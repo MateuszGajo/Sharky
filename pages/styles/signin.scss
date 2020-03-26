@@ -1,0 +1,157 @@
+@import "./global.scss";
+.authentication__form__wrapper__icons {
+  display: flex;
+  justify-content: space-between;
+  width: 30%;
+  .authentication__form__wrapper__icons--icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border: 2px solid #e1e1e1;
+    border-radius: 50%;
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}
+.authentication__form__wrapper--text {
+  margin-top: $medium-margin;
+  color: grey;
+}
+.authentication__form__wrapper__inputs {
+  .authentication__form__wrapper__inputs__wrapper {
+    display: flex;
+    flex-direction: column;
+    .authentication__form__wrapper__inputs__wrapper--input {
+      position: relative;
+      width: 350px;
+      height: 50px;
+      border: 1px solid #f2f2f2;
+      input {
+        border: 1px solid #d2d2d2;
+        width: 100%;
+        height: 100%;
+        background-color: #f2f2f2;
+        border-radius: 5px;
+        padding-left: 5px;
+        font-size: 1.2rem;
+        &:focus {
+          border: 1px solid $primary;
+        }
+        &:valid
+          + .authentication__form__wrapper__inputs__wrapper--input--placeholder {
+          transform: translateY(-100%);
+          margin-top: -15px;
+          font-size: 1rem;
+        }
+        &:focus
+          + .authentication__form__wrapper__inputs__wrapper--input--placeholder {
+          transform: translateY(-100%);
+          margin-top: -15px;
+          font-size: 1rem;
+          color: $primary;
+        }
+      }
+      .authentication__form__wrapper__inputs__wrapper--input--placeholder {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        font-weight: normal;
+        font-size: 1.3rem;
+        margin-top: 0;
+        margin-left: 5px;
+        background: #f2f2f2;
+        color: #b2b2b2;
+        transition: transform 0.3s, margin 0.2s;
+      }
+      &:nth-of-type(2) {
+        margin-top: $small-margin;
+      }
+    }
+    .authentication__form__wrapper__inputs__wrapper--helpers {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      margin-top: $small-margin;
+      .authentication__form__wrapper__inputs__wrapper--helpers--remberme {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .authentication__form__wrapper__inputs__wrapper--helpers--remberme--icon {
+          position: relative;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 23px;
+          height: 23px;
+          margin-right: 5px;
+          background: #d2d2d2;
+          input[type="checkbox"] {
+            visibility: hidden;
+          }
+          input[type="checkbox"]:checked + label:after {
+            filter: alpha(opacity=100);
+            opacity: 1;
+          }
+          label {
+            cursor: pointer;
+            position: absolute;
+            width: 21px;
+            height: 21px;
+            left: 1px;
+            top: 1px;
+            background-color: #f2f2f2;
+            &::after {
+              filter: alpha(opacity=0);
+              opacity: 0;
+              content: "";
+              position: absolute;
+              width: 14px;
+              height: 7px;
+              background: transparent;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, calc(-50% - 3px)) rotate(-45deg);
+              border: 3px solid $primary;
+              border-top: none;
+              border-right: none;
+            }
+            &:hover::after {
+              filter: alpha(opacity=30);
+              opacity: 0.3;
+            }
+          }
+        }
+      }
+      span {
+        font-weight: bold;
+        font-size: 1.1rem;
+        color: #292929;
+        cursor: pointer;
+      }
+    }
+    .authentication__form__wrapper__inputs--buton {
+      display: block;
+      width: 300px;
+      height: 50px;
+      margin: $small-margin auto 10px;
+      background-color: $primary;
+      border: 1px solid $primary;
+      color: #f2f2f2;
+      border-radius: 40px;
+      font-weight: bold;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      &:hover {
+        background-color: #16ca73;
+      }
+    }
+  }
+}

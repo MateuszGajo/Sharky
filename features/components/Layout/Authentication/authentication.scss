@@ -47,9 +47,14 @@
         }
       }
       .authentication__form__wrapper {
-        margin-top: $medium-margin;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
         flex-grow: 1;
         height: 100%;
+        width: 100%;
+        margin-top: $medium-margin;
       }
     }
     .authentication__text {
@@ -96,6 +101,10 @@
           cursor: pointer;
           border: 1px solid white;
           background-color: transparent;
+          transition: background-color 0.2s;
+          &:hover {
+            background-color: #16ca73;
+          }
         }
       }
     }
