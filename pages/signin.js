@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import Authentication from "../features/components/Layout/Authentication/Authentication";
 import { FaGooglePlusG, FaFacebookF } from "react-icons/fa";
 import { FiGithub } from "react-icons/fi";
 import "./styles/signin.scss";
 const SignIn = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = e => {
+    e.preventDefault();
+  };
   return (
     <Authentication>
       <>
@@ -22,16 +28,29 @@ const SignIn = () => {
           Lub przy pomocy e-mail
         </p>
         <div className="authentication__form__wrapper__inputs">
-          <form className="authentication__form__wrapper__inputs__wrapper">
+          <form
+            className="authentication__form__wrapper__inputs__wrapper"
+            onSubmit={handleSubmit}
+          >
             <div className="authentication__form__wrapper__inputs__wrapper--input">
-              <input type="text" required />
+              <input
+                type="text"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                required
+              />
               <h2 className="authentication__form__wrapper__inputs__wrapper--input--placeholder">
                 E-mail
               </h2>
             </div>
 
             <div className="authentication__form__wrapper__inputs__wrapper--input">
-              <input type="password" required />
+              <input
+                type="password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                required
+              />
               <h2 className="authentication__form__wrapper__inputs__wrapper--input--placeholder">
                 Hasło
               </h2>
@@ -45,7 +64,7 @@ const SignIn = () => {
                     id="remeberme"
                     name="check"
                   />
-                  <label for="remeberme"></label>
+                  <label htmlFor="remeberme"></label>
                 </div>
 
                 <span>Zapamiętaj mnie</span>
