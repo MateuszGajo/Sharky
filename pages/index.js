@@ -1,7 +1,10 @@
 import React from "react";
-import Authentication from "../features/components/Layout/Authentication/Authentication";
+
 import "./styles/global.scss";
+import "./styles/reset.scss";
+import SignIn from "./signin";
 const Index = () => {
-  return <Authentication />;
+  return <SignIn />;
 };
+
 export default Index;
