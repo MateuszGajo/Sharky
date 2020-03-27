@@ -2,7 +2,7 @@ import React from "react";
 import SignIn from "./signin";
 import SignUp from "./signup";
 const Index = () => {
-  return <SignIn />;
+  return <SignUp />;
 };
 
 export default Index;

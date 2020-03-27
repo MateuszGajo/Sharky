@@ -1,0 +1,9 @@
+@import "../../../../../pages/styles/reset.scss";
+@import "../../../../../pages/styles/variables.scss";
+
+.authentication__form__wrapper__inputs__wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+@import "../../../../../pages/styles/global.scss";

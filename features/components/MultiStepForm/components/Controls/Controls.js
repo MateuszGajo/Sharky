@@ -6,7 +6,6 @@ import cx from "classnames";
 
 const Controls = () => {
   const { page, setPage, numberOfPages } = useContext(WizzardContext);
-  console.log(numberOfPages);
   return (
     <div className="authentication__form__wrapper__controls">
       <div className="authentication__form__wrapper__controls__pagination">
@@ -25,7 +24,10 @@ const Controls = () => {
         </button>
         <button
           type="button"
-          className="authentication__form__wrapper__controls__pagination--button"
+          className={cx(
+            "authentication__form__wrapper__controls__pagination--button",
+            { "disabled--button": page === numberOfPages }
+          )}
           onClick={() => {
             setPage(page + 1);
           }}
@@ -36,7 +38,9 @@ const Controls = () => {
       </div>
       <button
         type="submit"
-        className="authentication__form__wrapper__controls--submitButton"
+        className={cx("button--auth", {
+          "hidden-element": page !== numberOfPages
+        })}
       >
         Zarejstruj
       </button>
