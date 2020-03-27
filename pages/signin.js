@@ -32,49 +32,51 @@ const SignIn = () => {
             className="authentication__form__wrapper__inputs__wrapper"
             onSubmit={handleSubmit}
           >
-            <div className="authentication__form__wrapper__inputs__wrapper--input">
+            <div className="input-form">
               <input
+                className="input-form--text"
                 type="text"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 required
               />
-              <h2 className="authentication__form__wrapper__inputs__wrapper--input--placeholder">
-                E-mail
-              </h2>
+              <h2 className="input-form--placeholder">E-mail</h2>
             </div>
 
-            <div className="authentication__form__wrapper__inputs__wrapper--input">
+            <div className="input-form">
               <input
+                className="input-form--text"
                 type="password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 required
               />
-              <h2 className="authentication__form__wrapper__inputs__wrapper--input--placeholder">
-                Hasło
-              </h2>
+              <h2 className="input-form--placeholder">Hasło</h2>
             </div>
-            <div className="authentication__form__wrapper__inputs__wrapper--helpers">
-              <div className="authentication__form__wrapper__inputs__wrapper--helpers--remberme">
-                <div className="authentication__form__wrapper__inputs__wrapper--helpers--remberme--icon">
+            <div className="authentication__form__wrapper__inputs__wrapper__helpers">
+              <div className="authentication__form__wrapper__inputs__wrapper__helpers--remberme">
+                <div className="checkbox--icon">
                   <input
+                    className="checkbox--icon--input"
                     type="checkbox"
                     value="None"
                     id="remeberme"
                     name="check"
                   />
-                  <label htmlFor="remeberme"></label>
+                  <label
+                    className="checkbox--icon--label"
+                    htmlFor="remeberme"
+                  ></label>
                 </div>
 
-                <span>Zapamiętaj mnie</span>
+                <span className="checkbox--text">Zapamiętaj mnie</span>
               </div>
 
-              <span>Przypomnij hasło</span>
+              <span className="authentication__form__wrapper__inputs__wrapper__helpers--remberme--text">
+                Przypomnij hasło
+              </span>
             </div>
-            <button className="authentication__form__wrapper__inputs--buton">
-              Zaloguj
-            </button>
+            <button className="button--auth">Zaloguj</button>
           </form>
         </div>
       </>

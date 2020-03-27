@@ -6,7 +6,10 @@ const Authentication = ({ children }) => {
       <section className="authentication">
         <div className="authentication__form">
           <h1 className="authentication__form--brand">
-            <span>Sha</span>rky
+            <span className="authentication__form--brand--primaryColor">
+              Sha
+            </span>
+            rky
           </h1>
           <span className="authentication__form--title">Zaloguj się</span>
           <div className="authentication__form__wrapper">{children}</div>

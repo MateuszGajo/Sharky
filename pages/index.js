@@ -1,8 +1,6 @@
 import React from "react";
-
-import "./styles/global.scss";
-import "./styles/reset.scss";
 import SignIn from "./signin";
+import SignUp from "./signup";
 const Index = () => {
   return <SignIn />;
 };

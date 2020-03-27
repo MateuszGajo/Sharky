@@ -1,0 +1,37 @@
+@import "../../../../../pages/styles/reset.scss";
+@import "../../../../../pages/styles/variables.scss";
+
+.authentication__form__wrapper__controls__pagination {
+  display: flex;
+  justify-content: center;
+  justify-content: space-between;
+}
+.authentication__form__wrapper__controls__pagination--button {
+  display: flex;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border: 1px solid #d2d2d2;
+  border-radius: 10px;
+  background-color: transparent;
+  font-size: 2rem;
+  color: $primaryColor;
+  cursor: pointer;
+}
+.authentication__form__wrapper__controls--submitButton {
+  display: block;
+  width: 300px;
+  height: 50px;
+  margin: $small-margin auto 10px;
+  background-color: $primaryColor;
+  border: 1px solid $primaryColor;
+  color: $secondardyBackgroundColor;
+  border-radius: 40px;
+  font-weight: bold;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  &:hover {
+    background-color: #16ca73;
+  }
+}
