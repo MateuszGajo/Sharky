@@ -6,7 +6,7 @@ import Step from "./components/Step/Step";
 import Credentials from "./components/Credentials/Credentials";
 import PersonalData from "./components/PersonalData/PersonalData";
 
-const Wizzard = ({ children }) => {
+const Wizzard = ({ children, onSubmit }) => {
   const [numberOfPages, setNumberOfPages] = useState(0);
   const [page, setPage] = useState(1);
   const [email, setEmail] = useState("");
@@ -15,6 +15,19 @@ const Wizzard = ({ children }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+
+  const handleSubmit = e => {
+    console.log("handleSubmit");
+    e.preventDefault();
+    onSubmit({
+      email,
+      password,
+      confirmPassword,
+      firstName,
+      lastName,
+      phoneNumber
+    });
+  };
   return (
     <WizzardContext.Provider
       value={{
@@ -36,7 +49,7 @@ const Wizzard = ({ children }) => {
         setPhoneNumber
       }}
     >
-      <form action="">{children}</form>
+      <form onSubmit={handleSubmit}>{children}</form>
     </WizzardContext.Provider>
   );
 };

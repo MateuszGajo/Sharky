@@ -1,10 +1,10 @@
 import React from "react";
-import Authentication from "../features/components/Layout/Authentication/Authentication";
+import Authentication from "../features/components/Layout/Authentication/Authentication/Authentication";
 import * as MultiStepForm from "../features/components/MultiStepForm/MultiStepForm";
-const SignUp = () => {
+const SignUp = ({ onSubmit }) => {
   return (
-    <Authentication>
-      <MultiStepForm.Wizzard>
+    <Authentication type="signup">
+      <MultiStepForm.Wizzard onSubmit={onSubmit}>
         <MultiStepForm.StepWrapper>
           <MultiStepForm.Step dataKey="Step">
             <MultiStepForm.Credentials />

@@ -16,6 +16,7 @@ const PersonalData = () => {
         <input
           className="input-form--text"
           type="text"
+          data-testid="firstname-input"
           value={firstName}
           onChange={e => setFirstName(e.target.value)}
           required
@@ -26,6 +27,7 @@ const PersonalData = () => {
         <input
           className="input-form--text"
           type="text"
+          data-testid="lastname-input"
           value={lastName}
           onChange={e => setLastName(e.target.value)}
           required
@@ -36,6 +38,7 @@ const PersonalData = () => {
         <input
           className="input-form--text"
           type="text"
+          data-testid="phonenumber-input"
           value={phoneNumber}
           onChange={e => setPhoneNumber(e.target.value)}
           required

@@ -18,6 +18,7 @@ const Credentials = () => {
         <input
           className="input-form--text"
           type="text"
+          data-testid="email-input"
           value={email}
           onChange={e => setEmail(e.target.value)}
           required
@@ -31,6 +32,7 @@ const Credentials = () => {
         <input
           className="input-form--text"
           type="text"
+          data-testid="password-input"
           value={password}
           onChange={e => setPassword(e.target.value)}
           required
@@ -42,6 +44,7 @@ const Credentials = () => {
         <input
           className="input-form--text"
           type="text"
+          data-testid="confirmpassword-input"
           value={confirmPassword}
           onChange={e => setConfirmPassword(e.target.value)}
           required

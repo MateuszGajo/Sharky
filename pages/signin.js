@@ -1,17 +1,21 @@
 import React, { useState } from "react";
-import Authentication from "../features/components/Layout/Authentication/Authentication";
+import Authentication from "../features/components/Layout/Authentication/Authentication/Authentication";
 import { FaGooglePlusG, FaFacebookF } from "react-icons/fa";
 import { FiGithub } from "react-icons/fi";
 import "./styles/signin.scss";
-const SignIn = () => {
+const SignIn = ({ onSubmit }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = e => {
     e.preventDefault();
+    onSubmit({
+      email,
+      password
+    });
   };
   return (
-    <Authentication>
+    <Authentication type="signin">
       <>
         <div className="authentication__form__wrapper__icons">
           <div className="authentication__form__wrapper__icons--icon">
@@ -36,6 +40,7 @@ const SignIn = () => {
               <input
                 className="input-form--text"
                 type="text"
+                data-testid="input-email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 required
@@ -47,6 +52,7 @@ const SignIn = () => {
               <input
                 className="input-form--text"
                 type="password"
+                data-testid="input-password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 required
@@ -76,7 +82,9 @@ const SignIn = () => {
                 Przypomnij hasło
               </span>
             </div>
-            <button className="button--auth">Zaloguj</button>
+            <button className="button--auth" data-testid="button-auth">
+              Zaloguj
+            </button>
           </form>
         </div>
       </>

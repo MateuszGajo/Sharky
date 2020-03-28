@@ -19,6 +19,7 @@ const Controls = () => {
             setPage(page - 1);
           }}
           disabled={page === 1}
+          data-testid="form-pagination-left"
         >
           <GoArrowLeft />
         </button>
@@ -32,15 +33,17 @@ const Controls = () => {
             setPage(page + 1);
           }}
           disabled={page === numberOfPages}
+          data-testid="form-pagination-right"
         >
           <GoArrowRight />
         </button>
       </div>
       <button
         type="submit"
-        className={cx("button--auth", {
-          "hidden-element": page !== numberOfPages
-        })}
+        className="button--auth"
+        // className={cx("button--auth", {
+        //   "hidden-element": page !== numberOfPages
+        // })}
       >
         Zarejstruj
       </button>
