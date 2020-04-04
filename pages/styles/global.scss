@@ -1,0 +1,29 @@
+.fixed-container {
+  position: relative;
+  width: 25vw;
+  height: 100vh;
+  display: flex;
+}
+
+.fixed-container-smaller {
+  width: 20vw;
+}
+
+.is-close {
+  display: none;
+}
+
+.transition-color {
+  transition: 0.2s color;
+}
+.hover-primary-color:hover {
+  color: $primaryColor;
+}
+
+.hover-pink-color:hover {
+  color: #f54275;
+}
+
+.hover-blue-color:hover {
+  color: #42b6f5;
+}

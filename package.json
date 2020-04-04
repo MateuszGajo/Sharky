@@ -4,16 +4,22 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "next",
+    "dev": "node features/server.js",
     "build": "next build",
-    "start": "next start"
+    "start": "NODE_ENV=production node features/server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@zeit/next-sass": "^1.0.1",
+    "classnames": "^2.2.6",
+    "express": "^4.17.1",
     "next": "^9.3.1",
+    "nextjs-dynamic-routes": "^2.5.1",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "react-icons": "^3.9.0",
+    "sass": "^1.26.3"
   }
 }
