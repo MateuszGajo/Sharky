@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "next",
+    "dev": "node features/server.js",
     "build": "next build",
-    "start": "next start",
-    "test": "jest"
+    "test": "jest",
+    "start": "NODE_ENV=production node features/server.js"
   },
   "keywords": [],
   "author": "",
@@ -27,6 +27,10 @@
     "react-icons": "^3.9.0"
   },
   "devDependencies": {
-    "identity-obj-proxy": "^3.0.0"
+    "identity-obj-proxy": "^3.0.0",
+    "@zeit/next-sass": "^1.0.1",
+    "express": "^4.17.1",
+    "nextjs-dynamic-routes": "^2.5.1",
+    "sass": "^1.26.3"
   }
 }

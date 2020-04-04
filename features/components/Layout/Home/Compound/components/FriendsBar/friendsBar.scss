@@ -1,0 +1,59 @@
+@import "../../../../../../../pages/styles/reset.scss";
+.home-wrapper__friends {
+  direction: rtl;
+  position: fixed;
+  width: 20vw;
+  height: 100vh;
+  box-shadow: 0 0 1px 1px $shadowColor;
+  overflow: overlay;
+}
+
+.home-wrapper_friends__list {
+  direction: ltr;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 5px 0;
+}
+
+.home-wrapper_friends__list__item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 5px 0;
+  cursor: pointer;
+  &:hover {
+    background-color: $secondaryBackgroundColor;
+  }
+}
+
+.home-wrapper_friends__list__item--online {
+  position: absolute;
+  right: 5px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #23b038;
+  margin-right: $small-margin;
+}
+
+.home-wrapper_friends__list__item--icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+  color: $shadowColor;
+  font-size: 1.5rem;
+}
+
+.home-wrapper_friends__list__item--icon--active {
+  color: $primaryColor;
+}
+
+.home-wrapper_friends__list__item--name {
+  font-size: 0.9rem;
+}
+
+@import "../../../../../../../pages/styles/global.scss";
