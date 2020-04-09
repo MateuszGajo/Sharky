@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Router from "../features/routes";
 import { FaUserCircle } from "react-icons/fa";
 import { FiMessageCircle } from "react-icons/fi";
@@ -8,7 +8,7 @@ import HomeLayout from "../features/components/Layout/Home/HomeLayout";
 import "./styles/home.scss";
 
 const Home = () => {
-  const posts = [
+  const [posts, setPosts] = useState([
     {
       id: 1,
       firstName: "Kamil",
@@ -27,15 +27,15 @@ const Home = () => {
       likes: 551,
       shares: 181,
     },
-  ];
+  ]);
   return (
-    <HomeLayout addingPost={true}>
+    <HomeLayout addingPost={true} search={true}>
       {posts.map((post) => {
         return (
           <div
             className="home-wrapper__main__content__post"
             onClick={() => {
-              Router.pushRoute("post", { postId: post.id });
+              // Router.pushRoute("post", { postId: post.id });
             }}
           >
             <div className="home-wrapper__main__content__post_body">
@@ -60,7 +60,12 @@ const Home = () => {
                   {post.comments}
                 </p>
               </div>
-              <div className="home-wrapper__main__content__post__icons__icon transition-color hover-pink-color">
+              <div
+                className="home-wrapper__main__content__post__icons__icon transition-color hover-pink-color"
+                onClick={() => {
+                  //save to database
+                }}
+              >
                 <IoIosHeartEmpty />
                 <p className="home-wrapper__main__content__post__icons__icon--amount">
                   {post.likes}

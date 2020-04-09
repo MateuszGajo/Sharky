@@ -12,8 +12,12 @@
   align-items: center;
 }
 
-.home-wrapper__main__search--input {
+.home-wrapper__main__search__form {
   width: 100%;
+}
+
+.home-wrapper__main__search__form--input {
+  width: calc(100% - (2 * #{$small-margin}));
   border-radius: 30px;
   border: 1px solid $shadowColor;
   padding: 10px 30px;
@@ -23,12 +27,13 @@
   &:focus {
     border-color: $primaryColor;
   }
-  &:focus + .home-wrapper__main__search--icon {
+  &:focus + .home-wrapper__main__search__form--icon {
     color: $primaryColor;
   }
 }
 
-.home-wrapper__main__search--icon {
+.home-wrapper__main__search__form--icon {
+  display: flex;
   position: absolute;
   top: 50%;
   right: 35px;
@@ -37,6 +42,8 @@
   color: grey;
   cursor: pointer;
   transition: color 0.2s;
+  background-color: transparent;
+  border: none;
 }
 
 .home-wrapper__main__content__message {

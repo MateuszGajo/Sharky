@@ -43,13 +43,15 @@ const FriendsBar = () => {
           "primary-scroll-active": isFriendsBarScrolling,
         })}
       >
-        <div
-          className="home-wrapper_friends__list"
-          onClick={() => setStatusOfMessage(true)}
-        >
+        <div className="home-wrapper_friends__list">
           {friendLists.map((friend) => {
             return (
-              <div className="home-wrapper_friends__list__item" key={friend.id}>
+              <div
+                className="home-wrapper_friends__list__item"
+                key={friend.id}
+                data-testid={`friend${friend.id}`}
+                onClick={() => setStatusOfMessage(true)}
+              >
                 {friend.online ? (
                   <div className="home-wrapper_friends__list__item--online"></div>
                 ) : null}
