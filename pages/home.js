@@ -4,6 +4,7 @@ import { FaUserCircle } from "react-icons/fa";
 import { FiMessageCircle } from "react-icons/fi";
 import { AiOutlineShareAlt } from "react-icons/ai";
 import { IoIosHeartEmpty } from "react-icons/io";
+import cx from "classnames";
 import HomeLayout from "../features/components/Layout/Home/HomeLayout";
 import "./styles/home.scss";
 
@@ -15,7 +16,7 @@ const Home = () => {
       lastName: "Latnikowski",
       content: "lorem lorem ala lorem",
       comments: 12,
-      likes: 55,
+      likes: [123, 545, 23],
       shares: 18,
     },
     {
@@ -24,18 +25,19 @@ const Home = () => {
       lastName: "Latnikowskiaaa",
       content: "lorem lorem ala lorem dasd",
       comments: 122,
-      likes: 551,
+      likes: [543, 563, 232],
       shares: 181,
     },
   ]);
   return (
-    <HomeLayout addingPost={true} search={true}>
+    <HomeLayout addingPost={true}>
       {posts.map((post) => {
+        let isLiked = post.likes.indexOf(123) !== -1;
         return (
           <div
             className="home-wrapper__main__content__post"
             onClick={() => {
-              // Router.pushRoute("post", { postId: post.id });
+              Router.pushRoute("post", { postId: post.id });
             }}
           >
             <div className="home-wrapper__main__content__post_body">
@@ -61,17 +63,28 @@ const Home = () => {
                 </p>
               </div>
               <div
-                className="home-wrapper__main__content__post__icons__icon transition-color hover-pink-color"
-                onClick={() => {
-                  //save to database
+                className={cx(
+                  "home-wrapper__main__content__post__icons__icon transition-color hover-pink-color",
+                  {
+                    "is-liked": isLiked,
+                  }
+                )}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (!isLiked) {
+                    console.log("zapisuje do bazy");
+                  }
                 }}
               >
                 <IoIosHeartEmpty />
                 <p className="home-wrapper__main__content__post__icons__icon--amount">
-                  {post.likes}
+                  {post.likes.length}
                 </p>
               </div>
-              <div className="home-wrapper__main__content__post__icons__icon transition-color hover-blue-color">
+              <div
+                className="home-wrapper__main__content__post__icons__icon transition-color hover-blue-color"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <AiOutlineShareAlt />
                 <p className="home-wrapper__main__content__post__icons__icon--amount">
                   {post.shares}
