@@ -8,11 +8,17 @@ import "./homeLayoutCompound.scss";
 
 const Wizzard = ({ children }) => {
   const [isMessage, setStatusOfMessage] = useState(false);
+  const [searchContent, setSearchContent] = useState("");
+  const [postContent, setPostContent] = useState("");
   return (
     <WizzardContext.Provider
       value={{
         isMessage,
         setStatusOfMessage,
+        searchContent,
+        setSearchContent,
+        postContent,
+        setPostContent,
       }}
     >
       <section className="home-wrapper">{children}</section>
