@@ -3,8 +3,8 @@ import { MdSend } from "react-icons/md";
 import { FaUserCircle } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
 import cx from "classnames";
-import "./message.scss";
 import { WizzardContext } from "../../components/Layout/Home/Compound/context/WizzardContext";
+
 const Message = () => {
   const messageArea = useRef(null);
   const messageForm = useRef(null);

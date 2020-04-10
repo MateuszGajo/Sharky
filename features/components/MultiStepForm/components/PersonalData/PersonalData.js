@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import "./personalData.scss";
 import { WizzardContext } from "../../context/WizzardContext";
+
 const PersonalData = () => {
   const {
     firstName,
@@ -8,7 +8,7 @@ const PersonalData = () => {
     lastName,
     setLastName,
     phoneNumber,
-    setPhoneNumber
+    setPhoneNumber,
   } = useContext(WizzardContext);
   return (
     <div className="authentication__form__wrapper__inputs__wrapper">
@@ -18,7 +18,7 @@ const PersonalData = () => {
           type="text"
           data-testid="firstname-input"
           value={firstName}
-          onChange={e => setFirstName(e.target.value)}
+          onChange={(e) => setFirstName(e.target.value)}
           required
         />
         <h2 className="input-form--placeholder">Imię</h2>
@@ -29,7 +29,7 @@ const PersonalData = () => {
           type="text"
           data-testid="lastname-input"
           value={lastName}
-          onChange={e => setLastName(e.target.value)}
+          onChange={(e) => setLastName(e.target.value)}
           required
         />
         <h2 className="input-form--placeholder">Nazwisko</h2>
@@ -40,7 +40,7 @@ const PersonalData = () => {
           type="text"
           data-testid="phonenumber-input"
           value={phoneNumber}
-          onChange={e => setPhoneNumber(e.target.value)}
+          onChange={(e) => setPhoneNumber(e.target.value)}
           required
         />
         <h2 className="input-form--placeholder">Numer Telefonu</h2>

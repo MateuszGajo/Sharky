@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { GoArrowLeft, GoArrowRight } from "react-icons/go";
-import "./controls.scss";
 import { WizzardContext } from "../../context/WizzardContext";
 import cx from "classnames";
 

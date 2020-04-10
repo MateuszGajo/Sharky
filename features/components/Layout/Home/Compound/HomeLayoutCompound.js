@@ -4,7 +4,6 @@ import NavBar from "./components/NavBar/Navbar";
 import Main from "./components/Main/Main";
 import FriendsBar from "./components/FriendsBar/FriendsBar";
 import Message from "../../../../common/Message/Message";
-import "./homeLayoutCompound.scss";
 
 const Wizzard = ({ children }) => {
   const [isMessage, setStatusOfMessage] = useState(false);

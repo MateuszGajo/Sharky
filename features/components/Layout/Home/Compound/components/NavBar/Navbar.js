@@ -10,7 +10,6 @@ import { MdPeopleOutline } from "react-icons/md";
 import { TiGroupOutline, TiNews } from "react-icons/ti";
 import { FaRegUser } from "react-icons/fa";
 import cx from "classnames";
-import "./navBar.scss";
 
 const NavBar = () => {
   const navbar = useRef(null);

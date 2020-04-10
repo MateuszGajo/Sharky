@@ -1,6 +1,8 @@
 import React from "react";
 import Authentication from "../features/components/Layout/Authentication/Authentication/Authentication";
 import * as MultiStepForm from "../features/components/MultiStepForm/MultiStepForm";
+import "./styles/main.scss";
+
 const SignUp = ({ onSubmit }) => {
   return (
     <Authentication type="signup">

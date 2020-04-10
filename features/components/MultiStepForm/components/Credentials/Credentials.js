@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
-import "./Credentials.scss";
 import { WizzardContext } from "../../context/WizzardContext";
 import cx from "classnames";
+
 const Credentials = () => {
   const {
     email,
@@ -9,7 +9,7 @@ const Credentials = () => {
     password,
     setPassword,
     confirmPassword,
-    setConfirmPassword
+    setConfirmPassword,
   } = useContext(WizzardContext);
   return (
     <div className="authentication__form__wrapper__inputs__wrapper">
@@ -20,7 +20,7 @@ const Credentials = () => {
           type="text"
           data-testid="email-input"
           value={email}
-          onChange={e => setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
           required
         />
         <h2 className="input-form--placeholder">Email</h2>
@@ -34,7 +34,7 @@ const Credentials = () => {
           type="text"
           data-testid="password-input"
           value={password}
-          onChange={e => setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
           required
         />
         <h2 className="input-form--placeholder">Hasło</h2>
@@ -46,7 +46,7 @@ const Credentials = () => {
           type="text"
           data-testid="confirmpassword-input"
           value={confirmPassword}
-          onChange={e => setConfirmPassword(e.target.value)}
+          onChange={(e) => setConfirmPassword(e.target.value)}
           required
         />
         <h2 className="input-form--placeholder">Powtórz hasło</h2>

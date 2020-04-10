@@ -2,16 +2,17 @@ import React, { useState } from "react";
 import Authentication from "../features/components/Layout/Authentication/Authentication/Authentication";
 import { FaGooglePlusG, FaFacebookF } from "react-icons/fa";
 import { FiGithub } from "react-icons/fi";
-import "./styles/signin.scss";
+import "./styles/main.scss";
+
 const SignIn = ({ onSubmit }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit({
       email,
-      password
+      password,
     });
   };
   return (
@@ -42,7 +43,7 @@ const SignIn = ({ onSubmit }) => {
                 type="text"
                 data-testid="input-email"
                 value={email}
-                onChange={e => setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
                 required
               />
               <h2 className="input-form--placeholder">E-mail</h2>
@@ -54,7 +55,7 @@ const SignIn = ({ onSubmit }) => {
                 type="password"
                 data-testid="input-password"
                 value={password}
-                onChange={e => setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
                 required
               />
               <h2 className="input-form--placeholder">Hasło</h2>

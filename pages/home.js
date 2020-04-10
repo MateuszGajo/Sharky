@@ -6,7 +6,7 @@ import { AiOutlineShareAlt } from "react-icons/ai";
 import { IoIosHeartEmpty } from "react-icons/io";
 import cx from "classnames";
 import HomeLayout from "../features/components/Layout/Home/HomeLayout";
-import "./styles/home.scss";
+import "./styles/main.scss";
 
 const Home = () => {
   const [posts, setPosts] = useState([
