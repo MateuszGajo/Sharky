@@ -1,8 +1,8 @@
 import React, { useState, useContext } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import cx from "classnames";
-import "./main.scss";
 import { WizzardContext } from "../../context/WizzardContext";
+
 const Main = ({ children, search, addingPost, onSubmit }) => {
   const handlePostSubmit = (e) => {
     e.preventDefault();
