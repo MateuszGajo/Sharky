@@ -1,0 +1,181 @@
+.setting-title {
+  position: relative;
+  border-bottom: 1px solid $primaryBackgroundColor;
+  padding: 10px 0;
+  padding-left: 10px;
+  background-color: #fff;
+  z-index: 1;
+}
+
+.setting-item-container {
+  position: relative;
+  background-color: #fff;
+  max-height: 300px;
+  transition: 0.5s max-height, visibility 0.1s 0s, z-index 0s 0.5s,
+    transform 0.3s;
+  visibility: visible;
+  transform: scaleY(1);
+}
+
+.setting-item {
+  border-bottom: 1px solid $primaryBackgroundColor;
+  padding: 10px 0;
+  padding-left: 20px;
+  transition: 0.2s background-color;
+  cursor: pointer;
+  &:hover {
+    background-color: $secondaryBackgroundColor;
+  }
+}
+
+.setting-section-collapse {
+  max-height: 0;
+  visibility: hidden;
+  transition: 0.3s max-height, visibility 0.1s 0.5s, z-index 0s 0.5s,
+    transform 0.3s;
+  transform: scaleY(0);
+}
+
+.setting-title--icon {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  transform: translatey(-50%);
+  right: 10px;
+  cursor: pointer;
+}
+.setting-title--icon-active {
+  transform: rotate(180deg) translateY(8px);
+}
+
+.settings-container {
+  display: flex;
+}
+
+.settings-container__settings {
+  display: flex;
+  flex-grow: 1;
+  padding-left: 1px;
+}
+
+.settings-container__settings__all {
+  width: 50%;
+  border-right: 1px solid $shadowColor;
+  background-color: #fff;
+}
+
+.settings-container__settings__all--title {
+  position: relative;
+  text-align: center;
+  padding: $small-margin 0;
+  border-bottom: 1px solid $shadowColor;
+  background-color: #fff;
+  z-index: 1;
+}
+
+.settings-container__settings__display {
+  width: 50%;
+}
+
+.settings-container__settings__display--title {
+  position: relative;
+  text-align: center;
+  padding: $small-margin 0;
+  border-bottom: 1px solid $shadowColor;
+}
+
+.settings-container__settings__display--title--icon {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  color: $primaryColor;
+  cursor: pointer;
+}
+
+.settings-container__settings__display--form {
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-container__settings__display--form__data {
+  position: relative;
+  display: flex;
+  align-self: flex-end;
+  width: 90%;
+  margin: 10px auto 0;
+  height: 8vh;
+}
+
+.settings-container__settings__display--form__data--title {
+  color: #c1c1c1;
+  font-weight: bold;
+  font-size: 1.1rem;
+  transition: color 0.2s;
+}
+
+.settings-container__settings__display--form__data--input {
+  position: absolute;
+  bottom: 0;
+  border: none;
+  width: 100%;
+  height: 50%;
+  border-bottom: 2px solid #c1c1c1;
+  background-color: transparent;
+  transition: border-bottom 0.2s;
+  &:focus {
+    border-bottom-color: $primaryColor;
+  }
+  &:focus + .settings-container__settings__display--form__data--title {
+    color: $primaryColor;
+  }
+}
+
+.settings-container__settings__display--form__data__autocomplete {
+  position: absolute;
+  top: 100%;
+  width: 100%;
+  border: 1px solid $shadowColor;
+}
+.settings-container__settings__display--form__data__autocomplete--item {
+  padding: 10px 0 10px 10px;
+  background-color: #fff;
+  z-index: 1;
+}
+
+.settings-container__settings__display--form__data__autocomplete--item--span:not(:last-child) {
+  border-bottom: 1px solid $shadowColor;
+}
+
+.settings-container__settings__display--form--button {
+  display: block;
+  width: 100px;
+  height: 40px;
+  margin: $small-margin 10px 0 auto;
+  background-color: $primaryColor;
+  border: none;
+  border-radius: 40px;
+  color: white;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  &:hover {
+    background-color: $primaryHoverColor;
+  }
+}
+
+.settings-container__settings__reminder {
+  width: 50%;
+}
+
+.settings-container__settings__reminder {
+  margin-top: $medium-margin;
+  text-align: center;
+}
+
+.settings-container__settings__reminder--p {
+  margin-top: $small-margin;
+}

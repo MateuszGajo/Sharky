@@ -35,6 +35,9 @@
     color: $primaryColor;
     background-color: $secondaryBackgroundColor;
   }
+  &:hover .home-wrapper__navbar__list__item--name--link {
+    color: $primaryColor;
+  }
 }
 
 .home-wrapper__navbar__list__item--icon {
@@ -44,6 +47,9 @@
   align-items: center;
 }
 
+.home-wrapper__navbar__list__item--name--link {
+  transition: color 0.2s;
+}
 .home-wrapper__navbar--title--primaryColor {
   color: $primaryColor;
 }
