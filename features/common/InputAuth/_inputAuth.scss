@@ -17,12 +17,12 @@
   &:focus {
     border: 1px solid $primaryColor;
   }
-  &:valid + .input-form--placeholder {
+  &:valid + .input-auth-container--placeholder {
     transform: translateY(-100%);
     margin-top: -15px;
     font-size: 1rem;
   }
-  &:focus + .input-form--placeholder {
+  &:focus + .input-auth-container--placeholder {
     transform: translateY(-100%);
     margin-top: -15px;
     font-size: 1rem;
