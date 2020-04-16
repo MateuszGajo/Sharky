@@ -5,6 +5,8 @@ const PrimaryButton = ({
   value = "wyślij",
   size = "medium",
   border = false,
+  isDisable = false,
+  link = "",
 }) => {
   return (
     <button
@@ -14,9 +16,16 @@ const PrimaryButton = ({
         "primary-button--medium": size === "medium",
         "primary-button--large": size === "large",
         "primary-button--border": border,
+        "is-close": isDisable === true,
       })}
     >
-      {value}
+      {link ? (
+        <a className="primary-button--link" href={link}>
+          {value}
+        </a>
+      ) : (
+        { value }
+      )}
     </button>
   );
 };

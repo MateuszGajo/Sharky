@@ -21,15 +21,18 @@ it("Does primary input works correct", () => {
       onChange={inputOnChange}
       title={inputTitle}
       autocompleteData={[]}
+      withOutMargin={true}
     />
   );
   const primaryInput = getByTestId("primary-input");
   const primaryInputTitle = getByTestId("primary-input-title");
   const autocomplete = getByTestId("input-primary-autocomplete");
+  const primaryInputContainer = getByTestId("primary-input-container");
 
   expect(primaryInputTitle).toHaveTextContent(inputTitle);
   expect(primaryInput).toHaveValue(inputValue);
   expect(autocomplete).toHaveClass("is-close");
+  expect(primaryInputContainer).toHaveClass("reset-margin");
 
   const newInputValue = "A";
   fireEvent.change(primaryInput, {

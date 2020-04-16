@@ -1,10 +1,22 @@
 import React from "react";
+import cx from "classnames";
 
-const InputAuth = ({ value, onChange, type = "text", title }) => {
+const InputAuth = ({
+  value,
+  onChange,
+  type = "text",
+  title,
+  withOutMargin = false,
+}) => {
   return (
-    <div className="input-form">
+    <div
+      data-testid="input-auth-container"
+      className={cx("input-auth-container", {
+        "reset-margin": withOutMargin === true,
+      })}
+    >
       <input
-        className="input-form--text"
+        className="input-auth-container--input"
         type={type}
         data-testid="input-auth"
         value={value}
@@ -13,7 +25,7 @@ const InputAuth = ({ value, onChange, type = "text", title }) => {
       />
       <h2
         data-testid="input-auth-placeholder"
-        className="input-form--placeholder"
+        className="input-auth-container--placeholder"
       >
         {title}
       </h2>

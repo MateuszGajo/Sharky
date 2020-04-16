@@ -1,7 +1,8 @@
 import React from "react";
 import "./styles/main.scss";
+import PrimaryButton from "../features/common/PrimaryButton/PrimaryButton";
 
 const Index = () => {
-  return <div></div>;
+  return <PrimaryButton link="/home" />;
 };
 export default Index;
