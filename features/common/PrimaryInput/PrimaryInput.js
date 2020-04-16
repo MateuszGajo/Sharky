@@ -8,6 +8,7 @@ const PrimaryInput = ({
   name,
   title,
   autocompleteData = [],
+  withOutMargin = false,
 }) => {
   const [autocompleteDataFiltered, setAutocompleteDataFiltered] = useState([]);
 
@@ -22,7 +23,12 @@ const PrimaryInput = ({
       );
   };
   return (
-    <div className="primary-input-container">
+    <div
+      data-testid="primary-input-container"
+      className={cx("primary-input-container", {
+        "reset-margin": withOutMargin === true,
+      })}
+    >
       <input
         type={type}
         name={name}

@@ -15,13 +15,21 @@ const Credentials = () => {
   return (
     <div className="authentication__form__wrapper__inputs__wrapper">
       <p className="input-error">Something go wrong</p>
-      <AuthInput value={email} onChange={setEmail} title="E-mail" />
+      <AuthInput
+        value={email}
+        onChange={setEmail}
+        title="E-mail"
+        withOutMargin={true}
+        //withoutMargin should be true only on password Error
+      />
       <p className="input-error">Something go wrong</p>
       <AuthInput
         type="password"
         value={password}
         onChange={setPassword}
         title="Hasło"
+        withOutMargin={true}
+        //withoutMargin should be true only on confirm password Error
       />
       <p className="input-error">Something go wrong</p>
       <AuthInput

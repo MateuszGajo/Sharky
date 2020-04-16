@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { GoArrowLeft, GoArrowRight } from "react-icons/go";
 import cx from "classnames";
 import { WizzardContext } from "../../context/WizzardContext";
+import PrimaryButton from "../../../../common/PrimaryButton/PrimaryButton";
 
 const Controls = () => {
   const { page, setPage, numberOfPages } = useContext(WizzardContext);
@@ -37,15 +38,7 @@ const Controls = () => {
           <GoArrowRight />
         </button>
       </div>
-      <button
-        type="submit"
-        className="button--auth"
-        className={cx("button--auth", {
-          "hidden-element": page !== numberOfPages,
-        })}
-      >
-        Zarejstruj
-      </button>
+      <PrimaryButton isDisable={page !== numberOfPages} value="Zarejstruj" />
     </div>
   );
 };

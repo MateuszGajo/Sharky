@@ -13,8 +13,18 @@ const PersonalData = () => {
   } = useContext(WizzardContext);
   return (
     <div className="authentication__form__wrapper__inputs__wrapper">
-      <InputAuth value={firstName} onChange={setFirstName} title="Imię" />
-      <InputAuth value={lastName} onChange={setLastName} title="Nazwisko" />
+      <InputAuth
+        value={firstName}
+        onChange={setFirstName}
+        title="Imię"
+        //withoutMargin should be true only on lastname Error
+      />
+      <InputAuth
+        value={lastName}
+        onChange={setLastName}
+        title="Nazwisko"
+        //withoutMargin should be true only on phone Error
+      />
       <InputAuth
         value={phoneNumber}
         onChange={setPhoneNumber}
