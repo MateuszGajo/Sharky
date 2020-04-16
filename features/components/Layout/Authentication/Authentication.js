@@ -1,5 +1,5 @@
 import React from "react";
-import "./authentication.scss";
+
 const Authentication = ({ children, type }) => {
   return (
     <div className="container--authentication">

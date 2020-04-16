@@ -2,7 +2,7 @@ import React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import SignUp from "../signup";
 
-it("submit form, does input data is correct", () => {
+it("submit form, does input data works correct", () => {
   const onSubmit = jest.fn();
   const { getByText, getByTestId } = render(<SignUp onSubmit={onSubmit} />);
 
@@ -14,25 +14,25 @@ it("submit form, does input data is correct", () => {
   const phoneNumber = "123456789";
 
   fireEvent.change(getByTestId("email-input"), {
-    target: { value: email }
+    target: { value: email },
   });
   fireEvent.change(getByTestId("password-input"), {
-    target: { value: password }
+    target: { value: password },
   });
   fireEvent.change(getByTestId("confirmpassword-input"), {
-    target: { value: confirmPassword }
+    target: { value: confirmPassword },
   });
 
   fireEvent.click(getByTestId("form-pagination-right"));
 
   fireEvent.change(getByTestId("firstname-input"), {
-    target: { value: firstName }
+    target: { value: firstName },
   });
   fireEvent.change(getByTestId("lastname-input"), {
-    target: { value: lastName }
+    target: { value: lastName },
   });
   fireEvent.change(getByTestId("phonenumber-input"), {
-    target: { value: phoneNumber }
+    target: { value: phoneNumber },
   });
 
   fireEvent.click(getByText(/Zarejstruj/i));
@@ -44,6 +44,6 @@ it("submit form, does input data is correct", () => {
     firstName,
     lastName,
     password,
-    phoneNumber
+    phoneNumber,
   });
 });

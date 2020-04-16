@@ -1,8 +1,7 @@
 import React, { useContext } from "react";
 import { GoArrowLeft, GoArrowRight } from "react-icons/go";
-import "./controls.scss";
-import { WizzardContext } from "../../context/WizzardContext";
 import cx from "classnames";
+import { WizzardContext } from "../../context/WizzardContext";
 
 const Controls = () => {
   const { page, setPage, numberOfPages } = useContext(WizzardContext);
@@ -41,9 +40,9 @@ const Controls = () => {
       <button
         type="submit"
         className="button--auth"
-        // className={cx("button--auth", {
-        //   "hidden-element": page !== numberOfPages
-        // })}
+        className={cx("button--auth", {
+          "hidden-element": page !== numberOfPages,
+        })}
       >
         Zarejstruj
       </button>
