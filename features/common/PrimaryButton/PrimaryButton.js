@@ -24,7 +24,7 @@ const PrimaryButton = ({
           {value}
         </a>
       ) : (
-        { value }
+        value
       )}
     </button>
   );

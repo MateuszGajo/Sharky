@@ -1,6 +1,7 @@
 import React from "react";
+import PrimaryButton from "../../../common/PrimaryButton/PrimaryButton";
 
-const Authentication = ({ children, type }) => {
+const Authentication = ({ children, type = "signin" }) => {
   return (
     <div className="container--authentication">
       <section className="authentication">
@@ -30,12 +31,11 @@ const Authentication = ({ children, type }) => {
                 ? "Wypełnij formularz i dołącz do naszej społecznośći"
                 : "Jeżeli posiadasz już konto"}
             </p>
-            <button
-              className="authentication__text__wrapper--button"
-              data-testid="redirect-auth-button"
-            >
-              {type === "signin" ? "Rejstracja" : "Zaloguj się"}
-            </button>
+            <PrimaryButton
+              border={true}
+              value={type === "signin" ? "Rejstracja" : "Zaloguj się"}
+              link={type === "signin" ? "/signup" : "/signin"}
+            />
           </div>
         </div>
       </section>
