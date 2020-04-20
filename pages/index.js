@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import "./styles/main.scss";
+import HomeLayout from "../features/components/Layout/Home/HomeLayout";
 
 const Index = () => {
-  return null;
+  return <HomeLayout />;
 };
 export default Index;

@@ -21,7 +21,9 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  padding: 5px 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 10px;
   cursor: pointer;
   &:hover {
     background-color: $secondaryBackgroundColor;
@@ -29,16 +31,22 @@
 }
 
 .home-wrapper_friends__list__item--online {
-  position: absolute;
-  right: 5px;
+  margin-left: $small-margin;
+  margin-right: 10px;
+}
+
+.home-wrapper_friends__list__item--online--circle {
   width: 5px;
   height: 5px;
   border-radius: 50%;
   background-color: #23b038;
-  margin-right: $small-margin;
 }
 
-.home-wrapper_friends__list__item--icon {
+.home-wrapper_friends__list__item__user {
+  display: flex;
+}
+
+.home-wrapper_friends__list__item__user--icon {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -47,10 +55,23 @@
   font-size: 1.5rem;
 }
 
-.home-wrapper_friends__list__item--icon--active {
+.home-wrapper_friends__list__item--icon__user--active {
   color: $primaryColor;
 }
 
-.home-wrapper_friends__list__item--name {
+.home-wrapper_friends__list__item__user--name {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
   font-size: 0.9rem;
+}
+
+.home-wrapper_friends__list__item__user--name--span {
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  word-wrap: break-word;
+  word-break: break-all;
+  overflow: hidden;
 }

@@ -1,7 +1,10 @@
 import React from "react";
 import PrimaryButton from "../../../common/PrimaryButton/PrimaryButton";
 
-const Authentication = ({ children, type = "signin" }) => {
+const Authentication = ({ children, type }) => {
+  {
+    console.log(type);
+  }
   return (
     <div className="container--authentication">
       <section className="authentication">
@@ -16,7 +19,9 @@ const Authentication = ({ children, type = "signin" }) => {
             className="authentication__form--title"
             data-testid="title-auth"
           >
-            {type === "signin" ? "Zaloguj się" : "Wypełnij formularz"}
+            {type === "signin"
+              ? "Zaloguj się"
+              : type === "signup" && "Wypełnij formularz"}
           </span>
           <div className="authentication__form__wrapper">{children}</div>
         </div>
@@ -29,13 +34,21 @@ const Authentication = ({ children, type = "signin" }) => {
             >
               {type === "signin"
                 ? "Wypełnij formularz i dołącz do naszej społecznośći"
-                : "Jeżeli posiadasz już konto"}
+                : type === "signup" && "Jeżeli posiadasz już konto"}
             </p>
-            <PrimaryButton
-              border={true}
-              value={type === "signin" ? "Rejstracja" : "Zaloguj się"}
-              link={type === "signin" ? "/signup" : "/signin"}
-            />
+            <div className="authentication__text__wrapper--button">
+              <PrimaryButton
+                border={true}
+                value={
+                  type === "signin"
+                    ? "Rejstracja"
+                    : type === "signup" && "Zaloguj się"
+                }
+                link={
+                  type === "signin" ? "/signup" : type === "signup" && "/signin"
+                }
+              />
+            </div>
           </div>
         </div>
       </section>
