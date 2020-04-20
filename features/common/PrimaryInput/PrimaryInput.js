@@ -9,6 +9,7 @@ const PrimaryInput = ({
   title,
   autocompleteData = [],
   withOutMargin = false,
+  size = "large",
 }) => {
   const [autocompleteDataFiltered, setAutocompleteDataFiltered] = useState([]);
 
@@ -27,6 +28,10 @@ const PrimaryInput = ({
       data-testid="primary-input-container"
       className={cx("primary-input-container", {
         "reset-margin": withOutMargin === true,
+        "primary-input-container--x-large": size === "x-large",
+        "primary-input-container--large": size === "large",
+        "primary-input-container--medium": size === "medium",
+        "primary-input-container--small": size === "small",
       })}
     >
       <input
@@ -47,7 +52,7 @@ const PrimaryInput = ({
       <div
         data-testid="input-primary-autocomplete"
         className={cx("primary-input-container__autocomplete", {
-          "is-close": autocompleteData.length === 0,
+          "is-close": autocompleteDataFiltered.length === 0,
         })}
       >
         {autocompleteDataFiltered.map((item, index) => (

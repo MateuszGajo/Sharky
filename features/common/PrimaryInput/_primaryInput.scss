@@ -2,9 +2,24 @@
   position: relative;
   display: flex;
   align-self: flex-end;
-  width: 90%;
-  margin: 10px auto 0;
+  margin: 0 auto $small-margin;
   height: 8vh;
+}
+
+.primary-input-container--x-large {
+  width: 100%;
+}
+
+.primary-input-container--large {
+  width: 90%;
+}
+
+.primary-input-container--medium {
+  width: 80%;
+}
+
+.primary-input-container--small {
+  width: 70%;
 }
 
 .primary-input-container--title {

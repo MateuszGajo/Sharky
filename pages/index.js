@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import "./styles/main.scss";
 
 const Index = () => {
-  return <div></div>;
+  return null;
 };
 export default Index;

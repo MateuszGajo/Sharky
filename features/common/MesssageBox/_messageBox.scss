@@ -1,0 +1,32 @@
+.message-box {
+  background-color: #fff;
+  border: 1px solid $primaryBackgroundColor;
+  box-shadow: 0 0 3px 2px $secondaryBackgroundColor;
+  border-radius: 2px;
+  width: 90%;
+  margin: 10px auto;
+}
+
+.message-box__navbar {
+  border-bottom: 1px solid $primaryBackgroundColor;
+  padding: 10px 5px;
+  font-weight: bold;
+}
+.message-box__content {
+  display: flex;
+  position: relative;
+  min-height: 80px;
+}
+.message-box__content--textarea {
+  width: 100%;
+  min-height: 50px;
+  padding: 5px;
+  resize: none;
+  border: none;
+}
+
+.message-box__content--button {
+  display: flex;
+  align-items: flex-end;
+  margin: 0 5px 5px 0;
+}

@@ -15,6 +15,7 @@ const PrimaryButton = ({
         "primary-button--small": size === "small",
         "primary-button--medium": size === "medium",
         "primary-button--large": size === "large",
+        "primary-button--x-large": size === "x-large",
         "primary-button--border": border,
         "is-close": isDisable === true,
       })}
