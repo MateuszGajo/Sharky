@@ -46,17 +46,18 @@
   display: flex;
 }
 
-.home-wrapper_friends__list__item__user--icon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.home-wrapper_friends__list__item__user__photo {
+  display: block;
+  width: 30px;
+  height: 30px;
   margin-right: 10px;
-  color: $shadowColor;
-  font-size: 1.5rem;
 }
 
-.home-wrapper_friends__list__item--icon__user--active {
-  color: $primaryColor;
+.home-wrapper_friends__list__item__user__photo--img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
 }
 
 .home-wrapper_friends__list__item__user--name {

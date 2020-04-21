@@ -16,12 +16,14 @@ const FriendsBar = () => {
       firstName: "Zbigniew",
       lastName: "Niedziółka-Domański",
       online: true,
+      photo: "profile.png",
     },
     453: {
       id: 453,
       firstName: "Witek",
       lastName: "Zbigniewski",
       online: false,
+      photo: "profile.png",
     },
   });
   const [listOfFriends, setListOfFirends] = useState([
@@ -74,16 +76,12 @@ const FriendsBar = () => {
                 onClick={() => setStatusOfMessage(true)}
               >
                 <div className="home-wrapper_friends__list__item__user">
-                  <div
-                    className={cx(
-                      "home-wrapper_friends__list__item__user--icon",
-                      {
-                        "home-wrapper_friends__list__item--icon--active":
-                          friend.online,
-                      }
-                    )}
-                  >
-                    <FaUserCircle />
+                  <div className="home-wrapper_friends__list__item__user__photo">
+                    <img
+                      src={"/static/images/" + friend.photo}
+                      alt=""
+                      className="home-wrapper_friends__list__item__user__photo--img"
+                    />
                   </div>
                   <div className="home-wrapper_friends__list__item__user--name">
                     <span className="home-wrapper_friends__list__item__user--name--span">
