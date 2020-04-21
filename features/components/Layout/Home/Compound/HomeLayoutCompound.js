@@ -3,8 +3,7 @@ import { WizzardContext } from "./context/WizzardContext";
 import NavBar from "./components/NavBar/Navbar";
 import Main from "./components/Main/Main";
 import FriendsBar from "./components/FriendsBar/FriendsBar";
-import Message from "../../../../common/Message/Message";
-import "./homeLayoutCompound.scss";
+import Messager from "./components/Messager/Messager";
 
 const Wizzard = ({ children }) => {
   const [isMessage, setStatusOfMessage] = useState(false);
@@ -26,4 +25,4 @@ const Wizzard = ({ children }) => {
   );
 };
 
-export { Wizzard, NavBar, Main, FriendsBar, Message };
+export { Wizzard, NavBar, Main, FriendsBar, Messager };

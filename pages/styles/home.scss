@@ -1,5 +1,3 @@
-@import "./variables.scss";
-
 .home-wrapper__main__content__post {
   width: 90%;
   margin: $small-margin auto 0;
@@ -52,6 +50,7 @@
 
 .home-wrapper__main__content__post__icons__icon {
   display: flex;
+  transition: 0.2s color;
   cursor: pointer;
 }
 

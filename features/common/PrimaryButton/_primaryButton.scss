@@ -1,0 +1,53 @@
+.primary-button {
+  display: block;
+  width: 300px;
+  height: 50px;
+  background-color: $primaryColor;
+  border: 1px solid $primaryColor;
+  color: $secondaryBackgroundColor;
+  border-radius: 40px;
+  font-weight: bold;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  &:hover {
+    background-color: #16ca73;
+  }
+}
+
+.primary-button--link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  color: white;
+}
+
+.primary-button--small {
+  width: 100px;
+  height: 35px;
+  font-size: 0.9rem;
+}
+
+.primary-button--medium {
+  width: 160px;
+  height: 45px;
+  font-size: 1rem;
+}
+
+.primary-button--large {
+  width: 210px;
+  height: 50px;
+  font-size: 1.1rem;
+}
+
+.primary-button--x-large {
+  width: 250px;
+  height: 55px;
+  font-size: 1.2rem;
+}
+
+.primary-button--border {
+  border: 1px solid white;
+}

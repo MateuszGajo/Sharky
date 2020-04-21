@@ -6,9 +6,11 @@ import { AiOutlineShareAlt } from "react-icons/ai";
 import { IoIosHeartEmpty } from "react-icons/io";
 import cx from "classnames";
 import HomeLayout from "../features/components/Layout/Home/HomeLayout";
-import "./styles/home.scss";
+import MessageBox from "../features/common/MesssageBox/MessageBox";
+import "./styles/main.scss";
 
 const Home = () => {
+  const [postText, setPostText] = useState("");
   const [posts, setPosts] = useState([
     {
       id: 1,
@@ -30,7 +32,8 @@ const Home = () => {
     },
   ]);
   return (
-    <HomeLayout addingPost={true}>
+    <HomeLayout>
+      <MessageBox btnSize="small" value={postText} onChange={setPostText} />
       {posts.map((post) => {
         let isLiked = post.likes.indexOf(123) !== -1;
         return (
@@ -56,7 +59,7 @@ const Home = () => {
               </div>
             </div>
             <div className="home-wrapper__main__content__post__icons">
-              <div className="home-wrapper__main__content__post__icons__icon transition-color hover-primary-color">
+              <div className="home-wrapper__main__content__post__icons__icon  hover-primary-color">
                 <FiMessageCircle />
                 <p className="home-wrapper__main__content__post__icons__icon--amount">
                   {post.comments}
@@ -64,9 +67,9 @@ const Home = () => {
               </div>
               <div
                 className={cx(
-                  "home-wrapper__main__content__post__icons__icon transition-color hover-pink-color",
+                  "home-wrapper__main__content__post__icons__icon  hover-pal-color",
                   {
-                    "is-liked": isLiked,
+                    "pal-color": isLiked,
                   }
                 )}
                 onClick={(e) => {
@@ -82,7 +85,7 @@ const Home = () => {
                 </p>
               </div>
               <div
-                className="home-wrapper__main__content__post__icons__icon transition-color hover-blue-color"
+                className="home-wrapper__main__content__post__icons__icon  hover-family-color"
                 onClick={(e) => e.stopPropagation()}
               >
                 <AiOutlineShareAlt />
