@@ -5,25 +5,28 @@ import { toHaveTextContent } from "@testing-library/jest-dom/matchers";
 
 expect.extend({ toHaveTextContent });
 
-describe("is text changing on auth form", () => {
+describe("is auth form text changing", () => {
   it("signin", () => {
     const { getByTestId } = render(<Authentication type="signin" />);
 
-    expect(getByTestId("welcome-text")).toHaveTextContent(
+    const welcomeText = getByTestId("welcome-text");
+    const primaryButton = getByTestId("primary-button");
+    const sectionName = getByTestId("title-auth");
+    expect(welcomeText).toHaveTextContent(
       "Wypełnij formularz i dołącz do naszej społecznośći"
     );
-
-    expect(getByTestId("redirect-auth-button")).toHaveTextContent("Rejstracja");
-    expect(getByTestId("title-auth")).toHaveTextContent("Zaloguj się");
+    expect(primaryButton).toHaveTextContent("Rejstracja");
+    expect(sectionName).toHaveTextContent("Zaloguj się");
   });
+
   it("signup", () => {
     const { getByTestId } = render(<Authentication type="signup" />);
-    expect(getByTestId("welcome-text")).toHaveTextContent(
-      "Jeżeli posiadasz już konto"
-    );
-    expect(getByTestId("redirect-auth-button")).toHaveTextContent(
-      "Zaloguj się"
-    );
-    expect(getByTestId("title-auth")).toHaveTextContent("Wypełnij formularz");
+    const welcomeText = getByTestId("welcome-text");
+    const primaryButton = getByTestId("primary-button");
+    const sectionName = getByTestId("title-auth");
+
+    expect(welcomeText).toHaveTextContent("Jeżeli posiadasz już konto");
+    expect(primaryButton).toHaveTextContent("Zaloguj się");
+    expect(sectionName).toHaveTextContent("Wypełnij formularz");
   });
 });

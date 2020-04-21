@@ -1,6 +1,3 @@
-@import "./reset.scss";
-@import "./variables.scss";
-
 .authentication__form__wrapper__icons {
   display: flex;
   justify-content: space-between;
@@ -43,6 +40,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-right: $small-margin;
 }
 
 .authentication__form__wrapper__inputs__wrapper__helpers--remberme--text {
@@ -51,4 +49,6 @@
   cursor: pointer;
 }
 
-@import "./global.scss";
+.authentication__form__wrapper__inputs__wrapper--button {
+  margin-top: 10px;
+}

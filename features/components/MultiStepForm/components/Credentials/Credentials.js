@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import cx from "classnames";
 import { WizzardContext } from "../../context/WizzardContext";
-import AuthInput from "../../../../common/InputAuth/InputAuth";
+import AuthInput from "../../../../common/AuthInput/AuthInput";
 
 const Credentials = () => {
   const {
@@ -20,6 +20,7 @@ const Credentials = () => {
         onChange={setEmail}
         title="E-mail"
         withOutMargin={true}
+        size="x-large"
         //withoutMargin should be true only on password Error
       />
       <p className="input-error">Something go wrong</p>
@@ -29,6 +30,7 @@ const Credentials = () => {
         onChange={setPassword}
         title="Hasło"
         withOutMargin={true}
+        size="x-large"
         //withoutMargin should be true only on confirm password Error
       />
       <p className="input-error">Something go wrong</p>
@@ -37,6 +39,7 @@ const Credentials = () => {
         value={confirmPassword}
         onChange={setConfirmPassword}
         title="Powtórz hasło"
+        size="x-large"
       />
     </div>
   );

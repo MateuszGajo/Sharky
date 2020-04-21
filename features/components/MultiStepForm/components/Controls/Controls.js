@@ -38,7 +38,13 @@ const Controls = () => {
           <GoArrowRight />
         </button>
       </div>
-      <PrimaryButton isDisable={page !== numberOfPages} value="Zarejstruj" />
+      <div className="authentication__form__wrapper__controls--submit-buton">
+        <PrimaryButton
+          isDisable={page !== numberOfPages}
+          value="Zarejstruj"
+          size="large"
+        />
+      </div>
     </div>
   );
 };

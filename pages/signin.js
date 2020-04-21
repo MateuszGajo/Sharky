@@ -4,7 +4,7 @@ import { FaGooglePlusG, FaFacebookF } from "react-icons/fa";
 import { FiGithub } from "react-icons/fi";
 import Checkbox from "../features/common/Checkbox/Checkbox";
 import PrimaryButton from "../features/common/PrimaryButton/PrimaryButton";
-import InputAuth from "../features/common/InputAuth/InputAuth";
+import AuthInput from "../features/common/AuthInput/AuthInput";
 import "./styles/main.scss";
 
 const SignIn = ({ onSubmit }) => {
@@ -41,12 +41,18 @@ const SignIn = ({ onSubmit }) => {
             className="authentication__form__wrapper__inputs__wrapper"
             onSubmit={handleSubmit}
           >
-            <InputAuth value={email} onChange={setEmail} title="E-mail" />
-            <InputAuth
+            <AuthInput
+              value={email}
+              onChange={setEmail}
+              title="E-mail"
+              size="x-large"
+            />
+            <AuthInput
               type="password"
               value={password}
               onChange={setPassword}
               title="Hasło"
+              size="x-large"
             />
 
             <div className="authentication__form__wrapper__inputs__wrapper__helpers">
@@ -61,7 +67,9 @@ const SignIn = ({ onSubmit }) => {
                 Przypomnij hasło
               </span>
             </div>
-            <PrimaryButton value="Zaloguj" />
+            <div className="authentication__form__wrapper__inputs__wrapper--button">
+              <PrimaryButton value="Zaloguj" size="large" />
+            </div>
           </form>
         </div>
       </>

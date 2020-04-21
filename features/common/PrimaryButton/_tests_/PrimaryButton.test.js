@@ -1,15 +1,15 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import PrimaryButton from "../PrimaryButton";
 import {
   toHaveClass,
   toHaveTextContent,
 } from "@testing-library/jest-dom/matchers";
+import PrimaryButton from "../PrimaryButton";
 
 expect.extend({ toHaveClass, toHaveTextContent });
 
 it("test primary button property", () => {
-  const textButton = "Akceptuj";
+  const textButton = "Accept";
   const { getByTestId } = render(
     <PrimaryButton
       size="large"

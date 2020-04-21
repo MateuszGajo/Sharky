@@ -32,3 +32,45 @@
 .hidden-element {
   visibility: hidden;
 }
+.hover-primary-color:hover {
+  color: $primaryColor;
+}
+
+.pal-color:hover {
+  color: $palColor;
+}
+
+.family-color:hover {
+  color: $familyColor;
+}
+
+.pal-color {
+  color: $palColor;
+}
+
+.family-color {
+  color: $familyColor;
+}
+
+.primary-color {
+  color: $primaryColor;
+}
+
+.primary-background {
+  background-color: $primaryColor;
+}
+
+.family-background {
+  background-color: $familyColor;
+}
+
+.pal-background {
+  background-color: $palColor;
+}
+
+.authentication__form__wrapper__inputs__wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+}

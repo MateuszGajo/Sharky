@@ -2,7 +2,6 @@
   display: block;
   width: 300px;
   height: 50px;
-  margin: $small-margin auto 10px;
   background-color: $primaryColor;
   border: 1px solid $primaryColor;
   color: $secondaryBackgroundColor;
@@ -26,18 +25,27 @@
 }
 
 .primary-button--small {
-  width: 120px;
-  height: 40px;
+  width: 100px;
+  height: 35px;
+  font-size: 0.9rem;
 }
 
 .primary-button--medium {
-  width: 200px;
-  height: 50px;
+  width: 160px;
+  height: 45px;
+  font-size: 1rem;
 }
 
 .primary-button--large {
+  width: 210px;
+  height: 50px;
+  font-size: 1.1rem;
+}
+
+.primary-button--x-large {
   width: 250px;
   height: 55px;
+  font-size: 1.2rem;
 }
 
 .primary-button--border {

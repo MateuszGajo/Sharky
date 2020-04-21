@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { WizzardContext } from "../../context/WizzardContext";
-import InputAuth from "../../../../common/InputAuth/InputAuth";
+import AuthInput from "../../../../common/AuthInput/AuthInput";
 
 const PersonalData = () => {
   const {
@@ -13,22 +13,25 @@ const PersonalData = () => {
   } = useContext(WizzardContext);
   return (
     <div className="authentication__form__wrapper__inputs__wrapper">
-      <InputAuth
+      <AuthInput
         value={firstName}
         onChange={setFirstName}
         title="Imię"
+        size="x-large"
         //withoutMargin should be true only on lastname Error
       />
-      <InputAuth
+      <AuthInput
         value={lastName}
         onChange={setLastName}
         title="Nazwisko"
+        size="x-large"
         //withoutMargin should be true only on phone Error
       />
-      <InputAuth
+      <AuthInput
         value={phoneNumber}
         onChange={setPhoneNumber}
         title="Telefon"
+        size="x-large"
       />
     </div>
   );
