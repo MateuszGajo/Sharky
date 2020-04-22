@@ -99,72 +99,17 @@
 .settings-container__settings__display--form {
   display: flex;
   flex-direction: column;
-}
-
-.settings-container__settings__display--form__data {
-  position: relative;
-  display: flex;
-  align-self: flex-end;
   width: 90%;
-  margin: 10px auto 0;
-  height: 8vh;
+  margin: 0 auto;
 }
-
-.settings-container__settings__display--form__data--title {
-  color: #c1c1c1;
-  font-weight: bold;
-  font-size: 1.1rem;
-  transition: color 0.2s;
-}
-
-.settings-container__settings__display--form__data--input {
-  position: absolute;
-  bottom: 0;
-  border: none;
-  width: 100%;
-  height: 50%;
-  border-bottom: 2px solid #c1c1c1;
-  background-color: transparent;
-  transition: border-bottom 0.2s;
-  &:focus {
-    border-bottom-color: $primaryColor;
-  }
-  &:focus + .settings-container__settings__display--form__data--title {
-    color: $primaryColor;
-  }
-}
-
-.settings-container__settings__display--form__data__autocomplete {
-  position: absolute;
-  top: 100%;
-  width: 100%;
-  border: 1px solid $shadowColor;
-}
-.settings-container__settings__display--form__data__autocomplete--item {
-  padding: 10px 0 10px 10px;
-  background-color: #fff;
-  z-index: 1;
-}
-
-.settings-container__settings__display--form__data__autocomplete--item--span:not(:last-child) {
-  border-bottom: 1px solid $shadowColor;
+.settings-container__settings__display--form--input {
+  margin-top: $small-margin;
 }
 
 .settings-container__settings__display--form--button {
-  display: block;
-  width: 100px;
-  height: 40px;
-  margin: $small-margin 10px 0 auto;
-  background-color: $primaryColor;
-  border: none;
-  border-radius: 40px;
-  color: white;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  &:hover {
-    background-color: $primaryHoverColor;
-  }
+  display: flex;
+  justify-content: flex-end;
+  margin-top: $small-margin;
 }
 
 .settings-container__settings__reminder {

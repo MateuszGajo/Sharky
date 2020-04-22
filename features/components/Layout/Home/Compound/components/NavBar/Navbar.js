@@ -50,10 +50,7 @@ const NavBar = () => {
               <AiOutlineHome />
             </div>
             <div className="home-wrapper__navbar__list__item--name">
-              <a
-                className="home-wrapper__navbar__list__item--name--link"
-                href="/home"
-              >
+              <a className="home-wrapper__navbar__list__item--name--a">
                 Główna
               </a>
             </div>
@@ -63,12 +60,7 @@ const NavBar = () => {
               <GiWorld />
             </div>
             <div className="home-wrapper__navbar__list__item--name">
-              <a
-                className="home-wrapper__navbar__list__item--name--link"
-                href="/world"
-              >
-                Świat
-              </a>
+              <a className="home-wrapper__navbar__list__item--name--a">Świat</a>
             </div>
           </div>
           <div className="home-wrapper__navbar__list__item">
@@ -76,10 +68,7 @@ const NavBar = () => {
               <IoIosNotificationsOutline />
             </div>
             <div className="home-wrapper__navbar__list__item--name">
-              <a
-                className="home-wrapper__navbar__list__item--name--link"
-                href="/notifications"
-              >
+              <a className="home-wrapper__navbar__list__item--name--a">
                 Powiadomienia
               </a>
             </div>
@@ -89,11 +78,8 @@ const NavBar = () => {
               <AiOutlineMessage />
             </div>
             <div className="home-wrapper__navbar__list__item--name">
-              <a
-                className="home-wrapper__navbar__list__item--name--link"
-                href="/messages"
-              >
-                Wiadomości
+              <a className="home-wrapper__navbar__list__item--name--a">
+                Wiadomośći
               </a>
             </div>
           </div>
@@ -102,10 +88,7 @@ const NavBar = () => {
               <MdPeopleOutline />
             </div>
             <div className="home-wrapper__navbar__list__item--name">
-              <a
-                className="home-wrapper__navbar__list__item--name--link"
-                href="/friends"
-              >
+              <a className="home-wrapper__navbar__list__item--name--a">
                 Znajomi
               </a>
             </div>
@@ -115,12 +98,7 @@ const NavBar = () => {
               <TiGroupOutline />
             </div>
             <div className="home-wrapper__navbar__list__item--name">
-              <a
-                className="home-wrapper__navbar__list__item--name--link"
-                href="/groups"
-              >
-                Grupy
-              </a>
+              <a className="home-wrapper__navbar__list__item--name--a">Grupy</a>
             </div>
           </div>
           <div className="home-wrapper__navbar__list__item">
@@ -128,10 +106,7 @@ const NavBar = () => {
               <TiNews />
             </div>
             <div className="home-wrapper__navbar__list__item--name">
-              <a
-                className="home-wrapper__navbar__list__item--name--link"
-                href="/fapages"
-              >
+              <a className="home-wrapper__navbar__list__item--name--a">
                 Fanpage
               </a>
             </div>
@@ -141,10 +116,7 @@ const NavBar = () => {
               <FaRegUser />
             </div>
             <div className="home-wrapper__navbar__list__item--name">
-              <a
-                className="home-wrapper__navbar__list__item--name--link"
-                href="/profile"
-              >
+              <a className="home-wrapper__navbar__list__item--name--a">
                 Profil
               </a>
             </div>
@@ -154,10 +126,7 @@ const NavBar = () => {
               <AiOutlineSetting />
             </div>
             <div className="home-wrapper__navbar__list__item--name">
-              <a
-                className="home-wrapper__navbar__list__item--name--link"
-                href="/settings"
-              >
+              <a className="home-wrapper__navbar__list__item--name--a">
                 Ustawienia
               </a>
             </div>

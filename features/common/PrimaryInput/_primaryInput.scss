@@ -1,0 +1,68 @@
+.primary-input-container {
+  position: relative;
+  display: flex;
+  align-self: flex-end;
+  margin: 0 auto $small-margin;
+  height: 8vh;
+}
+
+.primary-input-container--x-large {
+  width: 100%;
+}
+
+.primary-input-container--large {
+  width: 90%;
+}
+
+.primary-input-container--medium {
+  width: 80%;
+}
+
+.primary-input-container--small {
+  width: 70%;
+}
+
+.primary-input-container--title {
+  color: #c1c1c1;
+  font-weight: bold;
+  font-size: 1.1rem;
+  transition: color 0.2s;
+}
+
+.primary-input-container--input {
+  position: absolute;
+  bottom: 0;
+  border: none;
+  width: 100%;
+  height: 50%;
+  border-bottom: 2px solid #c1c1c1;
+  background-color: transparent;
+  transition: border-bottom 0.2s;
+  &:focus {
+    border-bottom-color: $primaryColor;
+  }
+  &:focus + .primary-input-container--title {
+    color: $primaryColor;
+  }
+}
+
+.primary-input-container__autocomplete {
+  position: absolute;
+  top: 100%;
+  width: 100%;
+  border: 1px solid $shadowColor;
+}
+.primary-input-container__autocomplete--item {
+  padding: 10px 0 10px 10px;
+  background-color: #fff;
+  z-index: 1;
+  transition: background-color 0.2s;
+  cursor: pointer;
+  &:hover {
+    background-color: $secondaryBackgroundColor;
+  }
+}
+
+.primary-input-container__autocomplete--item--span:not(:last-child) {
+  border-bottom: 1px solid $shadowColor;
+}

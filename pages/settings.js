@@ -1,13 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IoIosArrowDown, IoMdArrowBack } from "react-icons/io";
 import cx from "classnames";
 import * as HomeLayout from "../features/components/Layout/Home/Compound/HomeLayoutCompound";
 import ConfirmUser from "../features/common/PopUp/ConfirmUser/ConfirmUser";
 import "./styles/main.scss";
+import PrimaryButton from "../features/common/PrimaryButton/PrimaryButton";
+import PrimaryInput from "../features/common/PrimaryInput/PrimaryInput";
 
 const Settings = () => {
   const [isAccountCollapsed, setStatusOfAccountCollapse] = useState(true);
   const [isGeneralCollapsed, setStatusOfGeneralCollapse] = useState(true);
+  const [inputValue, setInputValue] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isOpenConfirmPopUp, setOpenConfirmPopUp] = useState(false);
+  const [confirmUser, setConfirmUser] = useState(false);
   const [settingValue, setSettingValue] = useState({
     value: "",
   });
@@ -18,7 +24,7 @@ const Settings = () => {
     value: "",
   });
 
-  const userSettings = {
+  const [userSettings, setUserSettings] = useState({
     account: [
       {
         name: "email",
@@ -58,40 +64,54 @@ const Settings = () => {
         id: 2,
       },
     ],
-  };
+  });
 
   const countries = ["Brytania", "Niemcy", "Polska", "Portugalia"];
   let autocompleteCountries = [];
   const languages = ["Angielski", "Niemiecki", "Polski", "Portugalski"];
 
-  const handleInputChange = (e) => {
-    if (e.target.name === "confirmPassword")
-      setSettingValue({ ...settingValue, confirmPassword: e.target.value });
-    else setSettingValue({ ...settingValue, value: e.target.value });
-  };
-
   const hnadleSubmit = (e) => {
     e.preventDefault();
     if (chooseSetting.category === "account") {
+      setOpenConfirmPopUp(true);
+      setConfirmUser(true);
     } else if (chooseSetting.category === "general") {
-      let newSetting = {
+      const newUserSetting = {
         account: [...userSettings.account],
-        general:
-          chooseSetting.category !== "general"
-            ? [...userSettings.general]
-            : userSettings.general.map((setting) => {
-                return setting.name === chooseSetting.name
-                  ? { ...setting, value: settingValue.value }
-                  : setting;
-              }),
+        general: userSettings.general.map((setting) => {
+          return setting.name === chooseSetting.name
+            ? { ...setting, value: inputValue }
+            : setting;
+        }),
       };
-      console.log(newSetting);
+      //save db
     }
   };
 
+  useEffect(() => {
+    if (confirmUser === true) {
+      if (chooseSetting.name === "password") {
+        if (inputValue !== confirmPassword) return setConfirmUser(false);
+      }
+      const newUserSetting = {
+        account: userSettings.account.map((item) => {
+          return item.name === chooseSetting.name
+            ? { ...item, value: inputValue }
+            : item;
+        }),
+        general: [...userSettings.general],
+      };
+      setConfirmUser(false);
+    }
+  }, [confirmUser]);
+
   return (
     <div className="settings-container">
-      {/* <ConfirmUser /> */}
+      <ConfirmUser
+        isOpen={isOpenConfirmPopUp}
+        setOpen={setOpenConfirmPopUp}
+        setVerify={setConfirmUser}
+      />
       <HomeLayout.NavBar />
       <div className="settings-container__settings">
         <div className="settings-container__settings__all">
@@ -126,7 +146,7 @@ const Settings = () => {
                   key={setting.id}
                   onClick={() => {
                     setChooseSetting(setting);
-                    setSettingValue({ value: setting.value });
+                    setInputValue(setting.value);
                   }}
                 >
                   {setting.title}
@@ -162,7 +182,7 @@ const Settings = () => {
                   key={setting.id}
                   onClick={() => {
                     setChooseSetting(setting);
-                    setSettingValue({ value: setting.value });
+                    setInputValue(setting.value);
                   }}
                 >
                   {setting.title}
@@ -186,43 +206,28 @@ const Settings = () => {
               className="settings-container__settings__display--form"
               onSubmit={hnadleSubmit}
             >
-              <div className="settings-container__settings__display--form__data">
-                <input
-                  name={chooseSetting.title}
-                  className="settings-container__settings__display--form__data--input"
-                  value={settingValue.value}
-                  onChange={handleInputChange}
+              <div className="settings-container__settings__display--form--input">
+                <PrimaryInput
+                  value={inputValue}
+                  onChange={setInputValue}
+                  size="x-large"
+                  title={chooseSetting.title}
+                  withOutMargin={true}
                 />
-
-                <h4 className="settings-container__settings__display--form__data--title">
-                  {chooseSetting.title}
-                </h4>
-                <div className="settings-container__settings__display--form__data__autocomplete">
-                  <div className="settings-container__settings__display--form__data__autocomplete--item">
-                    <span className="settings-container__settings__display--form__data__autocomplete--item--span">
-                      Polska
-                    </span>
-                  </div>
-                </div>
               </div>
               {chooseSetting.name === "password" ? (
-                <div className="settings-container__settings__display--form__data">
-                  <input
-                    name="confirmPassword"
-                    className="settings-container__settings__display--form__data--input"
-                    value={settingValue.confirmPassword}
-                    onChange={handleInputChange}
+                <div className="settings-container__settings__display--form--input">
+                  <PrimaryInput
+                    value={confirmPassword}
+                    onChange={setConfirmPassword}
+                    title="Powtórz hasło"
+                    size="x-large"
                   />
-
-                  <h4 className="settings-container__settings__display--form__data--title">
-                    Powtórz Hasło
-                  </h4>
                 </div>
               ) : null}
-
-              <button className="settings-container__settings__display--form--button">
-                Zapisz
-              </button>
+              <div className="settings-container__settings__display--form--button">
+                <PrimaryButton value="Zapisz" />
+              </div>
             </form>
           </div>
         ) : (
