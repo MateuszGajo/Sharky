@@ -50,7 +50,9 @@ const NavBar = () => {
               <AiOutlineHome />
             </div>
             <div className="home-wrapper__navbar__list__item--name">
-              <a href="/home">Główna</a>
+              <a className="home-wrapper__navbar__list__item--name--a">
+                Główna
+              </a>
             </div>
           </div>
           <div className="home-wrapper__navbar__list__item">
@@ -58,7 +60,7 @@ const NavBar = () => {
               <GiWorld />
             </div>
             <div className="home-wrapper__navbar__list__item--name">
-              <a href="/world">Świat</a>
+              <a className="home-wrapper__navbar__list__item--name--a">Świat</a>
             </div>
           </div>
           <div className="home-wrapper__navbar__list__item">
@@ -66,7 +68,9 @@ const NavBar = () => {
               <IoIosNotificationsOutline />
             </div>
             <div className="home-wrapper__navbar__list__item--name">
-              <a href="/notifications">Powiadomienia</a>
+              <a className="home-wrapper__navbar__list__item--name--a">
+                Powiadomienia
+              </a>
             </div>
           </div>
           <div className="home-wrapper__navbar__list__item">
@@ -74,7 +78,9 @@ const NavBar = () => {
               <AiOutlineMessage />
             </div>
             <div className="home-wrapper__navbar__list__item--name">
-              <a href="/messages">Wiadomośći</a>
+              <a className="home-wrapper__navbar__list__item--name--a">
+                Wiadomośći
+              </a>
             </div>
           </div>
           <div className="home-wrapper__navbar__list__item">
@@ -82,7 +88,9 @@ const NavBar = () => {
               <MdPeopleOutline />
             </div>
             <div className="home-wrapper__navbar__list__item--name">
-              <a href="/friends">Znajomi</a>
+              <a className="home-wrapper__navbar__list__item--name--a">
+                Znajomi
+              </a>
             </div>
           </div>
           <div className="home-wrapper__navbar__list__item">
@@ -90,7 +98,7 @@ const NavBar = () => {
               <TiGroupOutline />
             </div>
             <div className="home-wrapper__navbar__list__item--name">
-              <a href="/groups">Grupy</a>
+              <a className="home-wrapper__navbar__list__item--name--a">Grupy</a>
             </div>
           </div>
           <div className="home-wrapper__navbar__list__item">
@@ -98,7 +106,9 @@ const NavBar = () => {
               <TiNews />
             </div>
             <div className="home-wrapper__navbar__list__item--name">
-              <a href="/fapages">Fanpage</a>
+              <a className="home-wrapper__navbar__list__item--name--a">
+                Fanpage
+              </a>
             </div>
           </div>
           <div className="home-wrapper__navbar__list__item">
@@ -106,7 +116,9 @@ const NavBar = () => {
               <FaRegUser />
             </div>
             <div className="home-wrapper__navbar__list__item--name">
-              <a href="/profile">Profil</a>
+              <a className="home-wrapper__navbar__list__item--name--a">
+                Profil
+              </a>
             </div>
           </div>
           <div className="home-wrapper__navbar__list__item">
@@ -114,7 +126,9 @@ const NavBar = () => {
               <AiOutlineSetting />
             </div>
             <div className="home-wrapper__navbar__list__item--name">
-              <a href="/settings">Ustawienia</a>
+              <a className="home-wrapper__navbar__list__item--name--a">
+                Ustawienia
+              </a>
             </div>
           </div>
         </div>
