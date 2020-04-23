@@ -1,7 +1,8 @@
 import React from "react";
 import "./styles/main.scss";
+import Profile from "./profile";
 
 const Index = () => {
-  return null;
+  return <Profile />;
 };
 export default Index;
