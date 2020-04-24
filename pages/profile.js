@@ -1,19 +1,52 @@
 import React, { useState } from "react";
+import { TiInfoLargeOutline } from "react-icons/ti";
 import NavBar from "../features/components/Layout/Home/Compound/components/NavBar/Navbar";
 
 const profile = () => {
+  const [user, setUser] = useState({
+    id: 234,
+    firstName: "Janek",
+    lastName: "Kowalski",
+    photo: "profile.png",
+  });
+
+  const [fanpages, setFanPages] = useState([
+    {
+      id: 1,
+      name: "Fanpage Krzycha",
+      photo: "profile.png",
+    },
+  ]);
+
+  const [photos, setPhotos] = useState([
+    {
+      id: 1,
+      name: "profile.png",
+    },
+  ]);
+
+  const [posts, setPosts] = useState([
+    {
+      id: 1,
+      content: "Cos śmiesznego",
+    },
+  ]);
+
   const [groups, setGroups] = useState([
     {
       id: 123,
       name: "dsasa",
+      photo: "profile.png",
     },
     {
       id: 1233,
       name: "dsassdaa",
+      photo: "profile.png",
     },
     {
       id: 154,
       name: "dsasssa",
+      photo: "profile.png",
     },
   ]);
 
@@ -60,7 +93,7 @@ const profile = () => {
             <div className="profile__container__info__container__item">
               <div className="profile__container__info__container__item--circle">
                 <span className="profile__container__info__container__item--circle--span">
-                  234
+                  {friends.length}
                 </span>
               </div>
               <div className="profile__container__info__container__item--name">
@@ -72,24 +105,24 @@ const profile = () => {
             <div className="profile__container__info__container__item">
               <div className="profile__container__info__container__item--circle">
                 <span className="profile__container__info__container__item--circle--span">
-                  234
+                  {groups.length}
                 </span>
               </div>
               <div className="profile__container__info__container__item--name">
                 <span className="profile__container__info__container__item--name--span">
-                  Znajomi
+                  Grupy
                 </span>
               </div>
             </div>
             <div className="profile__container__info__container__item">
               <div className="profile__container__info__container__item--circle">
                 <span className="profile__container__info__container__item--circle--span">
-                  234
+                  {fanpages.length}
                 </span>
               </div>
               <div className="profile__container__info__container__item--name">
                 <span className="profile__container__info__container__item--name--span">
-                  Znajomi
+                  Fanpage
                 </span>
               </div>
             </div>
@@ -98,36 +131,38 @@ const profile = () => {
             <div className="profile__container__info__container__item">
               <div className="profile__container__info__container__item--circle">
                 <span className="profile__container__info__container__item--circle--span">
-                  234
+                  {photos.length}
                 </span>
               </div>
               <div className="profile__container__info__container__item--name">
                 <span className="profile__container__info__container__item--name--span">
-                  Znajomi
+                  Zdjęcia
                 </span>
               </div>
             </div>
             <div className="profile__container__info__container__item">
               <div className="profile__container__info__container__item--circle">
                 <span className="profile__container__info__container__item--circle--span">
-                  234
+                  {posts.length}
                 </span>
               </div>
               <div className="profile__container__info__container__item--name">
                 <span className="profile__container__info__container__item--name--span">
-                  Znajomi
+                  Posty
                 </span>
               </div>
             </div>
             <div className="profile__container__info__container__item">
               <div className="profile__container__info__container__item--circle">
                 <span className="profile__container__info__container__item--circle--span">
-                  234
+                  <span className="profile__container__info__container__item--circle--span--icon">
+                    <TiInfoLargeOutline />
+                  </span>
                 </span>
               </div>
               <div className="profile__container__info__container__item--name">
                 <span className="profile__container__info__container__item--name--span">
-                  Znajomi
+                  O mnie
                 </span>
               </div>
             </div>
