@@ -52,3 +52,12 @@
 .pal-background {
   background-color: $palColor;
 }
+
+.brightness-reduce {
+  filter: brightness(0.6);
+  transition: 0.2s filter;
+}
+
+.hover-brightness:hover {
+  filter: brightness(0.9);
+}
