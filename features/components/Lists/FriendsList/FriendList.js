@@ -2,41 +2,60 @@ import React,{useRef,useEffect,useState} from "react";
 import cx from "classnames";
 
 
-const FriendList = ({ listOfFriends, users,numberUserOfRow=1 }) => {
-  const friendShip = useRef(null);
-  const [isInvisible, setStatusOfVisiblity] = useState(true)
-
-  const displayChangeStatus =()=> {
-    console.log("ds")
-  }
-
-  useEffect(()=>{
-    friendShip.current.addEventListener("mouseout",displayChangeStatus)
-  },[])
+const FriendList = ({ listOfFriends=[
+  {
+  userId:234,
+  relationShip:"rodzina"
+},
+{
+  userId:345,
+  relationShip:"znajomy"
+},
+{
+  userId:456,
+  relationShip:"przyjaciel"
+}], users={
+  234:{
+    id:234,
+    firstName:"Jan",
+    lastName:"Kowalski",
+    photo:"profile.png",
+    amonutsOfFriends:123
+  },
+  345:{
+    id:345,
+    firstName:"Jan",
+    lastName:"Kowalski",
+    photo:"profile.png",
+    amonutsOfFriends:543
+  },
+  456:{
+    id:456,
+    firstName:"Jan",
+    lastName:"Kowalski",
+    photo:"profile.png",
+    amonutsOfFriends:54
+  }} }) => {
   return (
-    <div className="friends">
+    <div className="list">
       {listOfFriends.map((friend) => {
         const user = users[friend.userId];
         return (
-          <div className={cx("friends__item",{
-            "friends__item--large":numberUserOfRow === 1,
-            "friends__item--medium":numberUserOfRow === 2,
-            "friends__item--small":numberUserOfRow === 3,
-          })} key={user.id}>
-            <div className="friends__item--picture">
+          <div className="list__item" key={user.id}>
+            <div className="list__item--picture">
               <img
-                src="/static/images/profile.png"
-                className="friends__item--picture--img"
+                src={"/static/images/"+user.photo}
+                className="list__item--picture--img"
                 onClick={() => {
                   Router.pushRoute("profile", { id: user.id });
                 }}
               />
             </div>
-            <div className="friends__item__info">
-              <div className="friends__item__info__first-column">
-                <div className="friends__item__info__first-column--name">
+            <div className="list__item__info">
+              <div className="list__item__info__first-column">
+                <div className="list__item__info__first-column--name">
                   <span
-                    className="friends__item__info__first-column--name--span"
+                    className="list__item__info__first-column--name--span"
                     onClick={() => {
                       Router.pushRoute("profile", { id: user.id });
                     }}
@@ -44,37 +63,36 @@ const FriendList = ({ listOfFriends, users,numberUserOfRow=1 }) => {
                     {user.firstName} {user.lastName}
                   </span>
                 </div>
-                <div className="friends__item__info__first-column--amounts-of-friends">
-                  <span className="friends__item__info__first-column--amounts-of-friends--span">
+                <div className="list__item__info__first-column--amounts-of-friends">
+                  <span className="list__item__info__first-column--amounts-of-friends--span">
                     Liczba znajomych: {user.amonutsOfFriends}
                   </span>
                 </div>
               </div>
 
-              <div className="friends__item__info__second-column">
+              <div className="list__item__info__second-column">
                
-                <div className="friends__item__info__second-column--status">
+                <div className="list__item__info__second-column--buttons">
                 <div
-                  ref={friendShip}
-                    className={cx("friends__item__info__second-column--status--now", {
-                      "primary-background": friend.relationShip === "Znajomy",
-                      "family-background": friend.relationShip === "Rodzina",
-                      "pal-background": friend.relationShip === "Przyjaciel",
+                    className={cx("list__item__info__second-column--buttons--main-button white-color", {
+                      "primary-background": friend.relationShip === "znajomy",
+                      "family-background": friend.relationShip === "rodzina",
+                      "pal-background": friend.relationShip === "przyjaciel",
                     })}
                   >
-                    <span>{friend.relationShip}</span>
+                    <span className="list__item__info__second-column--buttons--main-button--span">{friend.relationShip}</span>
                   </div>
-                <div className="friends__item__info__second-column--status--change-status">
+                <div className="list__item__info__second-column--buttons--change-status">
                 <div
                       className={cx(
-                        "friends__item__info__second-column--status--change-status--circle primary-background",
+                        "list__item__info__second-column--buttons--change-status--circle primary-background",
                         {
                           "brightness-reduce hover-brightness":
-                            friend.relationShip !== "Znajomy",
+                            friend.relationShip !== "znajomy",
                         }
                       )}
                       onClick={() => {
-                        if (friend.relationShip !== "Znajomy") {
+                        if (friend.relationShip !== "znajomy") {
                           //save to db
                         }
                       }}
@@ -83,14 +101,14 @@ const FriendList = ({ listOfFriends, users,numberUserOfRow=1 }) => {
                     </div>
                     <div
                       className={cx(
-                        "friends__item__info__second-column--status--change-status--circle pal-background ",
+                        "list__item__info__second-column--buttons--change-status--circle pal-background ",
                         {
                           "brightness-reduce hover-brightness":
-                            friend.relationShip !== "Przyjaciel",
+                            friend.relationShip !== "przyjaciel",
                         }
                       )}
                       onClick={() => {
-                        if (friend.relationShip !== "Przyjaciel") {
+                        if (friend.relationShip !== "przyjaciel") {
                           //save to db
                         }
                       }}
@@ -99,14 +117,14 @@ const FriendList = ({ listOfFriends, users,numberUserOfRow=1 }) => {
                     </div>
                     <div
                       className={cx(
-                        "friends__item__info__second-column--status--change-status--circle family-background ",
+                        "list__item__info__second-column--buttons--change-status--circle family-background ",
                         {
                           "brightness-reduce hover-brightness":
-                            friend.relationShip !== "Rodzina",
+                            friend.relationShip !== "rodzina",
                         }
                       )}
                       onClick={() => {
-                        if (friend.relationShipd !== "Rodzina") {
+                        if (friend.relationShipd !== "rodzina") {
                           //save to db
                         }
                       }}
