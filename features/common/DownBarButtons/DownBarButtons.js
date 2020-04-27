@@ -5,16 +5,22 @@ import { IoIosHeartEmpty } from "react-icons/io";
 import cx from "classnames";
 
 const DownBarButtons = ({
-  amounts = { comments: 123, post: 123, share: 23 },
+  amounts = { comments: 123, posts: 123, shares: 23 },
   isLiked = false,
 }) => {
   return (
     <div className="downbar-buttons">
       <div className="downbar-buttons__icon  hover-primary-color">
         <FiMessageCircle />
-        <p className="downbar-buttons__icon--amount">{amounts.comments}</p>
+        <p
+          data-testid="downbar-buttons-amount-of-comments"
+          className="downbar-buttons__icon--amount"
+        >
+          {amounts.comments}
+        </p>
       </div>
       <div
+        data-testid="downbar-buttons-heart-icon"
         className={cx("downbar-buttons__icon  hover-pal-color", {
           "pal-color": isLiked,
         })}
@@ -26,14 +32,24 @@ const DownBarButtons = ({
         }}
       >
         <IoIosHeartEmpty />
-        <p className="downbar-buttons__icon--amount">{amounts.post}</p>
+        <p
+          data-testid="downbar-buttons-amount-of-posts"
+          className="downbar-buttons__icon--amount"
+        >
+          {amounts.posts}
+        </p>
       </div>
       <div
         className="downbar-buttons__icon  hover-family-color"
         onClick={(e) => e.stopPropagation()}
       >
         <AiOutlineShareAlt />
-        <p className="downbar-buttons__icon--amount">{amounts.share}</p>
+        <p
+          data-testid="downbar-buttons-amount-of-shares"
+          className="downbar-buttons__icon--amount"
+        >
+          {amounts.shares}
+        </p>
       </div>
     </div>
   );
