@@ -1,4 +1,5 @@
 import React from "react";
+import DownBarButtons from "../../../common/DownBarButtons/DownBarButtons";
 
 const PostList = ({
   posts = [
@@ -75,10 +76,7 @@ const PostList = ({
               </div>
             )}
             <div className="post-list__item__downbar">
-              <div className="post-list__item__downbar__item">
-                <div className="post-list__item__downbar__item--icon"></div>
-                <div className="post-list__item__downbar__item--name"></div>
-              </div>
+              <DownBarButtons />
             </div>
           </div>
         );

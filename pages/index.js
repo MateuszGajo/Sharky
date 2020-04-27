@@ -4,6 +4,6 @@ import PostList from "../features/components/Lists/PostList/PostList";
 import DownBarButtons from "../features/common/DownBarButtons/DownBarButtons";
 
 const Index = () => {
-  return <DownBarButtons />;
+  return <PostList />;
 };
 export default Index;
