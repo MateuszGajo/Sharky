@@ -1,41 +1,45 @@
-import React,{useRef,useEffect,useState} from "react";
+import React, { useRef, useEffect, useState } from "react";
 import cx from "classnames";
 
-
-const FriendList = ({ listOfFriends=[
-  {
-  userId:234,
-  relationShip:"rodzina"
-},
-{
-  userId:345,
-  relationShip:"znajomy"
-},
-{
-  userId:456,
-  relationShip:"przyjaciel"
-}], users={
-  234:{
-    id:234,
-    firstName:"Jan",
-    lastName:"Kowalski",
-    photo:"profile.png",
-    amonutsOfFriends:123
+const FriendList = ({
+  listOfFriends = [
+    {
+      userId: 234,
+      relationShip: "rodzina",
+    },
+    {
+      userId: 345,
+      relationShip: "znajomy",
+    },
+    {
+      userId: 456,
+      relationShip: "przyjaciel",
+    },
+  ],
+  users = {
+    234: {
+      id: 234,
+      firstName: "Jan",
+      lastName: "Kowalski",
+      photo: "profile.png",
+      amonutsOfFriends: 123,
+    },
+    345: {
+      id: 345,
+      firstName: "Jan",
+      lastName: "Kowalski",
+      photo: "profile.png",
+      amonutsOfFriends: 543,
+    },
+    456: {
+      id: 456,
+      firstName: "Jan",
+      lastName: "Kowalski",
+      photo: "profile.png",
+      amonutsOfFriends: 54,
+    },
   },
-  345:{
-    id:345,
-    firstName:"Jan",
-    lastName:"Kowalski",
-    photo:"profile.png",
-    amonutsOfFriends:543
-  },
-  456:{
-    id:456,
-    firstName:"Jan",
-    lastName:"Kowalski",
-    photo:"profile.png",
-    amonutsOfFriends:54
-  }} }) => {
+}) => {
   return (
     <div className="list">
       {listOfFriends.map((friend) => {
@@ -44,7 +48,7 @@ const FriendList = ({ listOfFriends=[
           <div className="list__item" key={user.id}>
             <div className="list__item--picture">
               <img
-                src={"/static/images/"+user.photo}
+                src={"/static/images/" + user.photo}
                 className="list__item--picture--img"
                 onClick={() => {
                   Router.pushRoute("profile", { id: user.id });
@@ -71,19 +75,23 @@ const FriendList = ({ listOfFriends=[
               </div>
 
               <div className="list__item__info__second-column">
-               
                 <div className="list__item__info__second-column--buttons">
-                <div
-                    className={cx("list__item__info__second-column--buttons--main-button white-color", {
-                      "primary-background": friend.relationShip === "znajomy",
-                      "family-background": friend.relationShip === "rodzina",
-                      "pal-background": friend.relationShip === "przyjaciel",
-                    })}
+                  <div
+                    className={cx(
+                      "list__item__info__second-column--buttons--main-button white-color",
+                      {
+                        "primary-background": friend.relationShip === "znajomy",
+                        "family-background": friend.relationShip === "rodzina",
+                        "pal-background": friend.relationShip === "przyjaciel",
+                      }
+                    )}
                   >
-                    <span className="list__item__info__second-column--buttons--main-button--span">{friend.relationShip}</span>
+                    <span className="list__item__info__second-column--buttons--main-button--span">
+                      {friend.relationShip}
+                    </span>
                   </div>
-                <div className="list__item__info__second-column--buttons--change-status">
-                <div
+                  <div className="list__item__info__second-column--buttons--change-status">
+                    <div
                       className={cx(
                         "list__item__info__second-column--buttons--change-status--circle primary-background",
                         {
@@ -131,7 +139,7 @@ const FriendList = ({ listOfFriends=[
                     >
                       <span>Rodzina</span>
                     </div>
-                </div>
+                  </div>
                 </div>
               </div>
             </div>

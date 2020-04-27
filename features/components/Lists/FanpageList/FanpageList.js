@@ -1,38 +1,38 @@
 import React from "react";
 
-const GroupList = ({
-  listOfGroups = [
+const FanpageList = ({
+  listOfFanPage = [
     {
-      id: 12,
-      name: "dsa",
+      id: 1,
+      name: "dassa",
       photo: "profile.png",
-      numberOfMembers: 123,
+      numberOfLikes: 123,
     },
     {
-      id: 12,
-      name: "dsa",
+      id: 2,
+      name: "dassa",
       photo: "profile.png",
-      numberOfMembers: 123,
+      numberOfLikes: 123,
     },
     {
-      id: 12,
-      name: "dsa",
+      id: 3,
+      name: "dassa",
       photo: "profile.png",
-      numberOfMembers: 123,
+      numberOfLikes: 123,
     },
   ],
 }) => {
   return (
     <div className="list">
-      {listOfGroups.map((group) => {
+      {listOfFanPage.map((fanpage) => {
         return (
-          <div className="list__item" key={group.id}>
+          <div className="list__item" key={fanpage.id}>
             <div className="list__item--picture">
               <img
-                src={"/static/images/" + group.photo}
+                src={"/static/images/" + fanpage.photo}
                 className="list__item--picture--img image-radius"
                 onClick={() => {
-                  Router.pushRoute("group", { id: group.id });
+                  Router.pushRoute("fanpage", { id: fanpage.id });
                 }}
               />
             </div>
@@ -42,22 +42,22 @@ const GroupList = ({
                   <span
                     className="list__item__info__first-column--name--span"
                     onClick={() => {
-                      Router.pushRoute("group", { id: group.id });
+                      Router.pushRoute("fanpage", { id: fanpage.id });
                     }}
                   >
-                    {group.name}
+                    {fanpage.name}
                   </span>
                 </div>
                 <div className="list__item__info__first-column--amounts-of-friends">
                   <span className="list__item__info__first-column--amounts-of-friends--span">
-                    Liczba osób: {group.numberOfMembers}
+                    Liczba Subskrybcji: {fanpage.numberOfLikes}
                   </span>
                 </div>
               </div>
               <div className="list__item__info__second-column">
                 <div className="list__item__info__second-column--buttons">
                   <div className="list__item__info__second-column--buttons--main-button button-join">
-                    <span>Dołącz</span>
+                    <span>Subskrybuj</span>
                   </div>
                 </div>
               </div>
@@ -69,4 +69,4 @@ const GroupList = ({
   );
 };
 
-export default GroupList;
+export default FanpageList;
