@@ -42,102 +42,108 @@ const FriendList = ({
 }) => {
   return (
     <div className="list">
-      {listOfFriends.map((friend) => {
+      {listOfFriends.map((friend, index) => {
         const user = users[friend.userId];
-        return (
-          <div className="list__item" key={user.id}>
-            <div className="list__item--picture">
-              <img
-                src={"/static/images/" + user.photo}
-                className="list__item--picture--img"
-                onClick={() => {
-                  Router.pushRoute("profile", { id: user.id });
-                }}
-              />
-            </div>
-            <div className="list__item__info">
-              <div className="list__item__info__first-column">
-                <div className="list__item__info__first-column--name">
-                  <span
-                    className="list__item__info__first-column--name--span"
-                    onClick={() => {
-                      Router.pushRoute("profile", { id: user.id });
-                    }}
-                  >
-                    {user.firstName} {user.lastName}
-                  </span>
-                </div>
-                <div className="list__item__info__first-column--amounts-of-friends">
-                  <span className="list__item__info__first-column--amounts-of-friends--span">
-                    Liczba znajomych: {user.amonutsOfFriends}
-                  </span>
-                </div>
-              </div>
 
-              <div className="list__item__info__second-column">
-                <div className="list__item__info__second-column--buttons">
-                  <div
-                    className={cx(
-                      "list__item__info__second-column--buttons--main-button white-color",
-                      {
-                        "primary-background": friend.relationShip === "znajomy",
-                        "family-background": friend.relationShip === "rodzina",
-                        "pal-background": friend.relationShip === "przyjaciel",
-                      }
-                    )}
-                  >
-                    <span className="list__item__info__second-column--buttons--main-button--span">
-                      {friend.relationShip}
+        return (
+          <div className="list__wrapper">
+            <div className="list__wrapper__item" key={user.id}>
+              <div className="list__wrapper__item--picture">
+                <img
+                  src={"/static/images/" + user.photo}
+                  className="list__wrapper__item--picture--img"
+                  onClick={() => {
+                    Router.pushRoute("profile", { id: user.id });
+                  }}
+                />
+              </div>
+              <div className="list__wrapper__item__info">
+                <div className="list__wrapper__item__info__first-column">
+                  <div className="list__wrapper__item__info__first-column--name">
+                    <span
+                      className="list__wrapper__item__info__first-column--name--span"
+                      onClick={() => {
+                        Router.pushRoute("profile", { id: user.id });
+                      }}
+                    >
+                      {user.firstName} {user.lastName}
                     </span>
                   </div>
-                  <div className="list__item__info__second-column--buttons--change-status">
+                  <div className="list__wrapper__item__info__first-column--amounts-of-friends">
+                    <span className="list__wrapper__item__info__first-column--amounts-of-friends--span">
+                      Liczba znajomych: {user.amonutsOfFriends}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="list__wrapper__item__info__second-column">
+                  <div className="list__wrapper__item__info__second-column--buttons">
                     <div
                       className={cx(
-                        "list__item__info__second-column--buttons--change-status--circle primary-background",
+                        "list__wrapper__item__info__second-column--buttons--main-button white-color",
                         {
-                          "brightness-reduce hover-brightness":
-                            friend.relationShip !== "znajomy",
+                          "primary-background":
+                            friend.relationShip === "znajomy",
+                          "family-background":
+                            friend.relationShip === "rodzina",
+                          "pal-background":
+                            friend.relationShip === "przyjaciel",
                         }
                       )}
-                      onClick={() => {
-                        if (friend.relationShip !== "znajomy") {
-                          //save to db
-                        }
-                      }}
                     >
-                      <span>Znajomy</span>
+                      <span className="list__wrapper__item__info__second-column--buttons--main-button--span">
+                        {friend.relationShip}
+                      </span>
                     </div>
-                    <div
-                      className={cx(
-                        "list__item__info__second-column--buttons--change-status--circle pal-background ",
-                        {
-                          "brightness-reduce hover-brightness":
-                            friend.relationShip !== "przyjaciel",
-                        }
-                      )}
-                      onClick={() => {
-                        if (friend.relationShip !== "przyjaciel") {
-                          //save to db
-                        }
-                      }}
-                    >
-                      <span>Przyjaciel</span>
-                    </div>
-                    <div
-                      className={cx(
-                        "list__item__info__second-column--buttons--change-status--circle family-background ",
-                        {
-                          "brightness-reduce hover-brightness":
-                            friend.relationShip !== "rodzina",
-                        }
-                      )}
-                      onClick={() => {
-                        if (friend.relationShipd !== "rodzina") {
-                          //save to db
-                        }
-                      }}
-                    >
-                      <span>Rodzina</span>
+                    <div className="list__wrapper__item__info__second-column--buttons--change-status">
+                      <div
+                        className={cx(
+                          "list__wrapper__item__info__second-column--buttons--change-status--circle primary-background",
+                          {
+                            "brightness-reduce hover-brightness":
+                              friend.relationShip !== "znajomy",
+                          }
+                        )}
+                        onClick={() => {
+                          if (friend.relationShip !== "znajomy") {
+                            //save to db
+                          }
+                        }}
+                      >
+                        <span>Znajomy</span>
+                      </div>
+                      <div
+                        className={cx(
+                          "list__wrapper__item__info__second-column--buttons--change-status--circle pal-background ",
+                          {
+                            "brightness-reduce hover-brightness":
+                              friend.relationShip !== "przyjaciel",
+                          }
+                        )}
+                        onClick={() => {
+                          if (friend.relationShip !== "przyjaciel") {
+                            //save to db
+                          }
+                        }}
+                      >
+                        <span>Przyjaciel</span>
+                      </div>
+                      <div
+                        className={cx(
+                          "list__wrapper__item__info__second-column--buttons--change-status--circle family-background ",
+                          {
+                            "brightness-reduce hover-brightness":
+                              friend.relationShip !== "rodzina",
+                          }
+                        )}
+                        onClick={() => {
+                          if (friend.relationShipd !== "rodzina") {
+                            //save to db
+                          }
+                        }}
+                      >
+                        <span>Rodzina</span>
+                      </div>
                     </div>
                   </div>
                 </div>

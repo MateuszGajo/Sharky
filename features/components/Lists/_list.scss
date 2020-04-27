@@ -3,8 +3,22 @@
     justify-content: flex-start;
     flex-wrap: wrap;
   }
+
+  .list__wrapper{
+    width:50%;
+  }
+
+  .list__wrapper:nth-child(even) .list__wrapper__item{
+    margin-right:calc((100% - 400px)*2/3);
+    margin-left:calc((100% - 400px)*1/3)
+  }
+
+  .list__wrapper:nth-child(odd) .list__wrapper__item{
+    margin-right:calc((100% - 400px)*1/3);
+    margin-left:calc((100% - 400px)*2/3)
+  }
   
-  .list__item {
+  .list__wrapper__item {
     display: flex;
     height:100px;
     width:400px;
@@ -13,31 +27,31 @@
     border: 1px solid $secondaryBackgroundColor;
   }
   
-  .list__item--picture {
+  .list__wrapper__item--picture {
     cursor: pointer;
-    width: 120px;
   }
   
-  .list__item--picture--img {
+  .list__wrapper__item--picture--img {
     display: block;
-    width: 100%;
     height: 100%;
+    width:100px;
+    object-fit: cover;
   }
   
-  .list__item__info {
+  .list__wrapper__item__info {
     display: flex;
     justify-content: space-between;
     width: 100%;
   }
   
-  .list__item__info__first-column {
+  .list__wrapper__item__info__first-column {
     display: flex;
     flex-direction: column;
     justify-content: center;
     margin-left: 5px;
   }
   
-  .list__item__info__first-column--name--span {
+  .list__wrapper__item__info__first-column--name--span {
     cursor: pointer;
     color: $primaryColor;
     font-weight: bold;
@@ -47,33 +61,33 @@
     }
   }
   
-  .list__item__info__first-column--number{
+  .list__wrapper__item__info__first-column--number{
     margin-top:10px;
   }
   
-  .list__item__info__first-column--number--span {
+  .list__wrapper__item__info__first-column--number--span {
     color: $greyTextAuthColor;
   }
 
-  .list__item__first-column--status {
+  .list__wrapper__item__first-column--status {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
   }
   
-  .list__item__info__second-column {
+  .list__wrapper__item__info__second-column {
     display: flex;
     justify-content: center;
     align-items: center;
   }
   
-  .list__item__info__second-column--buttons{
+  .list__wrapper__item__info__second-column--buttons{
     display:flex;
     height:100%;
   }
   
-  .list__item__info__second-column--buttons--main-button{
+  .list__wrapper__item__info__second-column--buttons--main-button{
     display:flex;
     justify-content: center;
     align-items: center;
@@ -87,7 +101,7 @@
     margin-right:5px;
   }
   
-  .list__item__info__second-column--buttons--main-button--span{
+  .list__wrapper__item__info__second-column--buttons--main-button--span{
     &::first-letter{
       text-transform: uppercase;
     }

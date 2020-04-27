@@ -6,7 +6,7 @@ import GroupList from "../../Lists/GroupList/GroupList";
 import PhotoList from "../../Lists/PhotoList/PhotoList";
 import PostList from "../../Lists/PostList/PostList";
 
-const ProfileDisplayItems = ({ name = "Name" }) => {
+const ProfileDisplayItems = ({ name = "grupy" }) => {
   const renderComponent = (name) => {
     switch (name.toLowerCase()) {
       case "polubione fanpage":
@@ -15,6 +15,10 @@ const ProfileDisplayItems = ({ name = "Name" }) => {
         return <FriendsList />;
       case "grupy":
         return <GroupList />;
+      case "zdjecia":
+        return <PhotoList />;
+      case "posty":
+        return <PostList />;
     }
   };
   return (
@@ -25,9 +29,7 @@ const ProfileDisplayItems = ({ name = "Name" }) => {
         </div>
         <div className="profile__display__navbar--name">{name}</div>
       </div>
-      <div className="profile__display__content">
-        {renderComponent("Grupy")}
-      </div>
+      <div className="profile__display__content">{renderComponent(name)}</div>
     </div>
   );
 };
