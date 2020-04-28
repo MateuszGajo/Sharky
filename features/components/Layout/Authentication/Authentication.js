@@ -2,9 +2,6 @@ import React from "react";
 import PrimaryButton from "../../../common/PrimaryButton/PrimaryButton";
 
 const Authentication = ({ children, type }) => {
-  {
-    console.log(type);
-  }
   return (
     <div className="container--authentication">
       <section className="authentication">

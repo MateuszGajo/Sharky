@@ -1,0 +1,14 @@
+.downbar-buttons {
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  .downbar-buttons__icon {
+    display: flex;
+    transition: 0.2s color;
+    cursor: pointer;
+  }
+  
+  .downbar-buttons__icon--amount {
+    margin-left: 5px;
+  }
