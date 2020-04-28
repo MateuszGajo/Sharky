@@ -8,6 +8,12 @@
 @import "../../features/common/AuthInput/authInput";
 @import "../../features/common/PrimaryButton/primaryButton";
 @import "../../features/common/PrimaryInput/primaryInput";
+@import "../../features/common/DownBarButtons/downBarButtons";
+@import "../../features/components/About/about";
+@import "../../features/components/Lists/list.scss";
+@import "../../features/components/Lists/FriendsList/FriendList";
+@import "../../features/components/Lists/PhotoList/photoList";
+@import "../../features/components/Lists/PostList/PostList";
 @import "../../features/components/Layout/Authentication/authentication";
 @import "../../features/components/Layout/Home/Compound/homeLayoutCompound";
 @import "../../features/components/Layout/Home/Compound/components/Messager/messager";
