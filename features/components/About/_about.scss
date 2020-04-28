@@ -1,0 +1,16 @@
+.about{
+    display:flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height:100vh;
+    width:100%;
+}
+.about__item{
+    display:flex;
+    justify-content: space-between;
+    margin:0 10px 0;
+}
+
+.about__item__second-column{
+    font-weight: bold;
+}

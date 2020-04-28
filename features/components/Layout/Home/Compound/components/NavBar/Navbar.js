@@ -10,6 +10,7 @@ import { MdPeopleOutline } from "react-icons/md";
 import { TiGroupOutline, TiNews } from "react-icons/ti";
 import { FaRegUser } from "react-icons/fa";
 import cx from "classnames";
+import Router from "next/router";
 
 const NavBar = () => {
   const navbar = useRef(null);
@@ -45,7 +46,10 @@ const NavBar = () => {
           rky
         </h1>
         <div className="home-wrapper__navbar__list">
-          <div className="home-wrapper__navbar__list__item">
+          <div
+            className="home-wrapper__navbar__list__item"
+            onClick={() => Router.push("/")}
+          >
             <div className="home-wrapper__navbar__list__item--icon">
               <AiOutlineHome />
             </div>
@@ -55,7 +59,10 @@ const NavBar = () => {
               </a>
             </div>
           </div>
-          <div className="home-wrapper__navbar__list__item">
+          <div
+            className="home-wrapper__navbar__list__item"
+            onClick={() => Router.push("/world")}
+          >
             <div className="home-wrapper__navbar__list__item--icon">
               <GiWorld />
             </div>
@@ -63,7 +70,10 @@ const NavBar = () => {
               <a className="home-wrapper__navbar__list__item--name--a">Świat</a>
             </div>
           </div>
-          <div className="home-wrapper__navbar__list__item">
+          <div
+            className="home-wrapper__navbar__list__item"
+            onClick={() => Router.push("/notifications")}
+          >
             <div className="home-wrapper__navbar__list__item--icon">
               <IoIosNotificationsOutline />
             </div>
@@ -73,7 +83,10 @@ const NavBar = () => {
               </a>
             </div>
           </div>
-          <div className="home-wrapper__navbar__list__item">
+          <div
+            className="home-wrapper__navbar__list__item"
+            onClick={() => Router.push("/messages")}
+          >
             <div className="home-wrapper__navbar__list__item--icon">
               <AiOutlineMessage />
             </div>
@@ -83,7 +96,10 @@ const NavBar = () => {
               </a>
             </div>
           </div>
-          <div className="home-wrapper__navbar__list__item">
+          <div
+            className="home-wrapper__navbar__list__item"
+            onClick={() => Router.push("/friends")}
+          >
             <div className="home-wrapper__navbar__list__item--icon">
               <MdPeopleOutline />
             </div>
@@ -93,7 +109,10 @@ const NavBar = () => {
               </a>
             </div>
           </div>
-          <div className="home-wrapper__navbar__list__item">
+          <div
+            className="home-wrapper__navbar__list__item"
+            onClick={() => Router.push("/groups")}
+          >
             <div className="home-wrapper__navbar__list__item--icon">
               <TiGroupOutline />
             </div>
@@ -101,7 +120,10 @@ const NavBar = () => {
               <a className="home-wrapper__navbar__list__item--name--a">Grupy</a>
             </div>
           </div>
-          <div className="home-wrapper__navbar__list__item">
+          <div
+            className="home-wrapper__navbar__list__item"
+            onClick={() => Router.push("/fanpages")}
+          >
             <div className="home-wrapper__navbar__list__item--icon">
               <TiNews />
             </div>
@@ -111,7 +133,10 @@ const NavBar = () => {
               </a>
             </div>
           </div>
-          <div className="home-wrapper__navbar__list__item">
+          <div
+            className="home-wrapper__navbar__list__item"
+            onClick={() => Router.push("/profile")}
+          >
             <div className="home-wrapper__navbar__list__item--icon">
               <FaRegUser />
             </div>
@@ -121,7 +146,10 @@ const NavBar = () => {
               </a>
             </div>
           </div>
-          <div className="home-wrapper__navbar__list__item">
+          <div
+            className="home-wrapper__navbar__list__item"
+            onClick={() => Router.push("/setting")}
+          >
             <div className="home-wrapper__navbar__list__item--icon">
               <AiOutlineSetting />
             </div>
