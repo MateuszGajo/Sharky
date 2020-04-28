@@ -63,3 +63,7 @@
 .hover-brightness:hover {
   filter: brightness(0.9);
 }
+
+.primary-border-left{
+  border-left:1px solid $shadowColor;
+}

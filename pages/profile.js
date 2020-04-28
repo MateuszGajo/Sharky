@@ -4,7 +4,7 @@ import ProfileInfo from "../features/components/Profile/ProfileInfo/ProfileInfo"
 import ProfileDisplayItems from "../features/components/Profile/ProfileDisplayItems/ProfileDisplayItems";
 
 const profile = () => {
-  const [isDisplayItem, setStatusOfDisplayItem] = useState(true);
+  const [chooseItem, setChooseItem] = useState("");
   const [user, setUser] = useState({
     id: 234,
     firstName: "Janek",
@@ -75,10 +75,14 @@ const profile = () => {
   return (
     <section className="profile">
       <NavBar />
-      {isDisplayItem ? (
-        <ProfileDisplayItems />
+      {chooseItem !== "" ? (
+        <ProfileDisplayItems
+          setChooseItem={setChooseItem}
+          chooseItem={chooseItem}
+        />
       ) : (
         <ProfileInfo
+          setChooseItem={setChooseItem}
           user={user}
           fanpages={fanpages}
           groups={groups}
