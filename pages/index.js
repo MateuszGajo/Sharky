@@ -1,7 +1,7 @@
 import React from "react";
-import "./styles/main.scss";
+import Fanpages from "./fanpages";
 
 const Index = () => {
-  return null;
+  return <Fanpages />;
 };
 export default Index;
