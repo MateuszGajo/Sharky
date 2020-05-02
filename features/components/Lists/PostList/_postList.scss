@@ -3,14 +3,14 @@
     flex-direction: column;
     width:600px;
     border:1px solid $shadowColor;
-    margin:$small-margin auto 0;
+    margin:$smallMargin auto 0;
 }
 
 .post-list__item__navbar{
     padding:5px;
     display:flex;
     justify-content: space-between;
-    margin-bottom:$small-margin
+    margin-bottom:$smallMargin
 }
 
 .post-list__item__navbar__user{
@@ -18,7 +18,7 @@
 }
 
 .post-list__item__content{
-    margin-bottom:$small-margin;
+    margin-bottom:$smallMargin;
     margin-left:5px;
 }
 
