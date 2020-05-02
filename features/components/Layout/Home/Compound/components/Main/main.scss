@@ -17,11 +17,11 @@
 }
 
 .home-wrapper__main__search__form--input {
-  width: calc(100% - (2 * #{$small-margin}));
+  width: calc(100% - (2 * #{$smallMargin}));
   border-radius: 30px;
   border: 1px solid $shadowColor;
   padding: 10px 30px;
-  margin: $small-margin $small-margin;
+  margin: $smallMargin $smallMargin;
   font-size: 1.3rem;
   transition: border-color 0.2s;
   &:focus {
