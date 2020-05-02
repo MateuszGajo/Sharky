@@ -22,12 +22,12 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
-  margin: $medium-margin 0;
+  margin: $mediumMargin 0;
 }
 
 .home-wrapper__navbar__list__item {
   display: flex;
-  padding: 5px $small-margin 5px 5px;
+  padding: 5px $smallMargin 5px 5px;
   border-radius: 30px;
   font-size: 1.3rem;
   transition: color 0.2s, background-color 0.2s;
@@ -42,7 +42,7 @@
 }
 
 .home-wrapper__navbar__list__item--icon {
-  margin-right: $small-margin;
+  margin-right: $smallMargin;
   display: flex;
   justify-content: center;
   align-items: center;
