@@ -36,7 +36,7 @@
 }
 
 .confrim-user-container__content__data {
-  margin-top: $medium-margin;
+  margin-top: $mediumMargin;
 }
 .confrim-user-container__content__data__form {
   display: flex;
@@ -46,5 +46,5 @@
 .confrim-user-container__content__data__form--button {
   display: flex;
   justify-content: flex-end;
-  margin: $small-margin 5% 0 0;
+  margin: $smallMargin 5% 0 0;
 }
