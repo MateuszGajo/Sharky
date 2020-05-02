@@ -68,7 +68,7 @@
 .settings-container__settings__all--title {
   position: relative;
   text-align: center;
-  padding: $small-margin 0;
+  padding: $smallMargin 0;
   border-bottom: 1px solid $shadowColor;
   background-color: #fff;
   z-index: 1;
@@ -81,7 +81,7 @@
 .settings-container__settings__display--title {
   position: relative;
   text-align: center;
-  padding: $small-margin 0;
+  padding: $smallMargin 0;
   border-bottom: 1px solid $shadowColor;
 }
 
@@ -103,13 +103,13 @@
   margin: 0 auto;
 }
 .settings-container__settings__display--form--input {
-  margin-top: $small-margin;
+  margin-top: $smallMargin;
 }
 
 .settings-container__settings__display--form--button {
   display: flex;
   justify-content: flex-end;
-  margin-top: $small-margin;
+  margin-top: $smallMargin;
 }
 
 .settings-container__settings__reminder {
@@ -117,10 +117,10 @@
 }
 
 .settings-container__settings__reminder {
-  margin-top: $medium-margin;
+  margin-top: $mediumMargin;
   text-align: center;
 }
 
 .settings-container__settings__reminder--p {
-  margin-top: $small-margin;
+  margin-top: $smallMargin;
 }
