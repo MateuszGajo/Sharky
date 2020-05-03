@@ -1,68 +1,72 @@
 import React, { useState, useRef, useEffect } from "react";
 import { MdSend } from "react-icons/md";
 import { AiOutlineClose } from "react-icons/ai";
-import Router from "../../routes";
+import { MdGroup } from "react-icons/md";
+import { IconContext } from "react-icons";
 import cx from "classnames";
+import Router from "../../routes";
+
 // import { WizzardContext } from "../../context/WizzardContext";
 
 const Messenger = ({
-  isClose = false,
+  isMessengerClose = false,
+  setStatusOfMessenger = null,
   windowMessenger = false,
   conversation = {
     id: 1212,
     type: "group",
     name: "Grupowa konwersacja",
-    photo: "group.png",
+    photo: "group",
     members: [123, 124, 125],
     messages: [
       {
         idUser: 123,
         message: "Lorem",
-        data: new Date(),
+        date: new Date(),
       },
       {
         idUser: 123,
         message: "Lorem",
-        data: new Date(),
+        date: new Date(),
       },
       {
         idUser: 123,
         message: "Lorem",
-        data: new Date(),
+        date: new Date(),
       },
       {
         idUser: 123,
         message: "Lorem",
-        data: new Date(),
+        date: new Date(),
       },
       {
         idUser: 124,
         message:
           "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam dolore, maiores tempora repellendus accusantium consectetur quasi itaque suscipit, veritatis inventore ea ad odio eaque doloremque neque voluptas ab. Quis, facere.",
-        data: new Date(),
+        date: new Date(),
       },
       {
         idUser: 124,
         message:
           "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam dolore, maiores tempora repellendus accusantium consectetur quasi itaque suscipit, veritatis inventore ea ad odio eaque doloremque neque voluptas ab. Quis, facere.",
-        data: new Date(),
+        date: new Date(),
       },
       {
         idUser: 124,
         message:
           "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam dolore, maiores tempora repellendus accusantium consectetur quasi itaque suscipit, veritatis inventore ea ad odio eaque doloremque neque voluptas ab. Quis, facere.",
-        data: new Date(),
+        date: new Date(),
       },
       {
         idUser: 123,
         message:
           "Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam doloremque ea excepturi distinctio aspernatur voluptatibus illum dignissimos necessitatibus natus officiis cumque nesciunt minus molestiae fugit, optio expedita consequatur vero ut!",
-        data: new Date(),
+        date: new Date(),
       },
       {
         idUser: 123,
         message: "Lorem",
-        data: new Date(),
+        date: new Date(),
       },
     ],
   },
@@ -91,6 +95,7 @@ const Messenger = ({
   const messageForm = useRef(null);
   const [messageContent, setMessageContent] = useState("");
   const [userInfo, setUserInfo] = useState({ id: 123 });
+
   useEffect(() => {
     messageArea.current.addEventListener("keydown", function textAreaSubmit(e) {
       if (e.keyCode == 13) {
@@ -101,25 +106,37 @@ const Messenger = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("submits");
   };
 
   return (
     <div
       className={cx("messenger", {
-        "is-close": isClose,
+        "is-close": isMessengerClose,
         "window-messanger": windowMessenger === true,
       })}
     >
       <div className="messenger__navbar">
         <div className="messenger__navbar__person">
-          <div className="messenger__navbar__person__photo">
-            <img
-              src={"/static/images/" + conversation.photo}
-              alt=""
-              className="messenger__navbar__person__photo--img"
-            />
-          </div>
+          {conversation.photo === "group" ? (
+            <div className="messenger__navbar__person__icon">
+              <IconContext.Provider
+                value={{
+                  className: "messenger__navbar__person__icon--group",
+                }}
+              >
+                <MdGroup />
+              </IconContext.Provider>
+            </div>
+          ) : (
+            <div className="messenger__navbar__person__photo">
+              <img
+                src={"/static/images/" + conversation.photo}
+                alt=""
+                className="messenger__navbar__person__photo--img"
+              />
+            </div>
+          )}
+
           <div className="messenger__navbar__person--name">
             <span className="messenger__navbar__person--name--text">
               {conversation.name}
@@ -130,7 +147,7 @@ const Messenger = ({
           <div className="messenger__navbar__icons">
             <div
               className="messenger__navbar__icons--icon"
-              onClick={() => setStatusOfMessage(false)}
+              onClick={() => setStatusOfMessenger(true)}
             >
               <AiOutlineClose />
             </div>
@@ -146,13 +163,13 @@ const Messenger = ({
 
           return item.idUser === userInfo.id ? (
             <div className="messenger__text--myself" key={index}>
-              <span className="messenger__text--myself--primary-color messganer-text-style">
+              <span className="messenger__text--myself--primary-color messenger-text-style">
                 {item.message}
               </span>
             </div>
           ) : (
             <div className="messenger__text--stranger" key={index}>
-              <span className="messenger__text--stranger--primary-background-color messganer-text-style">
+              <span className="messenger__text--stranger--primary-background-color messenger-text-style">
                 {item.message}
               </span>
               {addAuthor ? (
@@ -189,16 +206,20 @@ const Messenger = ({
           ref={messageForm}
           className="messenger__downbar__form"
         >
-          <textarea
-            ref={messageArea}
-            type="text"
-            className="messenger__downbar__form--textarea"
-            placeholder="Napisz wiadomość"
-            onChange={(e) => setMessageContent(e.target.value)}
-          />
-          <button className="messenger__downbar__form--buton">
-            <MdSend />
-          </button>
+          <div className="messenger__downbar__form__text">
+            <textarea
+              ref={messageArea}
+              type="text"
+              className="messenger__downbar__form__text--textarea"
+              placeholder="Napisz wiadomość"
+              onChange={(e) => setMessageContent(e.target.value)}
+            />
+          </div>
+          <div className="messenger__downbar__form__send">
+            <button className="messenger__downbar__form__send--buton">
+              <MdSend />
+            </button>
+          </div>
         </form>
       </div>
     </div>
