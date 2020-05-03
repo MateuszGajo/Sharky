@@ -24,6 +24,14 @@
     }
 }
 
+.messages__container__conversations__item__icon--group{
+    display:block;
+    width:60px;
+    height:60px;
+    color:grey;
+    background-color: $primaryBackgroundColor;
+}
+
 .messages__container__conversations__item__photo--img{
     display:block;
     width:60px;

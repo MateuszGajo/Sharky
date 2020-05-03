@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
+import { MdGroup } from "react-icons/md";
+import { IconContext } from "react-icons";
 import NavBar from "../features/components/Layout/Home/Compound/components/NavBar/Navbar";
 import Messenger from "../features/components/Messenger/Messenger";
 
@@ -8,7 +10,7 @@ const Messages = ({
       id: 2,
       type: "group",
       name: "Konwersacja grupowa",
-      photo: "group.png",
+      photo: "group",
       members: [123, 124, 125],
       messages: [
         {
@@ -66,7 +68,7 @@ const Messages = ({
       id: 2,
       type: "group",
       name: "Konwersacja grupowa",
-      photo: "group.png",
+      photo: "group",
       members: [123, 124, 125],
       messages: [
         {
@@ -112,6 +114,7 @@ const Messages = ({
     },
   },
 }) => {
+  const [conversation, setConversation] = useState(null);
   return (
     <section className="messages">
       <NavBar />
@@ -122,14 +125,29 @@ const Messages = ({
               <div
                 className="messages__container__conversations__item"
                 key={conversation.id}
+                onClick={() => setConversation(conversation)}
               >
-                <div className="messages__container__conversations__item__photo">
-                  <img
-                    src={"/static/images/" + conversation.photo}
-                    alt=""
-                    className="messages__container__conversations__item__photo--img"
-                  />
-                </div>
+                {conversation.photo === "group" ? (
+                  <div className="messages__container__conversations__item__icon">
+                    <IconContext.Provider
+                      value={{
+                        className:
+                          "messages__container__conversations__item__icon--group",
+                      }}
+                    >
+                      <MdGroup />
+                    </IconContext.Provider>
+                  </div>
+                ) : (
+                  <div className="messages__container__conversations__item__photo">
+                    <img
+                      src={"/static/images/" + conversation.photo}
+                      alt=""
+                      className="messages__container__conversations__item__photo--img"
+                    />
+                  </div>
+                )}
+
                 <div className="messages__container__conversations__item__content">
                   <div className="messages__container__conversations__item__content--name">
                     <span className="messages__container__conversations__item__content--name--span">
@@ -150,7 +168,11 @@ const Messages = ({
           })}
         </div>
         <div className="messages__container__display">
-          <Messenger />
+          <Messenger
+            conversation={
+              conversation === null ? conversations[0] : conversation
+            }
+          />
         </div>
       </div>
     </section>
