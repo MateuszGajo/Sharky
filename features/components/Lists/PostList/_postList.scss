@@ -46,10 +46,65 @@
     color:$primaryColor;
 }
 
-.post-list__item__navbar__data{
+.post-list__item__navbar__column-end{
     display:flex;
     justify-content: center;
     align-items: center;
+}
+
+.post-list__item__navbar__column-end__data{
+    margin-right:10px;
+}
+
+.post-list__item__navbar__column-end__setting{
+    position:relative;
+    font-size: 1.2rem;
+    cursor:pointer;
+}
+
+.post-list__item__navbar__column-end__setting--icon{
+    display:flex;
+    align-items: center;
+    font-size: 1.2rem;
+}
+
+.post-list__item__navbar__column-end__setting__collapse{
+    position:absolute;
+    top:100%;
+    right:100%;
+    background-color: white;
+    box-shadow: 0 0 2px 1px $shadowColor;
+    z-index: 1;
+}
+
+
+
+.post-list__item__navbar__column-end__setting__collapse__item{
+    display:grid;
+    grid-template-columns: 20% 80%;
+    padding:10px;
+    &:hover{
+        background-color: $secondaryBackgroundColor;
+    }
+}
+
+.post-list__item__navbar__column-end__setting__collapse__item--icon{
+    display:flex;
+    align-items: center;
+    margin-right:$smallMargin;
+    font-size: 1.5rem;
+}
+
+
+.post-list__item__navbar__column-end__setting__collapse__item--name{
+    display:flex;
+    align-items: center;
+}
+
+.post-list__item__navbar__column-end__setting__collapse__item--name--span{
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .post-list__item__photo{

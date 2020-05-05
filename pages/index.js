@@ -1,8 +1,8 @@
 import React from "react";
 import "./styles/main.scss";
-import Messenger from "../features/components/Messenger/Messenger";
+import PostList from "../features/components/Lists/PostList/PostList";
 
 const Index = () => {
-  return <Messenger />;
+  return <PostList />;
 };
 export default Index;
