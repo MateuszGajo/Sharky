@@ -1,8 +1,8 @@
 import React from "react";
 import "./styles/main.scss";
-import PostList from "../features/components/Lists/PostList/PostList";
+import SecondaryInput from "../features/common/SecondaryInput/SecondaryInput";
 
 const Index = () => {
-  return <PostList />;
+  return <SecondaryInput />;
 };
 export default Index;

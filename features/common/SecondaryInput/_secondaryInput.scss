@@ -1,0 +1,59 @@
+.secondary-input{
+    display:flex;
+    width:100%;
+}
+.secondary-input__photo{
+    display:flex;
+    align-items: center;
+}
+
+.secondary-input__photo--img{
+    
+    object-fit: cover;
+    border-radius:50%;
+}
+
+.secondary-input__photo--img--small{
+    width:25px;
+    height:25px;
+}
+
+.secondary-input__photo--img--medium{
+    width:30px;
+    height:30px;
+}
+
+.secondary-input__photo--img--large{
+    width:40px;
+    height:40px;
+}
+
+.secondary-input__text{
+    display:flex;
+    align-items: center;
+    width:100%;
+    margin-left:$smallMargin;
+}
+
+.secondary-input__text--input{
+    width:100%;
+    border:1px solid $shadowColor;
+    background-color: $secondaryBackgroundColor;
+    border-radius:20px;
+    padding:0 10px;
+}
+
+.secondary-input__text--input--small{
+    height:30px;
+    font-size: 0.8rem;
+}
+
+.secondary-input__text--input--medium{
+    height:40px;
+    font-size: 1rem;
+}
+
+.secondary-input__text--input--large{
+    height:50px;
+    font-size: 1.2rem;
+}
