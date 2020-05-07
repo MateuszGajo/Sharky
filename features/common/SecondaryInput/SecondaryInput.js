@@ -4,6 +4,8 @@ import cx from "classnames";
 const SecondaryInput = ({
   user = { photo: "profile.png" },
   size = "medium",
+  value,
+  onChange,
 }) => {
   return (
     <div className="secondary-input">
@@ -21,6 +23,8 @@ const SecondaryInput = ({
       <div className="secondary-input__text">
         <input
           type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
           className={cx("secondary-input__text--input", {
             "secondary-input__text--input--small": size === "small",
             "secondary-input__text--input--medium": size === "medium",

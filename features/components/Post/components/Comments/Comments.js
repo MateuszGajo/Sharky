@@ -4,6 +4,7 @@ import { FiMessageCircle, FiVolumeX, FiFlag } from "react-icons/fi";
 import { BsThreeDots } from "react-icons/bs";
 import { IconContext } from "react-icons";
 import Reply from "./components/Reply/Reply";
+import SecondaryInput from "../../../../common/SecondaryInput/SecondaryInput";
 
 const Comments = ({
   comments = [
@@ -29,6 +30,9 @@ const Comments = ({
       lastName: "Krakowiaczek",
       photo: "profile.png",
     },
+  },
+  user = {
+    photo: "profile.png",
   },
   focusElement,
 }) => {
@@ -87,8 +91,21 @@ const Comments = ({
       });
     });
   }, []);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("submit");
+  };
   return (
     <div className="post__item__comments__container">
+      <div className="post__item__comments__container__input">
+        <form
+          className="post__item__comments__container__input--form"
+          onSubmit={handleSubmit}
+        >
+          <SecondaryInput user={user} />
+        </form>
+      </div>
       {comments.map((comment, index) => {
         const user = users[comment.userId];
         return (

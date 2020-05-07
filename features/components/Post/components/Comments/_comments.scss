@@ -2,7 +2,9 @@
     border-top:1px solid $primaryBackgroundColor;
     padding:10px;
 }
-
+.post__item__comments__container__input{
+    margin-bottom:$smallMargin;
+}
 .post__item__comments__container__item{
     display:flex; 
 }
