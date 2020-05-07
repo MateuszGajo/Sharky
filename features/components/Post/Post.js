@@ -60,10 +60,9 @@ const Post = ({
     <div
       className="post__item"
       onClick={() => {
-        // Router.pushRoute("post", { id: post.id });
+        Router.pushRoute("post", { id: post.id });
       }}
     >
-      {console.log(focusElement)}
       <div className="post__item__navbar">
         <div className="post__item__navbar__user">
           <div className="post__item__navbar__user--photo">

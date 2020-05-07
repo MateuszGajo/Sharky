@@ -1,8 +1,7 @@
 import React from "react";
 import "./styles/main.scss";
-import PostList from "../features/components/Lists/PostList/PostList";
 
 const Index = () => {
-  return <PostList />;
+  return null;
 };
 export default Index;

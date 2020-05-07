@@ -1,8 +1,9 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IoIosHeartEmpty } from "react-icons/io";
 import { FiVolumeX, FiFlag } from "react-icons/fi";
 import { BsThreeDots } from "react-icons/bs";
 import { IconContext } from "react-icons";
+import SecondaryInput from "../../../../../../common/SecondaryInput/SecondaryInput";
 
 const Reply = ({
   replies = [
@@ -25,6 +26,8 @@ const Reply = ({
   focusIcon,
   handleClick,
 }) => {
+  const [replyText, setReplyText] = useState("");
+
   const collapseSetting = useRef(
     [...new Array(replies.length)].map(() => React.createRef())
   );
@@ -42,7 +45,6 @@ const Reply = ({
         const { current: fIcon } = focusIcon;
 
         if (fElement !== collapseItem && fElement !== null) {
-          console.log("wchodze");
           fElement.classList.add("is-close");
         }
 
@@ -57,8 +59,24 @@ const Reply = ({
       });
     });
   }, []);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
   return (
     <div className="post__item__comments__container__item__content__reply__container">
+      <div className="post__item__comments__container__item__content__reply__container__input">
+        <form
+          className="post__item__comments__container__item__content__reply__container__input--form"
+          onSubmit={handleSubmit}
+        >
+          <SecondaryInput
+            value={replyText}
+            onChange={setReplyText}
+            size="small"
+          />
+        </form>
+      </div>
       {replies.map((reply, index) => {
         const user = users[reply.userId];
         return (

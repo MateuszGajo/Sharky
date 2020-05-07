@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IoIosHeartEmpty } from "react-icons/io";
 import { FiMessageCircle, FiVolumeX, FiFlag } from "react-icons/fi";
 import { BsThreeDots } from "react-icons/bs";
@@ -37,6 +37,7 @@ const Comments = ({
   focusElement,
 }) => {
   const focusIcon = useRef(null);
+  const [commentText, setCommentText] = useState("");
 
   const replies = useRef(
     [...new Array(comments.length)].map(() => React.createRef())
@@ -94,7 +95,6 @@ const Comments = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("submit");
   };
   return (
     <div className="post__item__comments__container">
@@ -103,7 +103,11 @@ const Comments = ({
           className="post__item__comments__container__input--form"
           onSubmit={handleSubmit}
         >
-          <SecondaryInput user={user} />
+          <SecondaryInput
+            user={user}
+            value={commentText}
+            onChange={setCommentText}
+          />
         </form>
       </div>
       {comments.map((comment, index) => {
