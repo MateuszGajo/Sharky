@@ -1,7 +1,8 @@
 import React from "react";
 import "./styles/main.scss";
+import News from "./news";
 
 const Index = () => {
-  return null;
+  return <News />;
 };
 export default Index;
