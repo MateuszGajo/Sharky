@@ -5,7 +5,6 @@
     box-shadow: 0 0 3px 1px $shadowColor;
     border:1px solid $shadowColor;
     margin:$smallMargin auto 0;
-    cursor:pointer;
 }
 
 .post__item__navbar{
@@ -17,11 +16,6 @@
 
 .post__item__navbar__user{
     display:flex;
-}
-
-.post__item__content{
-    margin-bottom:$smallMargin;
-    margin-left:5px;
 }
 
 .post__item__navbar__user--photo{
@@ -109,13 +103,20 @@
 
 .post__item__navbar__column-end__setting__collapse__item--name--span{
     display: inline-block;
-    // overflow: hidden;
     white-space: nowrap;
 }
+
+.post__item__content{
+    cursor:pointer;
+    padding-bottom:$smallMargin;
+    padding-left:5px;
+}
+
 
 .post__item__photo{
     width:100%;
     margin-bottom:10px;
+    cursor:pointer;
 }
 
 .post__item__photo--img{

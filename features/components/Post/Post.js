@@ -21,7 +21,7 @@ const Post = ({
     lastName: "Kowalski",
     photo: "profile.png",
   },
-  singlePost = true,
+  singlePost = false,
   focusElement = null,
 }) => {
   const collapseSetting = useRef(null);
@@ -57,12 +57,7 @@ const Post = ({
     });
   }, []);
   return (
-    <div
-      className="post__item"
-      onClick={() => {
-        Router.pushRoute("post", { id: post.id });
-      }}
-    >
+    <div className="post__item">
       <div className="post__item__navbar">
         <div className="post__item__navbar__user">
           <div className="post__item__navbar__user--photo">
@@ -165,11 +160,21 @@ const Post = ({
           </div>
         </div>
       </div>
-      <div className="post__item__content">
+      <div
+        className="post__item__content"
+        onClick={() => {
+          Router.pushRoute("post", { id: post.id });
+        }}
+      >
         <span className="post__item__content--span">{post.content}</span>
       </div>
       {post.photo !== null && (
-        <div className="post__item__photo">
+        <div
+          className="post__item__photo"
+          onClick={() => {
+            Router.pushRoute("post", { id: post.id });
+          }}
+        >
           <img
             src={"/static/images/" + post.photo}
             alt=""
@@ -178,7 +183,7 @@ const Post = ({
         </div>
       )}
       <div className="post__item__downbar">
-        <DownBarButtons />
+        <DownBarButtons postId={post.id} />
       </div>
       <div className="post__item__comments">
         {singlePost === true ? <Comments focusElement={focusElement} /> : null}
