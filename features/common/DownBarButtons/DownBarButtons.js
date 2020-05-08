@@ -3,14 +3,21 @@ import { FiMessageCircle } from "react-icons/fi";
 import { AiOutlineShareAlt } from "react-icons/ai";
 import { IoIosHeartEmpty } from "react-icons/io";
 import cx from "classnames";
+import Router from "../../routes";
 
 const DownBarButtons = ({
   amounts = { comments: 123, posts: 123, shares: 23 },
   isLiked = false,
+  postId,
 }) => {
   return (
     <div className="downbar-buttons">
-      <div className="downbar-buttons__icon  hover-primary-color">
+      <div
+        className="downbar-buttons__icon  hover-primary-color"
+        onClick={() => {
+          Router.pushRoute("post", { id: postId });
+        }}
+      >
         <FiMessageCircle />
         <p
           data-testid="downbar-buttons-amount-of-comments"

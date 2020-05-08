@@ -36,6 +36,7 @@
     display:flex;
     width:100%;
     justify-content: space-between;
+    
 }
 
 .post__item__comments__container__item__content__item__top-bar__user-name--span{
@@ -44,6 +45,7 @@
 }
 
 .post__item__comments__container__item__content__item__top-bar__icon{
+    cursor:pointer;
     position:relative;
     visibility: hidden;
 }

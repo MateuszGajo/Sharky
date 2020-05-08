@@ -18,24 +18,29 @@ const PostList = ({
       photo: null,
     },
   ],
-  user = {
-    id: 123,
-    firstName: "Jan",
-    lastName: "Kowalski",
-    photo: "profile.png",
+  users = {
+    123: {
+      id: 123,
+      firstName: "Jan",
+      lastName: "Kowalski",
+      photo: "profile.png",
+    },
   },
 }) => {
   const focusElement = useRef(null);
   return (
     <div className="post-list">
-      {posts.map((post) => (
-        <Post
-          post={post}
-          user={user}
-          key={post.id}
-          focusElement={focusElement}
-        />
-      ))}
+      {posts.map((post) => {
+        const user = users[post.userId];
+        return (
+          <Post
+            post={post}
+            user={user}
+            key={post.id}
+            focusElement={focusElement}
+          />
+        );
+      })}
     </div>
   );
 };
