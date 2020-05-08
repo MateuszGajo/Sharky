@@ -1,7 +1,8 @@
 import React from "react";
 import HomeLayout from "../features/components/Layout/Home/HomeLayout";
-import MessageBox from "../features/common/MesssageBox/MessageBox";
+import MessageBox from "../features/common/MessageBox/MessageBox";
 import PostList from "../features/components/Lists/PostList/PostList";
+import { MdBlock } from "react-icons/md";
 
 const News = ({
   news = [
@@ -23,11 +24,23 @@ const News = ({
     },
   },
 }) => {
+  const permission = false;
   return (
     <section className="news">
       <HomeLayout>
-        <MessageBox btnSize="small" />
-        <PostList posts={news} user={users} />
+        {permission ? (
+          <MessageBox btnSize="small" />
+        ) : (
+          <div className="news__info">
+            <div className="news__info--icon">
+              <MdBlock />
+            </div>
+            <span className="news__info--span">
+              Nie masz uprawnień do zamieszczania postów tej sekcji
+            </span>
+          </div>
+        )}
+        <PostList posts={news} users={users} />
       </HomeLayout>
     </section>
   );
