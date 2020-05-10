@@ -3,17 +3,17 @@ import { WizzardContext } from "./context/WizzardContext";
 import NavBar from "./components/NavBar/Navbar";
 import Main from "./components/Main/Main";
 import FriendsBar from "./components/FriendsBar/FriendsBar";
-import Messager from "./components/Messager/Messager";
+import Messager from "./components/Messenger/Messenger";
 
 const Wizzard = ({ children }) => {
-  const [isMessage, setStatusOfMessage] = useState(false);
+  const [isMessengerClose, setStatusOfMessenger] = useState(false);
   const [searchContent, setSearchContent] = useState("");
   const [postContent, setPostContent] = useState("");
   return (
     <WizzardContext.Provider
       value={{
-        isMessage,
-        setStatusOfMessage,
+        isMessengerClose,
+        setStatusOfMessenger,
         searchContent,
         setSearchContent,
         postContent,
