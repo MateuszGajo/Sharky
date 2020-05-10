@@ -15,6 +15,10 @@
   display: none;
 }
 
+.is-visible{
+  visibility: visible;
+}
+
 .reset-margin {
   margin: 0;
 }
@@ -65,4 +69,10 @@
 
 .hover-brightness:hover {
   filter: brightness(0.9);
+}
+
+.list {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
 }

@@ -1,8 +1,8 @@
 import React from "react";
 
 export const WizzardContext = React.createContext({
-  isMessage: false,
-  setStatusOfMessage: () => {},
+  isMessengerClose: true,
+  setStatusOfMessenger: () => {},
   searchContent: "",
   setSearchContent: () => {},
   postContent: "",
