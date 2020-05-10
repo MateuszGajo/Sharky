@@ -1,9 +1,5 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 import cx from "classnames";
-<<<<<<< HEAD
-=======
-import { FaUserCircle } from "react-icons/fa";
->>>>>>> features/friends
 import { WizzardContext } from "../../context/WizzardContext";
 
 const FriendsBar = () => {
