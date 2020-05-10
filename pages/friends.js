@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import FriendList from "../features/components/Lists/FriendsList/FriendList";
+import People from "../features/components/Lists/People/People";
 
 const Friends = () => {
   const [users, setUsers] = useState({
@@ -45,7 +45,7 @@ const Friends = () => {
 
   return (
     <div className="home-wrapper__main__content__friends">
-      <FriendList listOfFriends={friendLists} users={users} />
+      <People listOfPeople={friendLists} users={users} />
     </div>
   );
 };
