@@ -9,7 +9,7 @@ const Friends = () => {
       lastName: "Kowalski",
       photo: "profile.png",
       online: false,
-      amonutsOfFriends: 20,
+      numberOfFriends: 20,
     },
     453: {
       id: 453,
@@ -17,7 +17,7 @@ const Friends = () => {
       lastName: "Kowalski",
       online: false,
       photo: "profile.png",
-      amonutsOfFriends: 20,
+      numberOfFriends: 20,
     },
     156: {
       id: 156,
@@ -25,21 +25,21 @@ const Friends = () => {
       lastName: "Kowalski",
       online: false,
       photo: "profile.png",
-      amonutsOfFriends: 20,
+      numberOfFriends: 20,
     },
   });
   const friendLists = [
     {
       userId: 234,
-      relationShip: "rodzina",
+      relation: "Rodzina",
     },
     {
       userId: 453,
-      relationShip: "przyjaciel",
+      relation: "Przyjaciel",
     },
     {
       userId: 156,
-      relationShip: "znajomy",
+      relation: "Znajomy",
     },
   ];
 
