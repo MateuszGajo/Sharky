@@ -67,3 +67,9 @@
 .hover-brightness:hover {
   filter: brightness(0.9);
 }
+
+.list {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
