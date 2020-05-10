@@ -6,12 +6,10 @@ const People = ({
     {
       userId: 123,
       relation: "Rodzina",
-      numberOfFriends: 123,
     },
     {
       userId: 124,
       relation: "Rodzina",
-      numberOfFriends: 123,
     },
   ],
   users = {
@@ -20,12 +18,14 @@ const People = ({
       firstName: "Jan",
       lastName: "Kowalski",
       photo: "profile.png",
+      numberOfFriends: 123,
     },
     124: {
       id: 124,
       firstName: "Jan",
       lastName: "Kowalski",
       photo: "profile.png",
+      numberOfFriends: 123,
     },
   },
 }) => {
@@ -37,8 +37,10 @@ const People = ({
   return (
     <div className="list">
       {listOfPeople.map((person) => {
-        const { userId, relation, numberOfFriends } = person;
-        const { id, firstName, lastName, photo } = users[userId];
+        const { userId, relation } = person;
+        const { id, firstName, lastName, photo, numberOfFriends } = users[
+          userId
+        ];
         const data = {
           ref: "profile",
           refId: id,
