@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Router from "../features/routes";
 import HomeLayout from "../features/components/Layout/Home/HomeLayout";
 import cx from "classnames";
+import "./styles/main.scss";
 
 const notifications = () => {
   const [friends, setFriends] = useState({

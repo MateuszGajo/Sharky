@@ -3,6 +3,7 @@ import Navbar from "../features/components/Layout/Home/Compound/components/NavBa
 import About from "../features/components/group/About/About";
 import Members from "../features/components/group/Members/Members";
 import Home from "../features/components/group/Home/Home";
+import "./styles/main.scss";
 
 const Group = () => {
   const [section, setSection] = useState("");

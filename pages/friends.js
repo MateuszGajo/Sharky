@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import People from "../features/components/Lists/People/People";
+import "./styles/main.scss";
 
 const Friends = () => {
   const [users, setUsers] = useState({

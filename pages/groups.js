@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import HomeLayout from "../features/components/Layout/Home/HomeLayout";
 import ListOfGroups from "../features/components/Lists/Groups/Groups";
+import "./styles/main.scss";
 
 const Groups = () => {
   const [listOfGroups, setListOfGroups] = useState([

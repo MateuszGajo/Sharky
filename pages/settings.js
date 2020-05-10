@@ -6,6 +6,7 @@ import ConfirmUser from "../features/common/PopUp/ConfirmUser/ConfirmUser";
 import "./styles/main.scss";
 import PrimaryButton from "../features/common/PrimaryButton/PrimaryButton";
 import PrimaryInput from "../features/common/PrimaryInput/PrimaryInput";
+import "./styles/main.scss";
 
 const Settings = () => {
   const [isAccountCollapsed, setStatusOfAccountCollapse] = useState(true);
