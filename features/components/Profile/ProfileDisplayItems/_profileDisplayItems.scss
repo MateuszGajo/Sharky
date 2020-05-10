@@ -21,6 +21,10 @@
 }
 
 .profile__display__content{
+    width:100%;
+}
+
+.profile__display__content--center{
     display:flex;
     justify-content: center;
 }

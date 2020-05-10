@@ -1,26 +1,26 @@
 import React from "react";
 import { IoMdArrowBack } from "react-icons/io";
 import cx from "classnames";
-import FanpageList from "../../Lists/FanpageList/FanpageList";
-import FriendsList from "../../Lists/FriendsList/FriendList";
-import GroupList from "../../Lists/GroupList/GroupList";
-import PhotoList from "../../Lists/PhotoList/PhotoList";
-import PostList from "../../Lists/PostList/PostList";
+import Fanpages from "../../Lists/Fanpages/Fanpages";
+import People from "../../Lists/People/People";
+import Groups from "../../Lists/Groups/Groups";
+import Photos from "../../Lists/Photos/Photos";
+import Posts from "../../Lists/Posts/Posts";
 import About from "../../About/About";
 
 const ProfileDisplayItems = ({ setChooseItem, chooseItem }) => {
   const renderComponent = (name) => {
     switch (name.toLowerCase()) {
       case "polubione fanpage":
-        return <FanpageList />;
+        return <Fanpages />;
       case "znajomi":
-        return <FriendsList />;
+        return <People />;
       case "grupy":
-        return <GroupList />;
+        return <Groups />;
       case "zdjęcia":
-        return <PhotoList />;
+        return <Photos />;
       case "posty":
-        return <PostList />;
+        return <Posts />;
       case "o mnie":
         return <About />;
     }
@@ -40,7 +40,12 @@ const ProfileDisplayItems = ({ setChooseItem, chooseItem }) => {
         </div>
         <div className="profile__display__navbar--name">{chooseItem}</div>
       </div>
-      <div className="profile__display__content">
+      <div
+        className={cx("profile__display__content", {
+          "profile__display__content--center":
+            chooseItem.toLowerCase() === "zdjęcia" || "posty",
+        })}
+      >
         {renderComponent(chooseItem)}
       </div>
     </div>

@@ -9,7 +9,7 @@ const FriendsBar = () => {
   const [isFriendsBarScrolling, setStatusOfFriendsBarScrolling] = useState(
     false
   );
-  const { setStatusOfMessage } = useContext(WizzardContext);
+  const { setStatusOfMessenger } = useContext(WizzardContext);
   const [users, setUser] = useState({
     234: {
       id: 234,
@@ -67,13 +67,12 @@ const FriendsBar = () => {
         <div className="home-wrapper_friends__list">
           {listOfFriends.map((item) => {
             const friend = users[item.userId];
-            console.log(friend);
             return (
               <div
                 className="home-wrapper_friends__list__item"
                 key={friend.id}
                 data-testid={`friend${friend.id}`}
-                onClick={() => setStatusOfMessage(true)}
+                onClick={() => setStatusOfMessenger(false)}
               >
                 <div className="home-wrapper_friends__list__item__user">
                   <div className="home-wrapper_friends__list__item__user__photo">
