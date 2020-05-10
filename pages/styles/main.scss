@@ -8,6 +8,7 @@
 @import "./notifications";
 @import "./profile";
 @import "./messages";
+@import "./group";
 @import "../../features/common/PopUp/ConfirmUser/confirmUser";
 @import "../../features/common/MessageBox/messageBox";
 @import "../../features/common/Search/search";
@@ -20,6 +21,7 @@
 @import "../../features/components/Profile/ProfileDisplayItems/profileDisplayItems";
 @import "../../features/components/Profile/ProfileInfo/profileInfo";
 @import "../../features/components/About/about";
+@import "../../features/components/group/About/about";
 @import "../../features/components/Messenger/messenger";
 @import "../../features/components/Lists/Card/card";
 @import "../../features/components/Lists/Photos/photos";
