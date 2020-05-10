@@ -79,6 +79,9 @@
   align-items: center;
   margin: 0 auto;
 }
+.bold-text {
+  font-weight: bold;
+}
 .brightness-reduce {
   filter: brightness(0.6);
   transition: 0.2s filter;
