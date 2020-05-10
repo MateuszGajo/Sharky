@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import HomeLayout from "../features/components/Layout/Home/HomeLayout";
-import GroupList from "../features/components/Lists/GroupList/GroupList";
+import ListOfGroups from "../features/components/Lists/Groups/Groups";
 
 const Groups = () => {
   const [listOfGroups, setListOfGroups] = useState([
@@ -26,7 +26,7 @@ const Groups = () => {
   return (
     <HomeLayout>
       <div className="home-wrapper__main__content__groups">
-        <GroupList listOfGroupst={listOfGroups} />
+        <ListOfGroups listOfGroupst={listOfGroups} />
       </div>
     </HomeLayout>
   );
