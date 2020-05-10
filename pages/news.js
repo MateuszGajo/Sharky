@@ -1,7 +1,7 @@
 import React from "react";
 import HomeLayout from "../features/components/Layout/Home/HomeLayout";
 import MessageBox from "../features/common/MessageBox/MessageBox";
-import PostList from "../features/components/Lists/PostList/PostList";
+import Posts from "../features/components/Lists/Posts/Posts";
 import { MdBlock } from "react-icons/md";
 
 const News = ({
@@ -40,7 +40,7 @@ const News = ({
             </span>
           </div>
         )}
-        <PostList posts={news} users={users} />
+        <Posts posts={news} users={users} />
       </HomeLayout>
     </section>
   );
