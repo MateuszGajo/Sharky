@@ -10,6 +10,7 @@ import { MdPeopleOutline } from "react-icons/md";
 import { TiGroupOutline, TiNews } from "react-icons/ti";
 import { FaRegUser } from "react-icons/fa";
 import cx from "classnames";
+import Router from "next/router";
 
 const NavBar = () => {
   const navbar = useRef(null);
@@ -45,76 +46,117 @@ const NavBar = () => {
           rky
         </h1>
         <div className="home-wrapper__navbar__list">
-          <div className="home-wrapper__navbar__list__item">
+          <div
+            className="home-wrapper__navbar__list__item"
+            onClick={() => Router.push("/")}
+          >
             <div className="home-wrapper__navbar__list__item--icon">
               <AiOutlineHome />
             </div>
             <div className="home-wrapper__navbar__list__item--name">
-              <a href="/home">Główna</a>
+              <a className="home-wrapper__navbar__list__item--name--a">
+                Główna
+              </a>
             </div>
           </div>
-          <div className="home-wrapper__navbar__list__item">
+          <div
+            className="home-wrapper__navbar__list__item"
+            onClick={() => Router.push("/world")}
+          >
             <div className="home-wrapper__navbar__list__item--icon">
               <GiWorld />
             </div>
             <div className="home-wrapper__navbar__list__item--name">
-              <a href="/world">Świat</a>
+              <a className="home-wrapper__navbar__list__item--name--a">Świat</a>
             </div>
           </div>
-          <div className="home-wrapper__navbar__list__item">
+          <div
+            className="home-wrapper__navbar__list__item"
+            onClick={() => Router.push("/notifications")}
+          >
             <div className="home-wrapper__navbar__list__item--icon">
               <IoIosNotificationsOutline />
             </div>
             <div className="home-wrapper__navbar__list__item--name">
-              <a href="/notifications">Powiadomienia</a>
+              <a className="home-wrapper__navbar__list__item--name--a">
+                Powiadomienia
+              </a>
             </div>
           </div>
-          <div className="home-wrapper__navbar__list__item">
+          <div
+            className="home-wrapper__navbar__list__item"
+            onClick={() => Router.push("/messages")}
+          >
             <div className="home-wrapper__navbar__list__item--icon">
               <AiOutlineMessage />
             </div>
             <div className="home-wrapper__navbar__list__item--name">
-              <a href="/messages">Wiadomośći</a>
+              <a className="home-wrapper__navbar__list__item--name--a">
+                Wiadomośći
+              </a>
             </div>
           </div>
-          <div className="home-wrapper__navbar__list__item">
+          <div
+            className="home-wrapper__navbar__list__item"
+            onClick={() => Router.push("/friends")}
+          >
             <div className="home-wrapper__navbar__list__item--icon">
               <MdPeopleOutline />
             </div>
             <div className="home-wrapper__navbar__list__item--name">
-              <a href="/friends">Znajomi</a>
+              <a className="home-wrapper__navbar__list__item--name--a">
+                Znajomi
+              </a>
             </div>
           </div>
-          <div className="home-wrapper__navbar__list__item">
+          <div
+            className="home-wrapper__navbar__list__item"
+            onClick={() => Router.push("/groups")}
+          >
             <div className="home-wrapper__navbar__list__item--icon">
               <TiGroupOutline />
             </div>
             <div className="home-wrapper__navbar__list__item--name">
-              <a href="/groups">Grupy</a>
+              <a className="home-wrapper__navbar__list__item--name--a">Grupy</a>
             </div>
           </div>
-          <div className="home-wrapper__navbar__list__item">
+          <div
+            className="home-wrapper__navbar__list__item"
+            onClick={() => Router.push("/fanpages")}
+          >
             <div className="home-wrapper__navbar__list__item--icon">
               <TiNews />
             </div>
             <div className="home-wrapper__navbar__list__item--name">
-              <a href="/fapages">Fanpage</a>
+              <a className="home-wrapper__navbar__list__item--name--a">
+                Fanpage
+              </a>
             </div>
           </div>
-          <div className="home-wrapper__navbar__list__item">
+          <div
+            className="home-wrapper__navbar__list__item"
+            onClick={() => Router.push("/profile")}
+          >
             <div className="home-wrapper__navbar__list__item--icon">
               <FaRegUser />
             </div>
             <div className="home-wrapper__navbar__list__item--name">
-              <a href="/profile">Profil</a>
+              <a className="home-wrapper__navbar__list__item--name--a">
+                Profil
+              </a>
             </div>
           </div>
-          <div className="home-wrapper__navbar__list__item">
+          <div
+            className="home-wrapper__navbar__list__item"
+            onClick={() => Router.push("/setting")}
+          >
             <div className="home-wrapper__navbar__list__item--icon">
               <AiOutlineSetting />
             </div>
             <div className="home-wrapper__navbar__list__item--name">
-              <a href="/settings">Ustawienia</a>
+              <a className="home-wrapper__navbar__list__item--name--a">
+                Ustawienia
+              </a>
             </div>
           </div>
         </div>

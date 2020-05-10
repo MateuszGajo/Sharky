@@ -16,7 +16,7 @@ const Wizzard = ({ children, onSubmit }) => {
   const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     console.log("handleSubmit");
     e.preventDefault();
     onSubmit({
@@ -25,7 +25,7 @@ const Wizzard = ({ children, onSubmit }) => {
       confirmPassword,
       firstName,
       lastName,
-      phoneNumber
+      phoneNumber,
     });
   };
   return (
@@ -46,10 +46,15 @@ const Wizzard = ({ children, onSubmit }) => {
         lastName,
         setLastName,
         phoneNumber,
-        setPhoneNumber
+        setPhoneNumber,
       }}
     >
-      <form onSubmit={handleSubmit}>{children}</form>
+      <form
+        onSubmit={handleSubmit}
+        className="authentication__form__wrapper__form"
+      >
+        {children}
+      </form>
     </WizzardContext.Provider>
   );
 };

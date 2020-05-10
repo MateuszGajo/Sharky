@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
-import { WizzardContext } from "../../context/WizzardContext";
 import cx from "classnames";
+import { WizzardContext } from "../../context/WizzardContext";
+import AuthInput from "../../../../common/AuthInput/AuthInput";
 
 const Credentials = () => {
   const {
@@ -14,43 +15,32 @@ const Credentials = () => {
   return (
     <div className="authentication__form__wrapper__inputs__wrapper">
       <p className="input-error">Something go wrong</p>
-      <div className={cx("input-form", { "reset-margin": "passwordError" })}>
-        <input
-          className="input-form--text"
-          type="text"
-          data-testid="email-input"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <h2 className="input-form--placeholder">Email</h2>
-      </div>
+      <AuthInput
+        value={email}
+        onChange={setEmail}
+        title="E-mail"
+        withOutMargin={true}
+        size="x-large"
+        //withoutMargin should be true only on password Error
+      />
       <p className="input-error">Something go wrong</p>
-      <div
-        className={cx("input-form", { "reset-margin": "confirmPasswordError" })}
-      >
-        <input
-          className="input-form--text"
-          type="text"
-          data-testid="password-input"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <h2 className="input-form--placeholder">Hasło</h2>
-      </div>
+      <AuthInput
+        type="password"
+        value={password}
+        onChange={setPassword}
+        title="Hasło"
+        withOutMargin={true}
+        size="x-large"
+        //withoutMargin should be true only on confirm password Error
+      />
       <p className="input-error">Something go wrong</p>
-      <div className="input-form">
-        <input
-          className="input-form--text"
-          type="text"
-          data-testid="confirmpassword-input"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          required
-        />
-        <h2 className="input-form--placeholder">Powtórz hasło</h2>
-      </div>
+      <AuthInput
+        type="password"
+        value={confirmPassword}
+        onChange={setConfirmPassword}
+        title="Powtórz hasło"
+        size="x-large"
+      />
     </div>
   );
 };

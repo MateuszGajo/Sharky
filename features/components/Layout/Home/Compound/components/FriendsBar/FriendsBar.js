@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 import cx from "classnames";
-import { FaUserCircle } from "react-icons/fa";
 import { WizzardContext } from "../../context/WizzardContext";
 
 const FriendsBar = () => {
@@ -9,11 +8,33 @@ const FriendsBar = () => {
   const [isFriendsBarScrolling, setStatusOfFriendsBarScrolling] = useState(
     false
   );
-  const { setStatusOfMessage } = useContext(WizzardContext);
-  const friendLists = [
-    { firstName: "Janek", lastName: "Kowalski", online: true, id: 1 },
-    { firstName: "Janek", lastName: "Kowalski", online: false, id: 2 },
-  ];
+  const { setStatusOfMessenger } = useContext(WizzardContext);
+  const [users, setUser] = useState({
+    234: {
+      id: 234,
+      firstName: "Zbigniew",
+      lastName: "Niedziółka-Domański",
+      online: true,
+      photo: "profile.png",
+    },
+    453: {
+      id: 453,
+      firstName: "Witek",
+      lastName: "Zbigniewski",
+      online: false,
+      photo: "profile.png",
+    },
+  });
+  const [listOfFriends, setListOfFirends] = useState([
+    {
+      userId: 234,
+      relationShip: "friend",
+    },
+    {
+      userId: 453,
+      relationShip: "family",
+    },
+  ]);
 
   let timeout = {
     friendsBar: null,
@@ -43,28 +64,34 @@ const FriendsBar = () => {
         })}
       >
         <div className="home-wrapper_friends__list">
-          {friendLists.map((friend) => {
+          {listOfFriends.map((item) => {
+            const friend = users[item.userId];
             return (
               <div
                 className="home-wrapper_friends__list__item"
                 key={friend.id}
                 data-testid={`friend${friend.id}`}
-                onClick={() => setStatusOfMessage(true)}
+                onClick={() => setStatusOfMessenger(false)}
               >
+                <div className="home-wrapper_friends__list__item__user">
+                  <div className="home-wrapper_friends__list__item__user__photo">
+                    <img
+                      src={"/static/images/" + friend.photo}
+                      alt=""
+                      className="home-wrapper_friends__list__item__user__photo--img"
+                    />
+                  </div>
+                  <div className="home-wrapper_friends__list__item__user--name">
+                    <span className="home-wrapper_friends__list__item__user--name--span">
+                      {friend.firstName} {friend.lastName}
+                    </span>
+                  </div>
+                </div>
                 {friend.online ? (
-                  <div className="home-wrapper_friends__list__item--online"></div>
+                  <div className="home-wrapper_friends__list__item--online">
+                    <div className="home-wrapper_friends__list__item--online--circle"></div>
+                  </div>
                 ) : null}
-                <div
-                  className={cx("home-wrapper_friends__list__item--icon", {
-                    "home-wrapper_friends__list__item--icon--active":
-                      friend.online,
-                  })}
-                >
-                  <FaUserCircle />
-                </div>
-                <div className="home-wrapper_friends__list__item--name">
-                  {friend.firstName} {friend.lastName}
-                </div>
               </div>
             );
           })}

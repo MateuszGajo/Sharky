@@ -24,8 +24,8 @@
 }
 
 .authentication__form--brand {
-  margin-top: $small-margin;
-  margin-left: $small-margin;
+  margin-top: $smallMargin;
+  margin-left: $smallMargin;
   font-size: 1.8rem;
 }
 .authentication__form--brand--primaryColor {
@@ -58,7 +58,7 @@
   flex-grow: 1;
   height: 100%;
   width: 100%;
-  margin-top: $medium-margin;
+  margin-top: $mediumMargin;
 }
 
 .authentication__text {
@@ -94,7 +94,7 @@
 }
 
 .authentication__text__wrapper--description {
-  margin-top: $large-margin;
+  margin-top: $largeMargin;
   font-size: 1.2rem;
   text-align: center;
 }
@@ -104,7 +104,7 @@
   border-radius: 40px;
   width: 200px;
   height: 50px;
-  margin: $large-margin auto 0;
+  margin: $largeMargin auto 0;
   color: white;
   font-weight: bold;
   font-size: 1.2rem;

@@ -3,11 +3,11 @@ import { render, fireEvent } from "@testing-library/react";
 import * as MultiStepForm from "../MultiStepForm";
 import { WizzardContext } from "../context/WizzardContext";
 
-it("does auth pagination buttons work correctly", () => {
+it("do auth pagination buttons work correct", () => {
   const mockedContext = {
     page: 2,
     setPage: jest.fn(),
-    numberOfPages: 3
+    numberOfPages: 3,
   };
   const { getByTestId } = render(
     <WizzardContext.Provider value={mockedContext}>

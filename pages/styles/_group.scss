@@ -1,0 +1,33 @@
+.group{
+    display:flex;
+}
+
+.group__container{
+    display:flex;
+    flex-grow:1;
+}
+
+.group__container__content{
+    flex-grow:1;
+}
+
+.group__container__side-bar{
+    border-left:1px solid $shadowColor;
+    min-width:250px;
+}
+
+.group__container__side-bar__title{
+    text-align: center;
+    padding:30px 0 50px;
+}
+
+.group__container__side-bar__item{
+    border-bottom:1px solid $shadowColor;
+    padding:25px 30px;
+    font-size: 1.2rem;
+    cursor:pointer;
+    color:background-color 0.2s;
+    &:hover{
+        background-color: $secondaryBackgroundColor;
+    }
+}

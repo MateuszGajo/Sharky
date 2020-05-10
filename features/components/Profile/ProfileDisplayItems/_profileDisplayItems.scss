@@ -1,0 +1,30 @@
+.profile__display{
+    flex-grow:1;
+}
+.profile__display__navbar{
+    display:flex;
+    width:100%;
+    border-bottom:1px solid $shadowColor;
+    padding:10px 0 10px 10px;
+}
+
+.profile__display__navbar--icon{
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    cursor:pointer;
+}
+
+.profile__display__navbar--name{
+    margin-left:$smallMargin;
+    font-size: 1.4rem;
+}
+
+.profile__display__content{
+    width:100%;
+}
+
+.profile__display__content--center{
+    display:flex;
+    justify-content: center;
+}

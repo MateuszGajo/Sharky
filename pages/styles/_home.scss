@@ -2,7 +2,7 @@
 
 .home-wrapper__main__content__post {
   width: 90%;
-  margin: $small-margin auto 0;
+  margin: $smallMargin auto 0;
   padding: 10px;
   background-color: #fff;
   box-shadow: 0 0 3px 1px $primaryBackgroundColor;
@@ -18,7 +18,7 @@
   justify-content: center;
   align-items: center;
   font-size: 2rem;
-  margin-right: $small-margin;
+  margin-right: $smallMargin;
   color: $shadowColor;
 }
 
@@ -45,7 +45,7 @@
 }
 
 .home-wrapper__main__content__post__icons {
-  margin-top: $small-margin;
+  margin-top: $smallMargin;
   display: flex;
   justify-content: space-around;
 }

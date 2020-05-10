@@ -20,7 +20,7 @@
 }
 
 .authentication__form__wrapper--text {
-  margin-top: $medium-margin;
+  margin-top: $mediumMargin;
   color: $greyTextAuthColor;
 }
 
@@ -34,16 +34,21 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  margin-top: $small-margin;
+  margin-top: $smallMargin;
 }
 .authentication__form__wrapper__inputs__wrapper__helpers--remberme {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-right: $smallMargin;
 }
 
 .authentication__form__wrapper__inputs__wrapper__helpers--remberme--text {
   font-weight: bold;
   font-size: 1.1rem;
   cursor: pointer;
+}
+
+.authentication__form__wrapper__inputs__wrapper--button {
+  margin-top: 10px;
 }

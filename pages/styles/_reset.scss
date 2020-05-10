@@ -22,6 +22,10 @@ textarea:focus {
   outline: none;
 }
 
+form {
+  width: 100%;
+}
+
 .primary-scroll::-webkit-scrollbar {
   width: 0px;
 }

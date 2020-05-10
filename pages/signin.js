@@ -1,12 +1,16 @@
 import React, { useState } from "react";
-import Authentication from "../features/components/Layout/Authentication/Authentication/Authentication";
+import Authentication from "../features/components/Layout/Authentication/Authentication";
 import { FaGooglePlusG, FaFacebookF } from "react-icons/fa";
 import { FiGithub } from "react-icons/fi";
+import Checkbox from "../features/common/Checkbox/Checkbox";
+import PrimaryButton from "../features/common/PrimaryButton/PrimaryButton";
+import AuthInput from "../features/common/AuthInput/AuthInput";
 import "./styles/main.scss";
 
 const SignIn = ({ onSubmit }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isRembermeChecked, setStatusOfRemberme] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -37,55 +41,35 @@ const SignIn = ({ onSubmit }) => {
             className="authentication__form__wrapper__inputs__wrapper"
             onSubmit={handleSubmit}
           >
-            <div className="input-form">
-              <input
-                className="input-form--text"
-                type="text"
-                data-testid="input-email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-              <h2 className="input-form--placeholder">E-mail</h2>
-            </div>
+            <AuthInput
+              value={email}
+              onChange={setEmail}
+              title="E-mail"
+              size="x-large"
+            />
+            <AuthInput
+              type="password"
+              value={password}
+              onChange={setPassword}
+              title="Hasło"
+              size="x-large"
+            />
 
-            <div className="input-form">
-              <input
-                className="input-form--text"
-                type="password"
-                data-testid="input-password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-              <h2 className="input-form--placeholder">Hasło</h2>
-            </div>
             <div className="authentication__form__wrapper__inputs__wrapper__helpers">
               <div className="authentication__form__wrapper__inputs__wrapper__helpers--remberme">
-                <div className="checkbox--icon">
-                  <input
-                    className="checkbox--icon--input"
-                    type="checkbox"
-                    value="None"
-                    id="remeberme"
-                    name="check"
-                  />
-                  <label
-                    className="checkbox--icon--label"
-                    htmlFor="remeberme"
-                  ></label>
-                </div>
-
-                <span className="checkbox--text">Zapamiętaj mnie</span>
+                <Checkbox
+                  value={isRembermeChecked}
+                  onChange={setStatusOfRemberme}
+                />
               </div>
 
               <span className="authentication__form__wrapper__inputs__wrapper__helpers--remberme--text">
                 Przypomnij hasło
               </span>
             </div>
-            <button className="button--auth" data-testid="button-auth">
-              Zaloguj
-            </button>
+            <div className="authentication__form__wrapper__inputs__wrapper--button">
+              <PrimaryButton value="Zaloguj" size="large" />
+            </div>
           </form>
         </div>
       </>

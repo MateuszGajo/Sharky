@@ -1,0 +1,26 @@
+.photo-list{
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width:700px;
+}
+
+.photo-list__item{
+    margin-top:$smallMargin;
+}
+
+.photo-list__item:nth-child(3n) .photo-list__item--img{
+    width:650px;
+    height:400px;
+    object-fit: cover;
+}
+
+
+.photo-list__item--img{
+    display:block;
+    height:300px;
+    width:300px;
+    object-fit: cover;
+}
+
+
