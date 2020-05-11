@@ -18,6 +18,7 @@ const SecondaryInput = ({
             "secondary-input__photo--img--medium": size === "medium",
             "secondary-input__photo--img--large": size === "large",
           })}
+          data-testid="secondary-input-photo-img"
         />
       </div>
       <div className="secondary-input__text">
@@ -30,6 +31,7 @@ const SecondaryInput = ({
             "secondary-input__text--input--medium": size === "medium",
             "secondary-input__text--input--large": size === "large",
           })}
+          data-testid="secondary-input-field"
         />
       </div>
     </div>

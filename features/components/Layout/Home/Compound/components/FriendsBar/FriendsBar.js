@@ -65,13 +65,13 @@ const FriendsBar = () => {
         })}
       >
         <div className="home-wrapper_friends__list">
-          {listOfFriends.map((item) => {
+          {listOfFriends.map((item, index) => {
             const friend = users[item.userId];
             return (
               <div
                 className="home-wrapper_friends__list__item"
                 key={friend.id}
-                data-testid={`friend${friend.id}`}
+                data-testid={`friend${index}`}
                 onClick={() => setStatusOfMessenger(false)}
               >
                 <div className="home-wrapper_friends__list__item__user">
