@@ -1,5 +1,6 @@
 @import "./variables";
 @import "./reset";
+@import "./fanpage";
 @import "../../features/common/PopUp/ConfirmUser/confirmUser";
 @import "../../features/common/MessageBox/messageBox";
 @import "../../features/common/Search/search";
@@ -10,6 +11,8 @@
 @import "../../features/common/SecondaryInput/secondaryInput";
 @import "../../features/common/DownBarButtons/downBarButtons";
 @import "../../features/components/About/about";
+@import "../../features/components/Fanpage/About/about";
+@import "../../features/components/Fanpage/Members/members";
 @import "../../features/components/Messenger/messenger";
 @import "../../features/components/Lists/Card/card";
 @import "../../features/components/Lists/Photos/photos";
