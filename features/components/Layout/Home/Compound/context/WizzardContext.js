@@ -7,4 +7,6 @@ export const WizzardContext = React.createContext({
   setSearchContent: () => {},
   postContent: "",
   setPostContent: () => {},
+  isNavOpen: false,
+  setStatusOfNav: () => {},
 });
