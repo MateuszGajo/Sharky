@@ -24,7 +24,6 @@ const authentication__container = ({ children, type }) => {
                   {type === "signin"
                     ? "Zaloguj się"
                     : type === "signup" && "Wypełnij formularz"}
-                  dasdassa
                 </span>
               </div>
               {children}
