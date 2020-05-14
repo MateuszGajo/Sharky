@@ -14,16 +14,21 @@ const authentication__container = ({ children, type }) => {
               rky
             </span>
           </h1>
-          <span
-            className="authentication__container__form--title"
-            data-testid="title-auth"
-          >
-            {type === "signin"
-              ? "Zaloguj się"
-              : type === "signup" && "Wypełnij formularz"}
-          </span>
           <div className="authentication__container__form__wrapper">
-            {children}
+            <div className="authentication__container__form__wrapper__content">
+              <div className="authentication__container__form__wrapper__content__title">
+                <span
+                  className="authentication__container__form__wrapper__content__title--span"
+                  data-testid="title-auth"
+                >
+                  {type === "signin"
+                    ? "Zaloguj się"
+                    : type === "signup" && "Wypełnij formularz"}
+                  dasdassa
+                </span>
+              </div>
+              {children}
+            </div>
           </div>
         </div>
         <div className="authentication__container__text">
