@@ -9,15 +9,7 @@ const MessageBox = ({
   btnSize = "medium",
 }) => {
   return (
-    <div
-      data-testid="message-box"
-      className={cx("message-box", {
-        "message-box--x-large": size === "x-large",
-        "message-box--large": size === "large",
-        "message-box--medium": size === "medium",
-        "message-box--small": size === "small",
-      })}
-    >
+    <div data-testid="message-box" className="message-box">
       <div className="message-box__navbar">Dodaj post</div>
       <div className="message-box__content">
         <textarea
@@ -29,7 +21,7 @@ const MessageBox = ({
           onChange={(e) => onChange(e.target.value)}
         />
         <div className="message-box__content--button">
-          <PrimaryButton value="Opublikuj" size={btnSize} />
+          <PrimaryButton value="Opublikuj" size="large" />
         </div>
       </div>
     </div>
