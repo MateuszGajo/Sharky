@@ -1,39 +1,45 @@
 import React from "react";
 import PrimaryButton from "../../../common/PrimaryButton/PrimaryButton";
 
-const Authentication = ({ children, type }) => {
+const authentication__container = ({ children, type }) => {
   return (
-    <div className="container--authentication">
-      <section className="authentication">
-        <div className="authentication__form">
-          <h1 className="authentication__form--brand">
-            <span className="authentication__form--brand--primaryColor">
+    <section className="authentication">
+      <div className="authentication__container">
+        <div className="authentication__container__form">
+          <h1 className="authentication__container__form__brand">
+            <span className="authentication__container__form__brand--primaryColor">
               Sha
             </span>
-            rky
+            <span className="authentication__container__form__brand--span">
+              rky
+            </span>
           </h1>
           <span
-            className="authentication__form--title"
+            className="authentication__container__form--title"
             data-testid="title-auth"
           >
             {type === "signin"
               ? "Zaloguj się"
               : type === "signup" && "Wypełnij formularz"}
           </span>
-          <div className="authentication__form__wrapper">{children}</div>
+          <div className="authentication__container__form__wrapper">
+            {children}
+          </div>
         </div>
-        <div className="authentication__text">
-          <div className="authentication__text__wrapper">
-            <h1 className="authentication__text__wrapper--title">Witaj</h1>
+        <div className="authentication__container__text">
+          <div className="authentication__container__text__wrapper">
+            <h1 className="authentication__container__text__wrapper--title">
+              Witaj
+            </h1>
             <p
-              className="authentication__text__wrapper--description"
+              className="authentication__container__text__wrapper--description"
               data-testid="welcome-text"
             >
               {type === "signin"
                 ? "Wypełnij formularz i dołącz do naszej społecznośći"
                 : type === "signup" && "Jeżeli posiadasz już konto"}
             </p>
-            <div className="authentication__text__wrapper--button">
+            <div className="authentication__container__text__wrapper--button">
               <PrimaryButton
                 border={true}
                 value={
@@ -48,9 +54,9 @@ const Authentication = ({ children, type }) => {
             </div>
           </div>
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
   );
 };
 
-export default Authentication;
+export default authentication__container;

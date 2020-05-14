@@ -21,11 +21,11 @@ const Post = ({
     lastName: "Kowalski",
     photo: "profile.png",
   },
-  singlePost = false,
-  focusElement = null,
+  singlePost = true,
+  focusElement: fElement = null,
 }) => {
   const collapseSetting = useRef(null);
-
+  const focusElement = useRef(fElement?.current || null);
   const dtf = new Intl.DateTimeFormat("pl", {
     year: "numeric",
     month: "long",
@@ -42,10 +42,12 @@ const Post = ({
   };
 
   useEffect(() => {
+    console.log(collapseSetting);
     collapseSetting.current.addEventListener("click", () => {
       const collapseItem = collapseSetting.current.querySelector(
         ".post__item__navbar__column-end__setting__collapse"
       );
+      console.log(focusElement);
       const { current: lastItem } = focusElement;
       if (lastItem !== collapseItem && lastItem !== null) {
         lastItem.classList.add("is-close");
@@ -68,26 +70,36 @@ const Post = ({
             />
           </div>
           <div className="post__item__navbar__user--name">
-            <span className="post__item__navbar__user--name--span">
+            <span
+              className="post__item__navbar__user--name--span"
+              data-testid="post-username"
+            >
               {user.firstName + " " + user.lastName}
             </span>
           </div>
         </div>
         <div className="post__item__navbar__column-end">
           <div className="post__item__navbar__column-end__data">
-            <span className="post__item__navbar__column-end__data--span">
+            <span
+              className="post__item__navbar__column-end__data--span"
+              data-testid="post-date"
+            >
               {da} {mo} {ye}
             </span>
           </div>
           <div
             className="post__item__navbar__column-end__setting"
+            data-testid="post-setting-icon"
             ref={collapseSetting}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="post__item__navbar__column-end__setting--icon">
               <BsThreeDots />
             </div>
-            <div className="post__item__navbar__column-end__setting__collapse is-close">
+            <div
+              className="post__item__navbar__column-end__setting__collapse is-close"
+              data-testid="post-setting"
+            >
               <div className="post__item__navbar__column-end__setting__collapse__item">
                 <div className="post__item__navbar__column-end__setting__collapse__item--icon">
                   <IconContext.Provider
@@ -166,11 +178,14 @@ const Post = ({
           Router.pushRoute("post", { id: post.id });
         }}
       >
-        <span className="post__item__content--span">{post.content}</span>
+        <span className="post__item__content--span" data-testid="post-content">
+          {post.content}
+        </span>
       </div>
-      {post.photo !== null && (
+      {post?.photo && (
         <div
           className="post__item__photo"
+          data-testid="post-photo"
           onClick={() => {
             Router.pushRoute("post", { id: post.id });
           }}
@@ -185,7 +200,7 @@ const Post = ({
       <div className="post__item__downbar">
         <DownBarButtons postId={post.id} />
       </div>
-      <div className="post__item__comments">
+      <div className="post__item__comments" data-testid="post-comments">
         {singlePost === true ? <Comments focusElement={focusElement} /> : null}
       </div>
     </div>

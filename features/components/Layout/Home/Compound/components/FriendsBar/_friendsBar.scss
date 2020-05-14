@@ -1,4 +1,8 @@
-.home-wrapper__friends {
+.home__wrapper--medium{
+  width:250px;
+}
+
+.home__wrapper__friends {
   direction: rtl;
   position: fixed;
   width: 250px;
@@ -7,7 +11,7 @@
   overflow: overlay;
 }
 
-.home-wrapper_friends__list {
+.home_friends__list {
   direction: ltr;
   display: flex;
   flex-direction: column;
@@ -16,7 +20,7 @@
   margin: 5px 0;
 }
 
-.home-wrapper_friends__list__item {
+.home_friends__list__item {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -30,42 +34,42 @@
   }
 }
 
-.home-wrapper_friends__list__item--online {
+.home_friends__list__item--online {
   margin-left: $smallMargin;
   margin-right: 10px;
 }
 
-.home-wrapper_friends__list__item--online--circle {
+.home_friends__list__item--online--circle {
   width: 5px;
   height: 5px;
   border-radius: 50%;
   background-color: #23b038;
 }
 
-.home-wrapper_friends__list__item__user {
+.home_friends__list__item__user {
   display: flex;
 }
 
-.home-wrapper_friends__list__item__user__photo {
+.home_friends__list__item__user__photo {
   display: block;
   margin-right: 10px;
 }
 
-.home-wrapper_friends__list__item__user__photo--img {
+.home_friends__list__item__user__photo--img {
   display: block;
   height:30px;
   width:30px;
   border-radius: 50%;
 }
 
-.home-wrapper_friends__list__item__user--name {
+.home_friends__list__item__user--name {
   display: flex;
   align-items: center;
   overflow: hidden;
   font-size: 0.9rem;
 }
 
-.home-wrapper_friends__list__item__user--name--span {
+.home_friends__list__item__user--name--span {
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 1;
@@ -73,4 +77,21 @@
   word-wrap: break-word;
   word-break: break-all;
   overflow: hidden;
+}
+
+@media(max-width:1365px){
+  .home__wrapper--medium{
+    width:200px;
+  }
+  
+  .home__wrapper__friends{
+    width:200px;
+  }
+}
+
+@media(max-width:1023px){
+  .home__wrapper--medium{
+    display:none;
+  }
+  
 }
