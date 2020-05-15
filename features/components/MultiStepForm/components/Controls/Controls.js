@@ -38,12 +38,13 @@ const Controls = () => {
           <GoArrowRight />
         </button>
       </div>
-      <div className="authentication__form__wrapper__controls--submit-buton">
-        <PrimaryButton
-          isDisable={page !== numberOfPages}
-          value="Zarejstruj"
-          size="large"
-        />
+      <div
+        className={cx("authentication__form__wrapper__controls--submit-buton", {
+          "authentication__form__wrapper__controls--hide-button":
+            page !== numberOfPages,
+        })}
+      >
+        <PrimaryButton value="Zarejstruj" size="large" />
       </div>
     </div>
   );

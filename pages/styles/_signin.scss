@@ -1,7 +1,8 @@
 .authentication__form__wrapper__icons {
   display: flex;
   justify-content: space-between;
-  width: 30%;
+  width: 100%;
+  margin-top:$mediumMargin;
 }
 .authentication__form__wrapper__icons--icon {
   display: flex;
@@ -20,7 +21,7 @@
 }
 
 .authentication__form__wrapper--text {
-  margin-top: $mediumMargin;
+  margin: $smallMargin 0;
   color: $greyTextAuthColor;
 }
 
