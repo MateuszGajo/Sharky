@@ -3,6 +3,7 @@ import { IoIosHeartEmpty } from "react-icons/io";
 import { FiVolumeX, FiFlag } from "react-icons/fi";
 import { BsThreeDots } from "react-icons/bs";
 import { IconContext } from "react-icons";
+import useTranslation from "next-translate/useTranslation";
 import SecondaryInput from "../../../../../../common/SecondaryInput/SecondaryInput";
 
 const Reply = ({
@@ -31,6 +32,11 @@ const Reply = ({
   const collapseSetting = useRef(
     [...new Array(replies.length)].map(() => React.createRef())
   );
+
+  const { t } = useTranslation();
+
+  const reportComment = t("component:post.comments.settings.report");
+  const muteUser = t("component:post.comments.settings.mute");
 
   useEffect(() => {
     collapseSetting.current.forEach((item) => {
@@ -118,7 +124,7 @@ const Reply = ({
                       </div>
                       <div className="post__item__comments__container__item__content__reply__container__item__content__top-bar__icon__collapse__item--name">
                         <span className="post__item__comments__container__item__content__reply__container__item__content__top-bar__icon__collapse__item--name--span">
-                          Wycisz użytkownika
+                          {muteUser}
                         </span>
                       </div>
                     </div>
@@ -135,7 +141,7 @@ const Reply = ({
                       </div>
                       <div className="post__item__comments__container__item__content__reply__container__item__content__top-bar__icon__collapse__item--name">
                         <span className="post__item__comments__container__item__content__reply__container__item__content__top-bar__icon__collapse__item--name--span">
-                          Zgłoś użytkownika
+                          {reportComment}
                         </span>
                       </div>
                     </div>

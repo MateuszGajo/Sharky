@@ -1,8 +1,9 @@
-import React, { useRef, useEffect, useState } from "react";
-import { BsEyeSlash, BsVolumeMute, BsFlag, BsThreeDots } from "react-icons/bs";
+import React, { useRef, useEffect } from "react";
+import { BsEyeSlash, BsThreeDots } from "react-icons/bs";
 import { FiVolumeX, FiFlag } from "react-icons/fi";
 import { MdBlock } from "react-icons/md";
 import { IconContext } from "react-icons";
+import useTranslation from "next-translate/useTranslation";
 import DownBarButtons from "../../common/DownBarButtons/DownBarButtons";
 import Comments from "./components/Comments/Comments";
 import Router from "../../routes";
@@ -24,9 +25,11 @@ const Post = ({
   singlePost = true,
   focusElement: fElement = null,
 }) => {
+  const { t, lang } = useTranslation();
+
   const collapseSetting = useRef(null);
   const focusElement = useRef(fElement?.current || null);
-  const dtf = new Intl.DateTimeFormat("pl", {
+  const dtf = new Intl.DateTimeFormat(lang, {
     year: "numeric",
     month: "long",
     day: "2-digit",
@@ -34,6 +37,11 @@ const Post = ({
   const [{ value: da }, , { value: mo }, , { value: ye }] = dtf.formatToParts(
     post.date
   );
+
+  const hiddenPost = t("component:post.settings.hidden");
+  const reportPost = t("component:post.settings.report");
+  const muteUser = t("component:post.settings.mute");
+  const blockUser = t("component:post.settings.block");
 
   const clickHandle = (e) => {
     if (!focusElement.current.classList.contains("is-close"))
@@ -113,7 +121,7 @@ const Post = ({
                 </div>
                 <div className="post__item__navbar__column-end__setting__collapse__item--name">
                   <span className="post__item__navbar__column-end__setting__collapse__item--name--span">
-                    Ukryj post
+                    {hiddenPost}
                   </span>
                 </div>
               </div>
@@ -130,7 +138,7 @@ const Post = ({
                 </div>
                 <div className="post__item__navbar__column-end__setting__collapse__item--name">
                   <span className="post__item__navbar__column-end__setting__collapse__item--name--span">
-                    Wycisz użytkownika
+                    {muteUser}
                   </span>
                 </div>
               </div>
@@ -147,7 +155,7 @@ const Post = ({
                 </div>
                 <div className="post__item__navbar__column-end__setting__collapse__item--name">
                   <span className="post__item__navbar__column-end__setting__collapse__item--name--span">
-                    Zgłoś post
+                    {reportPost}
                   </span>
                 </div>
               </div>
@@ -164,7 +172,7 @@ const Post = ({
                 </div>
                 <div className="post__item__navbar__column-end__setting__collapse__item--name">
                   <span className="post__item__navbar__column-end__setting__collapse__item--name--span">
-                    Zablokuj użytkownika
+                    {blockUser}
                   </span>
                 </div>
               </div>

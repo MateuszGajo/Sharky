@@ -1,7 +1,20 @@
 import React from "react";
 import PrimaryButton from "../../../common/PrimaryButton/PrimaryButton";
+import useTranslation from "next-translate/useTranslation";
 
 const authentication__container = ({ children, type }) => {
+  const { t } = useTranslation();
+
+  const welcomeText = t("component:layout.authentication.welcome-text");
+  const signInDescription = t(
+    "component:layout.authentication.sign-in.description"
+  );
+  const signInButtonText = t("component:layout.authentication.sign-in.button");
+  const signUpDescription = t(
+    "component:layout.authentication.sign-up.description"
+  );
+  const signUpButtonText = t("component:layout.authentication.sign-up.button");
+
   return (
     <section className="authentication">
       <div className="authentication__container">
@@ -33,23 +46,23 @@ const authentication__container = ({ children, type }) => {
         <div className="authentication__container__text">
           <div className="authentication__container__text__wrapper">
             <h1 className="authentication__container__text__wrapper--title">
-              Witaj
+              {welcomeText}
             </h1>
             <p
               className="authentication__container__text__wrapper--description"
               data-testid="welcome-text"
             >
               {type === "signin"
-                ? "Wypełnij formularz i dołącz do naszej społecznośći"
-                : type === "signup" && "Jeżeli posiadasz już konto"}
+                ? signInDescription
+                : type === "signup" && signUpDescription}
             </p>
             <div className="authentication__container__text__wrapper--button">
               <PrimaryButton
                 border={true}
                 value={
                   type === "signin"
-                    ? "Rejstracja"
-                    : type === "signup" && "Zaloguj się"
+                    ? signInButtonText
+                    : type === "signup" && signUpButtonText
                 }
                 link={
                   type === "signin" ? "/signup" : type === "signup" && "/signin"

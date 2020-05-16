@@ -12,12 +12,25 @@ import { FaRegUser } from "react-icons/fa";
 import cx from "classnames";
 import Router from "next/router";
 import { WizzardContext } from "../../context/WizzardContext";
+import useTranslation from "next-translate/useTranslation";
 
 const NavBar = () => {
   const { isNavOpen, setStatusOfNav } = useContext(WizzardContext);
   const navbar = useRef(null);
   const navbarWrapper = useRef(null);
   const [isNavbarScrolling, setStatusOfNavbarScrolling] = useState(false);
+
+  const { t } = useTranslation();
+
+  const homeName = t("component:layout.home.navbar.home");
+  const worldName = t("component:layout.home.navbar.world");
+  const notificationsName = t("component:layout.home.navbar.notifications");
+  const messagesName = t("component:layout.home.navbar.messages");
+  const friendsName = t("component:layout.home.navbar.friends");
+  const groupsName = t("component:layout.home.navbar.groups");
+  const fanpagesName = t("component:layout.home.navbar.fanpages");
+  const profileName = t("component:layout.home.navbar.profile");
+  const settingsName = t("component:layout.home.navbar.settings");
 
   let timeout = {
     navbar: null,
@@ -76,7 +89,7 @@ const NavBar = () => {
             </div>
             <div className="home__wrapper__navbar__list__item__name">
               <a className="home__wrapper__navbar__list__item__name--a">
-                Główna
+                {homeName}
               </a>
             </div>
           </div>
@@ -89,7 +102,7 @@ const NavBar = () => {
             </div>
             <div className="home__wrapper__navbar__list__item__name">
               <a className="home__wrapper__navbar__list__item__name--a">
-                Świat
+                {worldName}
               </a>
             </div>
           </div>
@@ -102,7 +115,7 @@ const NavBar = () => {
             </div>
             <div className="home__wrapper__navbar__list__item__name">
               <a className="home__wrapper__navbar__list__item__name--a">
-                Powiadomienia
+                {notificationsName}
               </a>
             </div>
           </div>
@@ -115,7 +128,7 @@ const NavBar = () => {
             </div>
             <div className="home__wrapper__navbar__list__item__name">
               <a className="home__wrapper__navbar__list__item__name--a">
-                Wiadomośći
+                {messagesName}
               </a>
             </div>
           </div>
@@ -128,7 +141,7 @@ const NavBar = () => {
             </div>
             <div className="home__wrapper__navbar__list__item__name">
               <a className="home__wrapper__navbar__list__item__name--a">
-                Znajomi
+                {friendsName}
               </a>
             </div>
           </div>
@@ -141,7 +154,7 @@ const NavBar = () => {
             </div>
             <div className="home__wrapper__navbar__list__item__name">
               <a className="home__wrapper__navbar__list__item__name--a">
-                Grupy
+                {groupsName}
               </a>
             </div>
           </div>
@@ -154,7 +167,7 @@ const NavBar = () => {
             </div>
             <div className="home__wrapper__navbar__list__item__name">
               <a className="home__wrapper__navbar__list__item__name--a">
-                Fanpage
+                {fanpagesName}
               </a>
             </div>
           </div>
@@ -167,7 +180,7 @@ const NavBar = () => {
             </div>
             <div className="home__wrapper__navbar__list__item__name">
               <a className="home__wrapper__navbar__list__item__name--a">
-                Profil
+                {profileName}
               </a>
             </div>
           </div>
@@ -180,7 +193,7 @@ const NavBar = () => {
             </div>
             <div className="home__wrapper__navbar__list__item__name">
               <a className="home__wrapper__navbar__list__item__name--a">
-                Ustawienia
+                {settingsName}
               </a>
             </div>
           </div>
