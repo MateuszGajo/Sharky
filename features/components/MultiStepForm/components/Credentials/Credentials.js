@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
-import cx from "classnames";
+
+import useTranslation from "next-translate/useTranslation";
 import { WizzardContext } from "../../context/WizzardContext";
 import AuthInput from "../../../../common/AuthInput/AuthInput";
 
@@ -12,6 +13,10 @@ const Credentials = () => {
     confirmPassword,
     setConfirmPassword,
   } = useContext(WizzardContext);
+  const { t } = useTranslation();
+
+  const inputPassword = t("common:input.password");
+  const inputConfirmPassword = t("common:input.confirm-password");
   return (
     <div className="authentication__form__wrapper__inputs__wrapper">
       <div className="authentication__form__wrapper__inputs__wrapper__input">
@@ -22,9 +27,7 @@ const Credentials = () => {
           value={email}
           onChange={setEmail}
           title="E-mail"
-          withOutMargin={true}
           size="x-large"
-          //withoutMargin should be true only on password Error
         />
       </div>
       <div className="authentication__form__wrapper__inputs__wrapper__input">
@@ -35,10 +38,8 @@ const Credentials = () => {
           type="password"
           value={password}
           onChange={setPassword}
-          title="Hasło"
-          withOutMargin={true}
+          title={inputPassword}
           size="x-large"
-          //withoutMargin should be true only on confirm password Error
         />
       </div>
       <div className="authentication__form__wrapper__inputs__wrapper__input">
@@ -49,9 +50,8 @@ const Credentials = () => {
           type="password"
           value={confirmPassword}
           onChange={setConfirmPassword}
-          title="Powtórz hasło"
+          title={inputConfirmPassword}
           size="x-large"
-          withOutMargin={true}
         />
       </div>
     </div>

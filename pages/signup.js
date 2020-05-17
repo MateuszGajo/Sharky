@@ -4,8 +4,9 @@ import React from 'react'
 import C from '../pages_/signup'
 import ns0 from '../public/locales/en/common.json'
 import ns1 from '../public/locales/en/component.json'
+import ns2 from '../public/locales/en/signup.json'
 
-const namespaces = { 'common': ns0, 'component': ns1 }
+const namespaces = { 'common': ns0, 'component': ns1, 'signup': ns2 }
 
 export default function Page(p){
   return (

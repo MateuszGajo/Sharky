@@ -1,11 +1,15 @@
 import React, { useContext } from "react";
 import { GoArrowLeft, GoArrowRight } from "react-icons/go";
 import cx from "classnames";
+import useTranslation from "next-translate/useTranslation";
 import { WizzardContext } from "../../context/WizzardContext";
 import PrimaryButton from "../../../../common/PrimaryButton/PrimaryButton";
 
 const Controls = () => {
   const { page, setPage, numberOfPages } = useContext(WizzardContext);
+
+  const { t } = useTranslation();
+  const buttonText = t("signup:button");
   return (
     <div className="authentication__form__wrapper__controls">
       <div className="authentication__form__wrapper__controls__pagination">
@@ -44,7 +48,7 @@ const Controls = () => {
             page !== numberOfPages,
         })}
       >
-        <PrimaryButton value="Zarejstruj" size="large" />
+        <PrimaryButton value={buttonText} size="large" />
       </div>
     </div>
   );

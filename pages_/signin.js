@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Authentication from "../features/components/Layout/Authentication/Authentication";
 import { FaGooglePlusG, FaFacebookF } from "react-icons/fa";
 import { FiGithub } from "react-icons/fi";
+import useTranslation from "next-translate/useTranslation";
 import Checkbox from "../features/common/Checkbox/Checkbox";
 import PrimaryButton from "../features/common/PrimaryButton/PrimaryButton";
 import AuthInput from "../features/common/AuthInput/AuthInput";
@@ -11,6 +12,13 @@ const SignIn = ({ onSubmit }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isRembermeChecked, setStatusOfRemberme] = useState(false);
+
+  const { t } = useTranslation();
+
+  const inputPassword = t("common:input.password");
+  const description = t("signin:description");
+  const remindPassword = t("signin:forget");
+  const buttonText = t("signin:button");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -33,9 +41,7 @@ const SignIn = ({ onSubmit }) => {
             <FaFacebookF />
           </div>
         </div>
-        <p className="authentication__form__wrapper--text">
-          Lub przy pomocy e-mail
-        </p>
+        <p className="authentication__form__wrapper--text">{description}</p>
         <div className="authentication__form__wrapper__inputs">
           <form
             className="authentication__form__wrapper__inputs__wrapper"
@@ -51,7 +57,7 @@ const SignIn = ({ onSubmit }) => {
               type="password"
               value={password}
               onChange={setPassword}
-              title="Hasło"
+              title={inputPassword}
               size="x-large"
             />
 
@@ -64,11 +70,11 @@ const SignIn = ({ onSubmit }) => {
               </div>
 
               <span className="authentication__form__wrapper__inputs__wrapper__helpers--remberme--text">
-                Przypomnij hasło
+                {remindPassword}
               </span>
             </div>
             <div className="authentication__form__wrapper__inputs__wrapper--button">
-              <PrimaryButton value="Zaloguj" size="large" />
+              <PrimaryButton value={buttonText} size="large" />
             </div>
           </form>
         </div>

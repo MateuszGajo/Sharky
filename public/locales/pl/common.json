@@ -1,7 +1,11 @@
 {
     "input":{
         "password":"Hasło",
-        "email":"E-mail"
+        "email":"E-mail",
+        "confirm-password":"Powtórz hasło",
+        "first-name":"Imię",
+        "last-name":"Nazwisko",
+        "phone":"Telefon"
     },
     "checkbox":{
         "label":"Zapamiętaj mnie"
