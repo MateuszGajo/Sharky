@@ -4,6 +4,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { MdGroup } from "react-icons/md";
 import { IconContext } from "react-icons";
 import cx from "classnames";
+import useTranslation from "next-translate/useTranslation";
 import Router from "../../routes";
 
 // import { WizzardContext } from "../../context/WizzardContext";
@@ -92,6 +93,10 @@ const Messenger = ({
   },
   onSubmit,
 }) => {
+  const { t } = useTranslation();
+
+  const placeholder = t("component:messenger.placeholder");
+
   const messageArea = useRef(null);
   const messageForm = useRef(null);
   const [messageContent, setMessageContent] = useState("");
@@ -215,7 +220,7 @@ const Messenger = ({
               ref={messageArea}
               type="text"
               className="messenger__downbar__form__text--textarea"
-              placeholder="Napisz wiadomość"
+              placeholder={placeholder}
               data-testid="messenger-text"
               onChange={(e) => setMessageContent(e.target.value)}
             />

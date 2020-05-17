@@ -1,0 +1,20 @@
+{
+    "allLanguages": ["en", "pl"],
+    "defaultLanguage": "en",
+    "currentPagesDir": "pages_",
+    "finalPagesDir": "pages",
+    "localesPath": "public/locales",
+    "pages": {
+      "*": ["common","component"],
+      "/home": ["home"],
+      "/authentication": ["authentication"],
+      "/fanpages": ["fanpages"],
+      "/friends": ["friends"],
+      "/groups": ["groups"],
+      "/messgaes": ["messages"],
+      "/news": ["news"],
+      "/notifications": ["notifications"],
+      "/profile": ["profile"],
+      "/settings": ["settings"]
+    }
+  }
