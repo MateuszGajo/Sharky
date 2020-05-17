@@ -72,6 +72,11 @@
   color: white;
 }
 
+.authentication__container__form__wrapper__content__title{
+  display:flex;
+  justify-content: center;
+}
+
 .authentication__container__text__wrapper--title {
   position: relative;
   text-align: center;
@@ -87,6 +92,7 @@
     background-color: white;
   }
 }
+
 
 .authentication__container__text__wrapper--description {
   margin-top: $largeMargin;
@@ -143,5 +149,26 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
+  }
+}
+
+@media(max-width:1023px) and (orientation:landscape){
+  .authentication{
+    height:250vh;
+  }
+
+  .authentication__container__form{
+    height:140vh;
+  }
+}
+
+
+@media(max-width:767px) and (orientation:landscape){
+  .authentication{
+    height:300vh;
+  }
+
+  .authentication__container__form{
+    height:190vh;
   }
 }

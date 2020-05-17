@@ -3,7 +3,7 @@ import cx from "classnames";
 
 const SecondaryInput = ({
   user = { photo: "profile.png" },
-  size = "medium",
+  size = "large",
   value,
   onChange,
 }) => {

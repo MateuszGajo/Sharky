@@ -42,11 +42,13 @@ const ConfirmUser = ({ setVerify, isOpen = true, setOpen }) => {
             className="confrim-user-container__content__data__form"
             onSubmit={handleSubmit}
           >
-            <PrimaryInput
-              value={password}
-              onChange={setPassword}
-              title={inputPasswordText}
-            />
+            <div className="confrim-user-container__content__data__form__input">
+              <PrimaryInput
+                value={password}
+                onChange={setPassword}
+                title={inputPasswordText}
+              />
+            </div>
             <div className="confrim-user-container__content__data__form--button">
               <PrimaryButton value={buttonText} />
             </div>
