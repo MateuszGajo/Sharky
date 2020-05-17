@@ -5,9 +5,10 @@
     "finalPagesDir": "pages_",
     "localesPath": "locales",
     "pages": {
-      "*": ["common","layout","component"],
+      "*": ["common","component"],
       "/home": ["home"],
-      "/authentication": ["authentication"],
+      "/signin": ["signin"],
+      "/signup":["signup"],
       "/fanpages": ["fanpages"],
       "/friends": ["friends"],
       "/groups": ["groups"],
