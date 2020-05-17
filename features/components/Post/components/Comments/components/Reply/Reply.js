@@ -154,7 +154,7 @@ const Reply = ({
               <div className="post__item__comments__container__item__content__reply__container__item__content__down-bar">
                 <div className="post__item__comments__container__item__content__reply__container__item__content__down-bar--icon hover-pal-color">
                   <IoIosHeartEmpty />
-                  <span className="post__item__comments__container__item__content__reply__container__item__content__down-bar--icon--amount">
+                  <span className="post__item__comments__container__item__content__reply__container__item__content__down-bar--icon--number">
                     {reply.likes}
                   </span>
                 </div>

@@ -3,10 +3,12 @@
         "authentication":{
             "welcome-text":"Welcome",
             "sign-in":{
+                "title":"Fill in the form",
                 "description":" Fill in the form and join us",
                 "button":"Register"
             },
             "sign-up":{
+                "title":"Sign In",
                 "description":"If you have an account",
                 "button":"Login"
             }

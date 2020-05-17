@@ -6,6 +6,8 @@ const authentication__container = ({ children, type }) => {
   const { t } = useTranslation();
 
   const welcomeText = t("component:layout.authentication.welcome-text");
+  const signInTitle = t("component:layout.authentication.sign-in.title");
+  const signUpTitle = t("component:layout.authentication.sign-up.title");
   const signInDescription = t(
     "component:layout.authentication.sign-in.description"
   );
@@ -35,8 +37,8 @@ const authentication__container = ({ children, type }) => {
                   data-testid="title-auth"
                 >
                   {type === "signin"
-                    ? "Zaloguj się"
-                    : type === "signup" && "Wypełnij formularz"}
+                    ? signInTitle
+                    : type === "signup" && signUpTitle}
                 </span>
               </div>
               {children}

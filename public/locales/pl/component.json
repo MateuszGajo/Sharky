@@ -1,12 +1,14 @@
 {
     "layout":{
          "authentication":{
+            "title":"Wypełnij formularz",
             "welcome-text":"Witaj",
             "sign-in":{
                 "description":"Wypełnij formularz i dołącz do naszej społeczności",
                 "button":"Rejstracja"
             },
             "sign-up":{
+                "title":"Zaloguj się",
                 "description":"Jeżeli posiadasz już konto",
                 "button":"Zaloguj się"
             }

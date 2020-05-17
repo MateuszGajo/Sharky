@@ -188,7 +188,7 @@ const Comments = ({
                 <div className="post__item__comments__container__item__content__item__down-bar">
                   <div className="post__item__comments__container__item__content__item__down-bar--icon hover-pal-color">
                     <IoIosHeartEmpty />
-                    <span className="post__item__comments__container__item__content__item__down-bar--icon--amount">
+                    <span className="post__item__comments__container__item__content__item__down-bar--icon--number">
                       {comment.likes}
                     </span>
                   </div>
@@ -197,7 +197,7 @@ const Comments = ({
                     ref={replies.current[index]}
                   >
                     <FiMessageCircle />
-                    <span className="post__item__comments__container__item__content__item__down-bar--icon--amount">
+                    <span className="post__item__comments__container__item__content__item__down-bar--icon--number">
                       {comment.replies.length}
                     </span>
                   </div>

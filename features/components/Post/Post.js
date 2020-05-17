@@ -29,7 +29,7 @@ const Post = ({
 
   const collapseSetting = useRef(null);
   const focusElement = useRef(fElement?.current || null);
-  const dtf = new Intl.DateTimeFormat(lang, {
+  const dtf = new Intl.DateTimeFormat(lang || "pl", {
     year: "numeric",
     month: "long",
     day: "2-digit",
