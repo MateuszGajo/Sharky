@@ -72,6 +72,10 @@
   color: white;
 }
 
+.authentication__container__form__wrapper__content{
+  min-width:45%;
+}
+
 .authentication__container__form__wrapper__content__title{
   display:flex;
   justify-content: center;
@@ -92,7 +96,6 @@
     background-color: white;
   }
 }
-
 
 .authentication__container__text__wrapper--description {
   margin-top: $largeMargin;

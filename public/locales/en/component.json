@@ -5,12 +5,12 @@
             "sign-in":{
                 "title":"Sign In",
                 "description":"If you have an account",
-                "button":"Login"
+                "button":"Register"
             },
             "sign-up":{
                 "title":"Fill in the form",
                 "description":" Fill in the form and join us",
-                "button":"Register"
+                "button":"Login"
             }
         },
         "home":{
