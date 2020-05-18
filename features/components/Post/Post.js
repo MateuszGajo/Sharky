@@ -50,12 +50,10 @@ const Post = ({
   };
 
   useEffect(() => {
-    console.log(collapseSetting);
     collapseSetting.current.addEventListener("click", () => {
       const collapseItem = collapseSetting.current.querySelector(
         ".post__item__navbar__column-end__setting__collapse"
       );
-      console.log(focusElement);
       const { current: lastItem } = focusElement;
       if (lastItem !== collapseItem && lastItem !== null) {
         lastItem.classList.add("is-close");
