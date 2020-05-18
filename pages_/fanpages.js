@@ -1,7 +1,7 @@
 import React from "react";
 import HomeLayout from "../features/components/Layout/Home/HomeLayout";
 import ListOfFanpages from "../features/components/Lists/Fanpages/Fanpages";
-import "./styles/main.scss";
+import "../styles/main.scss";
 
 const Fanpages = () => {
   return (
