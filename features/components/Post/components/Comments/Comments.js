@@ -113,6 +113,7 @@ const Comments = ({
             user={user}
             value={commentText}
             onChange={setCommentText}
+            size="medium"
           />
         </form>
       </div>
