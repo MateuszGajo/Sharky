@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import cx from "classnames";
 import { AiOutlineCheck } from "react-icons/ai";
+import { IoIosNotificationsOutline } from "react-icons/io";
 import useTranslation from "next-translate/useTranslation";
 import HomeLayout from "../features/components/Layout/Home/HomeLayout";
 import Home from "../features/components/Fanpage/Home/Home";
@@ -22,7 +23,7 @@ const Fanpage = () => {
     [...new Array(navbarItems.length)].map(() => React.createRef())
   );
   const focusItem = useRef(null);
-  const [section, setSection] = useState("Główna");
+  const [section, setSection] = useState(homeName);
 
   const subscribe = true;
 
@@ -82,8 +83,24 @@ const Fanpage = () => {
               {subscribe ? subscribedName : subscribeName}
             </span>
           </div>
+          <div
+            className={cx("fanpage__navbar__subscribe--mobile", {
+              "fanpage__navbar__subscribe--mobile--active": subscribe,
+            })}
+          >
+            <div className="fanpage__navbar__subscribe--mobile__icon">
+              <IoIosNotificationsOutline />
+            </div>
+          </div>
         </div>
-        <div className="fanpage__content">{renderComponent(section)}</div>
+        <div
+          className={cx("fanpage__content", {
+            "fanpage__content--margin": section !== aboutName,
+            "fanpage__content--grow": section === aboutName,
+          })}
+        >
+          {renderComponent(section)}
+        </div>
       </section>
     </HomeLayout>
   );
