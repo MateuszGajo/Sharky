@@ -9,13 +9,16 @@
       "/home": ["home"],
       "/signin": ["signin"],
       "/signup":["signup"],
+      "/fanpage":["fanpage"],
       "/fanpages": ["fanpages"],
       "/friends": ["friends"],
+      "/group":["group"],
       "/groups": ["groups"],
       "/messgaes": ["messages"],
       "/news": ["news"],
       "/notifications": ["notifications"],
       "/profile": ["profile"],
+      "/post":["post"],
       "/settings": ["settings"]
     }
   }
