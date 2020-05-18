@@ -1,8 +1,9 @@
-import React, { useRef, useEffect, useState } from "react";
-import { BsEyeSlash, BsVolumeMute, BsFlag, BsThreeDots } from "react-icons/bs";
+import React, { useRef, useEffect } from "react";
+import { BsEyeSlash, BsThreeDots } from "react-icons/bs";
 import { FiVolumeX, FiFlag } from "react-icons/fi";
 import { MdBlock } from "react-icons/md";
 import { IconContext } from "react-icons";
+import useTranslation from "next-translate/useTranslation";
 import DownBarButtons from "../../common/DownBarButtons/DownBarButtons";
 import Comments from "./components/Comments/Comments";
 import Router from "../../routes";
@@ -21,12 +22,14 @@ const Post = ({
     lastName: "Kowalski",
     photo: "profile.png",
   },
-  singlePost = false,
-  focusElement = null,
+  singlePost = true,
+  focusElement: fElement = null,
 }) => {
-  const collapseSetting = useRef(null);
+  const { t, lang } = useTranslation();
 
-  const dtf = new Intl.DateTimeFormat("pl", {
+  const collapseSetting = useRef(null);
+  const focusElement = useRef(fElement?.current || null);
+  const dtf = new Intl.DateTimeFormat(lang || "pl", {
     year: "numeric",
     month: "long",
     day: "2-digit",
@@ -35,6 +38,11 @@ const Post = ({
     post.date
   );
 
+  const hiddenPost = t("component:post.settings.hidden");
+  const reportPost = t("component:post.settings.report");
+  const muteUser = t("component:post.settings.mute");
+  const blockUser = t("component:post.settings.block");
+
   const clickHandle = (e) => {
     if (!focusElement.current.classList.contains("is-close"))
       focusElement.current.classList.add("is-close");
@@ -42,10 +50,12 @@ const Post = ({
   };
 
   useEffect(() => {
+    console.log(collapseSetting);
     collapseSetting.current.addEventListener("click", () => {
       const collapseItem = collapseSetting.current.querySelector(
         ".post__item__navbar__column-end__setting__collapse"
       );
+      console.log(focusElement);
       const { current: lastItem } = focusElement;
       if (lastItem !== collapseItem && lastItem !== null) {
         lastItem.classList.add("is-close");
@@ -68,26 +78,36 @@ const Post = ({
             />
           </div>
           <div className="post__item__navbar__user--name">
-            <span className="post__item__navbar__user--name--span">
+            <span
+              className="post__item__navbar__user--name--span"
+              data-testid="post-username"
+            >
               {user.firstName + " " + user.lastName}
             </span>
           </div>
         </div>
         <div className="post__item__navbar__column-end">
           <div className="post__item__navbar__column-end__data">
-            <span className="post__item__navbar__column-end__data--span">
+            <span
+              className="post__item__navbar__column-end__data--span"
+              data-testid="post-date"
+            >
               {da} {mo} {ye}
             </span>
           </div>
           <div
             className="post__item__navbar__column-end__setting"
+            data-testid="post-setting-icon"
             ref={collapseSetting}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="post__item__navbar__column-end__setting--icon">
               <BsThreeDots />
             </div>
-            <div className="post__item__navbar__column-end__setting__collapse is-close">
+            <div
+              className="post__item__navbar__column-end__setting__collapse is-close"
+              data-testid="post-setting"
+            >
               <div className="post__item__navbar__column-end__setting__collapse__item">
                 <div className="post__item__navbar__column-end__setting__collapse__item--icon">
                   <IconContext.Provider
@@ -101,7 +121,7 @@ const Post = ({
                 </div>
                 <div className="post__item__navbar__column-end__setting__collapse__item--name">
                   <span className="post__item__navbar__column-end__setting__collapse__item--name--span">
-                    Ukryj post
+                    {hiddenPost}
                   </span>
                 </div>
               </div>
@@ -118,7 +138,7 @@ const Post = ({
                 </div>
                 <div className="post__item__navbar__column-end__setting__collapse__item--name">
                   <span className="post__item__navbar__column-end__setting__collapse__item--name--span">
-                    Wycisz użytkownika
+                    {muteUser}
                   </span>
                 </div>
               </div>
@@ -135,7 +155,7 @@ const Post = ({
                 </div>
                 <div className="post__item__navbar__column-end__setting__collapse__item--name">
                   <span className="post__item__navbar__column-end__setting__collapse__item--name--span">
-                    Zgłoś post
+                    {reportPost}
                   </span>
                 </div>
               </div>
@@ -152,7 +172,7 @@ const Post = ({
                 </div>
                 <div className="post__item__navbar__column-end__setting__collapse__item--name">
                   <span className="post__item__navbar__column-end__setting__collapse__item--name--span">
-                    Zablokuj użytkownika
+                    {blockUser}
                   </span>
                 </div>
               </div>
@@ -166,11 +186,14 @@ const Post = ({
           Router.pushRoute("post", { id: post.id });
         }}
       >
-        <span className="post__item__content--span">{post.content}</span>
+        <span className="post__item__content--span" data-testid="post-content">
+          {post.content}
+        </span>
       </div>
-      {post.photo !== null && (
+      {post?.photo && (
         <div
           className="post__item__photo"
+          data-testid="post-photo"
           onClick={() => {
             Router.pushRoute("post", { id: post.id });
           }}
@@ -185,7 +208,7 @@ const Post = ({
       <div className="post__item__downbar">
         <DownBarButtons postId={post.id} />
       </div>
-      <div className="post__item__comments">
+      <div className="post__item__comments" data-testid="post-comments">
         {singlePost === true ? <Comments focusElement={focusElement} /> : null}
       </div>
     </div>

@@ -1,4 +1,5 @@
 .fanpage-members{
-    display:flex;
-    flex-wrap: wrap;
+    width:100%;
+    display:grid;
+    grid-template-columns: 1fr 1fr;
 }

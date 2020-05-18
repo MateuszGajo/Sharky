@@ -1,5 +1,6 @@
 import React from "react";
 import Card from "../Card/Card";
+import useTranslation from "next-translate/useTranslation";
 
 const Fanpages = ({
   listOfFanPage = [
@@ -23,6 +24,9 @@ const Fanpages = ({
     },
   ],
 }) => {
+  const { t } = useTranslation();
+  const description = t("component:lists.fanpages.description");
+  const buttonText = t("component:lists.fanpages.button");
   return (
     <div className="list">
       {listOfFanPage.map((fanpage) => {
@@ -33,9 +37,9 @@ const Fanpages = ({
           photo,
           radiusPhoto: true,
           name,
-          description: "Liczba subskrypcji: " + numberOfLikes,
+          description: description + ": " + numberOfLikes,
           button: "join",
-          title: "Dołącz",
+          title: buttonText,
           collapse: false,
         };
         return <Card data={data} key={id} />;

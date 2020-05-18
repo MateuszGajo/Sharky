@@ -12,7 +12,7 @@ const Card = ({
     description: "Coś tam",
     button: "join",
     title: "Przyjaciel",
-    collapse: false,
+    collapse: true,
     collapseItems: {
       pink: "Przyjaciel",
       blue: "Rodzina",

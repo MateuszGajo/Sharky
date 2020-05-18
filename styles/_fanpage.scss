@@ -46,5 +46,8 @@
 }
 
 .fanpage__content{
+    margin:$mediumMargin 0;
+    display:flex;
+    justify-content: center;
     flex-grow:1
 }

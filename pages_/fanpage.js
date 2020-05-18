@@ -1,13 +1,22 @@
 import React, { useRef, useEffect, useState } from "react";
 import cx from "classnames";
 import { AiOutlineCheck } from "react-icons/ai";
+import useTranslation from "next-translate/useTranslation";
 import HomeLayout from "../features/components/Layout/Home/HomeLayout";
 import Home from "../features/components/Fanpage/Home/Home";
 import Members from "../features/components/Fanpage/Members/Members";
 import About from "../features/components/Fanpage/About/About";
+import "../styles/main.scss";
 
 const Fanpage = () => {
-  const navbarItems = ["Główna", "Polubienia", "Informacje"];
+  const { t } = useTranslation();
+  const homeName = t("fanpage:home");
+  const membersName = t("fanpage:members");
+  const aboutName = t("fanpage:about");
+  const subscribeName = t("fanpage:subscribe");
+  const subscribedName = t("fanpage:subscribed");
+
+  const navbarItems = [homeName, membersName, aboutName];
 
   const navbarItem = useRef(
     [...new Array(navbarItems.length)].map(() => React.createRef())
@@ -19,11 +28,11 @@ const Fanpage = () => {
 
   const renderComponent = (name) => {
     switch (name) {
-      case "Główna":
+      case homeName:
         return <Home />;
-      case "Polubienia":
+      case membersName:
         return <Members />;
-      case "Informacje":
+      case aboutName:
         return <About />;
       default:
         return <Home />;
@@ -32,7 +41,7 @@ const Fanpage = () => {
 
   useEffect(() => {
     navbarItem.current.forEach((item) => {
-      if (item.current.lastChild.outerText === "Główna") {
+      if (item.current.lastChild.outerText === homeName) {
         focusItem.current = item.current;
         item.current.classList.add("fanpage__navbar__item--active");
       }
@@ -70,7 +79,7 @@ const Fanpage = () => {
               {subscribe ? <AiOutlineCheck /> : null}
             </div>
             <span className="fanpage__navbar__subscribe--span">
-              {subscribe ? "Subskrybujesz" : "Subskrybuj"}
+              {subscribe ? subscribedName : subscribeName}
             </span>
           </div>
         </div>
