@@ -3,6 +3,7 @@ import { IoIosHeartEmpty } from "react-icons/io";
 import { FiMessageCircle, FiVolumeX, FiFlag } from "react-icons/fi";
 import { BsThreeDots } from "react-icons/bs";
 import { IconContext } from "react-icons";
+import useTranslation from "next-translate/useTranslation";
 import Reply from "./components/Reply/Reply";
 import SecondaryInput from "../../../../common/SecondaryInput/SecondaryInput";
 
@@ -45,6 +46,11 @@ const Comments = ({
   const collapseSetting = useRef(
     [...new Array(comments.length)].map(() => React.createRef())
   );
+
+  const { t } = useTranslation();
+
+  const reportComment = t("component:post.comments.settings.report");
+  const muteUser = t("component:post.comments.settings.mute");
 
   const handleClick = (e) => {
     const { current: fElement } = focusElement;
@@ -152,7 +158,7 @@ const Comments = ({
                         </div>
                         <div className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item--name">
                           <span className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item--name--span">
-                            Wycisz użytkownika
+                            {muteUser}
                           </span>
                         </div>
                       </div>
@@ -169,7 +175,7 @@ const Comments = ({
                         </div>
                         <div className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item--name">
                           <span className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item--name--span">
-                            Zgłoś użytkownika
+                            {reportComment}
                           </span>
                         </div>
                       </div>
@@ -182,7 +188,7 @@ const Comments = ({
                 <div className="post__item__comments__container__item__content__item__down-bar">
                   <div className="post__item__comments__container__item__content__item__down-bar--icon hover-pal-color">
                     <IoIosHeartEmpty />
-                    <span className="post__item__comments__container__item__content__item__down-bar--icon--amount">
+                    <span className="post__item__comments__container__item__content__item__down-bar--icon--number">
                       {comment.likes}
                     </span>
                   </div>
@@ -191,7 +197,7 @@ const Comments = ({
                     ref={replies.current[index]}
                   >
                     <FiMessageCircle />
-                    <span className="post__item__comments__container__item__content__item__down-bar--icon--amount">
+                    <span className="post__item__comments__container__item__content__item__down-bar--icon--number">
                       {comment.replies.length}
                     </span>
                   </div>

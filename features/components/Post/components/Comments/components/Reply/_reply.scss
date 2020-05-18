@@ -105,7 +105,38 @@
     margin-left:$smallMargin
 }
 
-.post__item__comments__container__item__content__reply__container__item__content__down-bar--icon--amount{
+.post__item__comments__container__item__content__reply__container__item__content__down-bar--icon--number{
     margin-left:5px;
 }
 
+
+
+@media(max-width:1023px){   
+.post__item__comments__container__item__content__reply__container__item__content__top-bar__icon{
+    visibility: visible;
+    }
+}
+
+@media(max-width:1023px) and (orientation:landscape){
+    .post__item__comments__container__item__content__reply__container__item__content__top-bar__icon__collapse__item{
+        padding:15px 20px;
+        height:60px;
+    }
+    
+    .post__item__comments__container__item__content__reply__container__item__content__top-bar__icon__collapse__item--icon--customize{
+        width:25px;
+        height:25px;
+    }
+    .post__item__comments__container__item__content__reply__container__item__content__top-bar__icon__collapse__item--name--span{
+        font-size: 1.2rem;
+    }
+    .post__item__comments__container__item__content__reply__container__item__content__down-bar--icon {
+        font-size: 0.9rem;
+    }
+}
+
+@media(max-width:1023px) and(orientation:portrait){
+    .post__item__comments__container__item__content__reply__container__item__content__down-bar--icon {
+        font-size: 0.96rem;
+    }
+}

@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { WizzardContext } from "./context/WizzardContext";
 import NavBar from "./components/NavBar/Navbar";
 import Main from "./components/Main/Main";
 import FriendsBar from "./components/FriendsBar/FriendsBar";
 import Messager from "./components/Messenger/Messenger";
+import Wrapper from "./components/Wrapper/Wrapper";
 
 const Wizzard = ({ children }) => {
   const [isMessengerClose, setStatusOfMessenger] = useState(false);
   const [searchContent, setSearchContent] = useState("");
   const [postContent, setPostContent] = useState("");
+  const [isNavOpen, setStatusOfNav] = useState(false);
+
   return (
     <WizzardContext.Provider
       value={{
@@ -18,11 +21,13 @@ const Wizzard = ({ children }) => {
         setSearchContent,
         postContent,
         setPostContent,
+        isNavOpen,
+        setStatusOfNav,
       }}
     >
-      <section className="home-wrapper">{children}</section>
+      {children}
     </WizzardContext.Provider>
   );
 };
 
-export { Wizzard, NavBar, Main, FriendsBar, Messager };
+export { Wizzard, Wrapper, NavBar, Main, FriendsBar, Messager };

@@ -13,10 +13,14 @@ describe("is auth form text changing", () => {
     const primaryButton = getByTestId("primary-button");
     const sectionName = getByTestId("title-auth");
     expect(welcomeText).toHaveTextContent(
-      "Wypełnij formularz i dołącz do naszej społecznośći"
+      "component:layout.authentication.sign-in.description"
     );
-    expect(primaryButton).toHaveTextContent("Rejstracja");
-    expect(sectionName).toHaveTextContent("Zaloguj się");
+    expect(primaryButton).toHaveTextContent(
+      "component:layout.authentication.sign-in.button"
+    );
+    expect(sectionName).toHaveTextContent(
+      "component:layout.authentication.sign-in.title"
+    );
   });
 
   it("signup", () => {
@@ -25,8 +29,14 @@ describe("is auth form text changing", () => {
     const primaryButton = getByTestId("primary-button");
     const sectionName = getByTestId("title-auth");
 
-    expect(welcomeText).toHaveTextContent("Jeżeli posiadasz już konto");
-    expect(primaryButton).toHaveTextContent("Zaloguj się");
-    expect(sectionName).toHaveTextContent("Wypełnij formularz");
+    expect(welcomeText).toHaveTextContent(
+      "component:layout.authentication.sign-up.description"
+    );
+    expect(primaryButton).toHaveTextContent(
+      "component:layout.authentication.sign-up.button"
+    );
+    expect(sectionName).toHaveTextContent(
+      "component:layout.authentication.sign-up.title"
+    );
   });
 });
