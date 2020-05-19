@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import HomeLayout from "../features/components/Layout/Home/HomeLayout";
 import People from "../features/components/Lists/People/People";
 
 const Friends = () => {
@@ -44,9 +45,11 @@ const Friends = () => {
   ];
 
   return (
-    <div className="home-wrapper__main__content__friends">
-      <People listOfPeople={friendLists} users={users} />
-    </div>
+    <HomeLayout>
+      <div className="home-wrapper__main__content__friends">
+        <People listOfPeople={friendLists} users={users} />
+      </div>
+    </HomeLayout>
   );
 };
 

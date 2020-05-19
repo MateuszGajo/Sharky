@@ -1,13 +1,32 @@
-import React from "react";
-import Frineds from "./friends";
-import HomeLayout from "../features/components/Layout/Home/HomeLayout";
-import "./styles/main.scss";
+// @ts-nocheck
+import I18nProvider from 'next-translate/I18nProvider'
+import React from 'react'
+import C from '../pages_'
+import ns0 from '../public/locales/en/common.json'
+import ns1 from '../public/locales/en/component.json'
 
-const Index = () => {
+const namespaces = { 'common': ns0, 'component': ns1 }
+
+export default function Page(p){
   return (
-    <HomeLayout>
-      <Frineds />
-    </HomeLayout>
-  );
-};
-export default Index;
+    <I18nProvider 
+      lang="en" 
+      namespaces={namespaces}  
+      internals={{"isStaticMode":true,"redirectToDefaultLang":false,"defaultLanguage":"en"}}
+    >
+      <C {...p} />
+    </I18nProvider>
+  )
+}
+
+Page = Object.assign(Page, { ...C })
+
+if(C && C.getInitialProps) {
+  Page.getInitialProps = ctx => C.getInitialProps({ ...ctx, lang: 'en'})
+}
+
+
+
+
+
+export * from '../pages_'

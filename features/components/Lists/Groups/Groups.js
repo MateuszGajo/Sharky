@@ -1,5 +1,7 @@
 import React from "react";
 import Card from "../Card/Card";
+import useTranslation from "next-translate/useTranslation";
+
 const Groups = ({
   listOfGroups = [
     {
@@ -22,6 +24,9 @@ const Groups = ({
     },
   ],
 }) => {
+  const { t } = useTranslation();
+  const description = t("component:lists.groups.description");
+  const buttonText = t("component:lists.groups.button");
   return (
     <div className="list">
       {listOfGroups.map((group) => {
@@ -32,9 +37,9 @@ const Groups = ({
           photo,
           radiusPhoto: true,
           name,
-          description: "Liczba członków: " + numberOfMembers,
+          description: description + ": " + numberOfMembers,
           button: "join",
-          title: "Dołącz",
+          title: buttonText,
           collapse: false,
         };
         return <Card data={data} key={id} />;
