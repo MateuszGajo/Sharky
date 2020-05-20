@@ -5,8 +5,10 @@ import Posts from "../../Lists/Posts/Posts";
 const Home = () => {
   return (
     <div className="group-home">
-      <MessageBox />
-      <Posts />
+      <MessageBox btnSize="small" />
+      <div className="group-home__posts">
+        <Posts />
+      </div>
     </div>
   );
 };

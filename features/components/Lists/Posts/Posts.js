@@ -26,6 +26,7 @@ const PostList = ({
       photo: "profile.png",
     },
   },
+  isComment = false,
 }) => {
   const focusElement = useRef(null);
   return (
@@ -33,12 +34,14 @@ const PostList = ({
       {posts.map((post) => {
         const user = users[post.userId];
         return (
-          <Post
-            post={post}
-            user={user}
-            key={post.id}
-            focusElement={focusElement}
-          />
+          <div className="post-list__post" key={post.id}>
+            <Post
+              post={post}
+              user={user}
+              focusElement={focusElement}
+              isComment={isComment}
+            />
+          </div>
         );
       })}
     </div>

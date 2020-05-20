@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
 import Card from "../Card/Card";
+import useTranslation from "next-translate/useTranslation";
 
 const People = ({
   listOfPeople = [
     {
       userId: 123,
-      relation: "Rodzina",
-      numberOfFriends: 123,
+      relation: "family",
     },
     {
       userId: 124,
-      relation: "Rodzina",
-      numberOfFriends: 123,
+      relation: "pal",
     },
   ],
   users = {
@@ -20,12 +19,14 @@ const People = ({
       firstName: "Jan",
       lastName: "Kowalski",
       photo: "profile.png",
+      numberOfFriends: 123,
     },
     124: {
       id: 124,
       firstName: "Jan",
       lastName: "Kowalski",
       photo: "profile.png",
+      numberOfFriends: 123,
     },
   },
 }) => {
@@ -34,25 +35,43 @@ const People = ({
   useEffect(() => {
     //console.log(updatedRelation);
   }, [updatedRelation]);
+
+  const { t } = useTranslation();
+  const description = t("component:lists.people.description");
+  const friendName = t("component:lists.people.friend");
+  const familyName = t("component:lists.people.family");
+  const palName = t("component:lists.people.pal");
   return (
     <div className="list">
       {listOfPeople.map((person) => {
-        const { userId, relation, numberOfFriends } = person;
-        const { id, firstName, lastName, photo } = users[userId];
+        const { userId, relation } = person;
+        const { id, firstName, lastName, photo, numberOfFriends } = users[
+          userId
+        ];
         const data = {
           ref: "profile",
           refId: id,
           photo,
           radiusPhoto: false,
           name: `${firstName + " " + lastName}`,
-          description: "Liczba znajomych: " + numberOfFriends,
+          description: description + ": " + numberOfFriends,
           button: "relation",
-          title: relation,
+          title: t(`component:lists.people.${relation.toLowerCase()}`),
+          buttonName: relation,
           collapse: true,
           collapseItems: {
-            pink: "Przyjaciel",
-            blue: "Rodzina",
-            green: "Znajomy",
+            pink: {
+              name: "pal",
+              title: palName,
+            },
+            blue: {
+              name: "family",
+              title: familyName,
+            },
+            green: {
+              name: "friend",
+              title: friendName,
+            },
           },
         };
         return (

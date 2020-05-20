@@ -1,10 +1,16 @@
 import React, { useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import cx from "classnames";
+import useTranslation from "next-translate/useTranslation";
 import PrimaryInput from "../../PrimaryInput/PrimaryInput";
 import PrimaryButton from "../../PrimaryButton/PrimaryButton";
 
 const ConfirmUser = ({ setVerify, isOpen = true, setOpen }) => {
+  const { t } = useTranslation();
+  const title = t("common:pop-up.confirm-user.title");
+  const buttonText = t("common:pop-up.confirm-user.button");
+  const inputPasswordText = t("common:input.password");
+
   const [password, setPassword] = useState("");
 
   const handleSubmit = (e) => {
@@ -28,7 +34,7 @@ const ConfirmUser = ({ setVerify, isOpen = true, setOpen }) => {
 
         <div className="confrim-user-container__content--title">
           <h3 className="confrim-user-container__content--title--h3">
-            Wpisz swoje hasło
+            {title}
           </h3>
         </div>
         <div className="confrim-user-container__content__data">
@@ -36,13 +42,15 @@ const ConfirmUser = ({ setVerify, isOpen = true, setOpen }) => {
             className="confrim-user-container__content__data__form"
             onSubmit={handleSubmit}
           >
-            <PrimaryInput
-              value={password}
-              onChange={setPassword}
-              title="Hasło"
-            />
+            <div className="confrim-user-container__content__data__form__input">
+              <PrimaryInput
+                value={password}
+                onChange={setPassword}
+                title={inputPasswordText}
+              />
+            </div>
             <div className="confrim-user-container__content__data__form--button">
-              <PrimaryButton value="Dalej" />
+              <PrimaryButton value={buttonText} />
             </div>
           </form>
         </div>

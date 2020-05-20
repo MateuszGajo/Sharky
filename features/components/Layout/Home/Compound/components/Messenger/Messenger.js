@@ -6,11 +6,13 @@ const Messenger = () => {
   const { isMessengerClose, setStatusOfMessenger } = useContext(WizzardContext);
 
   return (
-    <Mess
-      windowMessenger={true}
-      isMessengerClose={isMessengerClose}
-      setStatusOfMessenger={setStatusOfMessenger}
-    />
+    <div className="home__messenger">
+      <Mess
+        windowMessenger={true}
+        isMessengerClose={isMessengerClose}
+        setStatusOfMessenger={setStatusOfMessenger}
+      />
+    </div>
   );
 };
 

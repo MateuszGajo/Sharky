@@ -11,15 +11,26 @@ const Card = ({
     name: "Janek Kowalski",
     description: "Coś tam",
     button: "join",
+    buttonName: "pal",
     title: "Przyjaciel",
-    collapse: false,
+    collapse: true,
     collapseItems: {
-      pink: "Przyjaciel",
-      blue: "Rodzina",
-      green: "Znajomy",
+      pink: {
+        name: "pal",
+        title: "Przyjaciel",
+      },
+      blue: {
+        name: "family",
+        title: "Rodzina",
+      },
+      green: {
+        name: "friend",
+        title: "Znajomy",
+      },
     },
   },
-  updateRelation,
+  updateRelation = null,
+  join = null,
 }) => {
   const {
     refType,
@@ -29,10 +40,13 @@ const Card = ({
     description,
     button,
     title,
+    buttonName = null,
     collapse,
-    collapseItems,
+    collapseItems = null,
     radiusPhoto,
   } = data;
+  const { green: greenC, blue: blueC, pink: pinkC } = collapseItems || {};
+
   return (
     <div className="card">
       <div className="card__item">
@@ -89,12 +103,22 @@ const Card = ({
                         button === "relation",
                       "card__item__info__second-column__buttons--join":
                         button === "join",
-                      "primary-background": collapseItems?.green === title,
-                      "family-background": collapseItems?.blue === title,
-                      "pal-background": collapseItems?.pink === title,
+                      "primary-background":
+                        greenC?.name === buttonName && collapse,
+                      "family-background":
+                        blueC?.name === buttonName && collapse,
+                      "pal-background": pinkC?.name === buttonName && collapse,
                     }
                   )}
                   data-testid="card-button"
+                  onClick={() => {
+                    if (button == "join") {
+                      join({
+                        name: refType,
+                        id: refId,
+                      });
+                    }
+                  }}
                 >
                   <span
                     className="card__item__info__second-column__buttons--main-button--span"
@@ -113,60 +137,60 @@ const Card = ({
                         "card__item__info__second-column__buttons--change-status--circle primary-background",
                         {
                           "brightness-reduce hover-brightness":
-                            collapseItems.green !== title,
+                            greenC.name !== buttonName,
                         }
                       )}
                       onClick={() => {
-                        if (title !== collapseItems.green) {
+                        if (buttonName !== greenC.name) {
                           updateRelation({
                             id: refId,
-                            name: collapseItems.green,
+                            name: greenC.name,
                           });
                         }
                       }}
                       data-testid="card-relation-button-green"
                     >
-                      <span>{collapseItems.green}</span>
+                      <span>{greenC.title}</span>
                     </div>
                     <div
                       className={cx(
                         "card__item__info__second-column__buttons--change-status--circle pal-background ",
                         {
                           "brightness-reduce hover-brightness":
-                            collapseItems.pink !== title,
+                            pinkC.name !== buttonName,
                         }
                       )}
                       onClick={() => {
-                        if (title !== collapseItems.pink) {
+                        if (buttonName !== pinkC.name) {
                           updateRelation({
                             id: refId,
-                            name: collapseItems.pink,
+                            name: pinkC.name,
                           });
                         }
                       }}
                       data-testid="card-relation-button-pink"
                     >
-                      <span>{collapseItems.pink}</span>
+                      <span>{pinkC.title}</span>
                     </div>
                     <div
                       className={cx(
                         "card__item__info__second-column__buttons--change-status--circle family-background ",
                         {
                           "brightness-reduce hover-brightness":
-                            collapseItems.blue !== title,
+                            blueC.name !== buttonName,
                         }
                       )}
                       onClick={() => {
-                        if (title !== collapseItems.blue) {
+                        if (buttonName !== blueC.name) {
                           updateRelation({
                             id: refId,
-                            name: collapseItems.blue,
+                            name: blueC.name,
                           });
                         }
                       }}
                       data-testid="card-relation-button-blue"
                     >
-                      <span>{collapseItems.blue}</span>
+                      <span>{blueC.title}</span>
                     </div>
                   </div>
                 ) : null}

@@ -1,27 +1,18 @@
 import React from "react";
-import cx from "classnames";
+import useTranslation from "next-translate/useTranslation";
 import PrimaryButton from "../PrimaryButton/PrimaryButton";
 
-const MessageBox = ({
-  value,
-  onChange,
-  size = "large",
-  btnSize = "medium",
-}) => {
+const MessageBox = ({ value, onChange, btnSize = "medium" }) => {
+  const { t } = useTranslation();
+  const title = t("common:message-box.title");
+  const description = t("common:message-box.description");
+  const buttonText = t("common:message-box.button");
   return (
-    <div
-      data-testid="message-box"
-      className={cx("message-box", {
-        "message-box--x-large": size === "x-large",
-        "message-box--large": size === "large",
-        "message-box--medium": size === "medium",
-        "message-box--small": size === "small",
-      })}
-    >
-      <div className="message-box__navbar">Dodaj post</div>
+    <div data-testid="message-box" className="message-box">
+      <div className="message-box__navbar">{title}</div>
       <div className="message-box__content">
         <textarea
-          placeholder="Co u Ciebie?"
+          placeholder={description}
           className="message-box__content--textarea"
           data-testid="message-box-textarea"
           required
@@ -29,7 +20,7 @@ const MessageBox = ({
           onChange={(e) => onChange(e.target.value)}
         />
         <div className="message-box__content--button">
-          <PrimaryButton value="Opublikuj" size={btnSize} />
+          <PrimaryButton value={buttonText} size={btnSize} />
         </div>
       </div>
     </div>

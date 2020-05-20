@@ -1,4 +1,5 @@
 import React from "react";
+import useTranslation from "next-translate/useTranslation";
 
 const About = ({
   groupInfo = {
@@ -7,7 +8,8 @@ const About = ({
     amountOfMember: 123,
   },
 }) => {
-  const dtf = new Intl.DateTimeFormat("pl", {
+  const { lang } = useTranslation();
+  const dtf = new Intl.DateTimeFormat(lang, {
     year: "numeric",
     month: "long",
     day: "2-digit",

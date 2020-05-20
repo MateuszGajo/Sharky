@@ -6,7 +6,7 @@ import cx from "classnames";
 import Router from "../../routes";
 
 const DownBarButtons = ({
-  amounts = { comments: 123, posts: 123, shares: 23 },
+  statisticks = { comments: 123, posts: 123, shares: 23 },
   isLiked = false,
   postId,
 }) => {
@@ -20,10 +20,10 @@ const DownBarButtons = ({
       >
         <FiMessageCircle />
         <p
-          data-testid="downbar-buttons-amount-of-comments"
-          className="downbar-buttons__icon--amount"
+          data-testid="downbar-buttons-number-of-comments"
+          className="downbar-buttons__icon--number"
         >
-          {amounts.comments}
+          {statisticks.comments}
         </p>
       </div>
       <div
@@ -40,10 +40,10 @@ const DownBarButtons = ({
       >
         <IoIosHeartEmpty />
         <p
-          data-testid="downbar-buttons-amount-of-posts"
-          className="downbar-buttons__icon--amount"
+          data-testid="downbar-buttons-number-of-posts"
+          className="downbar-buttons__icon--number"
         >
-          {amounts.posts}
+          {statisticks.posts}
         </p>
       </div>
       <div
@@ -52,10 +52,10 @@ const DownBarButtons = ({
       >
         <AiOutlineShareAlt />
         <p
-          data-testid="downbar-buttons-amount-of-shares"
-          className="downbar-buttons__icon--amount"
+          data-testid="downbar-buttons-number-of-shares"
+          className="downbar-buttons__icon--number"
         >
-          {amounts.shares}
+          {statisticks.shares}
         </p>
       </div>
     </div>

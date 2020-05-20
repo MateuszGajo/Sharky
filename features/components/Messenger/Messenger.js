@@ -4,6 +4,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { MdGroup } from "react-icons/md";
 import { IconContext } from "react-icons";
 import cx from "classnames";
+import useTranslation from "next-translate/useTranslation";
 import Router from "../../routes";
 
 // import { WizzardContext } from "../../context/WizzardContext";
@@ -90,11 +91,16 @@ const Messenger = ({
     lastName: "Kowalski",
     photo: "profile.png",
   },
+  onSubmit,
 }) => {
+  const { t } = useTranslation();
+
+  const placeholder = t("component:messenger.placeholder");
+
   const messageArea = useRef(null);
   const messageForm = useRef(null);
   const [messageContent, setMessageContent] = useState("");
-  const [userInfo, setUserInfo] = useState({ id: 123 });
+  const [userInfo, setUserInfo] = useState({ id: user.id });
 
   useEffect(() => {
     messageArea.current.addEventListener("keydown", function textAreaSubmit(e) {
@@ -106,6 +112,7 @@ const Messenger = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    onSubmit(messageContent);
   };
 
   return (
@@ -114,6 +121,7 @@ const Messenger = ({
         "is-close": isMessengerClose,
         "window-messanger": windowMessenger === true,
       })}
+      data-testid="messenger"
     >
       <div className="messenger__navbar">
         <div className="messenger__navbar__person">
@@ -148,13 +156,14 @@ const Messenger = ({
             <div
               className="messenger__navbar__icons--icon"
               onClick={() => setStatusOfMessenger(true)}
+              data-testid="messenger-close"
             >
               <AiOutlineClose />
             </div>
           </div>
         ) : null}
       </div>
-      <div className="messenger__text">
+      <div className="messenger__text" data-testid="messenger-chat">
         {conversation.messages.map((item, index) => {
           const addAuthor =
             index + 1 === conversation.messages.length ||
@@ -211,12 +220,16 @@ const Messenger = ({
               ref={messageArea}
               type="text"
               className="messenger__downbar__form__text--textarea"
-              placeholder="Napisz wiadomość"
+              placeholder={placeholder}
+              data-testid="messenger-text"
               onChange={(e) => setMessageContent(e.target.value)}
             />
           </div>
           <div className="messenger__downbar__form__send">
-            <button className="messenger__downbar__form__send--buton">
+            <button
+              className="messenger__downbar__form__send--buton"
+              data-testid="messenger-send-button"
+            >
               <MdSend />
             </button>
           </div>
