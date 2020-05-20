@@ -32,15 +32,15 @@ const Friends = () => {
   const friendLists = [
     {
       userId: 234,
-      relation: "Rodzina",
+      relation: "family",
     },
     {
       userId: 453,
-      relation: "Przyjaciel",
+      relation: "pal",
     },
     {
       userId: 156,
-      relation: "Znajomy",
+      relation: "friend",
     },
   ];
 
