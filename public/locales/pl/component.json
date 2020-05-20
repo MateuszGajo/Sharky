@@ -36,7 +36,7 @@
             "description":"Liczba członków",
             "button":"Dołącz"
         },
-        "person":{
+        "people":{
             "description":"Liczba znajomych",
             "friend":"Znajomy",
             "family":"Rodzina",
