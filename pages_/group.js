@@ -6,10 +6,12 @@ import Navbar from "../features/components/Layout/Home/Compound/components/NavBa
 import About from "../features/components/group/About/About";
 import Members from "../features/components/group/Members/Members";
 import Home from "../features/components/group/Home/Home";
+import InvitePerson from "../features/common/PopUp/InvitePerson/InvitePerson";
 import "../styles/main.scss";
 
 const Group = () => {
   const [section, setSection] = useState("home");
+  const [isPopupOpen, setStatusOfPopup] = useState(false);
 
   const { t } = useTranslation();
 
@@ -34,6 +36,7 @@ const Group = () => {
 
   return (
     <section className="group">
+      <InvitePerson isOpen={isPopupOpen} setStatusOfOpen={setStatusOfPopup} />
       <Navbar />
       <div className="group__container">
         <div className="group__container__content">
@@ -90,7 +93,10 @@ const Group = () => {
                   <AiOutlineMinus />
                 </div>
               </div>
-              <div className="group__container__side-bar__manage__item">
+              <div
+                className="group__container__side-bar__manage__item"
+                onClick={() => setStatusOfPopup(true)}
+              >
                 <span className="group__container__side-bar__item--span">
                   {inviteText}
                 </span>
