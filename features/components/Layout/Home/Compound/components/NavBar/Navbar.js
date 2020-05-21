@@ -1,24 +1,98 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useContext } from "react";
 import {
   AiOutlineHome,
   AiOutlineMessage,
   AiOutlineSetting,
 } from "react-icons/ai";
 import { GiWorld } from "react-icons/gi";
-import { IoIosNotificationsOutline } from "react-icons/io";
+import { IoIosNotificationsOutline, IoMdArrowBack } from "react-icons/io";
 import { MdPeopleOutline } from "react-icons/md";
 import { TiGroupOutline, TiNews } from "react-icons/ti";
 import { FaRegUser } from "react-icons/fa";
 import cx from "classnames";
 import Router from "next/router";
+import { WizzardContext } from "../../context/WizzardContext";
+import useTranslation from "next-translate/useTranslation";
 
 const NavBar = () => {
+  const { isNavOpen, setStatusOfNav } = useContext(WizzardContext);
   const navbar = useRef(null);
+  const navbarWrapper = useRef(null);
   const [isNavbarScrolling, setStatusOfNavbarScrolling] = useState(false);
+
+  const { t } = useTranslation();
+
+  const homeName = t("component:layout.home.navbar.home");
+  const worldName = t("component:layout.home.navbar.world");
+  const notificationsName = t("component:layout.home.navbar.notifications");
+  const messagesName = t("component:layout.home.navbar.messages");
+  const friendsName = t("component:layout.home.navbar.friends");
+  const groupsName = t("component:layout.home.navbar.groups");
+  const fanpagesName = t("component:layout.home.navbar.fanpages");
+  const profileName = t("component:layout.home.navbar.profile");
+  const settingsName = t("component:layout.home.navbar.settings");
 
   let timeout = {
     navbar: null,
   };
+
+  const navbarItems = [
+    {
+      id: 1,
+      route: "",
+      name: homeName,
+      icon: <AiOutlineHome />,
+    },
+    {
+      id: 2,
+      route: "news",
+      name: worldName,
+      icon: <GiWorld />,
+    },
+    {
+      id: 3,
+      route: "notifications",
+      name: notificationsName,
+      icon: <IoIosNotificationsOutline />,
+    },
+    {
+      id: 4,
+      route: "messages",
+      name: messagesName,
+      icon: <AiOutlineMessage />,
+    },
+    {
+      id: 5,
+      route: "friends",
+      name: friendsName,
+      icon: <MdPeopleOutline />,
+    },
+    {
+      id: 6,
+      route: "groups",
+      name: groupsName,
+      icon: <TiGroupOutline />,
+    },
+    {
+      id: 7,
+      route: "fanpages",
+      name: fanpagesName,
+      icon: <TiNews />,
+    },
+    {
+      id: 8,
+      route: "profile",
+      name: profileName,
+      icon: <FaRegUser />,
+    },
+    {
+      id: 9,
+      route: "settings",
+      name: settingsName,
+      icon: <AiOutlineSetting />,
+    },
+  ];
+
   const showScroll = () => {
     if (timeout.navbar) {
       clearTimeout(timeout.navbar);
@@ -33,132 +107,54 @@ const NavBar = () => {
   useEffect(() => {
     navbar.current.addEventListener("wheel", showScroll);
   }, []);
+
+  useEffect(() => {
+    const { current: wrapper } = navbarWrapper;
+    isNavOpen
+      ? wrapper.classList.add("home__wrapper--active")
+      : wrapper.classList.remove("home__wrapper--active");
+  }, [isNavOpen]);
   return (
-    <div className="fixed-container ">
+    <div className="home__wrapper home__wrapper--large" ref={navbarWrapper}>
       <div
-        className={cx("home-wrapper__navbar primary-scroll", {
+        className={cx("home__wrapper__navbar primary-scroll", {
           "primary-scroll-active": isNavbarScrolling,
         })}
         ref={navbar}
       >
-        <h1 className="home-wrapper__navbar--title">
-          <span className="home-wrapper__navbar--title--primaryColor">Sha</span>
-          rky
-        </h1>
-        <div className="home-wrapper__navbar__list">
+        <div className="home__wrapper__navbar__title">
           <div
-            className="home-wrapper__navbar__list__item"
-            onClick={() => Router.push("/")}
+            className="home__wrapper__navbar__title__icon"
+            onClick={() => setStatusOfNav(false)}
           >
-            <div className="home-wrapper__navbar__list__item--icon">
-              <AiOutlineHome />
-            </div>
-            <div className="home-wrapper__navbar__list__item--name">
-              <a className="home-wrapper__navbar__list__item--name--a">
-                Główna
-              </a>
-            </div>
+            <IoMdArrowBack />
           </div>
-          <div
-            className="home-wrapper__navbar__list__item"
-            onClick={() => Router.push("/world")}
-          >
-            <div className="home-wrapper__navbar__list__item--icon">
-              <GiWorld />
-            </div>
-            <div className="home-wrapper__navbar__list__item--name">
-              <a className="home-wrapper__navbar__list__item--name--a">Świat</a>
-            </div>
-          </div>
-          <div
-            className="home-wrapper__navbar__list__item"
-            onClick={() => Router.push("/notifications")}
-          >
-            <div className="home-wrapper__navbar__list__item--icon">
-              <IoIosNotificationsOutline />
-            </div>
-            <div className="home-wrapper__navbar__list__item--name">
-              <a className="home-wrapper__navbar__list__item--name--a">
-                Powiadomienia
-              </a>
-            </div>
-          </div>
-          <div
-            className="home-wrapper__navbar__list__item"
-            onClick={() => Router.push("/messages")}
-          >
-            <div className="home-wrapper__navbar__list__item--icon">
-              <AiOutlineMessage />
-            </div>
-            <div className="home-wrapper__navbar__list__item--name">
-              <a className="home-wrapper__navbar__list__item--name--a">
-                Wiadomośći
-              </a>
-            </div>
-          </div>
-          <div
-            className="home-wrapper__navbar__list__item"
-            onClick={() => Router.push("/friends")}
-          >
-            <div className="home-wrapper__navbar__list__item--icon">
-              <MdPeopleOutline />
-            </div>
-            <div className="home-wrapper__navbar__list__item--name">
-              <a className="home-wrapper__navbar__list__item--name--a">
-                Znajomi
-              </a>
-            </div>
-          </div>
-          <div
-            className="home-wrapper__navbar__list__item"
-            onClick={() => Router.push("/groups")}
-          >
-            <div className="home-wrapper__navbar__list__item--icon">
-              <TiGroupOutline />
-            </div>
-            <div className="home-wrapper__navbar__list__item--name">
-              <a className="home-wrapper__navbar__list__item--name--a">Grupy</a>
-            </div>
-          </div>
-          <div
-            className="home-wrapper__navbar__list__item"
-            onClick={() => Router.push("/fanpages")}
-          >
-            <div className="home-wrapper__navbar__list__item--icon">
-              <TiNews />
-            </div>
-            <div className="home-wrapper__navbar__list__item--name">
-              <a className="home-wrapper__navbar__list__item--name--a">
-                Fanpage
-              </a>
-            </div>
-          </div>
-          <div
-            className="home-wrapper__navbar__list__item"
-            onClick={() => Router.push("/profile")}
-          >
-            <div className="home-wrapper__navbar__list__item--icon">
-              <FaRegUser />
-            </div>
-            <div className="home-wrapper__navbar__list__item--name">
-              <a className="home-wrapper__navbar__list__item--name--a">
-                Profil
-              </a>
-            </div>
-          </div>
-          <div
-            className="home-wrapper__navbar__list__item"
-            onClick={() => Router.push("/setting")}
-          >
-            <div className="home-wrapper__navbar__list__item--icon">
-              <AiOutlineSetting />
-            </div>
-            <div className="home-wrapper__navbar__list__item--name">
-              <a className="home-wrapper__navbar__list__item--name--a">
-                Ustawienia
-              </a>
-            </div>
-          </div>
+          <h1 className="home__wrapper__navbar__title--h1">
+            <span className="home__wrapper__navbar__title--h1--primaryColor">
+              Sha
+            </span>
+            rky
+          </h1>
+        </div>
+        <div className="home__wrapper__navbar__list">
+          {navbarItems.map((item) => {
+            return (
+              <div
+                key={item.id}
+                className="home__wrapper__navbar__list__item"
+                onClick={() => Router.push("/" + item.route)}
+              >
+                <div className="home__wrapper__navbar__list__item__icon">
+                  {item.icon}
+                </div>
+                <div className="home__wrapper__navbar__list__item__name">
+                  <a className="home__wrapper__navbar__list__item__name--a">
+                    {item.name}
+                  </a>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

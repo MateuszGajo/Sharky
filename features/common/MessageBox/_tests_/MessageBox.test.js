@@ -1,9 +1,9 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react";
-import { toHaveClass, toHaveValue } from "@testing-library/jest-dom/matchers";
+import { toHaveValue } from "@testing-library/jest-dom/matchers";
 import MessageBox from "../MessageBox";
 
-expect.extend({ toHaveClass, toHaveValue });
+expect.extend({ toHaveValue });
 
 it("does message box property works correct", () => {
   const messageBoxValue = "message";
@@ -14,14 +14,11 @@ it("does message box property works correct", () => {
       value={messageBoxValue}
       onChange={messageBoxOnChange}
       btn-size="medium"
-      size="large"
     />
   );
 
-  const messageBox = getByTestId("message-box");
   const messageBoxTextarea = getByTestId("message-box-textarea");
 
-  expect(messageBox).toHaveClass("message-box--large");
   expect(messageBoxTextarea).toHaveValue(messageBoxValue);
 
   const newMessageBoxValue = "messsage2";
