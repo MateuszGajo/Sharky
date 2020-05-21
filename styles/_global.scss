@@ -56,7 +56,19 @@
 }
 
 .list {
-  display: flex;
-  justify-content: flex-start;
-  flex-wrap: wrap;
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-rows: min-content;
+}
+
+@media(max-width:1023px) and(orientation:portrait){
+  .list{
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width : 767px) and (orientation:landscape){
+  .list{
+    grid-template-columns: 1fr;
+  }
 }

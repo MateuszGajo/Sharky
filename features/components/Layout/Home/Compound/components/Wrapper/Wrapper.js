@@ -14,7 +14,6 @@ const Wrapper = ({ children }) => {
   }, []);
   return (
     <section className="home">
-      {console.log(hamburgerMenu)}
       <div className="home__hamburger" ref={hamburgerMenu}>
         <div className="home__hamburger__icon">
           <GiHamburgerMenu />

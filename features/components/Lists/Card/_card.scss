@@ -1,8 +1,4 @@
 
-  .card{
-    width:50%;
-  }
-
   .card:nth-child(even) .card__item{
     margin-right:calc((100% - 400px)*2/3);
     margin-left:calc((100% - 400px)*1/3)
