@@ -3,6 +3,7 @@ import HomeLayout from "../features/components/Layout/Home/HomeLayout";
 import MessageBox from "../features/common/MessageBox/MessageBox";
 import Posts from "../features/components/Lists/Posts/Posts";
 import { MdBlock } from "react-icons/md";
+import "../styles/main.scss";
 
 const News = ({
   news = [

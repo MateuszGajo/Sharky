@@ -43,8 +43,47 @@
   flex-direction: column;
 }
 
+.confrim-user-container__content__data__form__input{
+  
+  display: flex;
+  justify-content:center;
+  width:100%;
+}
+
 .confrim-user-container__content__data__form--button {
   display: flex;
   justify-content: flex-end;
   margin: $smallMargin 5% 0 0;
+}
+
+@media (max-width:1365px){
+  .confrim-user-container__content{
+    width:50vw;
+    height:60vh;
+  }
+}
+
+@media (max-width:1365px){
+  .confrim-user-container__content{
+    width:60vw;
+    height:70vh;
+  }
+}
+
+
+@media (max-width:767px){
+  .confrim-user-container__content{
+    width:90vw;
+    height:80vh;
+  }
+}
+
+@media (max-width:767px) and (orientation:portrait){
+  .confrim-user-container__content--title--h3 {
+    font-size: 1.7rem;
+  }
+  .confrim-user-container__content{
+    width:90vw;
+    height:60vh;
+  }
 }
