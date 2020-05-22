@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { MdGroup } from "react-icons/md";
-import { IconContext } from "react-icons";
 import NavBar from "../features/components/Layout/Home/Compound/components/NavBar/Navbar";
 import Messenger from "../features/components/Messenger/Messenger";
+import Conversations from "../features/components/Messages/Conversations/Conversations";
+import "../styles/main.scss";
 
 const Messages = ({
   conversations = [
@@ -115,58 +115,12 @@ const Messages = ({
   },
 }) => {
   const [conversation, setConversation] = useState(null);
+  const [isMessengerOpen, setStatusOfMessenger] = useState(false);
   return (
     <section className="messages">
       <NavBar />
-      <div className="messages__container">
-        <div className="messages__container__conversations">
-          {conversations.map((conversation) => {
-            return (
-              <div
-                className="messages__container__conversations__item"
-                key={conversation.id}
-                onClick={() => setConversation(conversation)}
-              >
-                {conversation.photo === "group" ? (
-                  <div className="messages__container__conversations__item__icon">
-                    <IconContext.Provider
-                      value={{
-                        className:
-                          "messages__container__conversations__item__icon--group",
-                      }}
-                    >
-                      <MdGroup />
-                    </IconContext.Provider>
-                  </div>
-                ) : (
-                  <div className="messages__container__conversations__item__photo">
-                    <img
-                      src={"/static/images/" + conversation.photo}
-                      alt=""
-                      className="messages__container__conversations__item__photo--img"
-                    />
-                  </div>
-                )}
-
-                <div className="messages__container__conversations__item__content">
-                  <div className="messages__container__conversations__item__content--name">
-                    <span className="messages__container__conversations__item__content--name--span">
-                      {conversation.name}
-                    </span>
-                  </div>
-                  <div className="messages__container__conversations__item__content--last-message">
-                    <span className="messages__container__conversations__item__content--last-message--span">
-                      {
-                        conversation.messages[conversation.messages.length - 1]
-                          .message
-                      }
-                    </span>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+      <div className="messages__container messages__container--desktop">
+        <Conversations items={conversations} setItem={setConversation} />
         <div className="messages__container__display">
           <Messenger
             conversation={
@@ -174,6 +128,19 @@ const Messages = ({
             }
           />
         </div>
+      </div>
+      <div className="messages__container messages__container--mobile">
+        {!conversation ? (
+          <Conversations items={conversations} setItem={setConversation} />
+        ) : (
+          <div className="messages__container__display--mobile">
+            <Messenger
+              conversation={
+                conversation === null ? conversations[0] : conversation
+              }
+            />
+          </div>
+        )}
       </div>
     </section>
   );
