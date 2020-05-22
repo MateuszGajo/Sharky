@@ -6,7 +6,7 @@ import People from "../../Lists/People/People";
 import Groups from "../../Lists/Groups/Groups";
 import Photos from "../../Lists/Photos/Photos";
 import Posts from "../../Lists/Posts/Posts";
-import About from "../../About/About";
+import About from "../About/About";
 
 const ProfileDisplayItems = ({ setChooseItem, chooseItem }) => {
   const renderComponent = (name) => {
@@ -42,8 +42,12 @@ const ProfileDisplayItems = ({ setChooseItem, chooseItem }) => {
       </div>
       <div
         className={cx("profile__display__content", {
-          "profile__display__content--center":
-            chooseItem.toLowerCase() === "zdjęcia" || "posty",
+          "profile__display__content--photos":
+            chooseItem.toLowerCase() === "zdjęcia",
+          "profile__display__content--posts":
+            chooseItem.toLowerCase() === "posty",
+          "profile__display__content--about":
+            chooseItem.toLowerCase() == "o mnie",
         })}
       >
         {renderComponent(chooseItem)}

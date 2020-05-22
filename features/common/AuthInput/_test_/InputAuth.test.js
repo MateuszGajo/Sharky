@@ -18,7 +18,6 @@ it("does auth input property works correct", () => {
       value={inputValue}
       title={inputTitle}
       onChange={inputOnChange}
-      withOutMargin={true}
       size="large"
     />
   );
@@ -29,9 +28,7 @@ it("does auth input property works correct", () => {
 
   expect(authInputLabel).toHaveTextContent(inputTitle);
   expect(authInput).toHaveValue(inputValue);
-  expect(authInputContainer).toHaveClass(
-    "reset-margin auth-input-container--large"
-  );
+  expect(authInputContainer).toHaveClass("auth-input-container--large");
 
   const newInputValue = "e-mail2";
   fireEvent.change(authInput, {

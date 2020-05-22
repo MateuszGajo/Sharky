@@ -1,9 +1,7 @@
 .primary-input-container {
   position: relative;
   display: flex;
-  align-self: flex-end;
-  margin: 0 auto $smallMargin;
-  height: 8vh;
+  height: 50px;
 }
 
 .primary-input-container--x-large {
@@ -66,3 +64,22 @@
 .primary-input-container__autocomplete--item--span:not(:last-child) {
   border-bottom: 1px solid $shadowColor;
 }
+
+@media(max-width:767px) {
+  .primary-input-container{
+    height:35px;
+  }
+  .primary-input-container--title {
+    font-size: 1rem;
+  }
+}
+
+@media(max-width:767px) and (orientation:landscape) {
+  .primary-input-container--title {
+    font-size: 0.8rem;
+  }
+  .primary-input-container{
+    height:40px;
+  }
+}
+

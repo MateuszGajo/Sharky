@@ -1,45 +1,70 @@
 import React from "react";
 import PrimaryButton from "../../../common/PrimaryButton/PrimaryButton";
+import useTranslation from "next-translate/useTranslation";
 
-const Authentication = ({ children, type }) => {
+const authentication__container = ({ children, type }) => {
+  const { t } = useTranslation();
+
+  const welcomeText = t("component:layout.authentication.welcome-text");
+  const signInTitle = t("component:layout.authentication.sign-in.title");
+  const signUpTitle = t("component:layout.authentication.sign-up.title");
+  const signInDescription = t(
+    "component:layout.authentication.sign-in.description"
+  );
+  const signInButtonText = t("component:layout.authentication.sign-in.button");
+  const signUpDescription = t(
+    "component:layout.authentication.sign-up.description"
+  );
+  const signUpButtonText = t("component:layout.authentication.sign-up.button");
+
   return (
-    <div className="container--authentication">
-      <section className="authentication">
-        <div className="authentication__form">
-          <h1 className="authentication__form--brand">
-            <span className="authentication__form--brand--primaryColor">
+    <section className="authentication">
+      <div className="authentication__container">
+        <div className="authentication__container__form">
+          <h1 className="authentication__container__form__brand">
+            <span className="authentication__container__form__brand--primaryColor">
               Sha
             </span>
-            rky
+            <span className="authentication__container__form__brand--span">
+              rky
+            </span>
           </h1>
-          <span
-            className="authentication__form--title"
-            data-testid="title-auth"
-          >
-            {type === "signin"
-              ? "Zaloguj się"
-              : type === "signup" && "Wypełnij formularz"}
-          </span>
-          <div className="authentication__form__wrapper">{children}</div>
+          <div className="authentication__container__form__wrapper">
+            <div className="authentication__container__form__wrapper__content">
+              <div className="authentication__container__form__wrapper__content__title">
+                <span
+                  className="authentication__container__form__wrapper__content__title--span"
+                  data-testid="title-auth"
+                >
+                  {type === "signin"
+                    ? signInTitle
+                    : type === "signup" && signUpTitle}
+                </span>
+              </div>
+              {children}
+            </div>
+          </div>
         </div>
-        <div className="authentication__text">
-          <div className="authentication__text__wrapper">
-            <h1 className="authentication__text__wrapper--title">Witaj</h1>
+        <div className="authentication__container__text">
+          <div className="authentication__container__text__wrapper">
+            <h1 className="authentication__container__text__wrapper--title">
+              {welcomeText}
+            </h1>
             <p
-              className="authentication__text__wrapper--description"
+              className="authentication__container__text__wrapper--description"
               data-testid="welcome-text"
             >
               {type === "signin"
-                ? "Wypełnij formularz i dołącz do naszej społecznośći"
-                : type === "signup" && "Jeżeli posiadasz już konto"}
+                ? signInDescription
+                : type === "signup" && signUpDescription}
             </p>
-            <div className="authentication__text__wrapper--button">
+            <div className="authentication__container__text__wrapper--button">
               <PrimaryButton
                 border={true}
                 value={
                   type === "signin"
-                    ? "Rejstracja"
-                    : type === "signup" && "Zaloguj się"
+                    ? signInButtonText
+                    : type === "signup" && signUpButtonText
                 }
                 link={
                   type === "signin" ? "/signup" : type === "signup" && "/signin"
@@ -48,9 +73,9 @@ const Authentication = ({ children, type }) => {
             </div>
           </div>
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
   );
 };
 
-export default Authentication;
+export default authentication__container;

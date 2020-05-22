@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import NavBar from "../features/components/Layout/Home/Compound/components/NavBar/Navbar";
 import ProfileInfo from "../features/components/Profile/ProfileInfo/ProfileInfo";
 import ProfileDisplayItems from "../features/components/Profile/ProfileDisplayItems/ProfileDisplayItems";
+import "../styles/main.scss";
 
 const profile = () => {
   const [chooseItem, setChooseItem] = useState("");

@@ -1,6 +1,7 @@
 .profile__container {
+    flex-basis: 0;
+    flex-grow:1;
     display: flex;
-    width: 75vw;
   }
   
   .profile__container__person {
@@ -73,4 +74,56 @@
     margin-top: 5px;
     font-weight: bold;
     transition: 0.2s color;
+  }
+
+  @media(max-width:1023px){
+    .profile__container{
+      flex-direction: column;
+      min-height:100vh;
+    }
+
+    .profile__container__person{
+      flex-direction: row;
+      padding-bottom:$smallMargin;
+      border-bottom:2px solid $shadowColor;
+    }
+
+    .profile__container__person--name{
+      display:flex;
+      align-items: center;
+      margin-left:$smallMargin;
+      order:1;
+    }
+
+    .profile__container__person--name--span{
+      font-size: 1.8rem;
+    }
+
+    .profile__container__person--photo--img{
+      height:200px;
+      width:200px;
+      border-radius:50%;
+    }
+
+    .profile__container__info{
+      flex-grow:1;
+      flex-direction: column;
+    }
+
+    .profile__container__info__container{
+      flex-direction: row;
+    }
+  }
+
+  @media(max-width:1023px) and (orientation:landscape){
+    .profile__container{
+      min-height:150vh;
+    }
+  }
+
+  @media (max-width:767px) and (orientation:portrait){
+    .profile__container__person--photo--img{
+      width:150px;
+      height:150px;
+    }
   }
