@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { TiInfoLargeOutline } from "react-icons/ti";
+import useTranslation from "next-translate/useTranslation";
 import ProfileDisplayItems from "../ProfileDisplayItems/ProfileDisplayItems";
 
 const ProfileInfo = ({
@@ -12,6 +13,15 @@ const ProfileInfo = ({
   setChooseItem,
 }) => {
   const [isDisplayAbout, setStatusOfDisplayAbout] = useState(false);
+
+  const { t } = useTranslation();
+
+  const aboutItemName = t("profile:about-me");
+  const friendsItemName = t("profile:friends");
+  const groupsItemName = t("profile:groups");
+  const photosItemName = t("profile:photos");
+  const postsItemName = t("profile:posts");
+  const fanpagesItemName = t("profile:fanpages");
   return (
     <div className="profile__container">
       <div className="profile__container__person">
@@ -30,7 +40,7 @@ const ProfileInfo = ({
       </div>
       {isDisplayAbout ? (
         <ProfileDisplayItems
-          chooseItem="O mnie"
+          chooseItem={aboutItemName}
           setChooseItem={setStatusOfDisplayAbout}
         />
       ) : (
@@ -38,7 +48,7 @@ const ProfileInfo = ({
           <div className="profile__container__info__container">
             <div
               className="profile__container__info__container__item"
-              onClick={() => setChooseItem("Znajomi")}
+              onClick={() => setChooseItem(friendsItemName)}
             >
               <div className="profile__container__info__container__item--circle">
                 <span className="profile__container__info__container__item--circle--span">
@@ -47,13 +57,13 @@ const ProfileInfo = ({
               </div>
               <div className="profile__container__info__container__item--name">
                 <span className="profile__container__info__container__item--name--span">
-                  Znajomi
+                  {friendsItemName}
                 </span>
               </div>
             </div>
             <div
               className="profile__container__info__container__item"
-              onClick={() => setChooseItem("Grupy")}
+              onClick={() => setChooseItem(groupsItemName)}
             >
               <div className="profile__container__info__container__item--circle">
                 <span className="profile__container__info__container__item--circle--span">
@@ -62,13 +72,13 @@ const ProfileInfo = ({
               </div>
               <div className="profile__container__info__container__item--name">
                 <span className="profile__container__info__container__item--name--span">
-                  Grupy
+                  {groupsItemName}
                 </span>
               </div>
             </div>
             <div
               className="profile__container__info__container__item"
-              onClick={() => setChooseItem("Polubione fanpage")}
+              onClick={() => setChooseItem(fanpagesItemName)}
             >
               <div className="profile__container__info__container__item--circle">
                 <span className="profile__container__info__container__item--circle--span">
@@ -77,7 +87,7 @@ const ProfileInfo = ({
               </div>
               <div className="profile__container__info__container__item--name">
                 <span className="profile__container__info__container__item--name--span">
-                  Fanpage
+                  {fanpagesItemName}
                 </span>
               </div>
             </div>
@@ -85,7 +95,7 @@ const ProfileInfo = ({
           <div className="profile__container__info__container">
             <div
               className="profile__container__info__container__item"
-              onClick={() => setChooseItem("Zdjęcia")}
+              onClick={() => setChooseItem(photosItemName)}
             >
               <div className="profile__container__info__container__item--circle">
                 <span className="profile__container__info__container__item--circle--span">
@@ -94,13 +104,13 @@ const ProfileInfo = ({
               </div>
               <div className="profile__container__info__container__item--name">
                 <span className="profile__container__info__container__item--name--span">
-                  Zdjęcia
+                  {photosItemName}
                 </span>
               </div>
             </div>
             <div
               className="profile__container__info__container__item"
-              onClick={() => setChooseItem("Posty")}
+              onClick={() => setChooseItem(postsItemName)}
             >
               <div className="profile__container__info__container__item--circle">
                 <span className="profile__container__info__container__item--circle--span">
@@ -109,7 +119,7 @@ const ProfileInfo = ({
               </div>
               <div className="profile__container__info__container__item--name">
                 <span className="profile__container__info__container__item--name--span">
-                  Posty
+                  {postsItemName}
                 </span>
               </div>
             </div>
@@ -126,7 +136,7 @@ const ProfileInfo = ({
               </div>
               <div className="profile__container__info__container__item--name">
                 <span className="profile__container__info__container__item--name--span">
-                  O mnie
+                  {aboutItemName}
                 </span>
               </div>
             </div>
