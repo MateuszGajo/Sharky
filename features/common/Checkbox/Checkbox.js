@@ -1,6 +1,9 @@
 import React from "react";
+import useTranslation from "next-translate/useTranslation";
 
 const Checkbox = ({ value, onChange }) => {
+  const { t } = useTranslation();
+  const label = t("common:checkbox.label");
   return (
     <div className="checkbox">
       <div className="checkbox--icon">
@@ -15,7 +18,7 @@ const Checkbox = ({ value, onChange }) => {
         />
         <label className="checkbox--icon--label" htmlFor="remeberme"></label>
       </div>
-      <span className="checkbox--text">Zapamiętaj mnie</span>
+      <span className="checkbox--text">{label}</span>
     </div>
   );
 };

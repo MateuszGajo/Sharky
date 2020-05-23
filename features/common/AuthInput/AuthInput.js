@@ -6,14 +6,12 @@ const InputAuth = ({
   onChange,
   type = "text",
   title,
-  withOutMargin = false,
   size = "large",
 }) => {
   return (
     <div
       data-testid="auth-input-container"
       className={cx("auth-input-container", {
-        "reset-margin": withOutMargin === true,
         "auth-input-container--x-large": size === "x-large",
         "auth-input-container--large": size === "large",
         "auth-input-container--medium": size === "medium",
