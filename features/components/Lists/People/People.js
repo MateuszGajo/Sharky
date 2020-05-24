@@ -6,11 +6,11 @@ const People = ({
   listOfPeople = [
     {
       userId: 123,
-      relation: "Family",
+      relation: "family",
     },
     {
       userId: 124,
-      relation: "Pal",
+      relation: "pal",
     },
   ],
   users = {
@@ -57,11 +57,21 @@ const People = ({
           description: description + ": " + numberOfFriends,
           button: "relation",
           title: t(`component:lists.people.${relation.toLowerCase()}`),
+          buttonName: relation,
           collapse: true,
           collapseItems: {
-            pink: palName,
-            blue: familyName,
-            green: friendName,
+            pink: {
+              name: "pal",
+              title: palName,
+            },
+            blue: {
+              name: "family",
+              title: familyName,
+            },
+            green: {
+              name: "friend",
+              title: friendName,
+            },
           },
         };
         return (

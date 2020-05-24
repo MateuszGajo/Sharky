@@ -22,7 +22,7 @@ const Post = ({
     lastName: "Kowalski",
     photo: "profile.png",
   },
-  singlePost = true,
+  isComment = true,
   focusElement: fElement = null,
 }) => {
   const { t, lang } = useTranslation();
@@ -50,12 +50,10 @@ const Post = ({
   };
 
   useEffect(() => {
-    console.log(collapseSetting);
     collapseSetting.current.addEventListener("click", () => {
       const collapseItem = collapseSetting.current.querySelector(
         ".post__item__navbar__column-end__setting__collapse"
       );
-      console.log(focusElement);
       const { current: lastItem } = focusElement;
       if (lastItem !== collapseItem && lastItem !== null) {
         lastItem.classList.add("is-close");
@@ -209,7 +207,7 @@ const Post = ({
         <DownBarButtons postId={post.id} />
       </div>
       <div className="post__item__comments" data-testid="post-comments">
-        {singlePost === true ? <Comments focusElement={focusElement} /> : null}
+        {isComment === true ? <Comments focusElement={focusElement} /> : null}
       </div>
     </div>
   );

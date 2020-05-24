@@ -100,6 +100,7 @@
     margin-top:5px;
     cursor:pointer;
     transition:color 0.2s;
+    font-size: 0.95rem;
 }
 .post__item__comments__container__item__content__reply__container__item__content__down-bar--icon:nth-child(2){
     margin-left:$smallMargin
@@ -130,13 +131,11 @@
     .post__item__comments__container__item__content__reply__container__item__content__top-bar__icon__collapse__item--name--span{
         font-size: 1.2rem;
     }
-    .post__item__comments__container__item__content__reply__container__item__content__down-bar--icon {
-        font-size: 0.9rem;
-    }
+    
 }
 
 @media(max-width:1023px) and(orientation:portrait){
     .post__item__comments__container__item__content__reply__container__item__content__down-bar--icon {
-        font-size: 0.96rem;
+        font-size: 1rem;
     }
 }

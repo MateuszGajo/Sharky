@@ -36,6 +36,63 @@ const NavBar = () => {
     navbar: null,
   };
 
+  const navbarItems = [
+    {
+      id: 1,
+      route: "",
+      name: homeName,
+      icon: <AiOutlineHome />,
+    },
+    {
+      id: 2,
+      route: "news",
+      name: worldName,
+      icon: <GiWorld />,
+    },
+    {
+      id: 3,
+      route: "notifications",
+      name: notificationsName,
+      icon: <IoIosNotificationsOutline />,
+    },
+    {
+      id: 4,
+      route: "messages",
+      name: messagesName,
+      icon: <AiOutlineMessage />,
+    },
+    {
+      id: 5,
+      route: "friends",
+      name: friendsName,
+      icon: <MdPeopleOutline />,
+    },
+    {
+      id: 6,
+      route: "groups",
+      name: groupsName,
+      icon: <TiGroupOutline />,
+    },
+    {
+      id: 7,
+      route: "fanpages",
+      name: fanpagesName,
+      icon: <TiNews />,
+    },
+    {
+      id: 8,
+      route: "profile",
+      name: profileName,
+      icon: <FaRegUser />,
+    },
+    {
+      id: 9,
+      route: "settings",
+      name: settingsName,
+      icon: <AiOutlineSetting />,
+    },
+  ];
+
   const showScroll = () => {
     if (timeout.navbar) {
       clearTimeout(timeout.navbar);
@@ -80,123 +137,24 @@ const NavBar = () => {
           </h1>
         </div>
         <div className="home__wrapper__navbar__list">
-          <div
-            className="home__wrapper__navbar__list__item"
-            onClick={() => Router.push("/")}
-          >
-            <div className="home__wrapper__navbar__list__item__icon">
-              <AiOutlineHome />
-            </div>
-            <div className="home__wrapper__navbar__list__item__name">
-              <a className="home__wrapper__navbar__list__item__name--a">
-                {homeName}
-              </a>
-            </div>
-          </div>
-          <div
-            className="home__wrapper__navbar__list__item"
-            onClick={() => Router.push("/world")}
-          >
-            <div className="home__wrapper__navbar__list__item__icon">
-              <GiWorld />
-            </div>
-            <div className="home__wrapper__navbar__list__item__name">
-              <a className="home__wrapper__navbar__list__item__name--a">
-                {worldName}
-              </a>
-            </div>
-          </div>
-          <div
-            className="home__wrapper__navbar__list__item"
-            onClick={() => Router.push("/notifications")}
-          >
-            <div className="home__wrapper__navbar__list__item__icon">
-              <IoIosNotificationsOutline />
-            </div>
-            <div className="home__wrapper__navbar__list__item__name">
-              <a className="home__wrapper__navbar__list__item__name--a">
-                {notificationsName}
-              </a>
-            </div>
-          </div>
-          <div
-            className="home__wrapper__navbar__list__item"
-            onClick={() => Router.push("/messages")}
-          >
-            <div className="home__wrapper__navbar__list__item__icon">
-              <AiOutlineMessage />
-            </div>
-            <div className="home__wrapper__navbar__list__item__name">
-              <a className="home__wrapper__navbar__list__item__name--a">
-                {messagesName}
-              </a>
-            </div>
-          </div>
-          <div
-            className="home__wrapper__navbar__list__item"
-            onClick={() => Router.push("/friends")}
-          >
-            <div className="home__wrapper__navbar__list__item__icon">
-              <MdPeopleOutline />
-            </div>
-            <div className="home__wrapper__navbar__list__item__name">
-              <a className="home__wrapper__navbar__list__item__name--a">
-                {friendsName}
-              </a>
-            </div>
-          </div>
-          <div
-            className="home__wrapper__navbar__list__item"
-            onClick={() => Router.push("/groups")}
-          >
-            <div className="home__wrapper__navbar__list__item__icon">
-              <TiGroupOutline />
-            </div>
-            <div className="home__wrapper__navbar__list__item__name">
-              <a className="home__wrapper__navbar__list__item__name--a">
-                {groupsName}
-              </a>
-            </div>
-          </div>
-          <div
-            className="home__wrapper__navbar__list__item"
-            onClick={() => Router.push("/fanpages")}
-          >
-            <div className="home__wrapper__navbar__list__item__icon">
-              <TiNews />
-            </div>
-            <div className="home__wrapper__navbar__list__item__name">
-              <a className="home__wrapper__navbar__list__item__name--a">
-                {fanpagesName}
-              </a>
-            </div>
-          </div>
-          <div
-            className="home__wrapper__navbar__list__item"
-            onClick={() => Router.push("/profile")}
-          >
-            <div className="home__wrapper__navbar__list__item__icon">
-              <FaRegUser />
-            </div>
-            <div className="home__wrapper__navbar__list__item__name">
-              <a className="home__wrapper__navbar__list__item__name--a">
-                {profileName}
-              </a>
-            </div>
-          </div>
-          <div
-            className="home__wrapper__navbar__list__item"
-            onClick={() => Router.push("/setting")}
-          >
-            <div className="home__wrapper__navbar__list__item__icon">
-              <AiOutlineSetting />
-            </div>
-            <div className="home__wrapper__navbar__list__item__name">
-              <a className="home__wrapper__navbar__list__item__name--a">
-                {settingsName}
-              </a>
-            </div>
-          </div>
+          {navbarItems.map((item) => {
+            return (
+              <div
+                key={item.id}
+                className="home__wrapper__navbar__list__item"
+                onClick={() => Router.push("/" + item.route)}
+              >
+                <div className="home__wrapper__navbar__list__item__icon">
+                  {item.icon}
+                </div>
+                <div className="home__wrapper__navbar__list__item__name">
+                  <a className="home__wrapper__navbar__list__item__name--a">
+                    {item.name}
+                  </a>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
