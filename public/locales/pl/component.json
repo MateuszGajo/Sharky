@@ -30,7 +30,7 @@
     "lists":{
         "fanpages":{
             "description":"Liczba subskrypcji",
-            "title":"Subskrybuj"
+            "button":"Subskrybuj"
         },
         "groups":{
             "description":"Liczba członków",
