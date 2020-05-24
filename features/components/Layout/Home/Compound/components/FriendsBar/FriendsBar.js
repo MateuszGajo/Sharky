@@ -56,40 +56,40 @@ const FriendsBar = () => {
   }, []);
 
   return (
-    <div className="fixed-container fixed-container-smaller">
+    <div className="home__wrapper home__wrapper--medium">
       <div
         ref={friendsBar}
-        className={cx("home-wrapper__friends primary-scroll", {
+        className={cx("home__wrapper__friends primary-scroll", {
           "primary-scroll-active": isFriendsBarScrolling,
         })}
       >
-        <div className="home-wrapper_friends__list">
-          {listOfFriends.map((item) => {
+        <div className="home_friends__list">
+          {listOfFriends.map((item, index) => {
             const friend = users[item.userId];
             return (
               <div
-                className="home-wrapper_friends__list__item"
+                className="home_friends__list__item"
                 key={friend.id}
-                data-testid={`friend${friend.id}`}
+                data-testid={`friend${index}`}
                 onClick={() => setStatusOfMessenger(false)}
               >
-                <div className="home-wrapper_friends__list__item__user">
-                  <div className="home-wrapper_friends__list__item__user__photo">
+                <div className="home_friends__list__item__user">
+                  <div className="home_friends__list__item__user__photo">
                     <img
                       src={"/static/images/" + friend.photo}
                       alt=""
-                      className="home-wrapper_friends__list__item__user__photo--img"
+                      className="home_friends__list__item__user__photo--img"
                     />
                   </div>
-                  <div className="home-wrapper_friends__list__item__user--name">
-                    <span className="home-wrapper_friends__list__item__user--name--span">
+                  <div className="home_friends__list__item__user--name">
+                    <span className="home_friends__list__item__user--name--span">
                       {friend.firstName} {friend.lastName}
                     </span>
                   </div>
                 </div>
                 {friend.online ? (
-                  <div className="home-wrapper_friends__list__item--online">
-                    <div className="home-wrapper_friends__list__item--online--circle"></div>
+                  <div className="home_friends__list__item--online">
+                    <div className="home_friends__list__item--online--circle"></div>
                   </div>
                 ) : null}
               </div>

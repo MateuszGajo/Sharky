@@ -1,23 +1,33 @@
-import React from "react";
-import Authentication from "../features/components/Layout/Authentication/Authentication";
-import * as MultiStepForm from "../features/components/MultiStepForm/MultiStepForm";
-import "./styles/main.scss";
-const SignUp = ({ onSubmit }) => {
-  return (
-    <Authentication type="signup">
-      <MultiStepForm.Wizzard onSubmit={onSubmit}>
-        <MultiStepForm.StepWrapper>
-          <MultiStepForm.Step dataKey="Step">
-            <MultiStepForm.Credentials />
-          </MultiStepForm.Step>
-          <MultiStepForm.Step dataKey="Step">
-            <MultiStepForm.PersonalData />
-          </MultiStepForm.Step>
-        </MultiStepForm.StepWrapper>
-        <MultiStepForm.Controls />
-      </MultiStepForm.Wizzard>
-    </Authentication>
-  );
-};
+// @ts-nocheck
+import I18nProvider from 'next-translate/I18nProvider'
+import React from 'react'
+import C from '../pages_/signup'
+import ns0 from '../public/locales/en/common.json'
+import ns1 from '../public/locales/en/component.json'
+import ns2 from '../public/locales/en/signup.json'
 
-export default SignUp;
+const namespaces = { 'common': ns0, 'component': ns1, 'signup': ns2 }
+
+export default function Page(p){
+  return (
+    <I18nProvider 
+      lang="en" 
+      namespaces={namespaces}  
+      internals={{"isStaticMode":true,"redirectToDefaultLang":false,"defaultLanguage":"en"}}
+    >
+      <C {...p} />
+    </I18nProvider>
+  )
+}
+
+Page = Object.assign(Page, { ...C })
+
+if(C && C.getInitialProps) {
+  Page.getInitialProps = ctx => C.getInitialProps({ ...ctx, lang: 'en'})
+}
+
+
+
+
+
+export * from '../pages_/signup'

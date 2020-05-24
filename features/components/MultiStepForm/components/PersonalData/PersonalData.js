@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import useTranslation from "next-translate/useTranslation";
 import { WizzardContext } from "../../context/WizzardContext";
 import AuthInput from "../../../../common/AuthInput/AuthInput";
 
@@ -11,28 +12,44 @@ const PersonalData = () => {
     phoneNumber,
     setPhoneNumber,
   } = useContext(WizzardContext);
+
+  const { t } = useTranslation();
+
+  const inputFirstName = t("common:input.first-name");
+  const inputLastName = t("common:input.last-name");
+  const inputPhone = t("common:input.phone");
   return (
     <div className="authentication__form__wrapper__inputs__wrapper">
-      <AuthInput
-        value={firstName}
-        onChange={setFirstName}
-        title="Imię"
-        size="x-large"
-        //withoutMargin should be true only on lastname Error
-      />
-      <AuthInput
-        value={lastName}
-        onChange={setLastName}
-        title="Nazwisko"
-        size="x-large"
-        //withoutMargin should be true only on phone Error
-      />
-      <AuthInput
-        value={phoneNumber}
-        onChange={setPhoneNumber}
-        title="Telefon"
-        size="x-large"
-      />
+      <div className="authentication__form__wrapper__inputs__wrapper__input">
+        <p className="authentication__form__wrapper__inputs__wrapper__input--error">
+          {/* error text */}
+        </p>
+        <AuthInput
+          value={firstName}
+          onChange={setFirstName}
+          title={inputFirstName}
+          size="x-large"
+        />
+      </div>
+      <div className="authentication__form__wrapper__inputs__wrapper__input">
+        <p className="authentication__form__wrapper__inputs__wrapper__input--error"></p>
+        <AuthInput
+          value={lastName}
+          onChange={setLastName}
+          title={inputLastName}
+          size="x-large"
+        />
+      </div>
+      <div className="authentication__form__wrapper__inputs__wrapper__input">
+        <p className="authentication__form__wrapper__inputs__wrapper__input--error"></p>
+        <AuthInput
+          value={phoneNumber}
+          onChange={setPhoneNumber}
+          title={inputPhone}
+          size="x-large"
+          withOutMargin={true}
+        />
+      </div>
     </div>
   );
 };
