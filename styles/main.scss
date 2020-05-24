@@ -9,6 +9,7 @@
 @import "./notifications";
 @import "./settings";
 @import "./friends";
+@import "./profile";
 @import "../features/common/PopUp/ConfirmUser/confirmUser";
 @import "../features/common/MessageBox/messageBox";
 @import "../features/common/Search/search";
@@ -31,6 +32,9 @@
 @import "../features/components/Settings/Items/items";
 @import "../features/components/Post/components/Comments/comments";
 @import "../features/components/Post/components/Comments/components/Reply/reply";
+@import "../features/components/Profile/About/about";
+@import "../features/components/Profile/ProfileDisplayItems/profileDisplayItems";
+@import "../features/components/Profile/ProfileInfo/profileInfo";
 @import "../features/components/Layout/Authentication/authentication";
 @import "../features/components/Layout/Home/Compound/components/Wrapper/wrapper";
 @import "../features/components/Layout/Home/Compound/components/FriendsBar/friendsBar";
