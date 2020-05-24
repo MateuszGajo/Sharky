@@ -104,10 +104,11 @@ const Card = ({
                       "card__item__info__second-column__buttons--join":
                         button === "join",
                       "primary-background":
-                        greenC?.name === buttonName && collapse,
+                        greenC?.name === buttonName && collapseItems,
                       "family-background":
-                        blueC?.name === buttonName && collapse,
-                      "pal-background": pinkC?.name === buttonName && collapse,
+                        blueC?.name === buttonName && collapseItems,
+                      "pal-background":
+                        pinkC?.name === buttonName && collapseItems,
                     }
                   )}
                   data-testid="card-button"

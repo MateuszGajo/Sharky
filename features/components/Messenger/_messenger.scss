@@ -1,7 +1,7 @@
 .messenger {
     display: flex;
     flex-direction: column;
-    height:100%;
+    height:100vh;
     width:100%;
     background-color: white;
     border:1px solid $shadowColor;
@@ -9,11 +9,13 @@
   
   .messenger__navbar {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
     border-bottom: 1px solid $shadowColor;
     padding: 8px 5px;
   }
+
+ .messenger__navbar__return{
+ display:none;
+ }
   
   .messenger__navbar__person {
     display: flex;
@@ -168,8 +170,6 @@
     resize: none;
   }
 
-
-
   .messenger__downbar__form__send{
     display:flex;
     justify-content: flex-end;
@@ -180,6 +180,7 @@
     background-color: transparent;
     color: $primaryColor;
     font-size: 1.1rem;
+    margin-right:3px;
     cursor: pointer;
   }
 
@@ -196,3 +197,13 @@
   }
   
   
+@media(max-width:1023px){
+ .messenger__navbar__return{
+  display:flex;
+  align-items: center;
+  font-size: 2rem;
+  margin-right:$smallMargin;
+  color:$primaryColor;
+  cursor:pointer;
+}
+}
