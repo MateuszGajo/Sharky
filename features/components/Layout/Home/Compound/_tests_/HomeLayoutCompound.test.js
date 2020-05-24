@@ -4,6 +4,7 @@ import * as HomeLayoutCompound from "../HomeLayoutCompound";
 import { WizzardContext } from "../context/WizzardContext";
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 it("is post content and search content correct", () => {
@@ -47,14 +48,19 @@ it("is the massanger show", () => {
     setStatusOfMessage: jest.fn(),
 =======
 >>>>>>> features/settings
+=======
+>>>>>>> features/friends
 it("does messanger shows", () => {
   const mockContext = {
     isMessengerClose: true,
     setStatusOfMessenger: jest.fn(),
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> common-layout
 >>>>>>> features/settings
+=======
+>>>>>>> features/friends
   };
   const { getByTestId } = render(
     <WizzardContext.Provider value={mockContext}>
@@ -62,6 +68,7 @@ it("does messanger shows", () => {
     </WizzardContext.Provider>
   );
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   fireEvent.click(getByTestId("friend0"));
 
@@ -77,4 +84,9 @@ it("does messanger shows", () => {
   expect(mockContext.setStatusOfMessenger).toBeCalledWith(false);
 >>>>>>> common-layout
 >>>>>>> features/settings
+=======
+  fireEvent.click(getByTestId("friend0"));
+
+  expect(mockContext.setStatusOfMessenger).toBeCalledWith(false);
+>>>>>>> features/friends
 });
