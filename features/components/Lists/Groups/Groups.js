@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Card from "../Card/Card";
 import useTranslation from "next-translate/useTranslation";
 
@@ -11,13 +11,13 @@ const Groups = ({
       numberOfMembers: 123,
     },
     {
-      id: 12,
+      id: 13,
       name: "dsa",
       photo: "profile.png",
       numberOfMembers: 123,
     },
     {
-      id: 12,
+      id: 14,
       name: "dsa",
       photo: "profile.png",
       numberOfMembers: 123,
@@ -27,12 +27,19 @@ const Groups = ({
   const { t } = useTranslation();
   const description = t("component:lists.groups.description");
   const buttonText = t("component:lists.groups.button");
+
+  const [group, setGroup] = useState("");
+
+  useEffect(() => {
+    // console.log(group);
+  }, [group]);
+
   return (
     <div className="list">
       {listOfGroups.map((group) => {
         const { id, name, photo, numberOfMembers } = group;
         const data = {
-          ref: "group",
+          refType: "group",
           refId: id,
           photo,
           radiusPhoto: true,
@@ -42,7 +49,7 @@ const Groups = ({
           title: buttonText,
           collapse: false,
         };
-        return <Card data={data} key={id} />;
+        return <Card data={data} key={id} join={setGroup} />;
       })}
     </div>
   );

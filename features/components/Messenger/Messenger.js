@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { MdSend } from "react-icons/md";
 import { AiOutlineClose } from "react-icons/ai";
+import { IoMdArrowBack } from "react-icons/io";
 import { MdGroup } from "react-icons/md";
 import { IconContext } from "react-icons";
 import cx from "classnames";
@@ -13,6 +14,7 @@ const Messenger = ({
   isMessengerClose = false,
   setStatusOfMessenger = null,
   windowMessenger = false,
+  setStatusOfDisplayMobile,
   conversation = {
     id: 1212,
     type: "group",
@@ -124,6 +126,12 @@ const Messenger = ({
       data-testid="messenger"
     >
       <div className="messenger__navbar">
+        <div
+          className="messenger__navbar__return"
+          onClick={() => setStatusOfDisplayMobile(false)}
+        >
+          <IoMdArrowBack />
+        </div>
         <div className="messenger__navbar__person">
           {conversation.photo === "group" ? (
             <div className="messenger__navbar__person__icon">

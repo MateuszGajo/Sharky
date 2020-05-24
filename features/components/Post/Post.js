@@ -22,7 +22,7 @@ const Post = ({
     lastName: "Kowalski",
     photo: "profile.png",
   },
-  singlePost = true,
+  isComment = true,
   focusElement: fElement = null,
 }) => {
   const { t, lang } = useTranslation();
@@ -207,7 +207,7 @@ const Post = ({
         <DownBarButtons postId={post.id} />
       </div>
       <div className="post__item__comments" data-testid="post-comments">
-        {singlePost === true ? <Comments focusElement={focusElement} /> : null}
+        {isComment === true ? <Comments focusElement={focusElement} /> : null}
       </div>
     </div>
   );
