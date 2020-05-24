@@ -1,0 +1,17 @@
+.news__info{
+    display:flex;
+    justify-content: center;
+    text-align: center;
+    margin:$smallMargin 0 $mediumMargin;
+    color:grey;
+}
+
+.news__info--icon{
+    display:flex;
+    align-items: center;
+    font-size: 1.1rem;
+}
+
+.news__info--span{
+    margin-left:$smallMargin;
+}
