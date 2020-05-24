@@ -1,6 +1,6 @@
 {
     "allLanguages": ["en", "pl"],
-    "defaultLanguage": "pl",
+    "defaultLanguage": "en",
     "currentPagesDir": "pages_",
     "finalPagesDir": "pages",
     "localesPath": "public/locales",
