@@ -1,0 +1,24 @@
+{
+    "input":{
+        "password":"Hasło",
+        "email":"E-mail",
+        "confirm-password":"Powtórz hasło",
+        "first-name":"Imię",
+        "last-name":"Nazwisko",
+        "phone":"Telefon"
+    },
+    "checkbox":{
+        "label":"Zapamiętaj mnie"
+    },
+    "messagebox":{
+        "title":"Dodaj post",
+        "button":"Opublikuj",
+        "description":"Co słychać u Ciebie?"
+    },
+    "pop-up":{
+        "confirm-user":{
+            "title":"Wpisz swoje hasło",
+            "button":"Dalej"
+        }
+    }  
+}

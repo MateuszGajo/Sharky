@@ -1,0 +1,119 @@
+.photo-list{
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width:1000px;
+}
+
+.photo-list__item{
+    margin-top:$smallMargin;
+}
+
+.photo-list__item:nth-child(3n) .photo-list__item--img{
+    width:950px;
+    height:500px;
+    object-fit: cover;
+}
+
+
+.photo-list__item--img{
+    display:block;
+    height:450px;
+    width:450px;
+    object-fit: cover;
+}
+
+@media(max-width:1919px){
+    .photo-list{
+        width:800px;
+    }
+    
+    .photo-list__item:nth-child(3n) .photo-list__item--img{
+        width:750px;
+        height:430px;
+    }
+    
+    
+    .photo-list__item--img{
+        height:350px;
+        width:350px;
+    }
+}
+
+@media(max-width:1365px){
+    .photo-list{
+        width:700px;
+    }
+    
+    .photo-list__item:nth-child(3n) .photo-list__item--img{
+        width:650px;
+        height:400px;
+    }
+    
+    
+    .photo-list__item--img{
+        height:300px;
+        width:300px;
+    }
+}
+
+@media(max-width:1023px){
+    .photo-list{
+        width:600px;
+    }
+    
+    .photo-list__item:nth-child(3n) .photo-list__item--img{
+        width:550px;
+        height:300px;
+    }
+
+    .photo-list__item--img{
+        height:250px;
+        width:250px;
+    }
+    
+}
+
+@media(max-width:767px) and (orientation:portrait){
+    .photo-list{
+        flex-direction: column;
+        width:100%;
+    }
+
+    .photo-list__item{
+        margin-top:0;
+        margin-bottom:$smallMargin;
+    }
+
+    .photo-list__item:nth-child(3n) .photo-list__item--img{
+        height:auto;
+        width:100%;
+    }
+
+    .photo-list__item--img{
+        height:auto;
+        width:100%;
+    }
+}
+
+@media(max-width:767px) and (orientation:landscape){
+    .photo-list{
+        flex-direction: column;
+        width:100%;
+    }
+
+    .photo-list__item{
+        margin-top:0;
+        margin-bottom:$smallMargin;
+    }
+
+    .photo-list__item:nth-child(3n) .photo-list__item--img{
+        height:100vh;
+        width:100vw;
+    }
+    
+    .photo-list__item--img{
+        height:100vh;
+        width:100vw;
+    }
+}

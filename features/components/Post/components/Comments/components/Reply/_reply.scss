@@ -1,0 +1,141 @@
+.post__item__comments__container__item__content__reply__container{
+    margin-top:10px;
+}
+
+.post__item__comments__container__item__content__reply__container__input{
+    margin-bottom:5px;
+}
+.post__item__comments__container__item__content__reply__container__item{
+    display:flex; 
+}
+.post__item__comments__container__item__content__reply__container__item + .post__item__comments__container__item__content__reply__container__item{
+    margin-top:$smallMargin;
+}
+
+.post__item__comments__container__item__content__reply__container__item__photo--img{
+    object-fit: cover;
+    width:25px;
+    height:25px;
+    border-radius:50%;
+}
+
+.post__item__comments__container__item__content__reply__container__item__content{
+    width:100%;
+    margin-left:$smallMargin;
+    font-size: 0.85rem;
+    &:hover .post__item__comments__container__item__content__reply__container__item__content__top-bar__icon{
+        visibility: visible;
+    }
+}
+
+.post__item__comments__container__item__content__reply__container__item__content__top-bar{
+    display:flex;
+    justify-content: space-between;
+}
+
+.post__item__comments__container__item__content__reply__container__item__content__top-bar__user-name--span{
+    color:$primaryColor;
+    font-weight: bold;
+}
+
+
+
+.post__item__comments__container__item__content__reply__container__item__content__top-bar__icon{
+    position: relative;
+    visibility: hidden;
+    cursor:pointer;
+}
+
+.post__item__comments__container__item__content__reply__container__item__content__top-bar__icon__collapse{
+    position: absolute;
+    bottom:100%;
+    right:0;
+    background-color: white;
+    box-shadow: 0 0 2px 1px $shadowColor;
+}
+
+.post__item__comments__container__item__content__reply__container__item__content__top-bar__icon__collapse__item{
+    display:flex;
+    align-items: center;
+    padding:10px;
+    transition:background-color 0.2s;
+    height:50px;
+    &:hover{
+        background-color: $secondaryBackgroundColor;
+    }
+}
+
+.post__item__comments__container__item__content__reply__container__item__content__top-bar__icon__collapse__item--icon{
+    display:flex;
+    align-items: center;
+    margin-right:$smallMargin;
+    font-size: 1.2rem;
+}
+
+.post__item__comments__container__item__content__reply__container__item__content__top-bar__icon__collapse__item--icon--customize{
+    width:20px;
+    height:20px;
+    color:rgba(0,0,0,0.7);
+}
+
+.post__item__comments__container__item__content__reply__container__item__content__top-bar__icon__collapse__item--name{
+    display:flex;
+    align-items: center;
+}
+
+.post__item__comments__container__item__content__reply__container__item__content__top-bar__icon__collapse__item--name--span{
+    display:inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+
+.post__item__comments__container__item__content__reply__container__item__content__down-bar{
+    display:flex;
+}
+
+.post__item__comments__container__item__content__reply__container__item__content__down-bar--icon{
+    display:flex;
+    align-items: center;
+    margin-top:5px;
+    cursor:pointer;
+    transition:color 0.2s;
+    font-size: 0.95rem;
+}
+.post__item__comments__container__item__content__reply__container__item__content__down-bar--icon:nth-child(2){
+    margin-left:$smallMargin
+}
+
+.post__item__comments__container__item__content__reply__container__item__content__down-bar--icon--number{
+    margin-left:5px;
+}
+
+
+
+@media(max-width:1023px){   
+.post__item__comments__container__item__content__reply__container__item__content__top-bar__icon{
+    visibility: visible;
+    }
+}
+
+@media(max-width:1023px) and (orientation:landscape){
+    .post__item__comments__container__item__content__reply__container__item__content__top-bar__icon__collapse__item{
+        padding:15px 20px;
+        height:60px;
+    }
+    
+    .post__item__comments__container__item__content__reply__container__item__content__top-bar__icon__collapse__item--icon--customize{
+        width:25px;
+        height:25px;
+    }
+    .post__item__comments__container__item__content__reply__container__item__content__top-bar__icon__collapse__item--name--span{
+        font-size: 1.2rem;
+    }
+    
+}
+
+@media(max-width:1023px) and(orientation:portrait){
+    .post__item__comments__container__item__content__reply__container__item__content__down-bar--icon {
+        font-size: 1rem;
+    }
+}
