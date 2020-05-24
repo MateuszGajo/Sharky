@@ -1,11 +1,15 @@
 {
     "input":{
         "password":"Hasło",
+<<<<<<< HEAD
         "email":"E-mail",
         "confirm-password":"Powtórz hasło",
         "first-name":"Imię",
         "last-name":"Nazwisko",
         "phone":"Telefon"
+=======
+        "email":"E-mail"
+>>>>>>> common-layout
     },
     "checkbox":{
         "label":"Zapamiętaj mnie"
