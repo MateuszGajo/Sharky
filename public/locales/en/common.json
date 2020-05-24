@@ -1,0 +1,24 @@
+{
+    "input":{
+        "password":"Password",
+        "email":"E-mail",
+        "confirm-password":"Confirm password",
+        "first-name":"First name",
+        "last-name":"Last name",
+        "phone":"Phone"
+    },
+    "checkbox":{
+        "label":"Remember me"
+    },
+    "message-box":{
+        "title":"Add post",
+        "button":"Post",
+        "description":"How you doing?"
+    },
+    "pop-up":{
+        "confirm-user":{
+            "title":"Re-enter you account password",
+            "button":"Continue"
+        }
+    }  
+}

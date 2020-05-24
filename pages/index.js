@@ -1,17 +1,32 @@
-import React from "react";
-import Home from "./home";
-import SignIn from "./signin";
-import SignUp from "./signup";
-import Messages from "./messages";
-import News from "./news";
-import Group from "./group";
-import Groups from "./groups";
-import Friends from "./friends";
-import Notifications from "./notifications";
-import Profile from "./profile";
-import Settings from "./settings";
+// @ts-nocheck
+import I18nProvider from 'next-translate/I18nProvider'
+import React from 'react'
+import C from '../pages_'
+import ns0 from '../public/locales/pl/common.json'
+import ns1 from '../public/locales/pl/component.json'
 
-const Index = () => {
-  return <Groups />;
-};
-export default Index;
+const namespaces = { 'common': ns0, 'component': ns1 }
+
+export default function Page(p){
+  return (
+    <I18nProvider 
+      lang="pl" 
+      namespaces={namespaces}  
+      internals={{"isStaticMode":true,"redirectToDefaultLang":false,"defaultLanguage":"pl"}}
+    >
+      <C {...p} />
+    </I18nProvider>
+  )
+}
+
+Page = Object.assign(Page, { ...C })
+
+if(C && C.getInitialProps) {
+  Page.getInitialProps = ctx => C.getInitialProps({ ...ctx, lang: 'pl'})
+}
+
+
+
+
+
+export * from '../pages_'

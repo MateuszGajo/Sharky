@@ -1,0 +1,93 @@
+.fanpage{
+    display:flex;
+    flex-direction: column;
+    height:100vh;
+}
+.fanpage__navbar{
+    display:flex;
+    justify-content: space-around;
+    width:100%;
+}
+
+.fanpage__navbar__item{
+    position:relative;
+    display:flex;
+    width:100%;
+    align-items: center;
+    justify-content: center;
+    padding:$smallMargin 0;
+    border-bottom:1px solid $primaryBackgroundColor;
+    cursor:pointer;
+}
+
+.fanpage__navbar__item--active{
+    border-bottom:1px solid $primaryColor;
+    color:$primaryColor
+}
+
+.fanpage__navbar__subscribe{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    width:100%;
+    border-bottom:1px solid $primaryBackgroundColor;
+    border-left:1px solid $primaryBackgroundColor;
+    cursor:pointer;
+}
+
+.fanpage__navbar__subscribe--mobile{
+    display:none;
+}
+
+.fanpage__navbar__subscribe--mobile--active{
+    color:$primaryColor;
+}
+
+.fanpage__navbar__subscribe__icon{
+    display:flex;
+    align-items: center;
+    margin-right:5px;
+}
+
+.fanpage__navbar__subscribe--active{
+    color:$primaryColor;
+}
+
+.fanpage__content{
+    display:flex;
+    justify-content: center;
+}
+
+.fanpage__content--margin{
+    margin:$mediumMargin 0;
+}
+.fanpage__content--grow{
+    flex-grow:1
+}
+
+@media(max-width:1023px)  {
+    .fanpage__navbar__subscribe{
+        display:none;
+    }
+
+    .fanpage__navbar__subscribe--mobile{
+        position:fixed;
+        bottom:10px;
+        right:10px;
+        display:flex;
+        justify-content: center;
+        align-items: center;
+        width:35px;
+        height:35px;
+        border-radius :50%;
+        background-color: #fff;
+        box-shadow: 0 0 2px 1px $shadowColor;
+        z-index:2;
+    }
+    .fanpage__navbar__subscribe--mobile__icon{
+        display:flex;
+        align-items: center;
+        font-size: 2.5rem;
+    }
+}
+

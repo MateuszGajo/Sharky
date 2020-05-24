@@ -1,0 +1,14 @@
+{
+    "members":{
+        "admin":"Admin",
+        "moderator":"Moderator",
+        "member":"Członek"
+    },
+    "side-bar":{
+        "home":"Przeglądaj",
+        "members":"Członkowie",
+        "about":"Informacje",
+        "invite":"Zaproś",
+        "leave":"Opuść"
+    }
+}

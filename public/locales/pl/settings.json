@@ -1,0 +1,29 @@
+{
+    "title":"Settings",
+    "change":"Zmień",
+     "account":{
+        "title":"Konto",
+        "email":"E-mail",
+        "password":"Hasło",
+        "confirm-password":"Powtórz hasło",
+        "phone":"Telefon"
+    },
+    "general":{
+        "title":"Ogólne",
+        "country":"Kraj",
+        "language":"Język"
+    },
+    "information":{
+        "title":"Pamiętaj",
+        "description":"Regularnie zmieniaj hasło, aby zapobiec kradieży danych"
+    },
+    "button":"Zapisz",
+    "countries":{
+        "poland":"Polska",
+        "usa":"USA"
+    },
+    "languages":{
+        "polish":"Polski",
+        "english":"Angielski"
+    }
+}

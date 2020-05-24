@@ -1,47 +1,33 @@
-import React, { useState } from "react";
-import HomeLayout from "../features/components/Layout/Home/HomeLayout";
-import MessageBox from "../features/common/MessageBox/MessageBox";
-import Posts from "../features/components/Lists/Posts/Posts";
-import "./styles/main.scss";
+// @ts-nocheck
+import I18nProvider from 'next-translate/I18nProvider'
+import React from 'react'
+import C from '../pages_/home'
+import ns0 from '../public/locales/pl/common.json'
+import ns1 from '../public/locales/pl/component.json'
+import ns2 from '../public/locales/pl/home.json'
 
-const Home = () => {
-  const [postText, setPostText] = useState("");
-  const [users, setUsers] = useState({
-    234: {
-      id: 234,
-      firstName: "Janek",
-      lastName: "Kowalski",
-      photo: "profile.png",
-    },
-    453: {
-      id: 453,
-      firstName: "Janek",
-      lastName: "Kowalski",
-      photo: "profile.png",
-    },
-  });
-  const [posts, setPosts] = useState([
-    {
-      userId: 234,
-      content: "lorem lorem ala lorem",
-      comments: 12,
-      likes: [123, 545, 23],
-      shares: 18,
-    },
-    {
-      userId: 453,
-      content: "lorem lorem ala lorem dasd",
-      comments: 122,
-      likes: [543, 563, 232],
-      shares: 181,
-    },
-  ]);
+const namespaces = { 'common': ns0, 'component': ns1, 'home': ns2 }
+
+export default function Page(p){
   return (
-    <HomeLayout>
-      <MessageBox btnSize="small" value={postText} onChange={setPostText} />
-      <Posts />
-    </HomeLayout>
-  );
-};
+    <I18nProvider 
+      lang="pl" 
+      namespaces={namespaces}  
+      internals={{"isStaticMode":true,"redirectToDefaultLang":false,"defaultLanguage":"pl"}}
+    >
+      <C {...p} />
+    </I18nProvider>
+  )
+}
 
-export default Home;
+Page = Object.assign(Page, { ...C })
+
+if(C && C.getInitialProps) {
+  Page.getInitialProps = ctx => C.getInitialProps({ ...ctx, lang: 'pl'})
+}
+
+
+
+
+
+export * from '../pages_/home'

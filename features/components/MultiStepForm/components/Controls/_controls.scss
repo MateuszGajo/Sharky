@@ -1,8 +1,13 @@
+.authentication__form__wrapper__controls{
+  margin-top:$smallMargin;
+}
+
 .authentication__form__wrapper__controls__pagination {
   display: flex;
   justify-content: center;
   justify-content: space-between;
 }
+
 .authentication__form__wrapper__controls__pagination--button {
   display: flex;
   justify-content: center;
@@ -19,4 +24,23 @@
 .authentication__form__wrapper__controls--submit-buton {
   display: flex;
   justify-content: center;
+  margin-top:$smallMargin;
+}
+
+.authentication__form__wrapper__controls--hide-button{
+  visibility:hidden;
+}
+
+@media (max-width: 767px) and (orientation:portrait){
+  .authentication__form__wrapper__controls__pagination--button {
+    width: 45px;
+    height: 45px;
+  }
+}
+
+@media (max-width: 639px) and (orientation:portrait){
+  .authentication__form__wrapper__controls__pagination--button {
+    width: 40px;
+    height: 40px;
+  }
 }

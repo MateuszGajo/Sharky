@@ -1,72 +1,33 @@
-import React, { useState } from "react";
-import Navbar from "../features/components/Layout/Home/Compound/components/NavBar/Navbar";
-import About from "../features/components/group/About/About";
-import Members from "../features/components/group/Members/Members";
-import Home from "../features/components/group/Home/Home";
-import "./styles/main.scss";
+// @ts-nocheck
+import I18nProvider from 'next-translate/I18nProvider'
+import React from 'react'
+import C from '../pages_/group'
+import ns0 from '../public/locales/pl/common.json'
+import ns1 from '../public/locales/pl/component.json'
+import ns2 from '../public/locales/pl/group.json'
 
-const Group = () => {
-  const [section, setSection] = useState("");
+const namespaces = { 'common': ns0, 'component': ns1, 'group': ns2 }
 
-  const renderComponent = (name) => {
-    switch (name) {
-      case "home":
-        return <Home />;
-      case "members":
-        return <Members />;
-      case "about":
-        return <About />;
-      default:
-        return <Home />;
-    }
-  };
-
+export default function Page(p){
   return (
-    <section className="group">
-      <Navbar />
-      <div className="group__container">
-        <div className="group__container__content">
-          {renderComponent(section)}
-        </div>
-        <div className="group__container__side-bar">
-          <div className="group__container__side-bar__title">
-            <h3 className="group__container__side-bar__title--h3">
-              Nowości w zamościu
-            </h3>
-          </div>
-          <div
-            className="group__container__side-bar__item"
-            onClick={() => setSection("home")}
-          >
-            <span className="group__container__side-bar__item--span">
-              Przeglądaj
-            </span>
-          </div>
-          <div
-            className="group__container__side-bar__item"
-            onClick={() => setSection("members")}
-          >
-            <span className="group__container__side-bar__item--span">
-              Członkowie
-            </span>
-          </div>
-          <div
-            className="group__container__side-bar__item"
-            onClick={() => setSection("about")}
-          >
-            <span className="group__container__side-bar__item--span">
-              Informacje
-            </span>
-          </div>
-          <div className="group__container__side-bar__item">
-            <span className="group__container__side-bar__item--span">
-              Opuść grupe
-            </span>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
+    <I18nProvider 
+      lang="pl" 
+      namespaces={namespaces}  
+      internals={{"isStaticMode":true,"redirectToDefaultLang":false,"defaultLanguage":"pl"}}
+    >
+      <C {...p} />
+    </I18nProvider>
+  )
+}
 
-export default Group;
+Page = Object.assign(Page, { ...C })
+
+if(C && C.getInitialProps) {
+  Page.getInitialProps = ctx => C.getInitialProps({ ...ctx, lang: 'pl'})
+}
+
+
+
+
+
+export * from '../pages_/group'

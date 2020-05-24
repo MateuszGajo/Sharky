@@ -1,0 +1,9 @@
+.post-list__post{
+    display:flex;
+    justify-content: center;
+}
+
+.post-list__post:not(:last-child){
+    margin-bottom:$smallMargin;
+}
+

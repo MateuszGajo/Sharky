@@ -1,0 +1,88 @@
+.is-close {
+  display: none;
+}
+
+.input-error {
+  text-align: center;
+  color: red;
+  font-size: 1.15rem;
+  margin: 2px 0;
+}
+
+.disabled--button {
+  color: grey;
+  cursor: default;
+}
+.is-visible{
+  visibility: visible;
+}
+
+.reset-margin {
+  margin: 0;
+}
+
+.hidden-element {
+  visibility: hidden;
+}
+.hover-primary-color:hover {
+  color: $primaryColor;
+}
+
+.hover-pal-color:hover {
+  color: $palColor;
+}
+
+.hover-family-color:hover {
+  color: $familyColor;
+}
+
+.pal-color {
+  color: $palColor;
+}
+
+.family-color {
+  color: $familyColor;
+}
+
+.primary-color {
+  color: $primaryColor;
+}
+
+.primary-background {
+  background-color: $primaryColor;
+}
+
+.family-background {
+  background-color: $familyColor;
+}
+
+.pal-background {
+  background-color: $palColor;
+}
+
+.brightness-reduce {
+  filter: brightness(0.6);
+  transition: 0.2s filter;
+}
+
+.hover-brightness:hover {
+  filter: brightness(0.9);
+}
+
+.list {
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-rows: min-content;
+}
+
+@media(max-width:1023px) and(orientation:portrait){
+  .list{
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width : 767px) and (orientation:landscape){
+  .list{
+    grid-template-columns: 1fr;
+  }
+}

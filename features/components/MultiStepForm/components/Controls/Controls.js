@@ -1,11 +1,15 @@
 import React, { useContext } from "react";
 import { GoArrowLeft, GoArrowRight } from "react-icons/go";
 import cx from "classnames";
+import useTranslation from "next-translate/useTranslation";
 import { WizzardContext } from "../../context/WizzardContext";
 import PrimaryButton from "../../../../common/PrimaryButton/PrimaryButton";
 
 const Controls = () => {
   const { page, setPage, numberOfPages } = useContext(WizzardContext);
+
+  const { t } = useTranslation();
+  const buttonText = t("signup:button");
   return (
     <div className="authentication__form__wrapper__controls">
       <div className="authentication__form__wrapper__controls__pagination">
@@ -38,12 +42,13 @@ const Controls = () => {
           <GoArrowRight />
         </button>
       </div>
-      <div className="authentication__form__wrapper__controls--submit-buton">
-        <PrimaryButton
-          isDisable={page !== numberOfPages}
-          value="Zarejstruj"
-          size="large"
-        />
+      <div
+        className={cx("authentication__form__wrapper__controls--submit-buton", {
+          "authentication__form__wrapper__controls--hide-button":
+            page !== numberOfPages,
+        })}
+      >
+        <PrimaryButton value={buttonText} size="large" />
       </div>
     </div>
   );

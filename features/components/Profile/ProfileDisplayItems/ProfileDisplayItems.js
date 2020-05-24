@@ -1,34 +1,44 @@
 import React from "react";
 import { IoMdArrowBack } from "react-icons/io";
 import cx from "classnames";
+import useTranslation from "next-translate/useTranslation";
 import Fanpages from "../../Lists/Fanpages/Fanpages";
 import People from "../../Lists/People/People";
 import Groups from "../../Lists/Groups/Groups";
 import Photos from "../../Lists/Photos/Photos";
 import Posts from "../../Lists/Posts/Posts";
-import About from "../../About/About";
+import About from "../About/About";
 
 const ProfileDisplayItems = ({ setChooseItem, chooseItem }) => {
+  const { t } = useTranslation();
+
+  const aboutItemName = t("profile:about-me");
+  const friendsItemName = t("profile:friends");
+  const groupsItemName = t("profile:groups");
+  const photosItemName = t("profile:photos");
+  const postsItemName = t("profile:posts");
+  const fanpagesItemName = t("profile:fanpages");
+
   const renderComponent = (name) => {
-    switch (name.toLowerCase()) {
-      case "polubione fanpage":
+    switch (name) {
+      case fanpagesItemName:
         return <Fanpages />;
-      case "znajomi":
+      case friendsItemName:
         return <People />;
-      case "grupy":
+      case groupsItemName:
         return <Groups />;
-      case "zdjęcia":
+      case photosItemName:
         return <Photos />;
-      case "posty":
+      case postsItemName:
         return <Posts />;
-      case "o mnie":
+      case aboutItemName:
         return <About />;
     }
   };
   return (
     <div
       className={cx("profile__display", {
-        "primary-border-left": chooseItem.toLowerCase() === "o mnie",
+        "primary-border-left": chooseItem === aboutItemName,
       })}
     >
       <div className="profile__display__navbar">
@@ -42,8 +52,9 @@ const ProfileDisplayItems = ({ setChooseItem, chooseItem }) => {
       </div>
       <div
         className={cx("profile__display__content", {
-          "profile__display__content--center":
-            chooseItem.toLowerCase() === "zdjęcia" || "posty",
+          "profile__display__content--photos": chooseItem === photosItemName,
+          "profile__display__content--posts": chooseItem === postsItemName,
+          "profile__display__content--about": chooseItem == aboutItemName,
         })}
       >
         {renderComponent(chooseItem)}
