@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "next-translate && node -r esm features/server.js",
+    "dev": "next-translate && node -r esm server.js",
     "build": "next build",
     "test": "jest",
-    "start": "next-translate &&  NODE_ENV=production node -r esm features/server.js"
+    "start": "next-translate &&  NODE_ENV=production node -r esm server.js"
   },
   "keywords": [],
   "author": "",

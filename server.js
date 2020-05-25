@@ -1,6 +1,6 @@
 import express from "express";
 import next from "next";
-import Router from "./routes";
+import Router from "./route/routes";
 
 const app = next({ dev: process.env.NODE_ENV !== "production" });
 const handle = Router.getRequestHandler(app);

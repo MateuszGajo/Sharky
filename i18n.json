@@ -1,8 +1,8 @@
 {
     "allLanguages": ["en", "pl"],
     "defaultLanguage": "en",
-    "currentPagesDir": "pages",
-    "finalPagesDir": "pages_",
+    "currentPagesDir": "pages_",
+    "finalPagesDir": "pages",
     "localesPath": "locales",
     "pages": {
       "*": ["common","component"],
