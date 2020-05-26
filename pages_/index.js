@@ -1,7 +1,8 @@
 import React from "react";
 import "../styles/main.scss";
+import Post from "./post";
 
 const Index = () => {
-  return null;
+  return <Post />;
 };
 export default Index;
