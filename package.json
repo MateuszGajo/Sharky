@@ -4,10 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+<<<<<<< HEAD
     "dev": "next-translate && next dev",
+=======
+    "dev": "next-translate && node -r esm server.js",
+>>>>>>> config
     "build": "next build",
     "test": "jest",
-    "start": "next-translate &&  NODE_ENV=production node -r esm features/server.js"
+    "start": "next-translate &&  NODE_ENV=production node -r esm server.js"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +26,7 @@
     "i18next": "^19.4.4",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^25.2.3",
+    "koa": "^2.12.0",
     "next": "^9.3.1",
     "next-translate": "^0.15.1",
     "nextjs-dynamic-routes": "^2.5.1",
