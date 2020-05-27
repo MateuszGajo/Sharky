@@ -3,7 +3,7 @@
     "defaultLanguage": "en",
     "currentPagesDir": "pages_",
     "finalPagesDir": "pages",
-    "localesPath": "locales",
+    "localesPath": "public/locales",
     "pages": {
       "*": ["common","component"],
       "/home": ["home"],
