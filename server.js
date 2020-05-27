@@ -1,10 +1,10 @@
-import express from "express";
+import koa from "koa";
 import next from "next";
-import Router from "./route/routes";
+import Router from "./routes";
 
 const app = next({ dev: process.env.NODE_ENV !== "production" });
 const handle = Router.getRequestHandler(app);
-const server = express();
+const server = koa();
 
 (async () => {
   await app.prepare();
