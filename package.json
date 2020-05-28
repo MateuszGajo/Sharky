@@ -4,11 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-<<<<<<< HEAD
-    "dev": "next-translate && next dev",
-=======
     "dev": "next-translate && node -r esm server.js",
->>>>>>> config
     "build": "next build",
     "test": "jest",
     "start": "next-translate &&  NODE_ENV=production node -r esm server.js"
