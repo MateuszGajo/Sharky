@@ -19,10 +19,12 @@
     "classnames": "^2.2.6",
     "esm": "^3.2.25",
     "express": "^4.17.1",
+    "http": "0.0.1-security",
     "i18next": "^19.4.4",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^25.2.3",
     "koa": "^2.12.0",
+    "koa-router": "^8.0.8",
     "next": "^9.3.1",
     "next-translate": "^0.15.1",
     "nextjs-dynamic-routes": "^2.5.1",
@@ -33,7 +35,8 @@
     "react-dom": "^16.13.1",
     "react-i18next": "^11.4.0",
     "react-icons": "^3.9.0",
-    "sass": "^1.26.3"
+    "sass": "^1.26.3",
+    "socket.io": "^2.3.0"
   },
   "devDependencies": {
     "babel-preset-env": "^1.7.0",
