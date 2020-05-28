@@ -1,14 +1,25 @@
-import koa from "koa";
+import Koa from "koa";
 import next from "next";
-import Router from "./routes";
+import Router from "koa-router";
+import io from "socket.io";
+import http from "http";
+
+const router = Router();
 
 const app = next({ dev: process.env.NODE_ENV !== "production" });
-const handle = Router.getRequestHandler(app);
-const server = koa();
+const handle = app.getRequestHandler();
+const server = new Koa();
+
+const httpServer = http.createServer(server.callback());
+const socketIO = io(httpServer);
 
 (async () => {
   await app.prepare();
 
-  server.get("*", (req, res) => handle(req, res));
-  server.listen(3000);
+  router.get("*", async (ctx) => {
+    await handle(ctx.req, ctx.res);
+  });
+
+  server.use(router.routes());
+  httpServer.listen(3000);
 })();
