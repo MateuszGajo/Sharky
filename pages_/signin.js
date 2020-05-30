@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Authentication from "../features/components/Layout/Authentication/Authentication";
 import { FaGooglePlusG, FaFacebookF } from "react-icons/fa";
-import { FiGithub } from "react-icons/fi";
+import { FiTwitter } from "react-icons/fi";
 import useTranslation from "next-translate/useTranslation";
 import Checkbox from "../features/common/Checkbox/Checkbox";
 import PrimaryButton from "../features/common/PrimaryButton/PrimaryButton";
@@ -31,14 +31,29 @@ const SignIn = ({ onSubmit }) => {
     <Authentication type="signin">
       <>
         <div className="authentication__form__wrapper__icons">
-          <div className="authentication__form__wrapper__icons--icon">
-            <FaGooglePlusG />
+          <div className="authentication__form__wrapper__icons__icon">
+            <a
+              href="/auth/google"
+              class="authentication__form__wrapper__icons__icon--link"
+            >
+              <FaGooglePlusG />
+            </a>
           </div>
-          <div className="authentication__form__wrapper__icons--icon">
-            <FiGithub />
+          <div className="authentication__form__wrapper__icons__icon">
+            <a
+              href="/auth/twitter"
+              class="authentication__form__wrapper__icons__icon--link"
+            >
+              <FiTwitter />
+            </a>
           </div>
-          <div className="authentication__form__wrapper__icons--icon">
-            <FaFacebookF />
+          <div className="authentication__form__wrapper__icons__icon">
+            <a
+              href="/auth/facebook"
+              class="authentication__form__wrapper__icons__icon--link"
+            >
+              <FaFacebookF />
+            </a>
           </div>
         </div>
         <p className="authentication__form__wrapper--text">{description}</p>
