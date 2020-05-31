@@ -34,7 +34,7 @@ const SignIn = ({ onSubmit }) => {
           <div className="authentication__form__wrapper__icons__icon">
             <a
               href="/auth/google"
-              class="authentication__form__wrapper__icons__icon--link"
+              className="authentication__form__wrapper__icons__icon--link"
             >
               <FaGooglePlusG />
             </a>
@@ -42,7 +42,7 @@ const SignIn = ({ onSubmit }) => {
           <div className="authentication__form__wrapper__icons__icon">
             <a
               href="/auth/twitter"
-              class="authentication__form__wrapper__icons__icon--link"
+              className="authentication__form__wrapper__icons__icon--link"
             >
               <FiTwitter />
             </a>
@@ -50,7 +50,7 @@ const SignIn = ({ onSubmit }) => {
           <div className="authentication__form__wrapper__icons__icon">
             <a
               href="/auth/facebook"
-              class="authentication__form__wrapper__icons__icon--link"
+              className="authentication__form__wrapper__icons__icon--link"
             >
               <FaFacebookF />
             </a>
