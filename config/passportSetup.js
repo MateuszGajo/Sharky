@@ -4,11 +4,11 @@ const TwitterStrategy = require("passport-twitter").Strategy;
 const GoogleStrategy = require("passport-google-oauth").OAuthStrategy;
 const { client } = require("./pgAdaptor");
 
-const findUserQuery = "select * from users where $1=$2";
+const findUserQuery =
+  "select * from users where facebookid1='1590082907813263'";
 
-passport.serializeUser((user, done) => {
-  // console.log(user);
-  done(null, user.id);
+passport.serializeUser((id, done) => {
+  done(null, id);
 });
 passport.deserializeUser((id, done) => {
   return client.query("select * from users where id=$1", [id], (err, res) => {
@@ -28,30 +28,25 @@ passport.use(
       const firstName = displayName.match(/^([\w\-]+)/g)[0];
       const lastName = displayName.match(/\b(\w+)\W*$/g)[0];
 
-      client.query(findUserQuery, ["facebookId", id], (err, res) => {
+      client.query(findUserQuery, (err, res) => {
+        console.log(res);
         if (err)
-          return next(null, false, {
-            message: "invalid e-mail address or password",
+          return done(null, false, {
+            message: "connect-db-error",
           });
         if (res.rowCount == 0) {
-          console.log("Stwórzmy użytkownika");
           const createNewUser =
-            "INSERT INTO users(facebookId, firstName, lastName)";
+            "INSERT INTO users(facebookId, firstName, lastName) VALUES($1,$2,$3)";
           client.query(createNewUser, [id, firstName, lastName], (err, res) => {
             if (err) {
-              console.log("błąd");
-              // console.log(err);
-              // console.log(res);
-              return done(null, false, { message: "Incorrect password." });
+              return done(null, false, { message: "connect-db-error" });
             }
             if (res.rowCount === 0) {
-              console.log(res);
-              return done(null, false, "create user error");
+              return done(null, false, { message: "create-user-error" });
             }
-            console.log(res);
-            return done(err, res);
+            return done(null, id);
           });
-        } else return done(err, res);
+        } else return done(null, id);
       });
     }
   )

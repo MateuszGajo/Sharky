@@ -7,6 +7,7 @@ const passport = require("koa-passport");
 const session = require("koa-session");
 const bodyParser = require("koa-bodyparser");
 const flash = require("koa-connect-flash");
+const cors = require("@koa/cors");
 require("./api/route/auth/authRoute");
 require("./config/passportSetup");
 
@@ -20,6 +21,10 @@ server.use(bodyParser());
 server.keys = ["super-secret-key"];
 server.use(session(server));
 server.use(flash());
+server.use(cors());
+// server.use(function* () {
+//   this.set("Access-Control-Allow-Origin", "*");
+// });
 
 server.use(passport.initialize());
 server.use(passport.session());
@@ -30,37 +35,32 @@ const socketIO = io(httpServer);
 (async () => {
   await app.prepare();
   // router.get("/auth", authRoutes);
-  router.get("/auth/facebook", function (req, res, next) {
-    passport.authenticate("facebook", function (err, user, info) {
-      console.log(info);
-      if (err) {
-        console.log("db error");
-        return next(err);
-      }
-      if (!user) {
-        console.log("authen failes");
-        return res.send({ success: false, message: "authentication failed" });
-      }
-      console.log("good");
-      return res.send({ success: true, message: "authentication succeeded" });
-    })(req, res, next);
-  });
+  router.get(
+    "/auth/facebook",
+    passport.authenticate("facebook"),
+    (req, res) => {
+      req.session.flash = [];
+    }
+  );
 
   router.get("/auth/google", passport.authenticate("google"));
   router.get(
     "/auth/facebook/callback",
     passport.authenticate("facebook", {
       successRedirect: "/",
-      failureRedirect: "/signdupa",
+      failureRedirect: "/signin",
       failureFlash: true,
     })
   );
+  router.get("/auth/error", (ctx, next) => {
+    ctx.body = ctx.flash("error")[0];
+  });
 
   router.get(
     "/auth/google/callback",
     passport.authenticate("google", {
       successRedirect: "/",
-      failureRedirect: "/signin",
+      failureRedirect: "/auth/error",
     })
   );
 

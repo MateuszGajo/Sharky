@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Authentication from "../features/components/Layout/Authentication/Authentication";
 import { FaGooglePlusG, FaFacebookF } from "react-icons/fa";
 import { FiTwitter } from "react-icons/fi";
@@ -7,11 +7,13 @@ import Checkbox from "../features/common/Checkbox/Checkbox";
 import PrimaryButton from "../features/common/PrimaryButton/PrimaryButton";
 import AuthInput from "../features/common/AuthInput/AuthInput";
 import "../styles/main.scss";
+import Axios from "axios";
 
 const SignIn = ({ onSubmit }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isRembermeChecked, setStatusOfRemberme] = useState(false);
+  const [authError, setAuthError] = useState("");
 
   const { t } = useTranslation();
 
@@ -27,6 +29,19 @@ const SignIn = ({ onSubmit }) => {
       password,
     });
   };
+
+  useEffect(() => {
+    Axios.get("/auth/error")
+      .then((resp) => {
+        const { data } = resp || null;
+        if (data) {
+          setAuthError(t(`signin:error.${data}`));
+        }
+      })
+      .catch((err) => {
+        setAuthError("server-error");
+      });
+  }, []);
   return (
     <Authentication type="signin">
       <>
@@ -91,6 +106,11 @@ const SignIn = ({ onSubmit }) => {
             <div className="authentication__form__wrapper__inputs__wrapper--button">
               <PrimaryButton value={buttonText} size="large" />
             </div>
+            {authError && (
+              <div className="authentication__form__wrapper__inputs__wrapper__error">
+                <p className="input-error">{authError}</p>
+              </div>
+            )}
           </form>
         </div>
       </>
