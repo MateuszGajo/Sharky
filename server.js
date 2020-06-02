@@ -22,9 +22,6 @@ server.keys = ["super-secret-key"];
 server.use(session(server));
 server.use(flash());
 server.use(cors());
-// server.use(function* () {
-//   this.set("Access-Control-Allow-Origin", "*");
-// });
 
 server.use(passport.initialize());
 server.use(passport.session());
@@ -43,7 +40,15 @@ const socketIO = io(httpServer);
     }
   );
 
-  router.get("/auth/google", passport.authenticate("google"));
+  router.get(
+    "/auth/google",
+    passport.authenticate("google", {
+      scope: ["https://www.googleapis.com/auth/plus.login"],
+    }),
+    (req, res) => {
+      req.session.flash = [];
+    }
+  );
   router.get(
     "/auth/facebook/callback",
     passport.authenticate("facebook", {
@@ -60,7 +65,8 @@ const socketIO = io(httpServer);
     "/auth/google/callback",
     passport.authenticate("google", {
       successRedirect: "/",
-      failureRedirect: "/auth/error",
+      failureRedirect: "/signin",
+      failureFlash: true,
     })
   );
 

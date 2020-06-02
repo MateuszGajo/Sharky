@@ -48,7 +48,6 @@
     "react": "^16.13.1",
     "react-device-detect": "^1.12.1",
     "react-dom": "^16.13.1",
-    "react-i18next": "^11.4.0",
     "react-icons": "^3.9.0",
     "sass": "^1.26.3",
     "socket.io": "^2.3.0"
