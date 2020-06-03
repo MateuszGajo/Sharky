@@ -9,7 +9,7 @@ import AuthInput from "../features/common/AuthInput/AuthInput";
 import "../styles/main.scss";
 import Axios from "axios";
 
-const SignIn = ({ onSubmit }) => {
+const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isRembermeChecked, setStatusOfRemberme] = useState(false);
@@ -24,23 +24,29 @@ const SignIn = ({ onSubmit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({
+    Axios.post("/auth/signin", {
       email,
       password,
-    });
+    })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   useEffect(() => {
-    Axios.get("/auth/error")
-      .then((resp) => {
-        const { data } = resp || null;
-        if (data) {
-          setAuthError(t(`signin:error.${data}`));
-        }
-      })
-      .catch((err) => {
-        setAuthError("server-error");
-      });
+    // Axios.get("/auth/error")
+    //   .then((resp) => {
+    //     const { data } = resp || null;
+    //     if (data) {
+    //       setAuthError(t(`signin:error.${data}`));
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     setAuthError("server-error");
+    //   });
   }, []);
   return (
     <Authentication type="signin">

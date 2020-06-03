@@ -1,4 +1,5 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState } from "react";
+import axios from "axios";
 import { WizzardContext } from "./context/WizzardContext";
 import Controls from "./components/Controls/Controls";
 import StepWrapper from "./components/StepWrapper/StepWrapper";
@@ -6,7 +7,7 @@ import Step from "./components/Step/Step";
 import Credentials from "./components/Credentials/Credentials";
 import PersonalData from "./components/PersonalData/PersonalData";
 
-const Wizzard = ({ children, onSubmit }) => {
+const Wizzard = ({ children }) => {
   const [numberOfPages, setNumberOfPages] = useState(0);
   const [page, setPage] = useState(1);
   const [email, setEmail] = useState("");
@@ -17,16 +18,17 @@ const Wizzard = ({ children, onSubmit }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
 
   const handleSubmit = (e) => {
-    console.log("handleSubmit");
     e.preventDefault();
-    onSubmit({
-      email,
-      password,
-      confirmPassword,
-      firstName,
-      lastName,
-      phoneNumber,
-    });
+    axios
+      .post("/auth/signup", {
+        email,
+        password,
+        firstName,
+        lastName,
+        phone: phoneNumber,
+      })
+      .then((resp) => console.log(resp))
+      .catch((err) => console.log(err));
   };
   return (
     <WizzardContext.Provider

@@ -28,7 +28,7 @@ passport.use(
 
       const firstName = displayName.match(/^([\w\-]+)/g)[0];
       const lastName = displayName.match(/\b(\w+)\W*$/g)[0];
-      const query = "select * from users where facebookid=$1";
+      const query = "select * from users where facebook_id=$1";
 
       client.query(query, [id], (err, res) => {
         if (err)
@@ -38,9 +38,8 @@ passport.use(
 
         if (res.rowCount == 0) {
           const createNewUser =
-            "INSERT INTO users(facebookId, firstName, lastName) VALUES($1,$2,$3) RETURNING id";
+            "INSERT INTO users(facebook_id, first_name, last_name) VALUES($1,$2,$3) RETURNING id";
           client.query(createNewUser, [id, firstName, lastName], (err, res) => {
-            console.log(res);
             if (err) {
               return done(null, false, { message: "connect-db-error" });
             }
@@ -80,10 +79,9 @@ passport.use(
       const { displayName, id } = profile;
       const firstName = displayName.match(/^([\w\-]+)/g)[0];
       const lastName = displayName.match(/\b(\w+)\W*$/g)[0];
-      const query = "select * from users where googleid=$1";
+      const query = "select * from users where google_id=$1";
 
       client.query(query, [id], (err, res) => {
-        console.log(res);
         if (err)
           return done(null, false, {
             message: "connect-db-error",
@@ -91,7 +89,7 @@ passport.use(
 
         if (res.rowCount == 0) {
           const createNewUser =
-            "INSERT INTO users(googleid, firstName, lastName) VALUES($1,$2,$3) RETURNING id";
+            "INSERT INTO users(google_id, first_name, last_name) VALUES($1,$2,$3) RETURNING id";
           client.query(createNewUser, [id, firstName, lastName], (err, res) => {
             if (err) {
               return done(null, false, { message: "connect-db-error" });

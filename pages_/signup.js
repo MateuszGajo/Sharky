@@ -5,7 +5,7 @@ import "../styles/main.scss";
 const SignUp = ({ onSubmit }) => {
   return (
     <Authentication type="signup">
-      <MultiStepForm.Wizzard onSubmit={onSubmit}>
+      <MultiStepForm.Wizzard>
         <MultiStepForm.StepWrapper>
           <MultiStepForm.Step dataKey="Step">
             <MultiStepForm.Credentials />
