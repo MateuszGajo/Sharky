@@ -37,6 +37,9 @@ const SignIn = () => {
   };
 
   useEffect(() => {
+    Axios.get("/auth/me")
+      .then((resp) => console.log(resp))
+      .catch((err) => console.log(err));
     // Axios.get("/auth/error")
     //   .then((resp) => {
     //     const { data } = resp || null;

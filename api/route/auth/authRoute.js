@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { client } = require("../../../config/pgAdaptor");
 const { jwtSecret } = require("../../../config/keys");
+
 const saltRounds = 10;
 
 router.get(
@@ -20,10 +21,14 @@ router.get(
 router.get(
   "/google/callback",
   passport.authenticate("google", {
-    successRedirect: "/",
     failureRedirect: "/signin",
     failureFlash: true,
-  })
+    session: false,
+  }),
+  (ctx, next) => {
+    ctx.cookies.set("token", ctx.req.user);
+    ctx.redirect("/");
+  }
 );
 
 router.get("/facebook", passport.authenticate("facebook"), (ctx, next) => {
@@ -33,10 +38,14 @@ router.get("/facebook", passport.authenticate("facebook"), (ctx, next) => {
 router.get(
   "/facebook/callback",
   passport.authenticate("facebook", {
-    successRedirect: "/",
     failureRedirect: "/signin",
     failureFlash: true,
-  })
+    session: false,
+  }),
+  (ctx, next) => {
+    ctx.cookies.set("token", ctx.req.user);
+    ctx.redirect("/");
+  }
 );
 
 router.post("/signin", async (ctx, next) => {
@@ -119,6 +128,16 @@ router.post("/signup", async (ctx, next) => {
     }
   } catch {
     return (ctx.body = { error: "connect-db-error" });
+  }
+});
+
+router.get("/me", async (ctx, next) => {
+  const token = ctx.cookies.get("token");
+  try {
+    await jwt.verify(token, jwtSecret);
+    return (ctx.body = { verify: true });
+  } catch {
+    return (ctx.body = { verify: false });
   }
 });
 

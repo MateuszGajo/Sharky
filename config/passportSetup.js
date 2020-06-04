@@ -2,19 +2,21 @@ const passport = require("koa-passport");
 const FacebookStrategy = require("passport-facebook").Strategy;
 const TwitterStrategy = require("passport-twitter").Strategy;
 const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
+const jwt = require("jsonwebtoken");
 const { client } = require("./pgAdaptor");
+const { jwtSecret } = require("./keys");
 
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
+// passport.serializeUser((user, done) => {
+//   done(null, user.id);
+// });
 
-passport.deserializeUser((id, done) => {
-  return client.query("select * from users where id=$1", [id], (err, res) => {
-    if (err) return done(null, false, { message: "connect-db-error" });
-    if (res.rowCount == 0) return done(null, false, { message: "user-error" });
-    done(null, id);
-  });
-});
+// passport.deserializeUser((id, done) => {
+//   return client.query("select * from users where id=$1", [id], (err, res) => {
+//     if (err) return done(null, false, { message: "connect-db-error" });
+//     if (res.rowCount == 0) return done(null, false, { message: "user-error" });
+//     done(null, id);
+//   });
+// });
 
 passport.use(
   new FacebookStrategy(
@@ -57,11 +59,43 @@ passport.use(
               language: null,
             };
 
-            return done(null, user);
+            const token = jwt.sign(
+              {
+                exp: Math.floor(Date.now() / 1000) + 60 * 60,
+                data: user,
+              },
+              jwtSecret
+            );
+
+            return done(null, token);
           });
         } else {
           const user = res.rows[0];
-          return done(null, user);
+          const {
+            id,
+            first_name,
+            last_name,
+            email,
+            phone,
+            country,
+            language,
+          } = user;
+          const token = jwt.sign(
+            {
+              exp: Math.floor(Date.now() / 1000) + 60 * 60,
+              data: {
+                id,
+                firstName: first_name,
+                lastName: last_name,
+                email,
+                phone,
+                country,
+                language,
+              },
+            },
+            jwtSecret
+          );
+          return done(null, token);
         }
       });
     }
