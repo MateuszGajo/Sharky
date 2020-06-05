@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import axios from "axios";
 import Authentication from "../features/components/Layout/Authentication/Authentication";
 import { FaGooglePlusG, FaFacebookF } from "react-icons/fa";
 import { FiTwitter } from "react-icons/fi";
@@ -6,15 +7,16 @@ import useTranslation from "next-translate/useTranslation";
 import Checkbox from "../features/common/Checkbox/Checkbox";
 import PrimaryButton from "../features/common/PrimaryButton/PrimaryButton";
 import AuthInput from "../features/common/AuthInput/AuthInput";
+import { GlobalContext } from "../features/contex/globalContext";
 import "../styles/main.scss";
-import Axios from "axios";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isRembermeChecked, setStatusOfRemberme] = useState(false);
-  const [authError, setAuthError] = useState("");
 
+  const { authError, authUserError, signIn: sIn } = useContext(GlobalContext);
+  console.log(authError, authUserError);
   const { t } = useTranslation();
 
   const inputPassword = t("common:input.password");
@@ -24,22 +26,15 @@ const SignIn = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    Axios.post("/auth/signin", {
-      email,
-      password,
-    })
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    sIn(email, password);
   };
 
   useEffect(() => {
-    Axios.get("/auth/me")
-      .then((resp) => console.log(resp))
-      .catch((err) => console.log(err));
+    console.log(t(`component:layout.authentication.error.server-error`));
+    // axios
+    //   .get("/auth/me")
+    //   .then((resp) => console.log(resp))
+    //   .catch((err) => console.log(err));
     // Axios.get("/auth/error")
     //   .then((resp) => {
     //     const { data } = resp || null;
@@ -86,6 +81,7 @@ const SignIn = () => {
             className="authentication__form__wrapper__inputs__wrapper"
             onSubmit={handleSubmit}
           >
+            {authUserError && <p className="input-error">{authUserError}</p>}
             <AuthInput
               value={email}
               onChange={setEmail}

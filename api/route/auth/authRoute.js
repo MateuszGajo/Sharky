@@ -74,7 +74,8 @@ router.post("/signin", async (ctx, next) => {
         },
         jwtSecret
       );
-      return (ctx.body = { token });
+      ctx.cookies.set("token", token);
+      return (ctx.body = { error: "" });
     }
     return (ctx.body = { error: "password-hash-error" });
   } catch {
@@ -119,7 +120,8 @@ router.post("/signup", async (ctx, next) => {
           },
           jwtSecret
         );
-        return (ctx.body = { token });
+        ctx.cookies.set("token", token);
+        ctx.redirect("/");
       } catch {
         return (ctx.body = { error: "connect-db-error" });
       }

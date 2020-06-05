@@ -1,10 +1,5 @@
 {
     "description":"Lub przy pomocy email",
     "forget":"Zapomniałeś hasła?",
-    "button":"Zaloguj",
-    "error":{
-        "connect-db-error":"Błąd łączenia z bazą danych",
-        "create-user-error":"Błąd uwierzytelniania",
-        "server-error":"Błąd komunikacji z serwerem"
-    }
+    "button":"Zaloguj"
 }

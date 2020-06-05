@@ -1,10 +1,5 @@
 {
     "description":"Or use your email account",
     "forget":"Forgot password?",
-    "button":"Login",
-    "error":{
-        "connect-db-error":"Cannot connect to databse",
-        "create-user-error":"Authentication error",
-        "server-error":"Cannot connect to server"
-    }
+    "button":"Login"
 }
