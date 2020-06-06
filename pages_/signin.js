@@ -82,19 +82,23 @@ const SignIn = () => {
             onSubmit={handleSubmit}
           >
             {authUserError && <p className="input-error">{authUserError}</p>}
-            <AuthInput
-              value={email}
-              onChange={setEmail}
-              title="E-mail"
-              size="x-large"
-            />
-            <AuthInput
-              type="password"
-              value={password}
-              onChange={setPassword}
-              title={inputPassword}
-              size="x-large"
-            />
+            <div className="authentication__form__wrapper__inputs__wrapper__input--signin">
+              <AuthInput
+                value={email}
+                onChange={setEmail}
+                title="E-mail"
+                size="x-large"
+              />
+            </div>
+            <div className="authentication__form__wrapper__inputs__wrapper__input--signin">
+              <AuthInput
+                type="password"
+                value={password}
+                onChange={setPassword}
+                title={inputPassword}
+                size="x-large"
+              />
+            </div>
 
             <div className="authentication__form__wrapper__inputs__wrapper__helpers">
               <div className="authentication__form__wrapper__inputs__wrapper__helpers--remberme">
