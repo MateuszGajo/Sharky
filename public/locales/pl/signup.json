@@ -1,3 +1,11 @@
 {
-    "button":"Zarejstruj"
+    "button":"Zarejstruj",
+    "validation-errors":{
+        "empty-field":"Pole jest puste",
+        "email-validation-error":"Nieprawidłowy email",
+        "passwords-not-equal-error":"Hasła są różne",
+        "too-long-first-name":"Imię jest za długie",
+        "too-long-last-name":"Nazwisko jest za długie",
+        "invalid-phone-number":"Niepoprawny numer telefonu"
+    }
 }
