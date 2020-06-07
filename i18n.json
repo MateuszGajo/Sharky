@@ -14,7 +14,7 @@
       "/friends": ["friends"],
       "/group":["group"],
       "/groups": ["groups"],
-      "/messgaes": ["messages"],
+      "/messages": ["messages"],
       "/news": ["news"],
       "/notifications": ["notifications"],
       "/profile": ["profile"],

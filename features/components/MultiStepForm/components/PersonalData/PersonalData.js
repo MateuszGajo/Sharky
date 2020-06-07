@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import useTranslation from "next-translate/useTranslation";
 import { WizzardContext } from "../../context/WizzardContext";
 import AuthInput from "../../../../common/AuthInput/AuthInput";
+import { GlobalContext } from "../../../../contex/globalContext";
 
 const PersonalData = () => {
   const {
@@ -13,6 +14,10 @@ const PersonalData = () => {
     setPhoneNumber,
   } = useContext(WizzardContext);
 
+  const {
+    signUpValidation: { firstNameError, lastNameError, phoneNumberError },
+  } = useContext(GlobalContext);
+
   const { t } = useTranslation();
 
   const inputFirstName = t("common:input.first-name");
@@ -21,9 +26,11 @@ const PersonalData = () => {
   return (
     <div className="authentication__form__wrapper__inputs__wrapper">
       <div className="authentication__form__wrapper__inputs__wrapper__input">
-        <p className="authentication__form__wrapper__inputs__wrapper__input--error">
-          {/* error text */}
-        </p>
+        {firstNameError && (
+          <p className="authentication__form__wrapper__inputs__wrapper__input--error">
+            {t(`signup:validation-errors.${firstNameError}`)}
+          </p>
+        )}
         <AuthInput
           value={firstName}
           onChange={setFirstName}
@@ -32,7 +39,12 @@ const PersonalData = () => {
         />
       </div>
       <div className="authentication__form__wrapper__inputs__wrapper__input">
-        <p className="authentication__form__wrapper__inputs__wrapper__input--error"></p>
+        {lastNameError && (
+          <p className="authentication__form__wrapper__inputs__wrapper__input--error">
+            {t(`signup:validation-errors.${lastNameError}`)}
+          </p>
+        )}
+
         <AuthInput
           value={lastName}
           onChange={setLastName}
@@ -41,7 +53,12 @@ const PersonalData = () => {
         />
       </div>
       <div className="authentication__form__wrapper__inputs__wrapper__input">
-        <p className="authentication__form__wrapper__inputs__wrapper__input--error"></p>
+        {phoneNumberError && (
+          <p className="authentication__form__wrapper__inputs__wrapper__input--error">
+            {t(`signup:validation-errors.${phoneNumberError}`)}
+          </p>
+        )}
+
         <AuthInput
           value={phoneNumber}
           onChange={setPhoneNumber}

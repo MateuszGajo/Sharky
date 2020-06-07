@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
-
 import useTranslation from "next-translate/useTranslation";
 import { WizzardContext } from "../../context/WizzardContext";
 import AuthInput from "../../../../common/AuthInput/AuthInput";
+import { GlobalContext } from "../../../../contex/globalContext";
 
 const Credentials = () => {
   const {
@@ -15,14 +15,20 @@ const Credentials = () => {
   } = useContext(WizzardContext);
   const { t } = useTranslation();
 
+  const {
+    signUpValidation: { emailError, passwordError, confirmPasswordError },
+  } = useContext(GlobalContext);
+
   const inputPassword = t("common:input.password");
   const inputConfirmPassword = t("common:input.confirm-password");
   return (
     <div className="authentication__form__wrapper__inputs__wrapper">
       <div className="authentication__form__wrapper__inputs__wrapper__input">
-        <p className="authentication__form__wrapper__inputs__wrapper__input--error">
-          dfsd
-        </p>
+        {emailError && (
+          <p className="authentication__form__wrapper__inputs__wrapper__input--error">
+            {t(`signup:validation-errors.${emailError}`)}
+          </p>
+        )}
         <AuthInput
           value={email}
           onChange={setEmail}
@@ -31,9 +37,11 @@ const Credentials = () => {
         />
       </div>
       <div className="authentication__form__wrapper__inputs__wrapper__input">
-        <p className="authentication__form__wrapper__inputs__wrapper__input--error">
-          dsa
-        </p>
+        {passwordError && (
+          <p className="authentication__form__wrapper__inputs__wrapper__input--error">
+            {t(`signup:validation-errors.${passwordError}`)}
+          </p>
+        )}
         <AuthInput
           type="password"
           value={password}
@@ -43,9 +51,11 @@ const Credentials = () => {
         />
       </div>
       <div className="authentication__form__wrapper__inputs__wrapper__input">
-        <p className="authentication__form__wrapper__inputs__wrapper__input--error">
-          das
-        </p>
+        {confirmPasswordError && (
+          <p className="authentication__form__wrapper__inputs__wrapper__input--error">
+            {t(`signup:validation-errors.${confirmPasswordError}`)}
+          </p>
+        )}
         <AuthInput
           type="password"
           value={confirmPassword}

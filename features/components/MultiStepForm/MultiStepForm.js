@@ -1,12 +1,13 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { WizzardContext } from "./context/WizzardContext";
 import Controls from "./components/Controls/Controls";
 import StepWrapper from "./components/StepWrapper/StepWrapper";
 import Step from "./components/Step/Step";
 import Credentials from "./components/Credentials/Credentials";
 import PersonalData from "./components/PersonalData/PersonalData";
+import { GlobalContext } from "../../contex/globalContext";
 
-const Wizzard = ({ children, onSubmit }) => {
+const Wizzard = ({ children }) => {
   const [numberOfPages, setNumberOfPages] = useState(0);
   const [page, setPage] = useState(1);
   const [email, setEmail] = useState("");
@@ -16,10 +17,11 @@ const Wizzard = ({ children, onSubmit }) => {
   const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
 
+  const { signUp } = useContext(GlobalContext);
+
   const handleSubmit = (e) => {
-    console.log("handleSubmit");
     e.preventDefault();
-    onSubmit({
+    signUp({
       email,
       password,
       confirmPassword,

@@ -1,3 +1,11 @@
 {
-    "button":"Register"
+    "button":"Register",
+    "validation-errors":{
+        "empty-field":"Field is empty",
+        "email-validation-error":"Invalid email",
+        "passwords-not-equal-error":"Passwords are different",
+        "too-long-first-name":"First name is too long",
+        "too-long-last-name":"Last name is too long",
+        "invalid-phone-number":"Invalid phone number"
+    }
 }

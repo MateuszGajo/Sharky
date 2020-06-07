@@ -1,18 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import axios from "axios";
 import Authentication from "../features/components/Layout/Authentication/Authentication";
 import { FaGooglePlusG, FaFacebookF } from "react-icons/fa";
-import { FiGithub } from "react-icons/fi";
+import { FiTwitter } from "react-icons/fi";
 import useTranslation from "next-translate/useTranslation";
 import Checkbox from "../features/common/Checkbox/Checkbox";
 import PrimaryButton from "../features/common/PrimaryButton/PrimaryButton";
 import AuthInput from "../features/common/AuthInput/AuthInput";
+import { GlobalContext } from "../features/contex/globalContext";
 import "../styles/main.scss";
 
-const SignIn = ({ onSubmit }) => {
+const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isRembermeChecked, setStatusOfRemberme] = useState(false);
 
+  const { authError, authUserError, signIn: sIn } = useContext(GlobalContext);
+  console.log(authError, authUserError);
   const { t } = useTranslation();
 
   const inputPassword = t("common:input.password");
@@ -22,23 +26,61 @@ const SignIn = ({ onSubmit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({
-      email,
-      password,
-    });
+    if (isRembermeChecked) {
+      localStorage.email = email;
+      localStorage.password = password;
+    }
+    sIn(email, password);
   };
+
+  useEffect(() => {
+    if (localStorage.email && localStorage.password) {
+      setEmail(localStorage.email);
+      setPassword(localStorage.password);
+    }
+    console.log(t(`component:layout.authentication.error.server-error`));
+    // axios
+    //   .get("/auth/me")
+    //   .then((resp) => console.log(resp))
+    //   .catch((err) => console.log(err));
+    // Axios.get("/auth/error")
+    //   .then((resp) => {
+    //     const { data } = resp || null;
+    //     if (data) {
+    //       setAuthError(t(`signin:error.${data}`));
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     setAuthError("server-error");
+    //   });
+  }, []);
   return (
     <Authentication type="signin">
       <>
         <div className="authentication__form__wrapper__icons">
-          <div className="authentication__form__wrapper__icons--icon">
-            <FaGooglePlusG />
+          <div className="authentication__form__wrapper__icons__icon">
+            <a
+              href="/auth/google"
+              className="authentication__form__wrapper__icons__icon--link"
+            >
+              <FaGooglePlusG />
+            </a>
           </div>
-          <div className="authentication__form__wrapper__icons--icon">
-            <FiGithub />
+          <div className="authentication__form__wrapper__icons__icon">
+            <a
+              href="/auth/twitter"
+              className="authentication__form__wrapper__icons__icon--link"
+            >
+              <FiTwitter />
+            </a>
           </div>
-          <div className="authentication__form__wrapper__icons--icon">
-            <FaFacebookF />
+          <div className="authentication__form__wrapper__icons__icon">
+            <a
+              href="/auth/facebook"
+              className="authentication__form__wrapper__icons__icon--link"
+            >
+              <FaFacebookF />
+            </a>
           </div>
         </div>
         <p className="authentication__form__wrapper--text">{description}</p>
@@ -47,19 +89,24 @@ const SignIn = ({ onSubmit }) => {
             className="authentication__form__wrapper__inputs__wrapper"
             onSubmit={handleSubmit}
           >
-            <AuthInput
-              value={email}
-              onChange={setEmail}
-              title="E-mail"
-              size="x-large"
-            />
-            <AuthInput
-              type="password"
-              value={password}
-              onChange={setPassword}
-              title={inputPassword}
-              size="x-large"
-            />
+            {authUserError && <p className="input-error">{authUserError}</p>}
+            <div className="authentication__form__wrapper__inputs__wrapper__input--signin">
+              <AuthInput
+                value={email}
+                onChange={setEmail}
+                title="E-mail"
+                size="x-large"
+              />
+            </div>
+            <div className="authentication__form__wrapper__inputs__wrapper__input--signin">
+              <AuthInput
+                type="password"
+                value={password}
+                onChange={setPassword}
+                title={inputPassword}
+                size="x-large"
+              />
+            </div>
 
             <div className="authentication__form__wrapper__inputs__wrapper__helpers">
               <div className="authentication__form__wrapper__inputs__wrapper__helpers--remberme">
@@ -76,6 +123,11 @@ const SignIn = ({ onSubmit }) => {
             <div className="authentication__form__wrapper__inputs__wrapper--button">
               <PrimaryButton value={buttonText} size="large" />
             </div>
+            {authError && (
+              <div className="authentication__form__wrapper__inputs__wrapper__error">
+                <p className="input-error">{authError}</p>
+              </div>
+            )}
           </form>
         </div>
       </>
