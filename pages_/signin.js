@@ -26,10 +26,18 @@ const SignIn = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (isRembermeChecked) {
+      localStorage.email = email;
+      localStorage.password = password;
+    }
     sIn(email, password);
   };
 
   useEffect(() => {
+    if (localStorage.email && localStorage.password) {
+      setEmail(localStorage.email);
+      setPassword(localStorage.password);
+    }
     console.log(t(`component:layout.authentication.error.server-error`));
     // axios
     //   .get("/auth/me")
