@@ -5,8 +5,9 @@ import { IoMdArrowBack } from "react-icons/io";
 import { MdGroup } from "react-icons/md";
 import { IconContext } from "react-icons";
 import cx from "classnames";
-import useTranslation from "next-translate/useTranslation";
-import Router from "../../routes";
+import Router from "../../route/routes";
+import i18next from "../../../i18n";
+const { useTranslation } = i18next;
 
 // import { WizzardContext } from "../../context/WizzardContext";
 
@@ -95,7 +96,7 @@ const Messenger = ({
   },
   onSubmit,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["component"]);
 
   const placeholder = t("component:messenger.placeholder");
 
