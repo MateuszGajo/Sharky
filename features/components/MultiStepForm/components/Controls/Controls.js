@@ -1,14 +1,15 @@
 import React, { useContext } from "react";
 import { GoArrowLeft, GoArrowRight } from "react-icons/go";
 import cx from "classnames";
-import useTranslation from "next-translate/useTranslation";
 import { WizzardContext } from "../../context/WizzardContext";
 import PrimaryButton from "../../../../common/PrimaryButton/PrimaryButton";
+import i18next from "../../../../../i18n";
+const { useTranslation } = i18next;
 
 const Controls = () => {
   const { page, setPage, numberOfPages } = useContext(WizzardContext);
 
-  const { t } = useTranslation();
+  const { t } = useTranslation(["signup"]);
   const buttonText = t("signup:button");
   return (
     <div className="authentication__form__wrapper__controls">

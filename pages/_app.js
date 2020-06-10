@@ -9,7 +9,7 @@ import i18next from "../i18n";
 const { useTranslation } = i18next;
 
 const MyApp = ({ Component, pageProps }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["component", "signin"]);
   const [authError, setAuthError] = useState("");
   const [authUserError, setAuthUserError] = useState("");
 

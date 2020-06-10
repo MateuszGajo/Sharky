@@ -1,8 +1,9 @@
 import React, { useContext } from "react";
-import useTranslation from "next-translate/useTranslation";
 import { WizzardContext } from "../../context/WizzardContext";
 import AuthInput from "../../../../common/AuthInput/AuthInput";
 import { GlobalContext } from "../../../../contex/globalContext";
+import i18next from "../../../../../i18n";
+const { useTranslation } = i18next;
 
 const Credentials = () => {
   const {
@@ -13,7 +14,7 @@ const Credentials = () => {
     confirmPassword,
     setConfirmPassword,
   } = useContext(WizzardContext);
-  const { t } = useTranslation();
+  const { t } = useTranslation(["signup"]);
 
   const {
     signUpValidation: { emailError, passwordError, confirmPasswordError },
