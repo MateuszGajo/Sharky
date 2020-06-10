@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import i18next from "../i18n";
 import Spinner from "../features/components/Spinner/Spinner";
-import Home from "../features/components/Layout/Home/HomeLayout";
+import Checkbox from "../features/common/PopUp/ConfirmUser/ConfirmUser";
 import "../styles/main.scss";
 
 const Index = () => {
@@ -10,7 +10,7 @@ const Index = () => {
     i18next.initPromise.then((resp) => setInitialized(true));
   }, []);
   if (!initialized) return <Spinner />;
-  return <Home />;
+  return <Checkbox />;
 };
 
 export default Index;
