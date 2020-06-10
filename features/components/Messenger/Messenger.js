@@ -9,8 +9,6 @@ import Router from "../../route/routes";
 import i18next from "../../../i18n";
 const { useTranslation } = i18next;
 
-// import { WizzardContext } from "../../context/WizzardContext";
-
 const Messenger = ({
   isMessengerClose = false,
   setStatusOfMessenger = null,
@@ -161,9 +159,9 @@ const Messenger = ({
           </div>
         </div>
         {windowMessenger ? (
-          <div className="messenger__navbar__icons">
+          <div className="messenger__navbar__icon">
             <div
-              className="messenger__navbar__icons--icon"
+              className="messenger__navbar__icon--close-icon"
               onClick={() => setStatusOfMessenger(true)}
               data-testid="messenger-close"
             >
