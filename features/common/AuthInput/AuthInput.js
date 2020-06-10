@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import cx from "classnames";
 
 const InputAuth = ({
@@ -8,6 +8,7 @@ const InputAuth = ({
   title,
   size = "large",
 }) => {
+  const input = useRef(null);
   return (
     <div
       data-testid="auth-input-container"
@@ -23,12 +24,14 @@ const InputAuth = ({
         type={type}
         data-testid="auth-input"
         value={value}
+        ref={input}
         onChange={(e) => onChange(e.target.value)}
         required
       />
       <h2
         data-testid="auth-input-placeholder"
         className="auth-input-container--placeholder"
+        onClick={() => input.current.focus()}
       >
         {title}
       </h2>
