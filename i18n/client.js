@@ -6,7 +6,6 @@ export default new NextI18Next({
   use: [LanguageDetector, initReactI18next],
   defaultLanguage: "pl",
   otherLanguages: ["en"],
-  loadPath: "public/static/locales/{{lng}}/{{ns}}.json",
   load: "languageOnly",
   ns: ["common", "component", "signin", "signup"],
   defaultNS: "common",

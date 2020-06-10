@@ -5,10 +5,9 @@ import { IoMdArrowBack } from "react-icons/io";
 import { MdGroup } from "react-icons/md";
 import { IconContext } from "react-icons";
 import cx from "classnames";
-import useTranslation from "next-translate/useTranslation";
-import Router from "../../routes";
-
-// import { WizzardContext } from "../../context/WizzardContext";
+import Router from "../../route/routes";
+import i18next from "../../../i18n";
+const { useTranslation } = i18next;
 
 const Messenger = ({
   isMessengerClose = false,
@@ -95,7 +94,7 @@ const Messenger = ({
   },
   onSubmit,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["component"]);
 
   const placeholder = t("component:messenger.placeholder");
 
@@ -160,9 +159,9 @@ const Messenger = ({
           </div>
         </div>
         {windowMessenger ? (
-          <div className="messenger__navbar__icons">
+          <div className="messenger__navbar__icon">
             <div
-              className="messenger__navbar__icons--icon"
+              className="messenger__navbar__icon--close-icon"
               onClick={() => setStatusOfMessenger(true)}
               data-testid="messenger-close"
             >

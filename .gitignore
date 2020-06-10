@@ -1,10 +1,4 @@
 /.next
 /config/keys.js
 /node_modules
-<<<<<<< HEAD
-/pages
 .env
-/config/keys.js
-=======
-.env
->>>>>>> common-layout
