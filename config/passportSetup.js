@@ -1,4 +1,4 @@
-const passport = require("koa-passport");
+const passport = require("passport");
 const FacebookStrategy = require("passport-facebook").Strategy;
 const TwitterStrategy = require("passport-twitter").Strategy;
 const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;

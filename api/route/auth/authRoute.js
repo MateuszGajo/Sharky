@@ -1,10 +1,10 @@
-const passport = require("koa-passport");
-const router = require("koa-router")({ prefix: "/auth" });
-const bodyParser = require("koa-body")();
+const passport = require("passport");
+const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { client } = require("../../../config/pgAdaptor");
 const { jwtSecret } = require("../../../config/keys");
+const router = express.Router();
 
 const saltRounds = 10;
 
@@ -13,8 +13,8 @@ router.get(
   passport.authenticate("google", {
     scope: ["https://www.googleapis.com/auth/plus.login"],
   }),
-  (ctx, next) => {
-    ctx.session.flash = [];
+  (req, res) => {
+    req.session.flash = [];
   }
 );
 
@@ -25,14 +25,21 @@ router.get(
     failureFlash: true,
     session: false,
   }),
-  (ctx, next) => {
-    ctx.cookies.set("token", ctx.req.user);
-    ctx.redirect("/");
+  (req, res) => {
+    const token = jwt.sign(
+      {
+        exp: Math.floor(Date.now() / 1000) + 60 * 60,
+        data: req.user,
+      },
+      jwtSecret
+    );
+    res.cookie("token", token);
+    res.redirect("/");
   }
 );
 
-router.get("/facebook", passport.authenticate("facebook"), (ctx, next) => {
-  ctx.session.flash = [];
+router.get("/facebook", passport.authenticate("facebook"), (req, res) => {
+  req.session.flash = [];
 });
 
 router.get(
@@ -42,19 +49,26 @@ router.get(
     failureFlash: true,
     session: false,
   }),
-  (ctx, next) => {
-    ctx.cookies.set("token", ctx.req.user);
-    ctx.redirect("/");
+  (req, res) => {
+    const token = jwt.sign(
+      {
+        exp: Math.floor(Date.now() / 1000) + 60 * 60,
+        data: req.user,
+      },
+      jwtSecret
+    );
+    res.cookie("token", token);
+    res.redirect("/");
   }
 );
 
-router.post("/signin", async (ctx, next) => {
-  const { email, password } = ctx.request.body;
+router.post("/signin", async (req, res) => {
+  const { email, password } = req.body;
   const findUserQuery = "select * from users where email=$1";
   try {
     const findUser = await client.query(findUserQuery, [email]);
     if (findUser.rowCount == 0)
-      return (ctx.body = { userNotExist: "user-not-exist" });
+      return res.json({ userNotExist: "user-not-exist" });
 
     const user = findUser.rows[0];
     const pwCorrect = await bcrypt.compare(password, user.password);
@@ -74,21 +88,21 @@ router.post("/signin", async (ctx, next) => {
         },
         jwtSecret
       );
-      ctx.cookies.set("token", token);
-      return (ctx.body = { error: "" });
+      res.cookie("token", token);
+      return res.json({ error: "" });
     }
-    return (ctx.body = { error: "password-hash-error" });
+    return res.json({ error: "password-hash-error" });
   } catch {
-    return (ctx.body = { error: "connect-db-error" });
+    return res.json({ error: "connect-db-error" });
   }
 });
 
-router.post("/signup", async (ctx, next) => {
-  const { email, password, firstName, lastName, phone } = ctx.request.body;
+router.post("/signup", async (req, res) => {
+  const { email, password, firstName, lastName, phone } = req.body;
   const findUserQuery = "select * from users where email=$1";
   try {
     const findUser = await client.query(findUserQuery, [email]);
-    if (findUser.rowCount > 0) return (ctx.body = { userExist: "user-exist" });
+    if (findUser.rowCount > 0) return res.json({ userExist: "user-exist" });
 
     try {
       const pwHash = await bcrypt.hash(password, saltRounds);
@@ -104,7 +118,7 @@ router.post("/signup", async (ctx, next) => {
           phone,
         ]);
         if (createUser.rowCount == 0)
-          return (ctx.body = { error: "create-user-error" });
+          return res.json({ error: "create-user-error" });
 
         const token = jwt.sign(
           {
@@ -120,31 +134,31 @@ router.post("/signup", async (ctx, next) => {
           },
           jwtSecret
         );
-        ctx.cookies.set("token", token);
-        ctx.redirect("/");
+        res.cookie("token", token);
+        res.redirect("/");
       } catch {
-        return (ctx.body = { error: "connect-db-error" });
+        return res.json({ error: "connect-db-error" });
       }
     } catch {
-      return (ctx.body = { error: "password-hash-error" });
+      return res.json({ error: "password-hash-error" });
     }
   } catch {
-    return (ctx.body = { error: "connect-db-error" });
+    return res.json({ error: "connect-db-error" });
   }
 });
 
-router.get("/me", async (ctx, next) => {
-  const token = ctx.cookies.get("token");
+router.get("/me", async (req, res) => {
+  const token = req.cookies.token;
   try {
     await jwt.verify(token, jwtSecret);
-    return (ctx.body = { verify: true });
+    return res.json({ verify: true });
   } catch {
-    return (ctx.body = { verify: false });
+    return res.json({ verify: false });
   }
 });
 
-router.get("/error", (ctx, next) => {
-  ctx.body = ctx.flash("error")[0];
+router.get("/error", (req, res) => {
+  res.json(req.flash("error")[0]);
 });
 
 module.exports = router;

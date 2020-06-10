@@ -1,11 +1,12 @@
 import React, { useState, useReducer } from "react";
 import axios from "axios";
-import useTranslation from "next-translate/useTranslation";
 import Router from "next/router";
 import { GlobalContext } from "../features/contex/globalContext";
 import { signUpValidation } from "../features/Validation/Validation";
 import AuthReducer from "../features/contex/authReducer";
 import { authInitState } from "../features/contex/initState";
+import i18next from "../i18n";
+const { useTranslation } = i18next;
 
 const MyApp = ({ Component, pageProps }) => {
   const { t } = useTranslation();
@@ -45,6 +46,7 @@ const MyApp = ({ Component, pageProps }) => {
     <GlobalContext.Provider
       value={{
         authError,
+        setAuthError,
         authUserError,
         signIn,
         signUp,
