@@ -14,7 +14,6 @@ const MyApp = ({ Component, pageProps }) => {
   const [authUserError, setAuthUserError] = useState("");
 
   const [state, dispatch] = useReducer(AuthReducer, authInitState);
-  console.log(state);
 
   const signUp = (creds) => {
     if (signUpValidation(creds, dispatch)) {
@@ -38,7 +37,6 @@ const MyApp = ({ Component, pageProps }) => {
           );
       })
       .catch((err) => {
-        console.log(err);
         setAuthError(t(`component:layout.authentication.error.server-error`));
       });
   };

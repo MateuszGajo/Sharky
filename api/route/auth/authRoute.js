@@ -14,7 +14,7 @@ router.get(
     scope: ["https://www.googleapis.com/auth/plus.login"],
   }),
   (req, res) => {
-    req.session.flash = [];
+    // req.session.flash = [];
   }
 );
 
@@ -39,7 +39,7 @@ router.get(
 );
 
 router.get("/facebook", passport.authenticate("facebook"), (req, res) => {
-  req.session.flash = [];
+  // req.session.flash = [];
 });
 
 router.get(
@@ -158,7 +158,9 @@ router.get("/me", async (req, res) => {
 });
 
 router.get("/error", (req, res) => {
-  res.json(req.flash("error")[0]);
+  console.log(req.session);
+  console.log(res.locals.sessionFlash);
+  res.send("response");
 });
 
 module.exports = router;

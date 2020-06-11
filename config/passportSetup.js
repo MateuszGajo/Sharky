@@ -6,18 +6,6 @@ const jwt = require("jsonwebtoken");
 const { client } = require("./pgAdaptor");
 const { jwtSecret } = require("./keys");
 
-// passport.serializeUser((user, done) => {
-//   done(null, user.id);
-// });
-
-// passport.deserializeUser((id, done) => {
-//   return client.query("select * from users where id=$1", [id], (err, res) => {
-//     if (err) return done(null, false, { message: "connect-db-error" });
-//     if (res.rowCount == 0) return done(null, false, { message: "user-error" });
-//     done(null, id);
-//   });
-// });
-
 passport.use(
   new FacebookStrategy(
     {
@@ -66,7 +54,7 @@ passport.use(
               },
               jwtSecret
             );
-
+            console.log("mejbi tutaj");
             return done(null, token);
           });
         } else {
@@ -95,7 +83,7 @@ passport.use(
             },
             jwtSecret
           );
-          return done(null, token);
+          return done(null, false, { message: "create-user-error" });
         }
       });
     }
@@ -108,8 +96,9 @@ passport.use(
       clientID: process.env.GOOGLE_APPID,
       clientSecret: process.env.GOOGLE_APPSECRET,
       callbackURL: "/auth/google/callback",
+      passReqToCallback: true,
     },
-    function (token, tokenSecret, profile, done) {
+    function (req, token, tokenSecret, profile, done) {
       const { displayName, id } = profile;
       const firstName = displayName.match(/^([\w\-]+)/g)[0];
       const lastName = displayName.match(/\b(\w+)\W*$/g)[0];
@@ -146,7 +135,16 @@ passport.use(
           });
         } else {
           const user = res.rows[0];
-          return done(null, user);
+          console.log("tutaj ```````````````````");
+          return done(
+            null,
+            false,
+            (req.session.sessionFlash = {
+              type: "error",
+              message:
+                "This is a flash message using custom middleware and express-session.",
+            })
+          );
         }
       });
     }
