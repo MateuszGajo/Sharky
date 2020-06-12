@@ -1,6 +1,6 @@
 import React from "react";
 import PrimaryButton from "../PrimaryButton/PrimaryButton";
-import i18next from "../../../../i18n";
+import i18next from "../../../i18n";
 const { useTranslation } = i18next;
 
 const MessageBox = ({ value, onChange, btnSize = "medium" }) => {
