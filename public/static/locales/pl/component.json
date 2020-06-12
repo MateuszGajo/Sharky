@@ -16,7 +16,6 @@
                 "connect-db-error":"Błąd łączenia z bazą danych",
                 "create-user-error":"Błąd uwierzytelniania",
                 "server-error":"Błąd komunikacji z serwerem",
-                "user-not-exist":"Niepoprawny email bądź hasło",
                 "password-hash-error":"Błąd szyfrowania hasła"
             }
          },

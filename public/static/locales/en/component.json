@@ -16,7 +16,6 @@
                 "connect-db-error":"Cannot connect to databse",
                 "create-user-error":"Authentication error",
                 "server-error":"Cannot connect to server",
-                "user-not-exist":"Invalid email or password",
                 "password-hash-error":"Password hash error"
             }
         },

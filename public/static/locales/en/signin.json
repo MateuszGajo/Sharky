@@ -1,5 +1,8 @@
 {
     "description":"Or use your email account",
     "forget":"Forgot password?",
-    "button":"Login"
+    "button":"Login",
+    "error":{
+        "user-not-exist":"Invalid email or password"
+    }
 }

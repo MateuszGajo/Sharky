@@ -1,5 +1,8 @@
 {
     "description":"Lub przy pomocy email",
     "forget":"Zapomniałeś hasła?",
-    "button":"Zaloguj"
+    "button":"Zaloguj",
+    "error":{
+        "user-not-exist":"Niepoprawny email bądź hasło"
+    }
 }

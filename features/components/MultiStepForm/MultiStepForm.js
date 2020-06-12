@@ -17,7 +17,9 @@ const Wizzard = ({ children }) => {
   const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
 
-  const { signUp } = useContext(GlobalContext);
+  const { signUp, validationSignUpError, authUserError } = useContext(
+    GlobalContext
+  );
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -55,6 +57,10 @@ const Wizzard = ({ children }) => {
         onSubmit={handleSubmit}
         className="authentication__form__wrapper__form"
       >
+        {validationSignUpError && (
+          <p className="input-error">{validationSignUpError}</p>
+        )}
+        {authUserError && <p className="input-error">{authUserError}</p>}
         {children}
       </form>
     </WizzardContext.Provider>

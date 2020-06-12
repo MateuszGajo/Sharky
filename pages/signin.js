@@ -34,7 +34,7 @@ const SignIn = () => {
       localStorage.email = email;
       localStorage.password = password;
     }
-    sIn(email, password);
+    sIn({ email, password });
   };
 
   useEffect(() => {
@@ -43,15 +43,11 @@ const SignIn = () => {
       setPassword(localStorage.password);
     }
 
-    axios
-      .get("/auth/me")
-      .then(({ data: { verify } }) => {
-        console.log(verify);
-        if (verify) {
-          // Router.push("/");
-        }
-      })
-      .catch((err) => console.log(err));
+    axios.get("/auth/me").then(({ data: { verify } }) => {
+      if (verify) {
+        Router.push("/");
+      }
+    });
   }, []);
   return (
     <Authentication type="signin">

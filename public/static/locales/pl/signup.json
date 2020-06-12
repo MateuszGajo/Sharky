@@ -6,6 +6,10 @@
         "passwords-not-equal-error":"Hasła są różne",
         "too-long-first-name":"Imię jest za długie",
         "too-long-last-name":"Nazwisko jest za długie",
-        "invalid-phone-number":"Niepoprawny numer telefonu"
+        "invalid-phone-number":"Niepoprawny numer telefonu",
+        "fields-error":"Popraw zaznaczone pola"
+    },
+    "error":{
+        "user-exist":"Użytkownik już istnieje"
     }
 }

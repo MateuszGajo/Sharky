@@ -105,14 +105,15 @@ router.post("/signin", async (req, res) => {
       res.cookie("token", token);
       return res.json({ error: "" });
     }
-    return res.json({ error: "password-hash-error" });
+    return res.json({ userNotExist: "user-not-exist" });
   } catch {
     return res.json({ error: "connect-db-error" });
   }
 });
 
 router.post("/signup", async (req, res) => {
-  const { email, password, firstName, lastName, phone } = req.body;
+  const { creds } = req.body;
+  const { email, password, firstName, lastName, phone } = creds;
   const findUserQuery = "select * from users where email=$1";
   try {
     const findUser = await client.query(findUserQuery, [email]);
@@ -120,10 +121,10 @@ router.post("/signup", async (req, res) => {
 
     try {
       const pwHash = await bcrypt.hash(password, saltRounds);
-      const createUserQuery =
-        "INSERT INTO users(email, password, first_name, last_name, phone) values($1,$2,$3,$4,$5)";
 
       try {
+        const createUserQuery =
+          "INSERT INTO users(email, password, first_name, last_name, phone) values($1,$2,$3,$4,$5)";
         const createUser = await client.query(createUserQuery, [
           email,
           pwHash,

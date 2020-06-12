@@ -1,6 +1,6 @@
 export default (state, action) => {
   switch (action.type) {
-    case "EMAIL_ERROR": {
+    case "EMAIL_ERROR":
       return {
         ...state,
         signUpValidation: {
@@ -8,9 +8,8 @@ export default (state, action) => {
           emailError: action.msg,
         },
       };
-    }
 
-    case "PASSWORD_ERROR": {
+    case "PASSWORD_ERROR":
       return {
         ...state,
         signUpValidation: {
@@ -18,9 +17,8 @@ export default (state, action) => {
           passwordError: action.msg,
         },
       };
-    }
 
-    case "CONFIRM_PASSWORD_ERROR": {
+    case "CONFIRM_PASSWORD_ERROR":
       return {
         ...state,
         signUpValidation: {
@@ -28,9 +26,8 @@ export default (state, action) => {
           confirmPasswordError: action.msg,
         },
       };
-    }
 
-    case "FIRST_NAME_ERROR": {
+    case "FIRST_NAME_ERROR":
       return {
         ...state,
         signUpValidation: {
@@ -38,9 +35,8 @@ export default (state, action) => {
           firstNameError: action.msg,
         },
       };
-    }
 
-    case "LAST_NAME_ERROR": {
+    case "LAST_NAME_ERROR":
       return {
         ...state,
         signUpValidation: {
@@ -48,9 +44,8 @@ export default (state, action) => {
           lastNameError: action.msg,
         },
       };
-    }
 
-    case "PHONE_NUMBER_ERROR": {
+    case "PHONE_NUMBER_ERROR":
       return {
         ...state,
         signUpValidation: {
@@ -58,6 +53,5 @@ export default (state, action) => {
           phoneNumberError: action.msg,
         },
       };
-    }
   }
 };

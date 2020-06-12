@@ -3,11 +3,14 @@ import { GoArrowLeft, GoArrowRight } from "react-icons/go";
 import cx from "classnames";
 import { WizzardContext } from "../../context/WizzardContext";
 import PrimaryButton from "../../../../common/PrimaryButton/PrimaryButton";
+import { GlobalContext } from "../../../../contex/globalContext";
 import i18next from "../../../../../i18n";
+import passport from "passport";
 const { useTranslation } = i18next;
 
 const Controls = () => {
   const { page, setPage, numberOfPages } = useContext(WizzardContext);
+  const { authError } = useContext(GlobalContext);
 
   const { t } = useTranslation(["signup"]);
   const buttonText = t("signup:button");
@@ -43,6 +46,7 @@ const Controls = () => {
           <GoArrowRight />
         </button>
       </div>
+      {authError && <p className="input-error">{authError}</p>}
       <div
         className={cx("authentication__form__wrapper__controls--submit-buton", {
           "authentication__form__wrapper__controls--hide-button":
