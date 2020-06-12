@@ -11,7 +11,7 @@ import { GlobalContext } from "../features/contex/globalContext";
 import i18next from "../i18n";
 const { useTranslation } = i18next;
 import "../styles/main.scss";
-import { Router } from "next/router";
+import Router from "next/router";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -42,34 +42,16 @@ const SignIn = () => {
       setEmail(localStorage.email);
       setPassword(localStorage.password);
     }
-    axios.get("/auth/error").then((resp) => {
-      console.log(resp);
-      const { data } = resp || null;
-      console.log(data);
-      if (data) {
-        setAuthError(t(`signin:error.${data}`));
-      }
-    });
 
-    // .catch(() => setAuthError("server-error"));
-    // axios
+    axios
       .get("/auth/me")
-      .then((resp) =>{
-        if(resp.verify){
-          Router.push("/")
+      .then(({ data: { verify } }) => {
+        console.log(verify);
+        if (verify) {
+          // Router.push("/");
         }
       })
       .catch((err) => console.log(err));
-    // Axios.get("/auth/error")
-    //   .then((resp) => {
-    //     const { data } = resp || null;
-    //     if (data) {
-    //       setAuthError(t(`signin:error.${data}`));
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     setAuthError("server-error");
-    //   });
   }, []);
   return (
     <Authentication type="signin">

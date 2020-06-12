@@ -12,17 +12,13 @@ router.get(
   "/google",
   passport.authenticate("google", {
     scope: ["https://www.googleapis.com/auth/plus.login"],
-  }),
-  (req, res) => {
-    // req.session.flash = [];
-  }
+  })
 );
 
 router.get(
   "/google/callback",
   passport.authenticate("google", {
     failureRedirect: "/signin",
-    failureFlash: true,
     session: false,
   }),
   (req, res) => {
@@ -38,15 +34,33 @@ router.get(
   }
 );
 
-router.get("/facebook", passport.authenticate("facebook"), (req, res) => {
-  // req.session.flash = [];
-});
+router.get("/facebook", passport.authenticate("facebook"));
 
 router.get(
   "/facebook/callback",
   passport.authenticate("facebook", {
     failureRedirect: "/signin",
-    failureFlash: true,
+    session: false,
+  }),
+  (req, res) => {
+    const token = jwt.sign(
+      {
+        exp: Math.floor(Date.now() / 1000) + 60 * 60,
+        data: req.user,
+      },
+      jwtSecret
+    );
+    res.cookie("token", token);
+    res.redirect("/");
+  }
+);
+
+router.get("/twitter", passport.authenticate("twitter"));
+
+router.get(
+  "/twitter/callback",
+  passport.authenticate("twitter", {
+    failureRedirect: "/signin",
     session: false,
   }),
   (req, res) => {
@@ -148,19 +162,13 @@ router.post("/signup", async (req, res) => {
 });
 
 router.get("/me", async (req, res) => {
-  const token = req.cookies.token;
+  const token = req.cookies.token || null;
   try {
     await jwt.verify(token, jwtSecret);
     return res.json({ verify: true });
   } catch {
     return res.json({ verify: false });
   }
-});
-
-router.get("/error", (req, res) => {
-  console.log(req.session);
-  console.log(res.locals.sessionFlash);
-  res.send("response");
 });
 
 module.exports = router;
