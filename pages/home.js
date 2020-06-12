@@ -1,9 +1,4 @@
 import React, { useState } from "react";
-import Router from "../features/routes";
-import { FiMessageCircle } from "react-icons/fi";
-import { AiOutlineShareAlt } from "react-icons/ai";
-import { IoIosHeartEmpty } from "react-icons/io";
-import cx from "classnames";
 import HomeLayout from "../features/components/Layout/Home/HomeLayout";
 import MessageBox from "../features/common/MessageBox/MessageBox";
 import Post from "../features/components/Post/Post";
