@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Card from "../Card/Card";
-import useTranslation from "next-translate/useTranslation";
+import i18next from "../../../../i18n";
+const { useTranslation } = i18next;
 
 const Fanpages = ({
   listOfFanPage = [
@@ -24,15 +25,13 @@ const Fanpages = ({
     },
   ],
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["component"]);
   const description = t("component:lists.fanpages.description");
   const buttonText = t("component:lists.fanpages.button");
 
   const [fanpage, setFanpage] = useState("");
 
-  useEffect(() => {
-    // console.log(fanpage);
-  }, [fanpage]);
+  useEffect(() => {}, [fanpage]);
 
   return (
     <div className="list">

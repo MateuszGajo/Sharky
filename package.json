@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "node server.js",
+    "dev": "nodemon server.js",
     "build": "next build",
     "test": "jest",
     "start": "NODE_ENV=production node server.js"
@@ -17,6 +17,7 @@
     "@testing-library/react": "^10.0.1",
     "@winstrike/next-i18next-koa": "^0.1.14",
     "@zeit/next-sass": "^1.0.1",
+    "axios": "^0.19.2",
     "axios-cache-adapter": "^2.5.0",
     "body-parser": "^1.19.0",
     "classnames": "^2.2.6",
@@ -30,6 +31,7 @@
     "i18next-browser-languagedetector": "^4.2.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^25.2.3",
+    "jsonwebtoken": "^8.5.1",
     "koa": "^2.12.0",
     "koa-mount": "^4.0.0",
     "koa-router": "^8.0.8",

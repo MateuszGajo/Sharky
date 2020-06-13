@@ -3,7 +3,7 @@ import { FiMessageCircle } from "react-icons/fi";
 import { AiOutlineShareAlt } from "react-icons/ai";
 import { IoIosHeartEmpty } from "react-icons/io";
 import cx from "classnames";
-import Router from "../../routes";
+import Router from "../../route/routes";
 
 const DownBarButtons = ({
   statisticks = { comments: 123, posts: 123, shares: 23 },

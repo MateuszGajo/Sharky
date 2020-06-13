@@ -5,7 +5,7 @@ import { MdBlock } from "react-icons/md";
 import { IconContext } from "react-icons";
 import DownBarButtons from "../../common/DownBarButtons/DownBarButtons";
 import Comments from "./components/Comments/Comments";
-import Router from "../../routes";
+import Router from "../../route/routes";
 import i18next from "../../../i18n";
 const { useTranslation } = i18next;
 
