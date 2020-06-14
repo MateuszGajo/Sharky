@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import HomeLayout from "../features/components/Layout/Home/HomeLayout";
 import MessageBox from "../features/common/MessageBox/MessageBox";
 import Post from "../features/components/Post/Post";
@@ -57,7 +57,6 @@ const Home = () => {
       })
       .then(({ data }) => {
         if (data.success) {
-          console.log("success", data);
           setUser(data.user);
           setAddedPosts([
             {
@@ -73,13 +72,35 @@ const Home = () => {
       })
       .catch((err) => console.log(err.response));
   };
+
+  const getPostsUsers = (posts) => {
+    let usersId = [];
+    for (let i = 0; i < posts.length; i++) {
+      const { id } = posts[i];
+      if (users[id] === undefined) usersId.push(id);
+    }
+    axios
+      .post("/user/get", {
+        usersId,
+      })
+      .then((resp) => console.log(resp))
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    axios
+      .post("/post/get", { from: 0 })
+      .then((resp) => {
+        getPostsUsers(resp.data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
   return (
     <HomeLayout>
       <form onSubmit={handleSubmit}>
         <MessageBox btnSize="small" value={postText} onChange={setPostText} />
       </form>
       <section className="home-page">
-        {console.log(addedPosts)}
         {addedPosts.map((post) => (
           <div className="home-page__post">
             <Post post={post} user={user} isComment={true} key={post.id} />

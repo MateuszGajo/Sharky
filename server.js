@@ -5,6 +5,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const nextI18NextMiddleware = require("next-i18next/middleware").default;
 const postRoute = require("./api/route/post/postRoute");
+const userRoute = require("./api/route/user/userRoute");
 
 const nextI18Next = require("./i18n/server");
 
@@ -25,6 +26,7 @@ const socketIO = io(httpServer);
   server.use(nextI18NextMiddleware(nextI18Next));
 
   server.use("/post", postRoute);
+  server.use("/user", userRoute);
 
   server.get("*", (req, res) => {
     handle(req, res);
