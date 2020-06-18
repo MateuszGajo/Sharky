@@ -12,9 +12,8 @@ import { FaRegUser } from "react-icons/fa";
 import cx from "classnames";
 import Router from "next/router";
 import { WizzardContext } from "../../context/WizzardContext";
-import i18next from '../../../../../../../i18n';
+import i18next from "../../../../../../../i18n";
 const { useTranslation } = i18next;
-
 
 const NavBar = () => {
   const { isNavOpen, setStatusOfNav } = useContext(WizzardContext);

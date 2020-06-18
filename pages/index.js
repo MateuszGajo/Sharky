@@ -9,7 +9,7 @@ const Index = () => {
     i18next.initPromise.then((resp) => setInitialized(false));
   }, []);
   if (!initialized) return <Spinner />;
-  return <El />;
+  return null;
 };
 
 export default Index;
