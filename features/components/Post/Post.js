@@ -36,7 +36,7 @@ const Post = ({
     day: "2-digit",
   });
   const [{ value: da }, , { value: mo }, , { value: ye }] = dtf.formatToParts(
-    post.date
+    new Date(post.date)
   );
 
   const hiddenPost = t("component:post.settings.hidden");

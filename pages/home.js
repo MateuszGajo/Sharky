@@ -1,50 +1,25 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
+import InfiniteScroll from 'react-infinite-scroll-component';
 import HomeLayout from "../features/components/Layout/Home/HomeLayout";
 import MessageBox from "../features/common/MessageBox/MessageBox";
 import Post from "../features/components/Post/Post";
-import axios from "axios";
+import Spinner from "../features/components/Spinner/Spinner";
+import i18next from '../i18n';
 import "../styles/main.scss";
+const { useTranslation } = i18next;
+
+
 
 const Home = () => {
+  const { t } = useTranslation(["home"])
+
   const [postText, setPostText] = useState("");
   const [addedPosts, setAddedPosts] = useState([]);
+  const [isMoreData, setStatusOfMoreData] = useState(true);
   const [user, setUser] = useState({});
-  const [users, setUsers] = useState({
-    234: {
-      id: 234,
-      firstName: "Janek",
-      lastName: "Kowalski",
-      photo: "profile.png",
-    },
-    453: {
-      id: 453,
-      firstName: "Janek",
-      lastName: "Kowalski",
-      photo: "profile.png",
-    },
-  });
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      userId: 234,
-      content: "lorem lorem ala lorem",
-      comments: 12,
-      likes: [123, 545, 23],
-      shares: 18,
-      date: new Date("2019-03-25"),
-      photo: "profile.png",
-    },
-    {
-      id: 2,
-      userId: 453,
-      content: "lorem lorem ala lorem dasd",
-      comments: 122,
-      likes: [543, 563, 232],
-      shares: 181,
-      date: new Date("2019-03-25"),
-      photo: "profile.png",
-    },
-  ]);
+  const [users, setUsers] = useState({});
+  const [posts, setPosts] = useState([]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -73,27 +48,35 @@ const Home = () => {
       .catch((err) => console.log(err.response));
   };
 
-  const getPostsUsers = (posts) => {
-    let usersId = [];
+  const getPostsUsers = async (posts) => {
+    console.log(posts)
+    const usersId = [];
     for (let i = 0; i < posts.length; i++) {
-      const { id } = posts[i];
-      if (users[id] === undefined) usersId.push(id);
+      const { id_user } = posts[i];
+      if (users[id_user] === undefined) usersId.push(id_user);
     }
-    axios
-      .post("/user/get", {
-        usersId,
-      })
-      .then((resp) => console.log(resp))
-      .catch((err) => console.log(err));
+    if (usersId.length > 0)
+      await axios
+        .post("/user/get", {
+          usersId,
+        })
+        .then(({ data }) => { setUsers({ ...users, ...data }); console.log("wykonałem") })
+        .catch((err) => console.log(err));
   };
 
-  useEffect(() => {
+  const getPosts = (from) => {
     axios
-      .post("/post/get", { from: 0 })
-      .then((resp) => {
-        getPostsUsers(resp.data);
+      .post("/post/get", { from })
+      .then(async ({ data }) => {
+        await getPostsUsers(data);
+        if (data.length < 20) setStatusOfMoreData(false)
+        setPosts([...posts, ...data])
       })
       .catch((err) => console.log(err));
+  }
+
+  useEffect(() => {
+    getPosts(0);
   }, []);
   return (
     <HomeLayout>
@@ -106,15 +89,28 @@ const Home = () => {
             <Post post={post} user={user} isComment={true} key={post.id} />
           </div>
         ))}
-        {posts.map((post, index) => {
-          let isLiked = post.likes.indexOf(123) !== -1;
-          const user = users[post.userId];
-          return (
-            <div className="home-page__post">
-              <Post post={post} user={user} singlePost={false} key={post.id} />
-            </div>
-          );
-        })}
+        <InfiniteScroll
+          dataLength={posts.length}
+          next={() => getPosts(posts.length)}
+          hasMore={isMoreData}
+          style={{ overflow: "hidden" }}
+          loader={<Spinner style={{ position: "absolute" }} />}
+          endMessage={
+            <p className="home-page__end-of-content">
+              <b>{t("home:end-of-content")}</b>
+            </p>
+          }>
+          {posts.map((post, index) => {
+
+            const user = users[post.userId];
+            return (
+              <div className="home-page__post">
+                <Post post={post} user={user} singlePost={false} />
+              </div>
+            );
+          })}
+        </InfiniteScroll>
+
       </section>
     </HomeLayout>
   );

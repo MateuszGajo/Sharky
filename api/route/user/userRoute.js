@@ -4,15 +4,24 @@ const { client } = require("../../../config/pgAdaptor");
 
 router.post("/get", async (req, res) => {
   const { usersId } = req.body;
-  const usersIdParm = usersId.join(",");
-  console.log(usersIdParm);
-  const getUserQuery = `select * from users where id in($1);`;
+
+  const getUserQuery = `select id, first_name, last_name, photo from users where id = ANY($1);`
 
   try {
-    const users = await client.query(getUserQuery, [usersIdParm]);
-    console.log(users);
+    const users = await client.query(getUserQuery, [usersId]);
+    const usersKey = {};
+    const { rowCount, rows } = users;
+    for (let i = 0; i < rowCount; i++) {
+      const { id, first_name: firstName, last_name: lastName, photo } = rows[i]
+      usersKey[id] = {
+        id,
+        firstName,
+        lastName,
+        photo
+      }
+    }
+    return res.json(usersKey);
   } catch {
-    console.log("hjuston problemo");
     return res.status(400);
   }
 });

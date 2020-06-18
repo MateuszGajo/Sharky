@@ -12,7 +12,7 @@ router.post("/add", async (req, res) => {
     {
       exp: Math.floor(Date.now() / 1000) + 60 * 60,
       data: {
-        userId: "3",
+        userId: "1",
         firstName: "Janek",
         lastName: "Kowalski",
         userPhoto: "profile.png",
@@ -50,7 +50,6 @@ router.post("/add", async (req, res) => {
 
 router.post("/get", async (req, res) => {
   const { from } = req.body;
-
   const token = jwt.sign(
     {
       exp: Math.floor(Date.now() / 1000) + 60 * 60,
@@ -68,17 +67,30 @@ router.post("/get", async (req, res) => {
   const { userId } = decoded.data;
 
   try {
-    const getPostsQuery = `select * from posts where id_user in(
-    SELECT id_user_1  fROM friends where id_user_2=$1
-    UNION
-    SELECT id_user_2 fROM friends where id_user_1=$2)
-    limit 20 OFFSET $3;`;
+    const getPostsQuery = `
+    select posts.id, posts.id_user, post_comments.content, photo, date, post_like.id as id_like, post_comments.content
+    from posts
+    LEFT JOIN post_like on posts.id = post_like.id_post
+    LEFT JOIN post_comments on posts.id = post_comments.id_post
+    where posts.id_user in(
+      SELECT $1 AS id_user_1
+      UNION
+      SELECT id_user_1  fROM friends where id_user_2=$1
+      UNION
+      SELECT id_user_2 fROM friends where id_user_1=$1)
+    limit 20 OFFSET $2;`;
 
-    const posts = await client.query(getPostsQuery, [userId, userId, from]);
-
+    const getCommentsQuery = `
+    select * from post_comments
+  where id_post between $1 and $2
+    `
+    const posts = await client.query(getPostsQuery, [userId, from]);
+    const comments = await client.query(getCommentsQuery, [from, from + 20])
+    console.log(comments)
+    console.log(posts)
     return res.json(posts.rows);
   } catch {
-    console.log("bład");
+    console.log("error")
     return res.status(400);
   }
 });
