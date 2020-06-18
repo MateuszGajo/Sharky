@@ -9,8 +9,6 @@ import i18next from '../i18n';
 import "../styles/main.scss";
 const { useTranslation } = i18next;
 
-
-
 const Home = () => {
   const { t } = useTranslation(["home"])
 
@@ -49,7 +47,6 @@ const Home = () => {
   };
 
   const getPostsUsers = async (posts) => {
-    console.log(posts)
     const usersId = [];
     for (let i = 0; i < posts.length; i++) {
       const { id_user } = posts[i];
@@ -60,17 +57,40 @@ const Home = () => {
         .post("/user/get", {
           usersId,
         })
-        .then(({ data }) => { setUsers({ ...users, ...data }); console.log("wykonałem") })
+        .then(({ data }) => { setUsers({ ...users, ...data }) })
         .catch((err) => console.log(err));
   };
 
   const getPosts = (from) => {
     axios
       .post("/post/get", { from })
-      .then(async ({ data }) => {
-        await getPostsUsers(data);
-        if (data.length < 20) setStatusOfMoreData(false)
-        setPosts([...posts, ...data])
+      .then(async ({ data: { posts: p, comments: c, replies: r } }) => {
+        await getPostsUsers(p);
+        const replies = new Array(20);
+        r.forEach(item => {
+          if (!replies[item.idComment]) {
+            replies[item.idComment] = []
+          }
+          replies[item.idComment].push(item);
+        })
+
+        const comments = new Array(20);
+        c.forEach((item, index) => {
+          if (!comments[item.idPost]) {
+            comments[item.idPost] = [];
+          }
+          comments[item.idPost].push({ ...item, replies: replies[index] });
+        })
+
+        const newPosts = p.map((item, index) => {
+          return {
+            ...item,
+            comments: comments[index]
+          }
+        })
+
+        if (newPosts.length < 20) setStatusOfMoreData(false)
+        setPosts([...posts, ...newPosts])
       })
       .catch((err) => console.log(err));
   }

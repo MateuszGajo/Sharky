@@ -68,7 +68,7 @@ router.post("/get", async (req, res) => {
 
   try {
     const getPostsQuery = `
-    select posts.id, posts.id_user, post_comments.content, photo, date, post_like.id as id_like, post_comments.content
+    select posts.id, posts.id_user as "idUser", post_comments.content, photo, date, post_like.id as "idLike", post_comments.content
     from posts
     LEFT JOIN post_like on posts.id = post_like.id_post
     LEFT JOIN post_comments on posts.id = post_comments.id_post
@@ -81,16 +81,23 @@ router.post("/get", async (req, res) => {
     limit 20 OFFSET $2;`;
 
     const getCommentsQuery = `
-    select * from post_comments
-  where id_post between $1 and $2
+    select id, id_post as "idPost", id_user as "idUser", content from post_comments
+    where id_post between $1 and $2
+    `
+
+    const getCommentsReplyQuery = `
+      select id, id_comment as "idComment", id_user as "idUser", content from comment_replies
+      where id_comment IN(
+        select id from post_comments
+        where id_post between $1 and $2
+      )
     `
     const posts = await client.query(getPostsQuery, [userId, from]);
-    const comments = await client.query(getCommentsQuery, [from, from + 20])
-    console.log(comments)
-    console.log(posts)
-    return res.json(posts.rows);
+    const comments = await client.query(getCommentsQuery, [from, from + 20]);
+    const replies = await client.query(getCommentsReplyQuery, [from, from + 20]);
+
+    return res.json({ posts: posts.rows, comments: comments.rows, replies: replies.rows });
   } catch {
-    console.log("error")
     return res.status(400);
   }
 });
