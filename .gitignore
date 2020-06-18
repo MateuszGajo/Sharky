@@ -1,4 +1,5 @@
 /.next
+/config/keys.js
 /node_modules
-/pages
 .env
+./pages/index.js

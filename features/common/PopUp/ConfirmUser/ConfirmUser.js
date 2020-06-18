@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import cx from "classnames";
-import useTranslation from "next-translate/useTranslation";
 import PrimaryInput from "../../PrimaryInput/PrimaryInput";
 import PrimaryButton from "../../PrimaryButton/PrimaryButton";
+import i18next from '../../../../i18n';
+const { useTranslation } = i18next;
 
 const ConfirmUser = ({ setVerify, isOpen = true, setOpen }) => {
   const { t } = useTranslation();

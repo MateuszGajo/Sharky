@@ -5,10 +5,9 @@ import { IoMdArrowBack } from "react-icons/io";
 import { MdGroup } from "react-icons/md";
 import { IconContext } from "react-icons";
 import cx from "classnames";
-import useTranslation from "next-translate/useTranslation";
-import Router from "../../routes";
-
-// import { WizzardContext } from "../../context/WizzardContext";
+import Router from "../../route/routes";
+import i18next from '../../../i18n';
+const { useTranslation } = i18next;
 
 const Messenger = ({
   isMessengerClose = false,
@@ -95,7 +94,7 @@ const Messenger = ({
   },
   onSubmit,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["component"]);
 
   const placeholder = t("component:messenger.placeholder");
 
@@ -144,14 +143,14 @@ const Messenger = ({
               </IconContext.Provider>
             </div>
           ) : (
-            <div className="messenger__navbar__person__photo">
-              <img
-                src={"/static/images/" + conversation.photo}
-                alt=""
-                className="messenger__navbar__person__photo--img"
-              />
-            </div>
-          )}
+              <div className="messenger__navbar__person__photo">
+                <img
+                  src={"/static/images/" + conversation.photo}
+                  alt=""
+                  className="messenger__navbar__person__photo--img"
+                />
+              </div>
+            )}
 
           <div className="messenger__navbar__person--name">
             <span className="messenger__navbar__person--name--text">
@@ -185,36 +184,36 @@ const Messenger = ({
               </span>
             </div>
           ) : (
-            <div className="messenger__text--stranger" key={index}>
-              <span className="messenger__text--stranger--primary-background-color messenger-text-style">
-                {item.message}
-              </span>
-              {addAuthor ? (
-                <div className="messenger__text--stranger__user">
-                  <div
-                    className="messenger__text--stranger__user__container"
-                    title={user.firstName + " " + user.lastName}
-                    onClick={() =>
-                      Router.pushRoute("profile", { id: item.idUser })
-                    }
-                  >
-                    <div className="messenger__text--stranger__user__container__photo">
-                      <img
-                        src={"/static/images/" + user.photo}
-                        alt=""
-                        className="messenger__text--stranger__user__container__photo--img"
-                      />
-                    </div>
-                    <div className="messenger__text--stranger__user__container__name">
-                      <span className="messenger__text--stranger__user__container__name--span">
-                        {user.firstName} {user.lastName}
-                      </span>
+              <div className="messenger__text--stranger" key={index}>
+                <span className="messenger__text--stranger--primary-background-color messenger-text-style">
+                  {item.message}
+                </span>
+                {addAuthor ? (
+                  <div className="messenger__text--stranger__user">
+                    <div
+                      className="messenger__text--stranger__user__container"
+                      title={user.firstName + " " + user.lastName}
+                      onClick={() =>
+                        Router.pushRoute("profile", { id: item.idUser })
+                      }
+                    >
+                      <div className="messenger__text--stranger__user__container__photo">
+                        <img
+                          src={"/static/images/" + user.photo}
+                          alt=""
+                          className="messenger__text--stranger__user__container__photo--img"
+                        />
+                      </div>
+                      <div className="messenger__text--stranger__user__container__name">
+                        <span className="messenger__text--stranger__user__container__name--span">
+                          {user.firstName} {user.lastName}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ) : null}
-            </div>
-          );
+                ) : null}
+              </div>
+            );
         })}
       </div>
       <div className="messenger__downbar">

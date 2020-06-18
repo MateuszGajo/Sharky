@@ -3,9 +3,10 @@ import { IoIosHeartEmpty } from "react-icons/io";
 import { FiMessageCircle, FiVolumeX, FiFlag } from "react-icons/fi";
 import { BsThreeDots } from "react-icons/bs";
 import { IconContext } from "react-icons";
-import useTranslation from "next-translate/useTranslation";
 import Reply from "./components/Reply/Reply";
 import SecondaryInput from "../../../../common/SecondaryInput/SecondaryInput";
+import i18next from '../../../../../i18n';
+const { useTranslation } = i18next;
 
 const Comments = ({
   comments = [
@@ -38,7 +39,7 @@ const Comments = ({
   focusElement,
 }) => {
   const focusIcon = useRef(null);
-  const [commentText, setCommentText] = useState("");
+  const [commentText, setCommentText] = useState(["compoenent"]);
 
   const replies = useRef(
     [...new Array(comments.length)].map(() => React.createRef())

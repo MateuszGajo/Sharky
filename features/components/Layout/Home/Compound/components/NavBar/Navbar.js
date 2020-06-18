@@ -12,7 +12,9 @@ import { FaRegUser } from "react-icons/fa";
 import cx from "classnames";
 import Router from "next/router";
 import { WizzardContext } from "../../context/WizzardContext";
-import useTranslation from "next-translate/useTranslation";
+import i18next from '../../../../../../../i18n';
+const { useTranslation } = i18next;
+
 
 const NavBar = () => {
   const { isNavOpen, setStatusOfNav } = useContext(WizzardContext);
@@ -20,7 +22,7 @@ const NavBar = () => {
   const navbarWrapper = useRef(null);
   const [isNavbarScrolling, setStatusOfNavbarScrolling] = useState(false);
 
-  const { t } = useTranslation();
+  const { t } = useTranslation(["component"]);
 
   const homeName = t("component:layout.home.navbar.home");
   const worldName = t("component:layout.home.navbar.world");

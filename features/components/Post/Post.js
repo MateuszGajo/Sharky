@@ -3,10 +3,11 @@ import { BsEyeSlash, BsThreeDots } from "react-icons/bs";
 import { FiVolumeX, FiFlag } from "react-icons/fi";
 import { MdBlock } from "react-icons/md";
 import { IconContext } from "react-icons";
-import useTranslation from "next-translate/useTranslation";
 import DownBarButtons from "../../common/DownBarButtons/DownBarButtons";
 import Comments from "./components/Comments/Comments";
-import Router from "../../routes";
+import Router from "../../route/routes";
+import i18next from '../../../i18n';
+const { useTranslation } = i18next;
 
 const Post = ({
   post = {
@@ -25,7 +26,7 @@ const Post = ({
   isComment = true,
   focusElement: fElement = null,
 }) => {
-  const { t, lang } = useTranslation();
+  const { t, lang } = useTranslation(["component"]);
 
   const collapseSetting = useRef(null);
   const focusElement = useRef(fElement?.current || null);

@@ -1,5 +1,6 @@
 import React from "react";
-import useTranslation from "next-translate/useTranslation";
+import i18next from '../../../i18n';
+const { useTranslation } = i18next;
 
 const Checkbox = ({ value, onChange }) => {
   const { t } = useTranslation();

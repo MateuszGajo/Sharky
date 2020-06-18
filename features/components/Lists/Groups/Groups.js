@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Card from "../Card/Card";
-import useTranslation from "next-translate/useTranslation";
+import i18next from '../../../../i18n';
+const { useTranslation } = i18next;
+
 
 const Groups = ({
   listOfGroups = [
@@ -24,7 +26,7 @@ const Groups = ({
     },
   ],
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["component"]);
   const description = t("component:lists.groups.description");
   const buttonText = t("component:lists.groups.button");
 

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Card from "../Card/Card";
-import useTranslation from "next-translate/useTranslation";
+import i18next from '../../../../i18n';
+const { useTranslation } = i18next;
+
 
 const People = ({
   listOfPeople = [
@@ -36,7 +38,7 @@ const People = ({
     //console.log(updatedRelation);
   }, [updatedRelation]);
 
-  const { t } = useTranslation();
+  const { t } = useTranslation(["component"]);
   const description = t("component:lists.people.description");
   const friendName = t("component:lists.people.friend");
   const familyName = t("component:lists.people.family");
