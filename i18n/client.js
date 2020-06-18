@@ -6,6 +6,8 @@ export default new NextI18Next({
   use: [LanguageDetector, initReactI18next],
   defaultLanguage: "pl",
   otherLanguages: ["en"],
+  ns: ["common", "component"],
+  defaultNS: "common",
   load: "languageOnly",
   ns: [
     "common",
