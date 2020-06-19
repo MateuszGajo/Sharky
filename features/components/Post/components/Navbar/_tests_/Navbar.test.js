@@ -4,17 +4,12 @@ import {
   toHaveClass,
   toHaveTextContent,
 } from "@testing-library/jest-dom/matchers";
-import Post from "../Post";
+import Navbar from "../Navbar";
 
 expect.extend({ toHaveClass, toHaveTextContent });
 
-it("does post displays correct", () => {
-  const post = {
-    id: 1,
-    userId: 123,
-    content: "content",
-    date: new Date("2016-04-25"),
-  };
+test("does navbar displays correct", () => {
+  const date = new Date("2016-04-25");
 
   const user = {
     id: 123,
@@ -23,8 +18,8 @@ it("does post displays correct", () => {
     photo: "profile.png",
   };
 
-  const { getByTestId, queryByTestId } = render(
-    <Post singlePost={false} post={post} user={user} />
+  const { getByTestId } = render(
+    <Navbar date={date} user={user} focusElement={null} />
   );
 
   const dtf = new Intl.DateTimeFormat("pl", {
@@ -33,23 +28,17 @@ it("does post displays correct", () => {
     day: "2-digit",
   });
   const [{ value: da }, , { value: mo }, , { value: ye }] = dtf.formatToParts(
-    post.date
+    date
   );
 
-  const commentsSections = getByTestId("post-comments");
   const authorPost = getByTestId("post-username");
   const postDate = getByTestId("post-date");
-  const postContent = getByTestId("post-content");
-  const postPhoto = queryByTestId("post-photo");
 
   const postSettingIcon = getByTestId("post-setting-icon");
   const postSetting = getByTestId("post-setting");
 
-  expect(commentsSections.childElementCount).toBe(0);
   expect(authorPost).toHaveTextContent(`${user.firstName} ${user.lastName}`);
   expect(postDate).toHaveTextContent(`${da} ${mo} ${ye}`);
-  expect(postContent).toHaveTextContent(post.content);
-  expect(postPhoto).toBeNull();
 
   fireEvent.click(postSettingIcon);
   expect(postSetting).not.toHaveClass("is-close");

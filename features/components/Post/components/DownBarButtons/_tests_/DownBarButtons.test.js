@@ -8,9 +8,9 @@ import DownBarButton from "../DownBarButtons";
 
 expect.extend({ toHaveClass, toHaveTextContent });
 
-it("does downbar-buttons property wroks correct", () => {
+it("does post__item__downbar__buttons property wroks correct", () => {
   const statisticks = {
-    posts: 123,
+    likes: 123,
     comments: 123,
     shares: 24,
   };
@@ -20,13 +20,13 @@ it("does downbar-buttons property wroks correct", () => {
     <DownBarButton statisticks={statisticks} isLiked={isLiked} />
   );
 
-  const numberOfComments = getByTestId("downbar-buttons-number-of-comments");
-  const numberOfPosts = getByTestId("downbar-buttons-number-of-posts");
-  const numberOfShares = getByTestId("downbar-buttons-number-of-shares");
-  const likeButton = getByTestId("downbar-buttons-heart-icon");
+  const numberOfComments = getByTestId("downbar-number-of-comments");
+  const numberOfLikes = getByTestId("downbar-number-of-likes");
+  const numberOfShares = getByTestId("downbar-number-of-shares");
+  const likeButton = getByTestId("downbar-heart-icon");
 
   expect(numberOfComments).toHaveTextContent(statisticks.comments);
-  expect(numberOfPosts).toHaveTextContent(statisticks.posts);
+  expect(numberOfLikes).toHaveTextContent(statisticks.likes);
   expect(numberOfShares).toHaveTextContent(statisticks.shares);
   expect(likeButton).toHaveClass("pal-color");
 });

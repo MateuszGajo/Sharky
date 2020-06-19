@@ -1,14 +1,9 @@
-import React, { useRef, useEffect } from "react";
-import { BsEyeSlash, BsThreeDots } from "react-icons/bs";
-import { FiVolumeX, FiFlag } from "react-icons/fi";
-import { MdBlock } from "react-icons/md";
-import { IconContext } from "react-icons";
-import DownBarButtons from "../../common/DownBarButtons/DownBarButtons";
-import Comments from "./components/Comments/Comments";
-import Router from "../../route/routes";
-import i18next from '../../../i18n';
-const { useTranslation } = i18next;
-
+import React, { useRef } from "react";
+import DownBarButtons from "./components/DownBarButtons/DownBarButtons";
+import Navbar from "./components/Navbar/Navbar";
+import Content from "./components/Content/Content";
+import Comment from "./components/Comments/CommentsContainer";
+import SecondaryInput from "../../common/SecondaryInput/SecondaryInput";
 const Post = ({
   post = {
     id: 1,
@@ -16,200 +11,82 @@ const Post = ({
     content: "dasdsa",
     date: new Date("2019-03-25"),
     photo: "profile.png",
+    idLiked: 1,
+    likes: 20,
+    shares: 20,
+    comments: [
+      {
+        id: 1,
+        idUser: 123,
+        likes: 20,
+        content: "ble",
+        replies: [
+          { id: 1, idUser: 123, likes: 20, content: "sdasa" },
+          { id: 2, idUser: 123, likes: 30, content: "dasdss" },
+        ],
+      },
+      {
+        id: 2,
+        idUser: 123,
+        likes: 20,
+        content: "ble",
+        replies: [
+          { id: 1, likes: 20, content: "sdasa" },
+          { id: 2, likes: 30, content: "dasdss" },
+        ],
+      },
+    ],
   },
   user = {
     id: 123,
     firstName: "Janek",
     lastName: "Kowalski",
     photo: "profile.png",
+    idLiked: null,
   },
   isComment = true,
-  focusElement: fElement = null,
+  focusElement,
 }) => {
-  const { t, lang } = useTranslation(["component"]);
-
-  const collapseSetting = useRef(null);
-  const focusElement = useRef(fElement?.current || null);
-  const dtf = new Intl.DateTimeFormat(lang || "pl", {
-    year: "numeric",
-    month: "long",
-    day: "2-digit",
-  });
-  const [{ value: da }, , { value: mo }, , { value: ye }] = dtf.formatToParts(
-    post.date
-  );
-
-  const hiddenPost = t("component:post.settings.hidden");
-  const reportPost = t("component:post.settings.report");
-  const muteUser = t("component:post.settings.mute");
-  const blockUser = t("component:post.settings.block");
-
-  const clickHandle = (e) => {
-    if (!focusElement.current.classList.contains("is-close"))
-      focusElement.current.classList.add("is-close");
-    window.removeEventListener("click", clickHandle);
-  };
-
-  useEffect(() => {
-    collapseSetting.current.addEventListener("click", () => {
-      const collapseItem = collapseSetting.current.querySelector(
-        ".post__item__navbar__column-end__setting__collapse"
-      );
-      const { current: lastItem } = focusElement;
-      if (lastItem !== collapseItem && lastItem !== null) {
-        lastItem.classList.add("is-close");
-      }
-      window.addEventListener("click", clickHandle);
-      focusElement.current = collapseItem;
-
-      collapseItem.classList.toggle("is-close");
-    });
-  }, []);
+  const focusCollapse = useRef(focusElement?.current || null);
+  const focusIcon = useRef(null);
   return (
     <div className="post__item">
-      <div className="post__item__navbar">
-        <div className="post__item__navbar__user">
-          <div className="post__item__navbar__user--photo">
-            <img
-              src={"/static/images/" + user.photo}
-              alt="Zdjęcie użytkownika"
-              className="post__item__navbar__user--photo--img"
-            />
-          </div>
-          <div className="post__item__navbar__user--name">
-            <span
-              className="post__item__navbar__user--name--span"
-              data-testid="post-username"
-            >
-              {user.firstName + " " + user.lastName}
-            </span>
-          </div>
-        </div>
-        <div className="post__item__navbar__column-end">
-          <div className="post__item__navbar__column-end__data">
-            <span
-              className="post__item__navbar__column-end__data--span"
-              data-testid="post-date"
-            >
-              {da} {mo} {ye}
-            </span>
-          </div>
-          <div
-            className="post__item__navbar__column-end__setting"
-            data-testid="post-setting-icon"
-            ref={collapseSetting}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="post__item__navbar__column-end__setting--icon">
-              <BsThreeDots />
-            </div>
-            <div
-              className="post__item__navbar__column-end__setting__collapse is-close"
-              data-testid="post-setting"
-            >
-              <div className="post__item__navbar__column-end__setting__collapse__item">
-                <div className="post__item__navbar__column-end__setting__collapse__item--icon">
-                  <IconContext.Provider
-                    value={{
-                      className:
-                        "post__item__navbar__column-end__setting__collapse__item--icon--customize",
-                    }}
-                  >
-                    <BsEyeSlash />
-                  </IconContext.Provider>
-                </div>
-                <div className="post__item__navbar__column-end__setting__collapse__item--name">
-                  <span className="post__item__navbar__column-end__setting__collapse__item--name--span">
-                    {hiddenPost}
-                  </span>
-                </div>
-              </div>
-              <div className="post__item__navbar__column-end__setting__collapse__item">
-                <div className="post__item__navbar__column-end__setting__collapse__item--icon">
-                  <IconContext.Provider
-                    value={{
-                      className:
-                        "post__item__navbar__column-end__setting__collapse__item--icon--customize",
-                    }}
-                  >
-                    <FiVolumeX />
-                  </IconContext.Provider>
-                </div>
-                <div className="post__item__navbar__column-end__setting__collapse__item--name">
-                  <span className="post__item__navbar__column-end__setting__collapse__item--name--span">
-                    {muteUser}
-                  </span>
-                </div>
-              </div>
-              <div className="post__item__navbar__column-end__setting__collapse__item">
-                <div className="post__item__navbar__column-end__setting__collapse__item--icon">
-                  <IconContext.Provider
-                    value={{
-                      className:
-                        "post__item__navbar__column-end__setting__collapse__item--icon--customize",
-                    }}
-                  >
-                    <FiFlag />
-                  </IconContext.Provider>
-                </div>
-                <div className="post__item__navbar__column-end__setting__collapse__item--name">
-                  <span className="post__item__navbar__column-end__setting__collapse__item--name--span">
-                    {reportPost}
-                  </span>
-                </div>
-              </div>
-              <div className="post__item__navbar__column-end__setting__collapse__item">
-                <div className="post__item__navbar__column-end__setting__collapse__item--icon">
-                  <IconContext.Provider
-                    value={{
-                      className:
-                        "post__item__navbar__column-end__setting__collapse__item--icon--customize",
-                    }}
-                  >
-                    <MdBlock />
-                  </IconContext.Provider>
-                </div>
-                <div className="post__item__navbar__column-end__setting__collapse__item--name">
-                  <span className="post__item__navbar__column-end__setting__collapse__item--name--span">
-                    {blockUser}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        className="post__item__content"
-        onClick={() => {
-          Router.pushRoute("post", { id: post.id });
-        }}
-      >
-        <span className="post__item__content--span" data-testid="post-content">
-          {post.content}
-        </span>
-      </div>
-      {post?.photo && (
-        <div
-          className="post__item__photo"
-          data-testid="post-photo"
-          onClick={() => {
-            Router.pushRoute("post", { id: post.id });
+      <Navbar
+        date={post.date}
+        user={user}
+        focusCollapse={focusCollapse}
+        focusIcon={focusIcon}
+      />
+      <Content post={post} />
+      <div className="post__item__downbar">
+        <DownBarButtons
+          postId={post.id}
+          isLiked={post.idLiked}
+          statisticks={{
+            comments: post.comments?.length || 0,
+            likes: post.likes,
+            shares: post.shares,
           }}
-        >
-          <img
-            src={"/static/images/" + post.photo}
-            alt=""
-            className="post__item__photo--img"
-          />
+        />
+      </div>
+      {isComment && (
+        <div className="post__item__comments" data-testid="post-comments">
+          <div className="post__item__comments__input">
+            <SecondaryInput size={"medium"} />
+          </div>
+
+          {post.comments.map((comment) => (
+            <div className="post__item__comments__container">
+              <Comment
+                comment={comment}
+                user={user}
+                focusCollapse={focusCollapse}
+                focusIcon={focusIcon}
+              />
+            </div>
+          ))}
         </div>
       )}
-      <div className="post__item__downbar">
-        <DownBarButtons postId={post.id} />
-      </div>
-      <div className="post__item__comments" data-testid="post-comments">
-        {isComment === true ? <Comments focusElement={focusElement} /> : null}
-      </div>
     </div>
   );
 };

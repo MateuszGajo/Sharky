@@ -3,32 +3,32 @@ import { FiMessageCircle } from "react-icons/fi";
 import { AiOutlineShareAlt } from "react-icons/ai";
 import { IoIosHeartEmpty } from "react-icons/io";
 import cx from "classnames";
-import Router from "../../route/routes";
+import Router from "../../../../route/routes";
 
 const DownBarButtons = ({
-  statisticks = { comments: 123, posts: 123, shares: 23 },
+  statisticks = { comments: 123, likes: 123, shares: 23 },
   isLiked = false,
   postId,
 }) => {
   return (
-    <div className="downbar-buttons">
+    <div className="post__item__downbar__buttons">
       <div
-        className="downbar-buttons__icon  hover-primary-color"
+        className="post__item__downbar__buttons__icon  hover-primary-color"
         onClick={() => {
           Router.pushRoute("post", { id: postId });
         }}
       >
         <FiMessageCircle />
         <p
-          data-testid="downbar-buttons-number-of-comments"
-          className="downbar-buttons__icon--number"
+          data-testid="downbar-number-of-comments"
+          className="post__item__downbar__buttons__icon--number"
         >
           {statisticks.comments}
         </p>
       </div>
       <div
-        data-testid="downbar-buttons-heart-icon"
-        className={cx("downbar-buttons__icon  hover-pal-color", {
+        data-testid="downbar-heart-icon"
+        className={cx("post__item__downbar__buttons__icon  hover-pal-color", {
           "pal-color": isLiked,
         })}
         onClick={(e) => {
@@ -40,20 +40,20 @@ const DownBarButtons = ({
       >
         <IoIosHeartEmpty />
         <p
-          data-testid="downbar-buttons-number-of-posts"
-          className="downbar-buttons__icon--number"
+          data-testid="downbar-number-of-likes"
+          className="post__item__downbar__buttons__icon--number"
         >
-          {statisticks.posts}
+          {statisticks.likes}
         </p>
       </div>
       <div
-        className="downbar-buttons__icon  hover-family-color"
+        className="post__item__downbar__buttons__icon  hover-family-color"
         onClick={(e) => e.stopPropagation()}
       >
         <AiOutlineShareAlt />
         <p
-          data-testid="downbar-buttons-number-of-shares"
-          className="downbar-buttons__icon--number"
+          data-testid="downbar-number-of-shares"
+          className="post__item__downbar__buttons__icon--number"
         >
           {statisticks.shares}
         </p>
