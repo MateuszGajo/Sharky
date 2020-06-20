@@ -1,4 +1,5 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useMemo } from "react";
+import axios from "axios";
 import DownBarButtons from "./components/DownBarButtons/DownBarButtons";
 import Navbar from "./components/Navbar/Navbar";
 import Content from "./components/Content/Content";
@@ -49,6 +50,44 @@ const Post = ({
 }) => {
   const focusCollapse = useRef(focusElement?.current || null);
   const focusIcon = useRef(null);
+  const [comment, setComment] = useState("");
+  const [addedComments, setAddedComments] = useState([]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    axios
+      .post("/comment/add", {
+        idPost: post.id,
+        content: comment,
+      })
+      .then(({ data: { user, idPost: id } }) => {
+        setAddedComments([
+          ...addedComments,
+          {
+            id,
+            idUser: user.id,
+            likes: 0,
+            content: comment,
+            replies: [],
+          },
+        ]);
+        setComment("");
+      })
+      .catch((err) => console.log("err"));
+  };
+
+  const addComments = () => {
+    const elements = [];
+    for (let i = addedComments.length - 1; i >= 0; i--) {
+      elements.push(
+        <div className="post__item__comments__container" key={i}>
+          <Comment comment={addedComments[i]} user={user} />
+        </div>
+      );
+    }
+    return elements;
+  };
   return (
     <div className="post__item">
       <Navbar
@@ -72,9 +111,15 @@ const Post = ({
       {isComment && (
         <div className="post__item__comments" data-testid="post-comments">
           <div className="post__item__comments__input">
-            <SecondaryInput size={"medium"} />
+            <form onSubmit={handleSubmit}>
+              <SecondaryInput
+                size={"medium"}
+                value={comment}
+                onChange={setComment}
+              />
+            </form>
           </div>
-
+          {addComments()}
           {post.comments.map((comment) => (
             <div className="post__item__comments__container">
               <Comment
@@ -89,6 +134,10 @@ const Post = ({
       )}
     </div>
   );
+};
+
+const areEqual = (prevProps, nextProps) => {
+  return null;
 };
 
 export default Post;

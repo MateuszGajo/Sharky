@@ -22,11 +22,16 @@ router.post("/add", async (req, res) => {
   const { idUser } = decoded.data;
 
   const addReplyQuery = `
-      INSERT INTO comment_replies(id_comment, id_user, content) values($1,$2,$3);
+      INSERT INTO comment_replies(id_comment, id_user, content) values($1,$2,$3) RETURNING id;
       `;
   try {
-    await client.query(addReplyQuery, [idComment, idUser, content]);
-    res.status(200);
+    const reply = await client.query(addReplyQuery, [
+      idComment,
+      idUser,
+      content,
+    ]);
+    console.log(reply);
+    res.status(200).json({ id: reply.rows[0].id, idUser });
   } catch {
     res.status(400);
   }

@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import Comment from "./Comment";
 import SecondaryInput from "../../../../common/SecondaryInput/SecondaryInput";
+import axios from "axios";
 
 const withContainer = (WrappedComponent) => {
   const WithContainer = ({
@@ -22,8 +23,43 @@ const withContainer = (WrappedComponent) => {
     focusCollapse,
     focusIcon,
   }) => {
-    const collapseSetting = useRef(null);
     const [isRepliesOpen, setStatusOfOpenReplies] = useState(false);
+    const [reply, setReply] = useState("");
+    const [addedReplies, setAddedReplies] = useState([]);
+
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      axios
+        .post("/reply/add", {
+          idComment: comment.id,
+          content: reply,
+        })
+        .then(({ data: { id, idUser } }) => {
+          console.log(resp);
+          setReply("");
+          setAddedReplies([
+            ...addedReplies,
+            { id, idUser, likes: 0, content: reply },
+          ]);
+        })
+        .catch((err) => console.log(err));
+    };
+
+    const addReplies = () => {
+      const elements = [];
+      for (let i = addedReplies.length - 1; i >= 0; i--) {
+        elements.push(
+          <WrappedComponent
+            key={i}
+            comment={addedReplies[i]}
+            user={user}
+            focusCollapse={focusCollapse}
+            focusIcon={focusIcon}
+          />
+        );
+      }
+      return elements;
+    };
     return (
       <>
         <WrappedComponent
@@ -38,8 +74,15 @@ const withContainer = (WrappedComponent) => {
         {isRepliesOpen && (
           <div className="post__item__comments__container--margin">
             <div className="post__item__comments__container__wrapper__input">
-              <SecondaryInput size={"medium"} />
+              <form onSubmit={handleSubmit}>
+                <SecondaryInput
+                  size={"medium"}
+                  value={reply}
+                  onChange={setReply}
+                />
+              </form>
             </div>
+            {addReplies()}
             {comment.replies.map((comment) => {
               return (
                 <WrappedComponent
