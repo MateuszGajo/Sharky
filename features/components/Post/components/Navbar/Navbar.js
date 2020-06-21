@@ -2,11 +2,12 @@ import React, { useEffect, useRef } from "react";
 import { BsEyeSlash, BsThreeDots } from "react-icons/bs";
 import { FiVolumeX, FiFlag } from "react-icons/fi";
 import { MdBlock } from "react-icons/md";
+import { IoMdShareAlt } from "react-icons/io";
 import { IconContext } from "react-icons";
 import i18next from "../../../../../i18n";
 const { useTranslation } = i18next;
 
-const NavBar = ({ date, user, focusCollapse, focusIcon }) => {
+const NavBar = ({ date, user, isShare, focusCollapse, focusIcon }) => {
   const { t, lang } = useTranslation(["component"]);
 
   const hiddenPost = t("component:post.settings.hidden");
@@ -14,7 +15,6 @@ const NavBar = ({ date, user, focusCollapse, focusIcon }) => {
   const muteUser = t("component:post.settings.mute");
   const blockUser = t("component:post.settings.block");
 
-  // const focusElement = useRef(fElement?.current || null);
   const settingRef = useRef(null);
 
   const dtf = new Intl.DateTimeFormat(lang || "pl", {
@@ -57,6 +57,28 @@ const NavBar = ({ date, user, focusCollapse, focusIcon }) => {
 
   return (
     <div className="post__item__navbar">
+      {isShare && (
+        <div className="post__item__navbar__user">
+          <div className="post__item__navbar__user--photo">
+            <img
+              src={"/static/images/" + user.photo}
+              alt="Zdjęcie użytkownika"
+              className="post__item__navbar__user--photo--img"
+            />
+          </div>
+          <div className="post__item__navbar__user--name">
+            <span
+              className="post__item__navbar__user--name--span"
+              data-testid="post-username"
+            >
+              {user.firstName + " " + user.lastName}
+            </span>
+          </div>
+          <div className="post__item__navbar__user--share">
+            <IoMdShareAlt />
+          </div>
+        </div>
+      )}
       <div className="post__item__navbar__user">
         <div className="post__item__navbar__user--photo">
           <img

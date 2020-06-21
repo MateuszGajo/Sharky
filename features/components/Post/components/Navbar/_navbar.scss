@@ -1,7 +1,7 @@
 .post__item__navbar{
     padding:5px;
     display:flex;
-    justify-content: space-between;
+    // justify-content: space-between;
     margin-bottom:$smallMargin
 }
 
@@ -33,7 +33,16 @@
     color:$primaryColor;
 }
 
+.post__item__navbar__user--share{
+    display:flex;
+    align-items: center;
+    margin: 0 10px;
+    font-size: 1.5rem;
+    color:$familyColor
+}
+
 .post__item__navbar__column-end{
+    margin-left:auto;
     display:flex;
     justify-content: center;
     align-items: center;

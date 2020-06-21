@@ -1,6 +1,6 @@
 const express = require("express");
-const { client } = require("../../../config/pgAdaptor");
 const jwt = require("jsonwebtoken");
+const { client } = require("../../../config/pgAdaptor");
 const { jwtSecret } = require("../../../config/keys");
 
 const router = express.Router();
@@ -11,7 +11,7 @@ router.post("/add", async (req, res) => {
     {
       exp: Math.floor(Date.now() / 1000) + 60 * 60,
       data: {
-        idUser: "1",
+        id: "1",
         firstName: "Janek",
         lastName: "Kowalski",
         photo: "profile.png",
@@ -21,20 +21,16 @@ router.post("/add", async (req, res) => {
   );
   const decoded = jwt.verify(token, jwtSecret);
 
-  const { idUser, firstName, lastName, photo } = decoded.data;
+  const { id, firstName, lastName, photo } = decoded.data;
 
   const addCommentQuery = `
     INSERT INTO post_comments(id_post, id_user, content) values($1,$2,$3) RETURNING id;
     `;
   try {
-    const comment = await client.query(addCommentQuery, [
-      idPost,
-      idUser,
-      content,
-    ]);
+    const comment = await client.query(addCommentQuery, [idPost, id, content]);
     res.status(200).json({
       user: {
-        id: idUser,
+        id,
         firstName,
         lastName,
         photo,

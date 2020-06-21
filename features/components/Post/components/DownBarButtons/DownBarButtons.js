@@ -1,15 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { FiMessageCircle } from "react-icons/fi";
 import { AiOutlineShareAlt } from "react-icons/ai";
 import { IoIosHeartEmpty } from "react-icons/io";
 import cx from "classnames";
+import axios from "axios";
 import Router from "../../../../route/routes";
 
 const DownBarButtons = ({
   statisticks = { comments: 123, likes: 123, shares: 23 },
-  isLiked = false,
-  postId,
+  idLike: iL = false,
+  idPost,
 }) => {
+  const [idLike, setIdLike] = useState(iL);
   return (
     <div className="post__item__downbar__buttons">
       <div
@@ -29,12 +31,20 @@ const DownBarButtons = ({
       <div
         data-testid="downbar-heart-icon"
         className={cx("post__item__downbar__buttons__icon  hover-pal-color", {
-          "pal-color": isLiked,
+          "pal-color": idLike,
         })}
         onClick={(e) => {
           e.stopPropagation();
-          if (!isLiked) {
-            //save db
+          if (!idLike) {
+            axios
+              .post("/post/like", { idPost })
+              .then(({ data: { idPostLike } }) => setIdLike(idPostLike))
+              .catch((err) => console.log(err));
+          } else {
+            axios
+              .post("/post/unlike", { idLike })
+              .then((resp) => setIdLike(null))
+              .catch((err) => console.log(err));
           }
         }}
       >

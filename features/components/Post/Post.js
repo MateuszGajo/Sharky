@@ -1,4 +1,4 @@
-import React, { useRef, useState, useMemo } from "react";
+import React, { useRef, useState } from "react";
 import axios from "axios";
 import DownBarButtons from "./components/DownBarButtons/DownBarButtons";
 import Navbar from "./components/Navbar/Navbar";
@@ -6,13 +6,13 @@ import Content from "./components/Content/Content";
 import Comment from "./components/Comments/CommentsContainer";
 import SecondaryInput from "../../common/SecondaryInput/SecondaryInput";
 const Post = ({
-  post = {
+  post: p = {
     id: 1,
     userId: 123,
     content: "dasdsa",
     date: new Date("2019-03-25"),
     photo: "profile.png",
-    idLiked: 1,
+    idLike: 1,
     likes: 20,
     shares: 20,
     comments: [
@@ -46,12 +46,14 @@ const Post = ({
     idLiked: null,
   },
   isComment = true,
+  isShare = true,
   focusElement,
 }) => {
   const focusCollapse = useRef(focusElement?.current || null);
   const focusIcon = useRef(null);
-  const [comment, setComment] = useState("");
-  const [addedComments, setAddedComments] = useState([]);
+  const [newComment, setNewComment] = useState("");
+  const [comments, setComments] = useState(p.comments);
+  const [post, setPost] = useState(p);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -59,48 +61,39 @@ const Post = ({
     axios
       .post("/comment/add", {
         idPost: post.id,
-        content: comment,
+        content: newComment,
       })
       .then(({ data: { user, idPost: id } }) => {
-        setAddedComments([
-          ...addedComments,
+        setComments([
           {
             id,
             idUser: user.id,
             likes: 0,
-            content: comment,
+            content: newComment,
             replies: [],
           },
+          ...comments,
         ]);
-        setComment("");
+
+        setNewComment("");
       })
       .catch((err) => console.log("err"));
   };
 
-  const addComments = () => {
-    const elements = [];
-    for (let i = addedComments.length - 1; i >= 0; i--) {
-      elements.push(
-        <div className="post__item__comments__container" key={i}>
-          <Comment comment={addedComments[i]} user={user} />
-        </div>
-      );
-    }
-    return elements;
-  };
   return (
     <div className="post__item">
       <Navbar
         date={post.date}
         user={user}
+        isShare={isShare}
         focusCollapse={focusCollapse}
         focusIcon={focusIcon}
       />
       <Content post={post} />
       <div className="post__item__downbar">
         <DownBarButtons
-          postId={post.id}
-          isLiked={post.idLiked}
+          idPost={post.id}
+          idLike={post.idLike}
           statisticks={{
             comments: post.comments?.length || 0,
             likes: post.likes,
@@ -114,14 +107,13 @@ const Post = ({
             <form onSubmit={handleSubmit}>
               <SecondaryInput
                 size={"medium"}
-                value={comment}
-                onChange={setComment}
+                value={newComment}
+                onChange={setNewComment}
               />
             </form>
           </div>
-          {addComments()}
-          {post.comments.map((comment) => (
-            <div className="post__item__comments__container">
+          {comments.map((comment, index) => (
+            <div className="post__item__comments__container" key={index}>
               <Comment
                 comment={comment}
                 user={user}
