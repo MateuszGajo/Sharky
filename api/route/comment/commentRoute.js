@@ -43,4 +43,50 @@ router.post("/add", async (req, res) => {
   }
 });
 
+router.post("/get", async (req, res) => {
+  const { from, idPost } = req.body;
+
+  const token = jwt.sign(
+    {
+      exp: Math.floor(Date.now() / 1000) + 60 * 60,
+      data: {
+        id: "1",
+      },
+    },
+    jwtSecret
+  );
+  const decoded = jwt.verify(token, jwtSecret);
+
+  const { id } = decoded.data;
+  commentsQuery = `
+  select post_comments.*,comment_like.id as idLike, count(comment_replies.id_comment) as "numberOfReplies"
+  from post_comments 
+  left join comment_replies on post_comments.id = comment_replies.id_comment
+  left join comment_like on post_comments.id = comment_like.id_comment
+  where id_post=$1 and comment_like.id_user = $2
+  group by post_comments.id, comment_like.id
+  order by post_comments.id desc
+  limit 21 offset $3
+  `;
+  let result;
+  try {
+    result = await client.query(commentsQuery, [idPost, id, from]);
+  } catch {
+    return res.status(400).json("bad-request");
+  }
+
+  let { rows: comments } = result;
+  console.log(comments);
+  let isMore = true;
+  if (comments.length != 21) {
+    isMore = false;
+  } else {
+    comments = comments.slice(0, -1);
+  }
+  return res.status(200).json({
+    comments,
+    isMore,
+  });
+});
+
 module.exports = router;

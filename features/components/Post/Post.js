@@ -5,14 +5,18 @@ import Navbar from "./components/Navbar/Navbar";
 import Content from "./components/Content/Content";
 import Comment from "./components/Comments/CommentsContainer";
 import SecondaryInput from "../../common/SecondaryInput/SecondaryInput";
+import i18next from "../../../i18n";
+const { useTranslation } = i18next;
+
 const Post = ({
   post: p = {
     id: 1,
-    userId: 123,
+    idUser: 123,
+    idLike: 1,
+    idUserShare: 1,
     content: "dasdsa",
     date: new Date("2019-03-25"),
     photo: "profile.png",
-    idLike: 1,
     likes: 20,
     shares: 20,
     comments: [
@@ -21,20 +25,14 @@ const Post = ({
         idUser: 123,
         likes: 20,
         content: "ble",
-        replies: [
-          { id: 1, idUser: 123, likes: 20, content: "sdasa" },
-          { id: 2, idUser: 123, likes: 30, content: "dasdss" },
-        ],
+        numberOfReplies: 1,
       },
       {
         id: 2,
         idUser: 123,
         likes: 20,
         content: "ble",
-        replies: [
-          { id: 1, likes: 20, content: "sdasa" },
-          { id: 2, likes: 30, content: "dasdss" },
-        ],
+        numberOfReplies: 2,
       },
     ],
   },
@@ -45,15 +43,22 @@ const Post = ({
     photo: "profile.png",
     idLiked: null,
   },
+  isMoreComments: statusOfMoreComments = true,
   isComment = true,
-  isShare = true,
   focusElement,
 }) => {
+  const { t } = useTranslation(["component"]);
+
+  const loadMoreComments = t("component:post.comments.load-more-comments");
+
   const focusCollapse = useRef(focusElement?.current || null);
   const focusIcon = useRef(null);
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState(p.comments);
   const [post, setPost] = useState(p);
+  const [isMoreComments, setStatusOfMoreComments] = useState(
+    statusOfMoreComments
+  );
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -70,7 +75,7 @@ const Post = ({
             idUser: user.id,
             likes: 0,
             content: newComment,
-            replies: [],
+            numberOfReplies: 0,
           },
           ...comments,
         ]);
@@ -80,12 +85,23 @@ const Post = ({
       .catch((err) => console.log("err"));
   };
 
+  const getComments = () => {
+    axios
+      .post("/comment/get", { idPost: p.id, from: comments.length })
+      .then(({ data: { comments: newComments, isMore } }) => {
+        console.log(newComments);
+        setComments([...newComments, ...comments]);
+        setStatusOfMoreComments(isMore);
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <div className="post__item">
       <Navbar
         date={post.date}
         user={user}
-        isShare={isShare}
+        idUserShare={post.idUserShare}
         focusCollapse={focusCollapse}
         focusIcon={focusIcon}
       />
@@ -122,14 +138,18 @@ const Post = ({
               />
             </div>
           ))}
+          {isMoreComments && (
+            <p
+              className="post__item__comments__more-content"
+              onClick={() => getComments()}
+            >
+              {loadMoreComments}
+            </p>
+          )}
         </div>
       )}
     </div>
   );
-};
-
-const areEqual = (prevProps, nextProps) => {
-  return null;
 };
 
 export default Post;

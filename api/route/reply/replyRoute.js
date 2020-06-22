@@ -37,4 +37,28 @@ router.post("/add", async (req, res) => {
   }
 });
 
+router.post("/get", async (req, res) => {
+  const { idComment, from } = req.body;
+  console.log(idComment, from);
+  const replyQuery = `
+  select *
+  from comment_replies
+  where id_comment =$1
+  order by id desc
+  limit 21 offset $2
+`;
+  try {
+    const replies = await client.query(replyQuery, [idComment, from]);
+
+    res
+      .status(200)
+      .json({
+        replies: replies.rows.slice(0, -1),
+        isMore: replies.rows.length == 21,
+      });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
 module.exports = router;

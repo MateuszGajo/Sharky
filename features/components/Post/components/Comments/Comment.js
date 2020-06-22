@@ -13,6 +13,7 @@ const Commnet = ({
   isRepliesOpen,
   focusCollapse,
   focusIcon,
+  getReplies,
 }) => {
   const { t } = useTranslation(["component"]);
 
@@ -127,14 +128,20 @@ const Commnet = ({
                 {comment.likes}
               </span>
             </div>
-            {comment.replies && (
+            {comment.numberOfReplies >= 0 && (
               <div
                 className="post__item__comments__container__item__content__item__down-bar--icon hover-primary-color"
-                onClick={() => setStatusOfOpenReplies(!isRepliesOpen)}
+                onClick={() => {
+                  if (!isRepliesOpen) {
+                    console.log("Here");
+                    getReplies();
+                  }
+                  setStatusOfOpenReplies(!isRepliesOpen);
+                }}
               >
                 <FiMessageCircle />
                 <span className="post__item__comments__container__item__content__item__down-bar--icon--number">
-                  {comment.replies.length}
+                  {comment.numberOfReplies}
                 </span>
               </div>
             )}

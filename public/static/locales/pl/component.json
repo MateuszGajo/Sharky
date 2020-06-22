@@ -54,7 +54,8 @@
             "settings":{
                 "report":"Zgłoś komentarz",
                 "mute":"Wycisz użytkownika"
-            }
+            },
+            "load-more-comments":"Pokaż więcej komentarzy..." 
         }
     },
     "messenger":{

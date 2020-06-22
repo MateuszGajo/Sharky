@@ -1,7 +1,9 @@
 import React, { useState, useRef } from "react";
+import axios from "axios";
 import Comment from "./Comment";
 import SecondaryInput from "../../../../common/SecondaryInput/SecondaryInput";
-import axios from "axios";
+import i18next from "../../../../../i18n";
+const { useTranslation } = i18next;
 
 const withContainer = (WrappedComponent) => {
   const WithContainer = ({
@@ -9,10 +11,7 @@ const withContainer = (WrappedComponent) => {
       id: 1,
       likes: 20,
       content: "ble",
-      replies: [
-        { id: 1, likes: 20, content: "sdasa" },
-        { id: 2, likes: 30, content: "dasdss" },
-      ],
+      numberOfReplies: 1,
     },
     user = {
       id: 1,
@@ -23,10 +22,16 @@ const withContainer = (WrappedComponent) => {
     focusCollapse,
     focusIcon,
   }) => {
+    const { t } = useTranslation(["component"]);
+
+    const loadMoreComments = t("component:post.comments.load-more-comments");
+
     const [isRepliesOpen, setStatusOfOpenReplies] = useState(false);
     const [reply, setReply] = useState("");
-    const [addedReplies, setAddedReplies] = useState([]);
-
+    const [replies, setReplies] = useState([]);
+    const [isMoreReplies, setStatusOfMoreReplies] = useState(
+      comment.numberOfReplies > 0
+    );
     const handleSubmit = (e) => {
       e.preventDefault();
       axios
@@ -35,31 +40,25 @@ const withContainer = (WrappedComponent) => {
           content: reply,
         })
         .then(({ data: { id, idUser } }) => {
-          console.log(resp);
           setReply("");
-          setAddedReplies([
-            ...addedReplies,
-            { id, idUser, likes: 0, content: reply },
-          ]);
+          setReplies([{ id, idUser, likes: 0, content: reply }, ...replies]);
         })
         .catch((err) => console.log(err));
     };
 
-    const addReplies = () => {
-      const elements = [];
-      for (let i = addedReplies.length - 1; i >= 0; i--) {
-        elements.push(
-          <WrappedComponent
-            key={i}
-            comment={addedReplies[i]}
-            user={user}
-            focusCollapse={focusCollapse}
-            focusIcon={focusIcon}
-          />
-        );
-      }
-      return elements;
+    const getReplies = () => {
+      axios
+        .post("/reply/get", {
+          idComment: comment.id,
+          from: replies.length,
+        })
+        .then(({ data: { replies: r, isMore } }) => {
+          setReplies([...replies, ...r]);
+          setStatusOfMoreReplies(isMore);
+        })
+        .catch((err) => console.log(err));
     };
+
     return (
       <>
         <WrappedComponent
@@ -69,6 +68,7 @@ const withContainer = (WrappedComponent) => {
           isRepliesOpen={isRepliesOpen}
           focusCollapse={focusCollapse}
           focusIcon={focusIcon}
+          getReplies={getReplies}
         />
 
         {isRepliesOpen && (
@@ -82,8 +82,7 @@ const withContainer = (WrappedComponent) => {
                 />
               </form>
             </div>
-            {addReplies()}
-            {comment.replies.map((comment) => {
+            {replies.map((comment) => {
               return (
                 <WrappedComponent
                   comment={comment}
@@ -93,6 +92,14 @@ const withContainer = (WrappedComponent) => {
                 />
               );
             })}
+            {isMoreReplies && (
+              <p
+                className="post__item__comments__container__more-content"
+                onClick={() => getReplies()}
+              >
+                {loadMoreComments}
+              </p>
+            )}
           </div>
         )}
       </>

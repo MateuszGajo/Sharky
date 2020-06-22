@@ -54,7 +54,8 @@
             "settings":{
                 "report":"Report comment",
                 "mute":"Mute user"
-            }
+            },
+            "load-more-comments":"View more comments..." 
         }
     },
     "messenger":{

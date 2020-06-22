@@ -7,7 +7,7 @@ import { IconContext } from "react-icons";
 import i18next from "../../../../../i18n";
 const { useTranslation } = i18next;
 
-const NavBar = ({ date, user, isShare, focusCollapse, focusIcon }) => {
+const NavBar = ({ date, user, idUserShare, focusCollapse, focusIcon }) => {
   const { t, lang } = useTranslation(["component"]);
 
   const hiddenPost = t("component:post.settings.hidden");
@@ -57,7 +57,7 @@ const NavBar = ({ date, user, isShare, focusCollapse, focusIcon }) => {
 
   return (
     <div className="post__item__navbar">
-      {isShare && (
+      {idUserShare && (
         <div className="post__item__navbar__user">
           <div className="post__item__navbar__user--photo">
             <img
