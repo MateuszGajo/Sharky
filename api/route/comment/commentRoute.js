@@ -62,7 +62,7 @@ router.post("/get", async (req, res) => {
   select post_comments.*,comment_like.id as idLike, count(comment_replies.id_comment) as "numberOfReplies"
   from post_comments 
   left join comment_replies on post_comments.id = comment_replies.id_comment
-  left join comment_like on post_comments.id = comment_like.id_comment
+  left join comment_like on post_comments.id = comment_like.id_comment and comment_like.id_user =1
   where id_post=$1 and comment_like.id_user = $2
   group by post_comments.id, comment_like.id
   order by post_comments.id desc
