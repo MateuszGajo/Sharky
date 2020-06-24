@@ -9,7 +9,7 @@ const { useTranslation } = i18next;
 
 const NavBar = ({ date, user, idUserShare, focusCollapse, focusIcon }) => {
   const { t, lang } = useTranslation(["component"]);
-
+  console.log(user);
   const hiddenPost = t("component:post.settings.hidden");
   const reportPost = t("component:post.settings.report");
   const muteUser = t("component:post.settings.mute");

@@ -3,21 +3,25 @@ import axios from "axios";
 import Comment from "./Comment";
 import SecondaryInput from "../../../../common/SecondaryInput/SecondaryInput";
 import i18next from "../../../../../i18n";
+import { getReplies, addReply } from "../../services/Functions/index";
 const { useTranslation } = i18next;
 
 const withContainer = (WrappedComponent) => {
   const WithContainer = ({
     comment = {
       id: 1,
+      idUser: 1,
       likes: 20,
       content: "ble",
       numberOfReplies: 1,
     },
-    user = {
-      id: 1,
-      firstName: "Janek",
-      lastName: "Kowalski",
-      photo: "profile.png",
+    users = {
+      1: {
+        id: 1,
+        firstName: "Janek",
+        lastName: "Kowalski",
+        photo: "profile.png",
+      },
     },
     focusCollapse,
     focusIcon,
@@ -26,37 +30,16 @@ const withContainer = (WrappedComponent) => {
 
     const loadMoreComments = t("component:post.comments.load-more-comments");
 
+    const [user, setUser] = useState(users[comment.idUser]);
     const [isRepliesOpen, setStatusOfOpenReplies] = useState(false);
     const [reply, setReply] = useState("");
     const [replies, setReplies] = useState([]);
     const [isMoreReplies, setStatusOfMoreReplies] = useState(
       comment.numberOfReplies > 0
     );
+
     const handleSubmit = (e) => {
       e.preventDefault();
-      axios
-        .post("/reply/add", {
-          idComment: comment.id,
-          content: reply,
-        })
-        .then(({ data: { id, idUser } }) => {
-          setReply("");
-          setReplies([{ id, idUser, likes: 0, content: reply }, ...replies]);
-        })
-        .catch((err) => console.log(err));
-    };
-
-    const getReplies = () => {
-      axios
-        .post("/reply/get", {
-          idComment: comment.id,
-          from: replies.length,
-        })
-        .then(({ data: { replies: r, isMore } }) => {
-          setReplies([...replies, ...r]);
-          setStatusOfMoreReplies(isMore);
-        })
-        .catch((err) => console.log(err));
     };
 
     return (

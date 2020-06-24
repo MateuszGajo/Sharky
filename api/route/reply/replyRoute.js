@@ -6,58 +6,117 @@ const { jwtSecret } = require("../../../config/keys");
 const router = express.Router();
 
 router.post("/add", async (req, res) => {
-  const { idComment, content } = req.body;
+  const { idComment, content, date } = req.body;
 
   const token = jwt.sign(
     {
       exp: Math.floor(Date.now() / 1000) + 60 * 60,
       data: {
-        idUser: "1",
+        id: "1",
       },
     },
     jwtSecret
   );
-  const decoded = jwt.verify(token, jwtSecret);
-
-  const { idUser } = decoded.data;
+  const {
+    data: { id: idUser },
+  } = jwt.verify(token, jwtSecret);
 
   const addReplyQuery = `
-      INSERT INTO comment_replies(id_comment, id_user, content) values($1,$2,$3) RETURNING id;
+      INSERT INTO comment_replies(id_comment, id_user, content, date) values($1,$2,$3,$4) RETURNING id;
       `;
   try {
     const reply = await client.query(addReplyQuery, [
       idComment,
       idUser,
       content,
+      date,
     ]);
-    console.log(reply);
-    res.status(200).json({ id: reply.rows[0].id, idUser });
+
+    return res.status(200).json({ id: reply.rows[0].id, idUser });
   } catch {
-    res.status(400);
+    return res.status(400);
   }
 });
 
 router.post("/get", async (req, res) => {
-  const { idComment, from } = req.body;
-  console.log(idComment, from);
+  const { idReply, from } = req.body;
   const replyQuery = `
-  select *
+  select comment_replies.*, reply_like.id as "idLike" 
   from comment_replies
-  where id_comment =$1
+  left join reply_like on comment_replies.id = reply_like.id_reply
+  where comment_replies.id_comment=$1
   order by id desc
   limit 21 offset $2
 `;
-  try {
-    const replies = await client.query(replyQuery, [idComment, from]);
 
-    res
-      .status(200)
-      .json({
-        replies: replies.rows.slice(0, -1),
-        isMore: replies.rows.length == 21,
-      });
+  let result;
+
+  try {
+    result = await client.query(replyQuery, [idComment, from]);
   } catch {
-    res.status(400).json("bad-request");
+    return res.status(400).json("bad-request");
+  }
+
+  let { rows: replies } = result;
+
+  let isMore = true;
+  if ((replies.rows.length = !21)) {
+    isMore = false;
+  }
+  {
+    replies = replies.slice(0, -1);
+  }
+
+  return res.status(200).json({
+    replies,
+    isMore,
+  });
+});
+
+router.post("/like", async (req, res) => {
+  const { idReply } = req.body;
+
+  const token = jwt.sign(
+    {
+      exp: Math.floor(Date.now() / 1000) + 60 * 60,
+      data: {
+        id: "1",
+      },
+    },
+    jwtSecret
+  );
+  const {
+    data: { id: idUser },
+  } = jwt.verify(token, jwtSecret);
+
+  const likeReplyQuery = `
+  insert into reply_like(idReply, idUser)
+  values($1,$2)
+  returning id`;
+
+  try {
+    const replyLike = await client.query(likeReplyQuery, [idReply, idUser]);
+
+    return res.status(200).json({ idReplyLike: replyLike.rows[0].id });
+  } catch {
+    return res.status(400).json("bad-request");
+  }
+});
+
+router.post("/unlike", async (req, res) => {
+  const { idLike } = req.body;
+
+  const unlikeReplyQuery = `
+  delete from reply_like
+  where id = $1;
+  `;
+
+  try {
+    await client.query(unlikeReplyQuery, [idLike]);
+
+    return res.status(200).json({ success: true });
+  } catch {
+    return res.status(400).json("bad-request");
   }
 });
 
