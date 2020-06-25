@@ -6,6 +6,7 @@ const nextI18NextMiddleware = require("next-i18next/middleware").default;
 const commentRoute = require("./api/route/comment/commentRoute");
 const replyRoute = require("./api/route/reply/replyRoute");
 const postRoute = require("./api/route/post/postRoute");
+const userRoute = require("./api/route/user/userRoute");
 const bodyParser = require("body-parser");
 
 const nextI18Next = require("./i18n/server");
@@ -28,6 +29,7 @@ const socketIO = io(httpServer);
     server.use("/comment", commentRoute);
     server.use("/reply", replyRoute);
     server.use("/post", postRoute);
+    server.use("/user", userRoute);
     handle(req, res);
   });
 

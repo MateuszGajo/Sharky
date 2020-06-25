@@ -1,5 +1,4 @@
-import React, { useState, useRef } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import Comment from "./Comment";
 import SecondaryInput from "../../../../common/SecondaryInput/SecondaryInput";
 import i18next from "../../../../../i18n";
@@ -23,6 +22,7 @@ const withContainer = (WrappedComponent) => {
         photo: "profile.png",
       },
     },
+    setUsers,
     focusCollapse,
     focusIcon,
   }) => {
@@ -31,6 +31,7 @@ const withContainer = (WrappedComponent) => {
     const loadMoreComments = t("component:post.comments.load-more-comments");
 
     const [user, setUser] = useState(users[comment.idUser]);
+    console.log(user);
     const [isRepliesOpen, setStatusOfOpenReplies] = useState(false);
     const [reply, setReply] = useState("");
     const [replies, setReplies] = useState([]);
@@ -40,7 +41,26 @@ const withContainer = (WrappedComponent) => {
 
     const handleSubmit = (e) => {
       e.preventDefault();
+      addReply({
+        idComment: comment.id,
+        content: reply,
+        replies,
+        setReplies,
+        date: new Date(),
+        clearText: setReply,
+      });
     };
+
+    const gReplies = () =>
+      getReplies({
+        idComment: comment.id,
+        from: replies.length,
+        replies,
+        setReplies,
+        users,
+        setUsers,
+        setStatusOfMoreData: setStatusOfMoreReplies,
+      });
 
     return (
       <>
@@ -51,7 +71,7 @@ const withContainer = (WrappedComponent) => {
           isRepliesOpen={isRepliesOpen}
           focusCollapse={focusCollapse}
           focusIcon={focusIcon}
-          getReplies={getReplies}
+          getReplies={gReplies}
         />
 
         {isRepliesOpen && (
@@ -78,7 +98,7 @@ const withContainer = (WrappedComponent) => {
             {isMoreReplies && (
               <p
                 className="post__item__comments__container__more-content"
-                onClick={() => getReplies()}
+                onClick={() => gReplies()}
               >
                 {loadMoreComments}
               </p>

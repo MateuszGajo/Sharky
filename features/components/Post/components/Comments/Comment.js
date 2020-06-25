@@ -1,9 +1,17 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { IoIosHeartEmpty } from "react-icons/io";
 import { FiMessageCircle, FiVolumeX, FiFlag } from "react-icons/fi";
 import { BsThreeDots } from "react-icons/bs";
 import { IconContext } from "react-icons";
+import cx from "classnames";
 import i18next from "../../../../../i18n";
+import {
+  likeComment,
+  unlikeComment,
+  likeReply,
+  unlikeReply,
+} from "../../services/Functions/index";
+
 const { useTranslation } = i18next;
 
 const Commnet = ({
@@ -20,6 +28,7 @@ const Commnet = ({
   const settingRef = useRef(null);
   const reportComment = t("component:post.comments.settings.report");
   const muteUser = t("component:post.comments.settings.mute");
+  const [idLike, setIdLike] = useState(comment.idLike);
 
   const clickHandle = (e) => {
     const { current: fCollapse } = focusCollapse;
@@ -57,6 +66,18 @@ const Commnet = ({
       focusCollapse.current = collapseItem;
     });
   }, []);
+
+  const setlikeComment = () => {
+    if ("numberOfReplies" in comment) {
+      idLike
+        ? unlikeComment({ idLike, setIdLike })
+        : likeComment({ idComment: comment.id, setIdLike });
+    } else {
+      idLike
+        ? unlikeReply({ idLike, setIdLike })
+        : likeReply({ idReply: comment.id, setIdLike });
+    }
+  };
   return (
     <div className="post__item__comments__container__item">
       <div className="post__item__comments__container__item__photo">
@@ -122,7 +143,17 @@ const Commnet = ({
             {comment.content}
           </div>
           <div className="post__item__comments__container__item__content__item__down-bar">
-            <div className="post__item__comments__container__item__content__item__down-bar--icon hover-pal-color">
+            <div
+              className={cx(
+                "post__item__comments__container__item__content__item__down-bar--icon hover-pal-color",
+                {
+                  "pal-color": idLike,
+                }
+              )}
+              onClick={() => {
+                setlikeComment();
+              }}
+            >
               <IoIosHeartEmpty />
               <span className="post__item__comments__container__item__content__item__down-bar--icon--number">
                 {comment.likes}
@@ -133,7 +164,6 @@ const Commnet = ({
                 className="post__item__comments__container__item__content__item__down-bar--icon hover-primary-color"
                 onClick={() => {
                   if (!isRepliesOpen) {
-                    console.log("Here");
                     getReplies();
                   }
                   setStatusOfOpenReplies(!isRepliesOpen);

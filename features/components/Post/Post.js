@@ -44,6 +44,13 @@ const Post = ({
       photo: "profile.png",
       idLiked: null,
     },
+    2: {
+      id: 2,
+      firstName: "Janek",
+      lastName: "Kowalski",
+      photo: "profile.png",
+      idLiked: null,
+    },
   },
   setUsers,
   isMoreComments: statusOfMoreComments = true,
@@ -112,7 +119,6 @@ const Post = ({
             <div className="post__item__comments__container" key={index}>
               <Comment
                 comment={comment}
-                user={user}
                 focusCollapse={focusCollapse}
                 focusIcon={focusIcon}
                 users={users}
@@ -123,7 +129,17 @@ const Post = ({
           {isMoreComments && (
             <p
               className="post__item__comments__more-content"
-              onClick={() => getComments()}
+              onClick={() =>
+                getComments({
+                  idPost: p.id,
+                  from: comments.length,
+                  users,
+                  setUsers,
+                  comments,
+                  setComments,
+                  setStatusOfMoreData: setStatusOfMoreComments,
+                })
+              }
             >
               {loadMoreComments}
             </p>

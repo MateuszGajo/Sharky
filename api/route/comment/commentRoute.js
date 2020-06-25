@@ -56,24 +56,30 @@ router.post("/get", async (req, res) => {
   } = jwt.verify(token, jwtSecret);
 
   commentsQuery = `
-  select post_comments.*,comment_like.id as "idLike", count(comment_replies.id_comment) as "numberOfReplies"
-  from post_comments 
-  left join comment_replies on post_comments.id = comment_replies.id_comment
-  left join comment_like on post_comments.id = comment_like.id_comment and comment_like.id_user= $1
-  where id_post=$2
-  group by post_comments.id, comment_like.id
-  order by date desc
+  select secondResult.*, post_comments.id, post_comments.id_post as "idPost", post_comments.id_user as "idUser", post_comments.content, post_comments.date , comment_like.id as "idLike"  from
+	(select result.id, result.numberofreplies as "numberOfReplies", count(comment_like.id_comment) as         "numerOfLikes" from(
+		  select post_comments.id,  count(comment_replies.id) as "numberofreplies"
+		  from post_comments
+		  left join comment_replies on post_comments.id = comment_replies.id_comment
+		  where id_post=$1
+		  group by  post_comments.id) as result
+	  left join comment_like on result.id = comment_like.id_comment
+	  group by result.id,result.numberofreplies) as secondResult
+  left join comment_like on secondResult.id = comment_like.id_comment and comment_like.id_user=$2
+  left join post_comments on post_comments.id = secondResult.id
+  order by post_comments.date desc
   limit 21 offset $3
+
+	
   `;
   let result;
   try {
-    result = await client.query(commentsQuery, [idUser, idPost, from]);
+    result = await client.query(commentsQuery, [idPost, idUser, from]);
   } catch {
     return res.status(400).json("bad-request");
   }
 
   let { rows: comments } = result;
-  console.log(comments);
   let isMore = true;
   if (comments.length != 21) {
     isMore = false;
@@ -103,7 +109,7 @@ router.post("/like", async (req, res) => {
   } = jwt.verify(token, jwtSecret);
 
   const likeCommentQuery = `
-  insert into comment_like(idComment, idUser)
+  insert into comment_like(id_comment, id_user)
   values($1,$2)
   returning id`;
 
@@ -112,7 +118,7 @@ router.post("/like", async (req, res) => {
       idComment,
       idUser,
     ]);
-
+    console.log(commentLike);
     return res.status(200).json({ idCommentLike: commentLike.rows[0].id });
   } catch {
     return res.status(400).json("bad-request");
