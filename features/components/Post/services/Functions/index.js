@@ -13,11 +13,11 @@ export const getUsers = async (users, setUsers, elements) => {
       .post("/user/get", {
         idUsers,
       })
-      .then(({ data: { users } }) => {
+      .then(({ data: { users: u } }) => {
         let usersKey = {};
 
-        for (let i = 0; i < users.length; i++) {
-          const { id, firstName, lastName, photo } = users[i];
+        for (let i = 0; i < u.length; i++) {
+          const { id, firstName, lastName, photo } = u[i];
           usersKey[id] = {
             id,
             firstName,
@@ -25,45 +25,44 @@ export const getUsers = async (users, setUsers, elements) => {
             photo,
           };
         }
-
-        setUsers({ ...users, ...data });
+        setUsers({ ...users, ...usersKey });
       })
       .catch((err) => console.log(err));
 };
 
-export const getPosts = (
+export const getPosts = ({
   posts,
   setPosts,
   from,
   users,
   setUsers,
   setStatusOfMorePosts,
-  setStatusOfMoreComments
-) => {
+  setStatusOfMoreComments,
+}) => {
   axios
     .post("/post/get", { from })
     .then(
-      async ({
-        data: { posts: p, comments: c, isMorePosts, isMoreComments },
-      }) => {
+      async ({ data: { posts: p, comments, isMorePosts, isMoreComments } }) => {
         await getUsers(users, setUsers, p);
-        await getUsers(users, setUsers, c);
-
-        const comments = new Array(2);
-        c.forEach((item, index) => {
-          if (!comments[item.idPost]) {
-            comments[item.idPost] = [];
-          }
-          comments[item.idPost].push({ ...item, replies: replies[index] });
-        });
-
+        await getUsers(users, setUsers, comments);
+        const commentsKey = {};
+        for (let i = 0; i < comments.length; i++) {
+          if (!commentsKey[comments[i].idPost])
+            commentsKey[comments[i].idPost] = [];
+          commentsKey[comments[i].idPost].push(comments[i]);
+        }
         const newPosts = p.map((item, index) => {
           return {
             ...item,
-            comments: comments[index],
+            comments: commentsKey[item.id],
+            isMoreComments:
+              commentsKey[item.id] == undefined
+                ? false
+                : commentsKey[item.id][0].number < 3
+                ? false
+                : true,
           };
         });
-
         setStatusOfMorePosts(isMorePosts);
         setStatusOfMoreComments(isMoreComments);
         setPosts([...posts, ...newPosts]);
@@ -115,7 +114,6 @@ export const getComments = ({
   axios
     .post("/comment/get", { idPost, from })
     .then(async ({ data: { comments: newComments, isMore } }) => {
-      console.log(newComments);
       await getUsers(users, setUsers, newComments);
       setComments([...newComments, ...comments]);
       setStatusOfMoreData(isMore);
@@ -155,18 +153,15 @@ export const addComent = ({
 };
 
 export const likeComment = ({ idComment, setIdLike }) => {
-  console.log("postlike");
   axios
     .post("/comment/like", { idComment })
     .then(({ data: { idCommentLike } }) => {
-      console.log(idCommentLike);
       setIdLike(idCommentLike);
     })
     .catch((err) => console.log(err));
 };
 
 export const unlikeComment = ({ idLike, setIdLike }) => {
-  console.log("postunlike");
   axios
     .post("/comment/unlike", { idLike })
     .then((resp) => setIdLike(null))
@@ -217,7 +212,6 @@ export const addReply = ({
 };
 
 export const likeReply = async ({ idReply, setIdLike }) => {
-  console.log("replylike");
   axios
     .post("/reply/like", { idReply })
     .then(({ data: { idReplyLike } }) => setIdLike(idReplyLike))
@@ -225,7 +219,6 @@ export const likeReply = async ({ idReply, setIdLike }) => {
 };
 
 export const unlikeReply = async ({ idLike, setIdLike }) => {
-  console.log("replyunlike");
   axios
     .post("/reply/unlike", { idLike })
     .then((resp) => setIdLike(null))

@@ -14,25 +14,31 @@ const Post = ({
     idUser: 1,
     idLike: 1,
     idUserShare: 1,
+    idShare: null,
+    numberOfShares: 2,
+    numberOfComments: 5,
+    numberOfLikes: 6,
     content: "dasdsa",
     date: new Date("2019-03-25"),
     photo: "profile.png",
-    likes: 20,
-    shares: 20,
     comments: [
       {
         id: 1,
         idUser: 1,
-        likes: 20,
+        idLike: null,
+        numberOfLikes: 20,
+        numberOfReplies: 5,
         content: "ble",
-        numberOfReplies: 1,
+        date: new Date(),
       },
       {
         id: 2,
         idUser: 1,
-        likes: 20,
-        content: "ble",
-        numberOfReplies: 2,
+        idLike: null,
+        numberOfLikes: 19,
+        numberOfReplies: 4,
+        content: "ble fds as",
+        date: new Date(),
       },
     ],
   },
@@ -98,13 +104,13 @@ const Post = ({
           idPost={post.id}
           idLike={post.idLike}
           statisticks={{
-            comments: post.comments?.length || 0,
-            likes: post.likes,
-            shares: post.shares,
+            comments: post.numberOfComments,
+            likes: post.numberOfLikes,
+            shares: post.numberOfShares,
           }}
         />
       </div>
-      {isComment && (
+      {isComment && post.comments && (
         <div className="post__item__comments" data-testid="post-comments">
           <div className="post__item__comments__input">
             <form onSubmit={handleSubmit}>

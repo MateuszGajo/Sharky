@@ -156,7 +156,7 @@ const Commnet = ({
             >
               <IoIosHeartEmpty />
               <span className="post__item__comments__container__item__content__item__down-bar--icon--number">
-                {comment.likes}
+                {comment.numberOfLikes}
               </span>
             </div>
             {comment.numberOfReplies >= 0 && (

@@ -10,9 +10,11 @@ const withContainer = (WrappedComponent) => {
     comment = {
       id: 1,
       idUser: 1,
-      likes: 20,
+      idLike: null,
+      numberOfLikes: 20,
+      numberOfReplies: 10,
       content: "ble",
-      numberOfReplies: 1,
+      date: new Date(),
     },
     users = {
       1: {
@@ -31,7 +33,6 @@ const withContainer = (WrappedComponent) => {
     const loadMoreComments = t("component:post.comments.load-more-comments");
 
     const [user, setUser] = useState(users[comment.idUser]);
-    console.log(user);
     const [isRepliesOpen, setStatusOfOpenReplies] = useState(false);
     const [reply, setReply] = useState("");
     const [replies, setReplies] = useState([]);

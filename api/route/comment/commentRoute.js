@@ -56,9 +56,9 @@ router.post("/get", async (req, res) => {
   } = jwt.verify(token, jwtSecret);
 
   commentsQuery = `
-  select secondResult.*, post_comments.id, post_comments.id_post as "idPost", post_comments.id_user as "idUser", post_comments.content, post_comments.date , comment_like.id as "idLike"  from
-	(select result.id, result.numberofreplies as "numberOfReplies", count(comment_like.id_comment) as         "numerOfLikes" from(
-		  select post_comments.id,  count(comment_replies.id) as "numberofreplies"
+  select secondResult.*, post_comments.id_user as "idUser", post_comments.content, post_comments.date , comment_like.id as "idLike"  from
+	(select result.id, result.numberofreplies as "numberOfReplies", count(comment_like.id_comment) as "numberOfLikes"
+	 from(select post_comments.id,  count(comment_replies.id) as "numberofreplies"
 		  from post_comments
 		  left join comment_replies on post_comments.id = comment_replies.id_comment
 		  where id_post=$1
@@ -69,8 +69,6 @@ router.post("/get", async (req, res) => {
   left join post_comments on post_comments.id = secondResult.id
   order by post_comments.date desc
   limit 21 offset $3
-
-	
   `;
   let result;
   try {

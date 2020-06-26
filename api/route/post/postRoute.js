@@ -55,49 +55,82 @@ router.post("/get", async (req, res) => {
   } = jwt.verify(token, jwtSecret);
 
   const getPostsQuery = `
-  select result.*, post_like.id as "idLike" from (
-    select posts.id, posts.id_user as "idUser", content, photo, date, null as "idShare", null as "idUserShare"
-      from posts
-      where posts.id_user in(
-        SELECT $1 AS id_user_1
-        UNION
-        SELECT id_user_1  fROM friends where id_user_2=$1
-        UNION
-        SELECT id_user_2 fROM friends where id_user_1=$1)
-      union
-      select posts.id, posts.id_user, content, photo, post_share.date, post_share.id as "idShare", post_share.id_user as "idUserShare" from post_share
-      LEFT JOIN posts on  posts.id= post_share.id_post) as result
-  LEFT JOIN post_like on result.id = post_like.id_post and post_like.id_user = $1
+  select fourthResult.*, post_like.id as "idLike" 
+  from(select  thirdResult.id, thirdResult.numberofshares as "numberOfShares",thirdResult.numberofcomments as "numberOfComments",thirdResult.numberoflikes as "numberOfLikes", posts.id_user as "idUser", posts.content, posts.photo, posts.date, null as "idShare", null as "idUserShare"
+    from(select secondResult.*, count(post_like.id_post) as "numberoflikes"
+      from(select firstResult.*, count(post_comments.id_post) as "numberofcomments" 
+        from(select posts.id, count(post_share.id_post) as "numberofshares"
+          from posts
+            left join post_share on posts.id = post_share.id_post
+          group by posts.id) as firstResult
+        left join post_comments on  firstResult.id= post_comments.id_post
+        group by firstResult.id, firstResult.numberofshares) as secondResult
+      left join post_like on secondResult.id = post_like.id_post
+      group by secondResult.id, secondResult.numberofshares, secondResult.numberofcomments) as thirdResult
+    left join posts on posts.id = thirdResult.id
+    where posts.id_user 
+    in(SELECT $1 AS id_user_1
+          union
+          select id_user_1  from friends where id_user_2=$1
+          union
+          select id_user_2 from friends where id_user_1=$1)
+    union
+    select  thirdResult.*, posts.id_user as "idUser", posts.content, posts.photo, posts.date, post_share.id as "idShare", post_share.id_user as "idShareUser"
+    from(select secondResult.*, count(post_like.id_post) as "numberoflikes"
+      from(select firstResult.*, count(post_comments.id_post) as "numberofcomments" 
+        from(select posts.id, count(post_share.id_post) as "numberofshares"
+          from posts
+            left join post_share on posts.id = post_share.id_post
+          group by posts.id) as firstResult
+        left join post_comments on  firstResult.id= post_comments.id_post
+        group by firstResult.id, firstResult.numberofshares) as secondResult
+      left join post_like on secondResult.id = post_like.id_post
+      group by secondResult.id, secondResult.numberofshares, secondResult.numberofcomments) as thirdResult
+    left join posts on posts.id = thirdResult.id
+    inner join post_share on thirdResult.id = post_share.id_post
+    where posts.id_user 
+    in(SELECT $1 AS id_user_1
+          union
+          select id_user_1  from friends where id_user_2=$1
+          union
+          select id_user_2 from friends where id_user_1=$1)
+    ) as fourthResult
+  left join post_like on fourthResult.id = post_like.id_post and post_like.id_user = $1
   order by date desc
-  limit 21 offset $2`;
+  limit 21 offset $2
+    `;
 
   const getCommentsQuery = `
-  select id, id_post as "idPost", id_user as "idUser", content, date from post_comments
-  where id_post in($1)
-  order by date desc
-  limit 3 offset 0
+  
+  select sresult.id, sresult.id_post as "idPost", sresult.id_user as "idUser", sresult.count as "number", sresult.content, sresult.date
+  from(
+    select result.count, post_comments.*, row_number() OVER (partition by post_comments.id_post order by date desc) as rn
+        from(
+        SELECT  count(id_post), id_post
+        FROM post_comments
+        where id_post = any($1)
+        group by id_post) as result
+  left join post_comments on post_comments.id_post = result.id_post) as sresult
+  where rn <= 3
   `;
 
   let postsResult, commentsResult;
   let isMorePosts,
     isMoreComments = true;
-
   try {
-    posts = await client.query(getPostsQuery, [idUser, from]);
-
+    postsResult = await client.query(getPostsQuery, [idUser, from]);
     const idPosts = [];
-    for (let i = 0; i < posts.rows.length; i++) {
-      idPosts.push(posts.rows[i].id);
+    for (let i = 0; i < postsResult.rows.length; i++) {
+      idPosts.push(postsResult.rows[i].id);
     }
-
-    comments = await client.query(getCommentsQuery, [idPosts]);
+    commentsResult = await client.query(getCommentsQuery, [idPosts]);
   } catch {
+    console.log("err");
     return res.status(400).json("bad-request");
   }
 
   let { rows: posts } = postsResult;
   let { rows: comments } = commentsResult;
-
   if (posts.length != 21) {
     isMorePosts = false;
   } else {
