@@ -116,7 +116,6 @@ router.post("/like", async (req, res) => {
       idComment,
       idUser,
     ]);
-    console.log(commentLike);
     return res.status(200).json({ idCommentLike: commentLike.rows[0].id });
   } catch {
     return res.status(400).json("bad-request");

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import axios from "axios";
 import DownBarButtons from "./components/DownBarButtons/DownBarButtons";
 import Navbar from "./components/Navbar/Navbar";
@@ -18,6 +18,7 @@ const Post = ({
     numberOfShares: 2,
     numberOfComments: 5,
     numberOfLikes: 6,
+    isMoreComments,
     content: "dasdsa",
     date: new Date("2019-03-25"),
     photo: "profile.png",
@@ -59,12 +60,10 @@ const Post = ({
     },
   },
   setUsers,
-  isMoreComments: statusOfMoreComments = true,
   isComment = true,
   focusElement,
 }) => {
   const { t } = useTranslation(["component"]);
-
   const loadMoreComments = t("component:post.comments.load-more-comments");
 
   const focusCollapse = useRef(focusElement?.current || null);
@@ -74,9 +73,7 @@ const Post = ({
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState(p.comments);
   const [post, setPost] = useState(p);
-  const [isMoreComments, setStatusOfMoreComments] = useState(
-    statusOfMoreComments
-  );
+  const [isMoreComments, setStatusOfMoreComments] = useState(p.isMoreComments);
   const handleSubmit = (e) => {
     e.preventDefault();
     addComent({
@@ -102,7 +99,7 @@ const Post = ({
       <div className="post__item__downbar">
         <DownBarButtons
           idPost={post.id}
-          idLike={post.idLike}
+          idLike={post?.idLike}
           statisticks={{
             comments: post.numberOfComments,
             likes: post.numberOfLikes,
@@ -110,7 +107,7 @@ const Post = ({
           }}
         />
       </div>
-      {isComment && post.comments && (
+      {isComment && (
         <div className="post__item__comments" data-testid="post-comments">
           <div className="post__item__comments__input">
             <form onSubmit={handleSubmit}>
@@ -121,8 +118,8 @@ const Post = ({
               />
             </form>
           </div>
-          {comments.map((comment, index) => (
-            <div className="post__item__comments__container" key={index}>
+          {comments?.map((comment) => (
+            <div className="post__item__comments__container" key={comment.id}>
               <Comment
                 comment={comment}
                 focusCollapse={focusCollapse}

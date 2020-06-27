@@ -17,7 +17,7 @@ const DownBarButtons = ({
       <div
         className="post__item__downbar__buttons__icon  hover-primary-color"
         onClick={() => {
-          Router.pushRoute("post", { id: postId });
+          Router.pushRoute("post", { id: idPost });
         }}
       >
         <FiMessageCircle />

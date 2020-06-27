@@ -21,7 +21,8 @@ const Index = () => {
   });
   const [posts, setPosts] = useState([
     {
-      id: 1,
+      id: "21sd",
+      idPost: 1,
       idUser: 1,
       idLike: 1,
       idUserShare: 1,
@@ -29,6 +30,7 @@ const Index = () => {
       numberOfShares: 2,
       numberOfComments: 5,
       numberOfLikes: 6,
+      isMoreComments: true,
       content: "dasdsa",
       date: new Date("2019-03-25"),
       photo: "profile.png",
@@ -39,6 +41,7 @@ const Index = () => {
           likes: 20,
           content: "ble",
           numberOfReplies: 1,
+          numberOfLikes: 5,
         },
         {
           id: 2,
@@ -46,6 +49,7 @@ const Index = () => {
           likes: 20,
           content: "ble",
           numberOfReplies: 2,
+          numberOfLikes: 2,
         },
       ],
     },
@@ -65,8 +69,9 @@ const Index = () => {
   if (!initialized) return <Spinner />;
   return (
     <>
+      {console.log(posts)}
       {posts.map((post) => (
-        <Post post={post} users={users} setUsers={setUsers} />
+        <Post post={post} users={users} setUsers={setUsers} key={post.id} />
       ))}
     </>
   );

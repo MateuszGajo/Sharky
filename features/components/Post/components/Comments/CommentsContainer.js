@@ -31,13 +31,15 @@ const withContainer = (WrappedComponent) => {
     const { t } = useTranslation(["component"]);
 
     const loadMoreComments = t("component:post.comments.load-more-comments");
-
     const [user, setUser] = useState(users[comment.idUser]);
     const [isRepliesOpen, setStatusOfOpenReplies] = useState(false);
     const [reply, setReply] = useState("");
     const [replies, setReplies] = useState([]);
     const [isMoreReplies, setStatusOfMoreReplies] = useState(
       comment.numberOfReplies > 0
+    );
+    const [numberOfReplies, setNumberOfReplies] = useState(
+      Number(comment.numberOfReplies)
     );
 
     const handleSubmit = (e) => {
@@ -50,6 +52,7 @@ const withContainer = (WrappedComponent) => {
         date: new Date(),
         clearText: setReply,
       });
+      setNumberOfReplies(numberOfReplies + 1);
     };
 
     const gReplies = () =>
@@ -67,6 +70,7 @@ const withContainer = (WrappedComponent) => {
       <>
         <WrappedComponent
           comment={comment}
+          numberOfReplies={numberOfReplies}
           user={user}
           setStatusOfOpenReplies={setStatusOfOpenReplies}
           isRepliesOpen={isRepliesOpen}
@@ -89,6 +93,7 @@ const withContainer = (WrappedComponent) => {
             {replies.map((comment) => {
               return (
                 <WrappedComponent
+                  key={comment.id}
                   comment={comment}
                   user={user}
                   focusCollapse={focusCollapse}

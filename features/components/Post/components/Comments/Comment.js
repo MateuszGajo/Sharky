@@ -18,6 +18,7 @@ const Commnet = ({
   comment,
   user,
   setStatusOfOpenReplies,
+  numberOfReplies,
   isRepliesOpen,
   focusCollapse,
   focusIcon,
@@ -28,7 +29,10 @@ const Commnet = ({
   const settingRef = useRef(null);
   const reportComment = t("component:post.comments.settings.report");
   const muteUser = t("component:post.comments.settings.mute");
-  const [idLike, setIdLike] = useState(comment.idLike);
+  const [idLike, setIdLike] = useState(comment?.idLike);
+  const [numberOfLikes, setNumberOfLikes] = useState(
+    Number(comment.numberOfLikes)
+  );
 
   const clickHandle = (e) => {
     const { current: fCollapse } = focusCollapse;
@@ -68,14 +72,16 @@ const Commnet = ({
   }, []);
 
   const setlikeComment = () => {
-    if ("numberOfReplies" in comment) {
-      idLike
+    if (idLike) {
+      "numberOfReplies" in comment
         ? unlikeComment({ idLike, setIdLike })
-        : likeComment({ idComment: comment.id, setIdLike });
+        : unlikeReply({ idLike, setIdLike });
+      setNumberOfLikes(numberOfLikes - 1);
     } else {
-      idLike
-        ? unlikeReply({ idLike, setIdLike })
+      "numberOfReplies" in comment
+        ? likeComment({ idComment: comment.id, setIdLike })
         : likeReply({ idReply: comment.id, setIdLike });
+      setNumberOfLikes(numberOfLikes + 1);
     }
   };
   return (
@@ -156,10 +162,10 @@ const Commnet = ({
             >
               <IoIosHeartEmpty />
               <span className="post__item__comments__container__item__content__item__down-bar--icon--number">
-                {comment.numberOfLikes}
+                {numberOfLikes}
               </span>
             </div>
-            {comment.numberOfReplies >= 0 && (
+            {numberOfReplies >= 0 && (
               <div
                 className="post__item__comments__container__item__content__item__down-bar--icon hover-primary-color"
                 onClick={() => {
@@ -171,7 +177,7 @@ const Commnet = ({
               >
                 <FiMessageCircle />
                 <span className="post__item__comments__container__item__content__item__down-bar--icon--number">
-                  {comment.numberOfReplies}
+                  {numberOfReplies}
                 </span>
               </div>
             )}

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { uuid } from "uuidv4";
 
 export const getUsers = async (users, setUsers, elements) => {
   const idUsers = [];
@@ -54,11 +55,12 @@ export const getPosts = ({
         const newPosts = p.map((item, index) => {
           return {
             ...item,
+            id: uuid(),
             comments: commentsKey[item.id],
             isMoreComments:
               commentsKey[item.id] == undefined
                 ? false
-                : commentsKey[item.id][0].number < 3
+                : commentsKey[item.id][0].number < 4
                 ? false
                 : true,
           };
@@ -93,6 +95,10 @@ export const addPost = ({
           idUser,
           content,
           date,
+          comments: null,
+          numberOfLikes: 0,
+          numberOfShares: 0,
+          numberOfComments: 0,
           photo: "profile.png",
         },
         ...posts,
@@ -140,13 +146,14 @@ export const addComent = ({
         {
           id,
           idUser,
-          likes: 0,
+          idPost,
           content,
           numberOfReplies: 0,
+          numberOfLikes: 0,
+          date: new Date(),
         },
         ...comments,
       ]);
-
       clearText("");
     })
     .catch((err) => console.log("err"));
@@ -206,7 +213,7 @@ export const addReply = ({
     })
     .then(({ data: { idReply: id, idUser } }) => {
       clearText("");
-      setReplies([{ id, idUser, likes: 0, content }, ...replies]);
+      setReplies([{ id, idUser, numberOfLikes: 0, content }, ...replies]);
     })
     .catch((err) => console.log(err));
 };

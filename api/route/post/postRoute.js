@@ -56,7 +56,7 @@ router.post("/get", async (req, res) => {
 
   const getPostsQuery = `
   select fourthResult.*, post_like.id as "idLike" 
-  from(select  thirdResult.id, thirdResult.numberofshares as "numberOfShares",thirdResult.numberofcomments as "numberOfComments",thirdResult.numberoflikes as "numberOfLikes", posts.id_user as "idUser", posts.content, posts.photo, posts.date, null as "idShare", null as "idUserShare"
+  from(select  thirdResult.id as "idPost", thirdResult.numberofshares as "numberOfShares",thirdResult.numberofcomments as "numberOfComments",thirdResult.numberoflikes as "numberOfLikes", posts.id_user as "idUser", posts.content, posts.photo, posts.date, null as "idShare", null as "idUserShare"
     from(select secondResult.*, count(post_like.id_post) as "numberoflikes"
       from(select firstResult.*, count(post_comments.id_post) as "numberofcomments" 
         from(select posts.id, count(post_share.id_post) as "numberofshares"
@@ -95,42 +95,53 @@ router.post("/get", async (req, res) => {
           union
           select id_user_2 from friends where id_user_1=$1)
     ) as fourthResult
-  left join post_like on fourthResult.id = post_like.id_post and post_like.id_user = $1
+  left join post_like on "idPost" = post_like.id_post and post_like.id_user = $1
   order by date desc
   limit 21 offset $2
     `;
 
   const getCommentsQuery = `
   
-  select sresult.id, sresult.id_post as "idPost", sresult.id_user as "idUser", sresult.count as "number", sresult.content, sresult.date
-  from(
-    select result.count, post_comments.*, row_number() OVER (partition by post_comments.id_post order by date desc) as rn
+  select d.id, d.count, d.numeroflikes as "numberOfLikes", d.numberofreplies as "numberOfReplies", post_comments.id_post as "idPost", post_comments.id_user as "idUser", post_comments.content, post_comments.date, comment_like.id as "idLike"	
+  from(select c.*, count(comment_replies.id_comment) as "numberofreplies"
+    from(select b.count, b.id,count(comment_like.id_comment) "numeroflikes"
         from(
-        SELECT  count(id_post), id_post
-        FROM post_comments
-        where id_post = any($1)
-        group by id_post) as result
-  left join post_comments on post_comments.id_post = result.id_post) as sresult
-  where rn <= 3
+        select a.count, post_comments.id, row_number() OVER (partition by post_comments.id_post order by date desc) as rn
+          from(
+          SELECT  count(id_post), id_post
+          FROM post_comments
+          where id_post = any($1)
+          group by id_post
+          ) as a
+        left join post_comments on post_comments.id_post = a.id_post) as b
+      left join comment_like on b.id = comment_like.id_comment
+      where rn <= 3
+      group by comment_like.id_comment, b.count, b.id) as c
+    left join comment_replies on c.id = comment_replies.id_comment
+    group by c.id, c.count, c.numeroflikes) as d
+  left join post_comments on d.id = post_comments.id
+  left join comment_like on d.id = comment_like.id_comment and comment_like.id_user = $2
+  order by date desc
   `;
 
   let postsResult, commentsResult;
   let isMorePosts,
     isMoreComments = true;
+
   try {
     postsResult = await client.query(getPostsQuery, [idUser, from]);
     const idPosts = [];
     for (let i = 0; i < postsResult.rows.length; i++) {
       idPosts.push(postsResult.rows[i].id);
     }
-    commentsResult = await client.query(getCommentsQuery, [idPosts]);
+    commentsResult = await client.query(getCommentsQuery, [idPosts, idUser]);
   } catch {
-    console.log("err");
     return res.status(400).json("bad-request");
   }
 
   let { rows: posts } = postsResult;
   let { rows: comments } = commentsResult;
+
   if (posts.length != 21) {
     isMorePosts = false;
   } else {
