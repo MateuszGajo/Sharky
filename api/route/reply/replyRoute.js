@@ -32,7 +32,7 @@ router.post("/add", async (req, res) => {
       date,
     ]);
 
-    return res.status(200).json({ id: reply.rows[0].id, idUser });
+    return res.status(200).json({ idReply: reply.rows[0].id, idUser });
   } catch {
     return res.status(400);
   }
@@ -60,9 +60,9 @@ router.post("/get", async (req, res) => {
     from comment_replies
     left join reply_like on comment_replies.id = reply_like.id_reply
     where comment_replies.id_comment=$1
-    group by comment_replies.id, reply_like.id_reply
-    order by id desc) as result
+    group by comment_replies.id, reply_like.id_reply) as result
   left join reply_like on result.id = reply_like.id_reply and reply_like.id_user = $2
+  order by date desc
   limit 21 offset $3
   `;
 

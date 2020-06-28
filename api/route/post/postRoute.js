@@ -132,7 +132,7 @@ router.post("/get", async (req, res) => {
     postsResult = await client.query(getPostsQuery, [idUser, from]);
     const idPosts = [];
     for (let i = 0; i < postsResult.rows.length; i++) {
-      idPosts.push(postsResult.rows[i].id);
+      idPosts.push(postsResult.rows[i].idPost);
     }
     commentsResult = await client.query(getCommentsQuery, [idPosts, idUser]);
   } catch {
@@ -141,7 +141,6 @@ router.post("/get", async (req, res) => {
 
   let { rows: posts } = postsResult;
   let { rows: comments } = commentsResult;
-
   if (posts.length != 21) {
     isMorePosts = false;
   } else {
@@ -194,6 +193,35 @@ router.post("/unlike", async (req, res) => {
     const unLikeQuery = `delete from post_like where id=$1`;
     await client.query(unLikeQuery, [idLike]);
     res.status(200).json({ success: true });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
+router.post("/share", async (req, res) => {
+  const { idPost, date } = req.body;
+  const token = jwt.sign(
+    {
+      exp: Math.floor(Date.now() / 1000) + 60 * 60,
+      data: {
+        id: "1",
+      },
+    },
+    jwtSecret
+  );
+  const {
+    data: { id: idUser },
+  } = jwt.verify(token, jwtSecret);
+
+  const postShareQuery = `insert into post_share(id_post, id_user, date) values($1,$2,$3) returning id`;
+
+  try {
+    const postShare = await client.query(postShareQuery, [
+      idPost,
+      idUser,
+      date,
+    ]);
+    res.status(200).json({ idShare: postShare.rows[0].id, idUser });
   } catch {
     res.status(400).json("bad-request");
   }

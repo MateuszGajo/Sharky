@@ -30,11 +30,13 @@ router.post("/add", async (req, res) => {
       content,
       date,
     ]);
+    console.log(comment);
     return res.status(200).json({
       idUser,
       idComment: comment.rows[0].id,
     });
   } catch {
+    console.log("err");
     return res.status(400).json("bad-request");
   }
 });

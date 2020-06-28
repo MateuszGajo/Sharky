@@ -7,7 +7,7 @@ const Content = ({ post }) => {
       <div
         className="post__item__content"
         onClick={() => {
-          Router.pushRoute("post", { id: post.id });
+          Router.pushRoute("post", { id: post.idPost });
         }}
       >
         <span className="post__item__content--span" data-testid="post-content">
@@ -19,7 +19,7 @@ const Content = ({ post }) => {
           className="post__item__photo"
           data-testid="post-photo"
           onClick={() => {
-            Router.pushRoute("post", { id: post.id });
+            Router.pushRoute("post", { id: post.idPost });
           }}
         >
           <img

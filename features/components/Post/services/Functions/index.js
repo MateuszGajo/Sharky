@@ -46,25 +46,27 @@ export const getPosts = ({
       async ({ data: { posts: p, comments, isMorePosts, isMoreComments } }) => {
         await getUsers(users, setUsers, p);
         await getUsers(users, setUsers, comments);
+
         const commentsKey = {};
         for (let i = 0; i < comments.length; i++) {
           if (!commentsKey[comments[i].idPost])
             commentsKey[comments[i].idPost] = [];
           commentsKey[comments[i].idPost].push(comments[i]);
         }
-        const newPosts = p.map((item, index) => {
+        const newPosts = p.map((item) => {
           return {
             ...item,
             id: uuid(),
-            comments: commentsKey[item.id],
+            comments: commentsKey[item.idPost],
             isMoreComments:
-              commentsKey[item.id] == undefined
+              commentsKey[item.idPost] == undefined
                 ? false
-                : commentsKey[item.id][0].number < 4
+                : commentsKey[item.idPost][0].number < 4
                 ? false
                 : true,
           };
         });
+
         setStatusOfMorePosts(isMorePosts);
         setStatusOfMoreComments(isMoreComments);
         setPosts([...posts, ...newPosts]);
@@ -121,8 +123,31 @@ export const getComments = ({
     .post("/comment/get", { idPost, from })
     .then(async ({ data: { comments: newComments, isMore } }) => {
       await getUsers(users, setUsers, newComments);
-      setComments([...newComments, ...comments]);
+      setComments([...comments, ...newComments]);
       setStatusOfMoreData(isMore);
+    })
+    .catch((err) => console.log(err));
+};
+
+export const postShare = ({ post, posts, setPosts }) => {
+  const date = new Date();
+  axios
+    .post("/post/share", {
+      idPost: post.idPost,
+      date,
+    })
+    .then(({ data: { idShare, idUser } }) => {
+      setPosts([
+        {
+          ...post,
+          idShare,
+          id: uuid(),
+          date,
+          idUserShare: idUser,
+          numberOfShares: Number(post.numberOfShares) + 1,
+        },
+        ...posts,
+      ]);
     })
     .catch((err) => console.log(err));
 };
@@ -152,7 +177,7 @@ export const addComent = ({
           numberOfLikes: 0,
           date: new Date(),
         },
-        ...comments,
+        ...(comments || []),
       ]);
       clearText("");
     })

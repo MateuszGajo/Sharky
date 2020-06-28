@@ -4,20 +4,26 @@ import { AiOutlineShareAlt } from "react-icons/ai";
 import { IoIosHeartEmpty } from "react-icons/io";
 import cx from "classnames";
 import axios from "axios";
+import { postShare } from "../../services/Functions/index";
 import Router from "../../../../route/routes";
 
 const DownBarButtons = ({
-  statisticks = { comments: 123, likes: 123, shares: 23 },
-  idLike: iL = false,
-  idPost,
+  numberOfLikes: nof,
+  numberOfComments,
+  numberOfShares: nos,
+  post,
+  posts,
+  setPosts,
 }) => {
-  const [idLike, setIdLike] = useState(iL);
+  const [idLike, setIdLike] = useState(post?.idLike);
+  const [numberOfLikes, setNumberOfLikes] = useState(Number(nof));
+  const [numberOfShares, setNumberOfShares] = useState(Number(nos));
   return (
     <div className="post__item__downbar__buttons">
       <div
         className="post__item__downbar__buttons__icon  hover-primary-color"
         onClick={() => {
-          Router.pushRoute("post", { id: idPost });
+          Router.pushRoute("post", { id: post.idPost });
         }}
       >
         <FiMessageCircle />
@@ -25,7 +31,7 @@ const DownBarButtons = ({
           data-testid="downbar-number-of-comments"
           className="post__item__downbar__buttons__icon--number"
         >
-          {statisticks.comments}
+          {numberOfComments}
         </p>
       </div>
       <div
@@ -36,11 +42,13 @@ const DownBarButtons = ({
         onClick={(e) => {
           e.stopPropagation();
           if (!idLike) {
+            setNumberOfLikes(numberOfLikes + 1);
             axios
-              .post("/post/like", { idPost })
+              .post("/post/like", { idPost: post.idPost })
               .then(({ data: { idPostLike } }) => setIdLike(idPostLike))
               .catch((err) => console.log(err));
           } else {
+            setNumberOfLikes(numberOfLikes - 1);
             axios
               .post("/post/unlike", { idLike })
               .then((resp) => setIdLike(null))
@@ -53,19 +61,22 @@ const DownBarButtons = ({
           data-testid="downbar-number-of-likes"
           className="post__item__downbar__buttons__icon--number"
         >
-          {statisticks.likes}
+          {numberOfLikes}
         </p>
       </div>
       <div
         className="post__item__downbar__buttons__icon  hover-family-color"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) => {
+          setNumberOfShares(numberOfShares + 1);
+          postShare({ post, posts, setPosts });
+        }}
       >
         <AiOutlineShareAlt />
         <p
           data-testid="downbar-number-of-shares"
           className="post__item__downbar__buttons__icon--number"
         >
-          {statisticks.shares}
+          {numberOfShares}
         </p>
       </div>
     </div>

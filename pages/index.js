@@ -69,9 +69,15 @@ const Index = () => {
   if (!initialized) return <Spinner />;
   return (
     <>
-      {console.log(posts)}
       {posts.map((post) => (
-        <Post post={post} users={users} setUsers={setUsers} key={post.id} />
+        <Post
+          post={post}
+          posts={posts}
+          setPosts={setPosts}
+          users={users}
+          setUsers={setUsers}
+          key={post.id}
+        />
       ))}
     </>
   );

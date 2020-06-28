@@ -59,6 +59,8 @@ const Post = ({
       idLiked: null,
     },
   },
+  posts,
+  setPosts,
   setUsers,
   isComment = true,
   focusElement,
@@ -74,16 +76,21 @@ const Post = ({
   const [comments, setComments] = useState(p.comments);
   const [post, setPost] = useState(p);
   const [isMoreComments, setStatusOfMoreComments] = useState(p.isMoreComments);
+  const [numberOfComments, setNumberOfComments] = useState(
+    Number(post.numberOfComments)
+  );
+
   const handleSubmit = (e) => {
     e.preventDefault();
     addComent({
       comments,
       setComments,
-      idPost: p.id,
+      idPost: p.idPost,
       content: newComment,
       date: new Date(),
       clearText: setNewComment,
     });
+    setNumberOfComments(numberOfComments + 1);
   };
 
   return (
@@ -98,13 +105,12 @@ const Post = ({
       <Content post={post} />
       <div className="post__item__downbar">
         <DownBarButtons
-          idPost={post.id}
-          idLike={post?.idLike}
-          statisticks={{
-            comments: post.numberOfComments,
-            likes: post.numberOfLikes,
-            shares: post.numberOfShares,
-          }}
+          post={post}
+          posts={posts}
+          setPosts={setPosts}
+          numberOfComments={numberOfComments}
+          numberOfLikes={post.numberOfLikes}
+          numberOfShares={post.numberOfShares}
         />
       </div>
       {isComment && (
@@ -134,7 +140,7 @@ const Post = ({
               className="post__item__comments__more-content"
               onClick={() =>
                 getComments({
-                  idPost: p.id,
+                  idPost: p.idPost,
                   from: comments.length,
                   users,
                   setUsers,
