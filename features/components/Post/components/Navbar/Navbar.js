@@ -5,14 +5,25 @@ import { MdBlock } from "react-icons/md";
 import { IoMdShareAlt } from "react-icons/io";
 import { IconContext } from "react-icons";
 import i18next from "../../../../../i18n";
+import { muteUser, blockUser } from "../../services/Functions/index";
 const { useTranslation } = i18next;
 
-const NavBar = ({ date, user, idUserShare, focusCollapse, focusIcon }) => {
+const NavBar = ({
+  date,
+  user,
+  shareUser,
+  idUser,
+  focusCollapse,
+  focusIcon,
+  setStatusOfHiddenPost,
+  posts,
+  setPosts,
+}) => {
   const { t, lang } = useTranslation(["component"]);
-  const hiddenPost = t("component:post.settings.hidden");
-  const reportPost = t("component:post.settings.report");
-  const muteUser = t("component:post.settings.mute");
-  const blockUser = t("component:post.settings.block");
+  const hiddenPostText = t("component:post.settings.hidden");
+  const reportPostText = t("component:post.settings.report");
+  const muteUserText = t("component:post.settings.mute");
+  const blockUserText = t("component:post.settings.block");
 
   const settingRef = useRef(null);
 
@@ -56,11 +67,11 @@ const NavBar = ({ date, user, idUserShare, focusCollapse, focusIcon }) => {
 
   return (
     <div className="post__item__navbar">
-      {idUserShare && (
+      {shareUser && (
         <div className="post__item__navbar__user">
           <div className="post__item__navbar__user--photo">
             <img
-              src={"/static/images/" + user.photo}
+              src={"/static/images/" + shareUser.photo}
               alt="Zdjęcie użytkownika"
               className="post__item__navbar__user--photo--img"
             />
@@ -70,7 +81,7 @@ const NavBar = ({ date, user, idUserShare, focusCollapse, focusIcon }) => {
               className="post__item__navbar__user--name--span"
               data-testid="post-username"
             >
-              {user.firstName + " " + user.lastName}
+              {shareUser.firstName + " " + shareUser.lastName}
             </span>
           </div>
           <div className="post__item__navbar__user--share">
@@ -117,7 +128,10 @@ const NavBar = ({ date, user, idUserShare, focusCollapse, focusIcon }) => {
             className="post__item__navbar__column-end__setting__collapse is-close"
             data-testid="post-setting"
           >
-            <div className="post__item__navbar__column-end__setting__collapse__item">
+            <div
+              className="post__item__navbar__column-end__setting__collapse__item"
+              onClick={() => setStatusOfHiddenPost(true)}
+            >
               <div className="post__item__navbar__column-end__setting__collapse__item--icon">
                 <IconContext.Provider
                   value={{
@@ -130,11 +144,20 @@ const NavBar = ({ date, user, idUserShare, focusCollapse, focusIcon }) => {
               </div>
               <div className="post__item__navbar__column-end__setting__collapse__item--name">
                 <span className="post__item__navbar__column-end__setting__collapse__item--name--span">
-                  {hiddenPost}
+                  {hiddenPostText}
                 </span>
               </div>
             </div>
-            <div className="post__item__navbar__column-end__setting__collapse__item">
+            <div
+              className="post__item__navbar__column-end__setting__collapse__item"
+              onClick={() =>
+                muteUser({
+                  idMuteUser: idUser,
+                  posts,
+                  setPosts,
+                })
+              }
+            >
               <div className="post__item__navbar__column-end__setting__collapse__item--icon">
                 <IconContext.Provider
                   value={{
@@ -147,7 +170,7 @@ const NavBar = ({ date, user, idUserShare, focusCollapse, focusIcon }) => {
               </div>
               <div className="post__item__navbar__column-end__setting__collapse__item--name">
                 <span className="post__item__navbar__column-end__setting__collapse__item--name--span">
-                  {muteUser}
+                  {muteUserText}
                 </span>
               </div>
             </div>
@@ -164,11 +187,16 @@ const NavBar = ({ date, user, idUserShare, focusCollapse, focusIcon }) => {
               </div>
               <div className="post__item__navbar__column-end__setting__collapse__item--name">
                 <span className="post__item__navbar__column-end__setting__collapse__item--name--span">
-                  {reportPost}
+                  {reportPostText}
                 </span>
               </div>
             </div>
-            <div className="post__item__navbar__column-end__setting__collapse__item">
+            <div
+              className="post__item__navbar__column-end__setting__collapse__item"
+              onClick={() =>
+                blockUser({ idBlockUser: idUser, posts, setPosts })
+              }
+            >
               <div className="post__item__navbar__column-end__setting__collapse__item--icon">
                 <IconContext.Provider
                   value={{
@@ -181,7 +209,7 @@ const NavBar = ({ date, user, idUserShare, focusCollapse, focusIcon }) => {
               </div>
               <div className="post__item__navbar__column-end__setting__collapse__item--name">
                 <span className="post__item__navbar__column-end__setting__collapse__item--name--span">
-                  {blockUser}
+                  {blockUserText}
                 </span>
               </div>
             </div>

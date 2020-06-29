@@ -7,6 +7,7 @@ import Comment from "./components/Comments/CommentsContainer";
 import SecondaryInput from "../../common/SecondaryInput/SecondaryInput";
 import i18next from "../../../i18n";
 import { addComent, getComments } from "./services/Functions/index";
+import { cx } from "emotion";
 const { useTranslation } = i18next;
 const Post = ({
   post: p = {
@@ -79,6 +80,7 @@ const Post = ({
   const [numberOfComments, setNumberOfComments] = useState(
     Number(post.numberOfComments)
   );
+  const [isHidenPost, setStatusOfHiddenPost] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -94,13 +96,22 @@ const Post = ({
   };
 
   return (
-    <div className="post__item">
+    <div
+      className={cx("post__item", {
+        "is-close": isHidenPost,
+      })}
+    >
+      {console.log(p)}
       <Navbar
         date={post.date}
         user={user}
-        idUserShare={post.idUserShare}
+        shareUser={users[p?.idUserShare]}
+        idUser={p.idUserShare || p.idUser}
+        posts={posts}
+        setPosts={setPosts}
         focusCollapse={focusCollapse}
         focusIcon={focusIcon}
+        setStatusOfHiddenPost={setStatusOfHiddenPost}
       />
       <Content post={post} />
       <div className="post__item__downbar">

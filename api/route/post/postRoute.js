@@ -56,49 +56,68 @@ router.post("/get", async (req, res) => {
 
   const getPostsQuery = `
   select fourthResult.*, post_like.id as "idLike" 
-  from(select  thirdResult.id as "idPost", thirdResult.numberofshares as "numberOfShares",thirdResult.numberofcomments as "numberOfComments",thirdResult.numberoflikes as "numberOfLikes", posts.id_user as "idUser", posts.content, posts.photo, posts.date, null as "idShare", null as "idUserShare"
-    from(select secondResult.*, count(post_like.id_post) as "numberoflikes"
-      from(select firstResult.*, count(post_comments.id_post) as "numberofcomments" 
-        from(select posts.id, count(post_share.id_post) as "numberofshares"
-          from posts
-            left join post_share on posts.id = post_share.id_post
-          group by posts.id) as firstResult
-        left join post_comments on  firstResult.id= post_comments.id_post
-        group by firstResult.id, firstResult.numberofshares) as secondResult
-      left join post_like on secondResult.id = post_like.id_post
-      group by secondResult.id, secondResult.numberofshares, secondResult.numberofcomments) as thirdResult
-    left join posts on posts.id = thirdResult.id
-    where posts.id_user 
-    in(SELECT $1 AS id_user_1
-          union
-          select id_user_1  from friends where id_user_2=$1
-          union
-          select id_user_2 from friends where id_user_1=$1)
-    union
-    select  thirdResult.*, posts.id_user as "idUser", posts.content, posts.photo, posts.date, post_share.id as "idShare", post_share.id_user as "idShareUser"
-    from(select secondResult.*, count(post_like.id_post) as "numberoflikes"
-      from(select firstResult.*, count(post_comments.id_post) as "numberofcomments" 
-        from(select posts.id, count(post_share.id_post) as "numberofshares"
-          from posts
-            left join post_share on posts.id = post_share.id_post
-          group by posts.id) as firstResult
-        left join post_comments on  firstResult.id= post_comments.id_post
-        group by firstResult.id, firstResult.numberofshares) as secondResult
-      left join post_like on secondResult.id = post_like.id_post
-      group by secondResult.id, secondResult.numberofshares, secondResult.numberofcomments) as thirdResult
-    left join posts on posts.id = thirdResult.id
-    inner join post_share on thirdResult.id = post_share.id_post
-    where posts.id_user 
-    in(SELECT $1 AS id_user_1
-          union
-          select id_user_1  from friends where id_user_2=$1
-          union
-          select id_user_2 from friends where id_user_1=$1)
-    ) as fourthResult
+  from(
+	  	select  thirdResult.id as "idPost", thirdResult.numberofshares as "numberOfShares",thirdResult.numberofcomments as "numberOfComments",thirdResult.numberoflikes as "numberOfLikes", posts.id_user as "idUser", posts.content, posts.photo, posts.date, null as "idShare", null as "idUserShare"
+	  	from(
+			  select secondResult.*, count(post_like.id_post) as "numberoflikes"
+			  from(
+            select firstResult.*, count(post_comments.id_post) as "numberofcomments" 
+            from(
+              select posts.id, count(post_share.id_post) as "numberofshares"
+              from posts
+              left join post_share on posts.id = post_share.id_post
+              group by posts.id) as firstResult
+            left join post_comments on  firstResult.id= post_comments.id_post
+            group by firstResult.id, firstResult.numberofshares) as secondResult
+			  left join post_like on secondResult.id = post_like.id_post
+			  group by secondResult.id, secondResult.numberofshares, secondResult.numberofcomments) as thirdResult
+    	left join posts on posts.id = thirdResult.id
+    	where posts.id_user 
+      in(	
+        SELECT $1 AS id_user_1
+        union
+        select id_user_1  
+        from friends 
+        where id_user_2=$1 and id_user_1 
+        not in (select id_user_2 from mute_users where id_user_1=$1)
+        union
+        select id_user_2 
+        from friends 
+        where id_user_1=$1 and id_user_2 
+        not in (select id_user_2 from mute_users where id_user_1=$1))
+      union
+      select  thirdResult.*, posts.id_user as "idUser", posts.content, posts.photo, posts.date, post_share.id as "idShare", post_share.id_user as "idShareUser"
+      from(
+          select secondResult.*, count(post_like.id_post) as "numberoflikes"
+          from(
+              select firstResult.*, count(post_comments.id_post) as "numberofcomments" 
+              from(
+                  select posts.id, count(post_share.id_post) as "numberofshares"
+                  from posts
+                  left join post_share on posts.id = post_share.id_post
+                  group by posts.id) as firstResult
+              left join post_comments on  firstResult.id= post_comments.id_post
+              group by firstResult.id, firstResult.numberofshares) as secondResult
+          left join post_like on secondResult.id = post_like.id_post
+          group by secondResult.id, secondResult.numberofshares, secondResult.numberofcomments) as thirdResult
+      left join posts on posts.id = thirdResult.id
+      inner join post_share on thirdResult.id = post_share.id_post
+      where post_share.id_user 
+      in(	
+      SELECT $1 AS id_user_1
+        union
+          select id_user_1  
+          from friends 
+          where id_user_2=$1 and id_user_1 
+          not in (select id_user_2 from mute_users where id_user_1=$1)
+        union
+          select id_user_2 
+          from friends 
+          where id_user_1=$1 and id_user_2 
+          not in (select id_user_2 from mute_users where id_user_1=$1))) as fourthResult
   left join post_like on "idPost" = post_like.id_post and post_like.id_user = $1
   order by date desc
-  limit 21 offset $2
-    `;
+  limit 21 offset $2`;
 
   const getCommentsQuery = `
   

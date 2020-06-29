@@ -31,6 +31,36 @@ export const getUsers = async (users, setUsers, elements) => {
       .catch((err) => console.log(err));
 };
 
+export const muteUser = ({ idMuteUser, posts, setPosts }) => {
+  axios
+    .post("/user/mute", {
+      idMuteUser,
+    })
+    .then((resp) => {
+      const filtredPosts = posts.filter((post) => {
+        const idUser = post.idUserShare || post.idUser;
+
+        return idMuteUser != idUser;
+      });
+      setPosts(filtredPosts);
+    })
+    .catch((err) => console.log(err));
+};
+
+export const blockUser = ({ idBlockUser, posts, setPosts }) => {
+  axios
+    .post("/user/block", { idBlockUser })
+    .then((resp) => {
+      console.log("correct");
+      const filtredPosts = posts.filter((post) => {
+        const idUser = post.idUserShare || post.idUser;
+        return idUser != idBlockUser;
+      });
+      setPosts(filtredPosts);
+    })
+    .catch((err) => console.log(err));
+};
+
 export const getPosts = ({
   posts,
   setPosts,
