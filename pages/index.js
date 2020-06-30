@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import i18next from "../i18n";
 import Spinner from "../features/components/Spinner/Spinner";
 import Post from "../features/components/Post/Post";
+import Report from "../features/common/PopUp/Report/Report";
 import { getPosts } from "../features/components/Post/services/Functions/index";
 import "../styles/main.scss";
 
@@ -69,6 +70,7 @@ const Index = () => {
   if (!initialized) return <Spinner />;
   return (
     <>
+      <Report />
       {posts.map((post) => (
         <Post
           post={post}

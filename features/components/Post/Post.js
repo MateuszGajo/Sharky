@@ -101,7 +101,6 @@ const Post = ({
         "is-close": isHidenPost,
       })}
     >
-      {console.log(p)}
       <Navbar
         date={post.date}
         user={user}

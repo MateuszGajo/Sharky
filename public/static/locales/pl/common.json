@@ -15,6 +15,17 @@
         "confirm-user":{
             "title":"Wpisz swoje hasło",
             "button":"Dalej"
+        },
+        "report":{
+            "title-post":"Zgłoś post",
+            "title-comment":"Zgłoś komentarz",
+            "title-user":"Zgłoś użytkownika",
+            "subtitle":"Powód",
+            "select":{
+                "offensive-content":"Obraźliwe treści",
+                "spam":"spam"
+            },
+            "button":"Prześlij"
         }
     }
 }
