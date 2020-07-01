@@ -51,7 +51,6 @@ export const blockUser = ({ idBlockUser, posts, setPosts }) => {
   axios
     .post("/user/block", { idBlockUser })
     .then((resp) => {
-      console.log("correct");
       const filtredPosts = posts.filter((post) => {
         const idUser = post.idUserShare || post.idUser;
         return idUser != idBlockUser;
@@ -140,6 +139,24 @@ export const addPost = ({
     .catch((err) => console.log(err.response));
 };
 
+export const likePost = ({ idPost, setNewLike }) => {
+  axios
+    .post("/post/like", { idPost })
+    .then(({ data: { idPostLike } }) =>
+      setNewLike({ idLike: idPostLike, idElement: idPost, type: "post" })
+    )
+    .catch((err) => console.log(err));
+};
+
+export const unlikePost = ({ idLike, idPost, setNewLike }) => {
+  axios
+    .post("/post/unlike", { idLike })
+    .then((resp) =>
+      setNewLike({ idLike: null, idElement: idPost, type: "post" })
+    )
+    .catch((err) => console.log(err));
+};
+
 export const getComments = ({
   idPost,
   from,
@@ -159,7 +176,7 @@ export const getComments = ({
     .catch((err) => console.log(err));
 };
 
-export const postShare = ({ post, posts, setPosts }) => {
+export const sharePost = ({ post, posts, setPosts }) => {
   const date = new Date();
   axios
     .post("/post/share", {
@@ -183,12 +200,11 @@ export const postShare = ({ post, posts, setPosts }) => {
 };
 
 export const addComent = ({
-  comments,
-  setComments,
   idPost,
   content,
   date,
   clearText,
+  setNewComment,
 }) => {
   axios
     .post("/comment/add", {
@@ -196,37 +212,38 @@ export const addComent = ({
       content,
       date,
     })
-    .then(({ data: { idUser, idComment: id } }) => {
-      setComments([
-        {
-          id,
-          idUser,
-          idPost,
-          content,
-          numberOfReplies: 0,
-          numberOfLikes: 0,
-          date: new Date(),
-        },
-        ...(comments || []),
-      ]);
+    .then(({ data: { idComment } }) => {
+      setNewComment({
+        content,
+        idElement: idPost,
+        idComment,
+        type: "post",
+        date,
+      });
       clearText("");
     })
     .catch((err) => console.log("err"));
 };
 
-export const likeComment = ({ idComment, setIdLike }) => {
+export const likeComment = ({ idComment, setNewLike }) => {
   axios
     .post("/comment/like", { idComment })
     .then(({ data: { idCommentLike } }) => {
-      setIdLike(idCommentLike);
+      setNewLike({
+        idLike: idCommentLike,
+        idElement: idComment,
+        type: "comment",
+      });
     })
     .catch((err) => console.log(err));
 };
 
-export const unlikeComment = ({ idLike, setIdLike }) => {
+export const unlikeComment = ({ idLike, idComment, setNewLike }) => {
   axios
     .post("/comment/unlike", { idLike })
-    .then((resp) => setIdLike(null))
+    .then((resp) =>
+      setNewLike({ idLike: null, idElement: idComment, type: "comment" })
+    )
     .catch((err) => console.log(err));
 };
 
@@ -255,10 +272,9 @@ export const getReplies = async ({
 export const addReply = ({
   idComment,
   content,
-  replies,
-  setReplies,
   date,
   clearText,
+  setNewComment,
 }) => {
   axios
     .post("/reply/add", {
@@ -266,23 +282,33 @@ export const addReply = ({
       content,
       date,
     })
-    .then(({ data: { idReply: id, idUser } }) => {
+    .then(({ data: { idReply } }) => {
+      setNewComment({
+        content,
+        idElement: idComment,
+        idReply,
+        type: "comment",
+        date,
+      });
       clearText("");
-      setReplies([{ id, idUser, numberOfLikes: 0, content }, ...replies]);
     })
     .catch((err) => console.log(err));
 };
 
-export const likeReply = async ({ idReply, setIdLike }) => {
+export const likeReply = async ({ idReply, setNewLike }) => {
   axios
     .post("/reply/like", { idReply })
-    .then(({ data: { idReplyLike } }) => setIdLike(idReplyLike))
+    .then(({ data: { idReplyLike } }) =>
+      setNewLike({ idLike: idReplyLike, idElement: idReply, type: "reply" })
+    )
     .catch((err) => console.log(err));
 };
 
-export const unlikeReply = async ({ idLike, setIdLike }) => {
+export const unlikeReply = async ({ idLike, idReply, setNewLike }) => {
   axios
     .post("/reply/unlike", { idLike })
-    .then((resp) => setIdLike(null))
+    .then((resp) =>
+      setNewLike({ idLike: null, idElement: idReply, type: "reply" })
+    )
     .catch((err) => console.log(err));
 };

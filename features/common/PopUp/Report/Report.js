@@ -3,7 +3,7 @@ import PrimaryButton from "../../PrimaryButton/PrimaryButton";
 import i18next from "../../../../i18n";
 const { useTranslation } = i18next;
 
-const Report = ({ type = "post" }) => {
+const Report = ({ type = "post", setStatusOfReport }) => {
   const { t } = useTranslation();
   const title = t(`common:pop-up.report.title-${type}`);
   const subtitle = t("common:pop-up.report.subtitle");
@@ -77,7 +77,10 @@ const Report = ({ type = "post" }) => {
         </div>
         <div
           className="report-user__container__button"
-          onClick={() => reportSend()}
+          onClick={() => {
+            reportSend();
+            setStatusOfReport(false);
+          }}
         >
           <PrimaryButton value={buttonText} size="medium" />
         </div>

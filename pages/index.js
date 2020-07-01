@@ -1,15 +1,29 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import i18next from "../i18n";
 import Spinner from "../features/components/Spinner/Spinner";
 import Post from "../features/components/Post/Post";
-import Report from "../features/common/PopUp/Report/Report";
 import { getPosts } from "../features/components/Post/services/Functions/index";
+import { getOwner } from "../features/service/Functions/index";
 import "../styles/main.scss";
 
 const Index = () => {
   const [initialized, setInitialized] = useState(false);
   const [isMoreComment, setStatusOfMoreComments] = useState();
   const [isMorePosts, setStatusOfMorePosts] = useState();
+  const [newLike, setNewLike] = useState({
+    idLike: null,
+    idElement: null,
+    type: "",
+    date: null,
+  });
+  const [newComment, setNewComment] = useState({
+    content: "",
+    idElement: null,
+    type: "",
+    date: null,
+  });
+  const [owner, setOwner] = useState({});
 
   const [users, setUsers] = useState({
     1: {
@@ -55,6 +69,7 @@ const Index = () => {
       ],
     },
   ]);
+
   useEffect(() => {
     i18next.initPromise.then((resp) => setInitialized(true));
     getPosts({
@@ -66,11 +81,12 @@ const Index = () => {
       setStatusOfMorePosts,
       setStatusOfMoreComments,
     });
+    getOwner(setOwner);
   }, []);
   if (!initialized) return <Spinner />;
+
   return (
     <>
-      <Report />
       {posts.map((post) => (
         <Post
           post={post}
@@ -79,6 +95,11 @@ const Index = () => {
           users={users}
           setUsers={setUsers}
           key={post.id}
+          newLike={newLike}
+          setNewLike={setNewLike}
+          owner={owner}
+          newComment={newComment}
+          setNewComment={setNewComment}
         />
       ))}
     </>

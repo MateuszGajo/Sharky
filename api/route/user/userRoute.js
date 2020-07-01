@@ -89,4 +89,23 @@ router.post("/block", async (req, res) => {
   }
 });
 
+router.get("/me", (req, res) => {
+  const token = jwt.sign(
+    {
+      exp: Math.floor(Date.now() / 1000) + 60 * 60,
+      data: {
+        id: 1,
+        firstName: "Jan",
+        lastName: "Kowalski",
+        photo: "profile.png",
+      },
+    },
+    jwtSecret
+  );
+
+  const { data } = jwt.verify(token, jwtSecret);
+
+  res.json({ user: data });
+});
+
 module.exports = router;

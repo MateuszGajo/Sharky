@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FiMessageCircle } from "react-icons/fi";
 import { AiOutlineShareAlt } from "react-icons/ai";
 import { IoIosHeartEmpty } from "react-icons/io";
 import cx from "classnames";
 import axios from "axios";
-import { postShare } from "../../services/Functions/index";
+import {
+  sharePost,
+  likePost,
+  unlikePost,
+} from "../../services/Functions/index";
 import Router from "../../../../route/routes";
 
 const DownBarButtons = ({
@@ -14,10 +18,25 @@ const DownBarButtons = ({
   post,
   posts,
   setPosts,
+  newLike,
+  setNewLike,
 }) => {
   const [idLike, setIdLike] = useState(post?.idLike);
   const [numberOfLikes, setNumberOfLikes] = useState(Number(nof));
   const [numberOfShares, setNumberOfShares] = useState(Number(nos));
+
+  useEffect(() => {
+    if (
+      newLike.type.toLowerCase() == "post" &&
+      newLike.idElement == post.idPost
+    ) {
+      setIdLike(newLike.idLike);
+
+      newLike.idLike
+        ? setNumberOfLikes(numberOfLikes + 1)
+        : setNumberOfLikes(numberOfLikes - 1);
+    }
+  }, [newLike]);
   return (
     <div className="post__item__downbar__buttons">
       <div
@@ -39,21 +58,10 @@ const DownBarButtons = ({
         className={cx("post__item__downbar__buttons__icon  hover-pal-color", {
           "pal-color": idLike,
         })}
-        onClick={(e) => {
-          e.stopPropagation();
-          if (!idLike) {
-            setNumberOfLikes(numberOfLikes + 1);
-            axios
-              .post("/post/like", { idPost: post.idPost })
-              .then(({ data: { idPostLike } }) => setIdLike(idPostLike))
-              .catch((err) => console.log(err));
-          } else {
-            setNumberOfLikes(numberOfLikes - 1);
-            axios
-              .post("/post/unlike", { idLike })
-              .then((resp) => setIdLike(null))
-              .catch((err) => console.log(err));
-          }
+        onClick={() => {
+          idLike
+            ? unlikePost({ idPost: post.idPost, setNewLike, idLike })
+            : likePost({ idPost: post.idPost, setNewLike });
         }}
       >
         <IoIosHeartEmpty />
@@ -66,9 +74,9 @@ const DownBarButtons = ({
       </div>
       <div
         className="post__item__downbar__buttons__icon  hover-family-color"
-        onClick={(e) => {
+        onClick={() => {
           setNumberOfShares(numberOfShares + 1);
-          postShare({ post, posts, setPosts });
+          sharePost({ post, posts, setPosts });
         }}
       >
         <AiOutlineShareAlt />

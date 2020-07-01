@@ -8,6 +8,7 @@ const replyRoute = require("./api/route/reply/replyRoute");
 const postRoute = require("./api/route/post/postRoute");
 const userRoute = require("./api/route/user/userRoute");
 const bodyParser = require("body-parser");
+const router = express.Router();
 
 const nextI18Next = require("./i18n/server");
 
@@ -24,12 +25,11 @@ const socketIO = io(httpServer);
 
   await nextI18Next.initPromise;
   server.use(nextI18NextMiddleware(nextI18Next));
-
+  server.use("/comment", commentRoute);
+  server.use("/reply", replyRoute);
+  server.use("/post", postRoute);
+  server.use("/user", userRoute);
   server.get("*", (req, res) => {
-    server.use("/comment", commentRoute);
-    server.use("/reply", replyRoute);
-    server.use("/post", postRoute);
-    server.use("/user", userRoute);
     handle(req, res);
   });
 

@@ -1,10 +1,10 @@
 import React, { useRef, useState, useEffect } from "react";
-import axios from "axios";
 import DownBarButtons from "./components/DownBarButtons/DownBarButtons";
 import Navbar from "./components/Navbar/Navbar";
 import Content from "./components/Content/Content";
 import Comment from "./components/Comments/CommentsContainer";
 import SecondaryInput from "../../common/SecondaryInput/SecondaryInput";
+import Report from "../../common/PopUp/Report/Report";
 import i18next from "../../../i18n";
 import { addComent, getComments } from "./services/Functions/index";
 import { cx } from "emotion";
@@ -65,6 +65,11 @@ const Post = ({
   setUsers,
   isComment = true,
   focusElement,
+  newLike,
+  setNewLike,
+  newComment,
+  setNewComment,
+  owner,
 }) => {
   const { t } = useTranslation(["component"]);
   const loadMoreComments = t("component:post.comments.load-more-comments");
@@ -73,7 +78,7 @@ const Post = ({
   const focusIcon = useRef(null);
 
   const [user, setUser] = useState(users[p.idUser]);
-  const [newComment, setNewComment] = useState("");
+  const [commentText, setCommentText] = useState("");
   const [comments, setComments] = useState(p.comments);
   const [post, setPost] = useState(p);
   const [isMoreComments, setStatusOfMoreComments] = useState(p.isMoreComments);
@@ -81,19 +86,36 @@ const Post = ({
     Number(post.numberOfComments)
   );
   const [isHidenPost, setStatusOfHiddenPost] = useState(false);
+  const [isReport, setStatusOfReport] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     addComent({
-      comments,
-      setComments,
       idPost: p.idPost,
-      content: newComment,
+      content: commentText,
       date: new Date(),
-      clearText: setNewComment,
+      clearText: setCommentText,
+      setNewComment,
     });
-    setNumberOfComments(numberOfComments + 1);
   };
+
+  useEffect(() => {
+    if (newComment.type == "post" && newComment.idElement == post.idPost) {
+      setComments([
+        {
+          id: newComment.idComment,
+          idUser: owner.id,
+          idLike: null,
+          numberOfLikes: 0,
+          numberOfReplies: 0,
+          content: newComment.content,
+          date: newComment.date,
+        },
+        ...comments,
+      ]);
+      setNumberOfComments(numberOfComments + 1);
+    }
+  }, [newComment]);
 
   return (
     <div
@@ -101,6 +123,13 @@ const Post = ({
         "is-close": isHidenPost,
       })}
     >
+      {isReport && (
+        <Report
+          type="post"
+          id={post.idPost}
+          setStatusOfReport={setStatusOfReport}
+        />
+      )}
       <Navbar
         date={post.date}
         user={user}
@@ -111,6 +140,7 @@ const Post = ({
         focusCollapse={focusCollapse}
         focusIcon={focusIcon}
         setStatusOfHiddenPost={setStatusOfHiddenPost}
+        setStatusOfReport={setStatusOfReport}
       />
       <Content post={post} />
       <div className="post__item__downbar">
@@ -118,6 +148,8 @@ const Post = ({
           post={post}
           posts={posts}
           setPosts={setPosts}
+          newLike={newLike}
+          setNewLike={setNewLike}
           numberOfComments={numberOfComments}
           numberOfLikes={post.numberOfLikes}
           numberOfShares={post.numberOfShares}
@@ -129,8 +161,8 @@ const Post = ({
             <form onSubmit={handleSubmit}>
               <SecondaryInput
                 size={"medium"}
-                value={newComment}
-                onChange={setNewComment}
+                value={commentText}
+                onChange={setCommentText}
               />
             </form>
           </div>
@@ -141,7 +173,12 @@ const Post = ({
                 focusCollapse={focusCollapse}
                 focusIcon={focusIcon}
                 users={users}
+                owner={owner}
                 setUsers={setUsers}
+                newLike={newLike}
+                setNewLike={setNewLike}
+                newComment={newComment}
+                setNewComment={setNewComment}
               />
             </div>
           ))}

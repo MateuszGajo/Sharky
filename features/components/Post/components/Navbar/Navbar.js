@@ -18,6 +18,7 @@ const NavBar = ({
   setStatusOfHiddenPost,
   posts,
   setPosts,
+  setStatusOfReport,
 }) => {
   const { t, lang } = useTranslation(["component"]);
   const hiddenPostText = t("component:post.settings.hidden");
@@ -174,7 +175,10 @@ const NavBar = ({
                 </span>
               </div>
             </div>
-            <div className="post__item__navbar__column-end__setting__collapse__item">
+            <div
+              className="post__item__navbar__column-end__setting__collapse__item"
+              onClick={() => setStatusOfReport(true)}
+            >
               <div className="post__item__navbar__column-end__setting__collapse__item--icon">
                 <IconContext.Provider
                   value={{

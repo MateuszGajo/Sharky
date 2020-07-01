@@ -23,6 +23,8 @@ const Commnet = ({
   focusCollapse,
   focusIcon,
   getReplies,
+  newLike,
+  setNewLike,
 }) => {
   const { t } = useTranslation(["component"]);
 
@@ -44,6 +46,18 @@ const Commnet = ({
       fIcon.classList.remove("is-visible");
 
     window.removeEventListener("click", clickHandle);
+  };
+
+  const setlikeComment = () => {
+    if (idLike) {
+      "numberOfReplies" in comment
+        ? unlikeComment({ idLike, idComment: comment.id, setNewLike })
+        : unlikeReply({ idLike, idReply: comment.id, setNewLike });
+    } else {
+      "numberOfReplies" in comment
+        ? likeComment({ idComment: comment.id, setNewLike })
+        : likeReply({ idReply: comment.id, setNewLike });
+    }
   };
 
   useEffect(() => {
@@ -71,19 +85,29 @@ const Commnet = ({
     });
   }, []);
 
-  const setlikeComment = () => {
-    if (idLike) {
-      "numberOfReplies" in comment
-        ? unlikeComment({ idLike, setIdLike })
-        : unlikeReply({ idLike, setIdLike });
-      setNumberOfLikes(numberOfLikes - 1);
-    } else {
-      "numberOfReplies" in comment
-        ? likeComment({ idComment: comment.id, setIdLike })
-        : likeReply({ idReply: comment.id, setIdLike });
-      setNumberOfLikes(numberOfLikes + 1);
+  useEffect(() => {
+    console.log(numberOfReplies, newLike.idElement, comment.id);
+    if (
+      newLike.type == "comment" &&
+      newLike.idElement == comment.id &&
+      numberOfReplies != undefined
+    ) {
+      setIdLike(newLike.idLike);
+      newLike.idLike
+        ? setNumberOfLikes(numberOfLikes + 1)
+        : setNumberOfLikes(numberOfLikes - 1);
+    } else if (
+      newLike.type == "reply" &&
+      newLike.idElement == comment.id &&
+      numberOfReplies == undefined
+    ) {
+      setIdLike(newLike.idLike);
+      newLike.idLike
+        ? setNumberOfLikes(numberOfLikes + 1)
+        : setNumberOfLikes(numberOfLikes - 1);
     }
-  };
+  }, [newLike]);
+
   return (
     <div className="post__item__comments__container__item">
       <div className="post__item__comments__container__item__photo">
@@ -165,7 +189,7 @@ const Commnet = ({
                 {numberOfLikes}
               </span>
             </div>
-            {numberOfReplies >= 0 && (
+            {numberOfReplies != undefined && (
               <div
                 className="post__item__comments__container__item__content__item__down-bar--icon hover-primary-color"
                 onClick={() => {

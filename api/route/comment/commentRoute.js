@@ -32,7 +32,6 @@ router.post("/add", async (req, res) => {
     ]);
     console.log(comment);
     return res.status(200).json({
-      idUser,
       idComment: comment.rows[0].id,
     });
   } catch {

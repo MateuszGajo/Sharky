@@ -32,7 +32,7 @@ router.post("/add", async (req, res) => {
       date,
     ]);
 
-    return res.status(200).json({ idReply: reply.rows[0].id, idUser });
+    return res.status(200).json({ idReply: reply.rows[0].id });
   } catch {
     return res.status(400);
   }

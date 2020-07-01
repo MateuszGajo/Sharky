@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Comment from "./Comment";
 import SecondaryInput from "../../../../common/SecondaryInput/SecondaryInput";
 import i18next from "../../../../../i18n";
 import { getReplies, addReply } from "../../services/Functions/index";
+import { setupCache } from "axios-cache-adapter";
 const { useTranslation } = i18next;
 
 const withContainer = (WrappedComponent) => {
@@ -27,6 +28,11 @@ const withContainer = (WrappedComponent) => {
     setUsers,
     focusCollapse,
     focusIcon,
+    newLike,
+    setNewLike,
+    newComment,
+    setNewComment,
+    owner,
   }) => {
     const { t } = useTranslation(["component"]);
 
@@ -47,12 +53,10 @@ const withContainer = (WrappedComponent) => {
       addReply({
         idComment: comment.id,
         content: reply,
-        replies,
-        setReplies,
         date: new Date(),
         clearText: setReply,
+        setNewComment,
       });
-      setNumberOfReplies(numberOfReplies + 1);
     };
 
     const gReplies = () =>
@@ -66,6 +70,22 @@ const withContainer = (WrappedComponent) => {
         setStatusOfMoreData: setStatusOfMoreReplies,
       });
 
+    useEffect(() => {
+      if (newComment.type == "comment" && newComment.idElement == comment.id) {
+        setReplies([
+          {
+            id: newComment.idElement,
+            idComment: newComment.idComment,
+            idUser: owner.id,
+            content: newComment.content,
+            date: newComment.date,
+            numberOfLikes: 0,
+          },
+          ...replies,
+        ]);
+        setNumberOfReplies(numberOfReplies + 1);
+      }
+    }, [newComment]);
     return (
       <>
         <WrappedComponent
@@ -77,6 +97,10 @@ const withContainer = (WrappedComponent) => {
           focusCollapse={focusCollapse}
           focusIcon={focusIcon}
           getReplies={gReplies}
+          newLike={newLike}
+          setNewLike={setNewLike}
+          newComment={newComment}
+          setNewComment={setNewComment}
         />
 
         {isRepliesOpen && (
@@ -98,6 +122,10 @@ const withContainer = (WrappedComponent) => {
                   user={user}
                   focusCollapse={focusCollapse}
                   focusIcon={focusIcon}
+                  newLike={newLike}
+                  setNewLike={setNewLike}
+                  newComment={newComment}
+                  setNewComment={setNewComment}
                 />
               );
             })}
