@@ -59,7 +59,8 @@ const withContainer = (WrappedComponent) => {
       });
     };
 
-    const gReplies = () =>
+    const gReplies = () => {
+      console.log(replies);
       getReplies({
         idComment: comment.id,
         from: replies.length,
@@ -69,12 +70,14 @@ const withContainer = (WrappedComponent) => {
         setUsers,
         setStatusOfMoreData: setStatusOfMoreReplies,
       });
+    };
 
     useEffect(() => {
       if (newComment.type == "comment" && newComment.idElement == comment.id) {
+        if (!isRepliesOpen) setStatusOfOpenReplies(true);
         setReplies([
           {
-            id: newComment.idElement,
+            id: newComment.idReply,
             idComment: newComment.idComment,
             idUser: owner.id,
             content: newComment.content,

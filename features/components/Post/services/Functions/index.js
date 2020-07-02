@@ -199,6 +199,13 @@ export const sharePost = ({ post, posts, setPosts }) => {
     .catch((err) => console.log(err));
 };
 
+export const editPost = ({ idPost, content }) => {
+  axios
+    .post("/post/edit", { idPost, content })
+    .then((resp) => console.log(resp))
+    .catch((err) => console.log(err));
+};
+
 export const addComent = ({
   idPost,
   content,
@@ -263,6 +270,8 @@ export const getReplies = async ({
     })
     .then(async ({ data: { replies: r, isMore } }) => {
       await getUsers(users, setUsers, r);
+      console.log(r);
+      console.log(replies);
       setReplies([...replies, ...r]);
       setStatusOfMoreData(isMore);
     })

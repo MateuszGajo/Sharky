@@ -86,7 +86,6 @@ const Commnet = ({
   }, []);
 
   useEffect(() => {
-    console.log(numberOfReplies, newLike.idElement, comment.id);
     if (
       newLike.type == "comment" &&
       newLike.idElement == comment.id &&
@@ -101,6 +100,9 @@ const Commnet = ({
       newLike.idElement == comment.id &&
       numberOfReplies == undefined
     ) {
+      {
+        console.log("wchodze", newLike.idElement, comment.id);
+      }
       setIdLike(newLike.idLike);
       newLike.idLike
         ? setNumberOfLikes(numberOfLikes + 1)

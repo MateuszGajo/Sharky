@@ -48,7 +48,9 @@
             "hidden":"Hidden post",
             "mute":"Mute user",
             "report":"Report post",
-            "block":"Block user"
+            "block":"Block user",
+            "edit":"Edit post",
+            "delete":"Delete post"
         },
         "comments":{
             "settings":{

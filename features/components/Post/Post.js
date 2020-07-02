@@ -87,6 +87,7 @@ const Post = ({
   );
   const [isHidenPost, setStatusOfHiddenPost] = useState(false);
   const [isReport, setStatusOfReport] = useState(false);
+  const [isEdit, setStatusOfEdit] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -133,6 +134,7 @@ const Post = ({
       <Navbar
         date={post.date}
         user={user}
+        owner={owner}
         shareUser={users[p?.idUserShare]}
         idUser={p.idUserShare || p.idUser}
         posts={posts}
@@ -141,8 +143,9 @@ const Post = ({
         focusIcon={focusIcon}
         setStatusOfHiddenPost={setStatusOfHiddenPost}
         setStatusOfReport={setStatusOfReport}
+        setStatusOfEdit={setStatusOfEdit}
       />
-      <Content post={post} />
+      <Content post={post} isEdit={isEdit} />
       <div className="post__item__downbar">
         <DownBarButtons
           post={post}

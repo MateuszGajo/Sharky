@@ -1,16 +1,15 @@
 import React, { useEffect, useRef } from "react";
-import { BsEyeSlash, BsThreeDots } from "react-icons/bs";
-import { FiVolumeX, FiFlag } from "react-icons/fi";
-import { MdBlock } from "react-icons/md";
+import { BsThreeDots } from "react-icons/bs";
 import { IoMdShareAlt } from "react-icons/io";
-import { IconContext } from "react-icons";
 import i18next from "../../../../../i18n";
-import { muteUser, blockUser } from "../../services/Functions/index";
+import UserSettings from "./components/UserSettings/UserSettings";
+import OwnerSettings from "./components/OwnerSettings/OwnerSettings";
 const { useTranslation } = i18next;
 
 const NavBar = ({
   date,
   user,
+  owner,
   shareUser,
   idUser,
   focusCollapse,
@@ -19,12 +18,9 @@ const NavBar = ({
   posts,
   setPosts,
   setStatusOfReport,
+  setStatusOfEdit,
 }) => {
-  const { t, lang } = useTranslation(["component"]);
-  const hiddenPostText = t("component:post.settings.hidden");
-  const reportPostText = t("component:post.settings.report");
-  const muteUserText = t("component:post.settings.mute");
-  const blockUserText = t("component:post.settings.block");
+  const { lang } = useTranslation(["component"]);
 
   const settingRef = useRef(null);
 
@@ -37,7 +33,7 @@ const NavBar = ({
     new Date(date)
   );
 
-  const clickHandle = (e) => {
+  const clickHandle = () => {
     const { current: fCollapse } = focusCollapse;
     if (!fCollapse.classList.contains("is-close"))
       fCollapse.classList.add("is-close");
@@ -129,94 +125,17 @@ const NavBar = ({
             className="post__item__navbar__column-end__setting__collapse is-close"
             data-testid="post-setting"
           >
-            <div
-              className="post__item__navbar__column-end__setting__collapse__item"
-              onClick={() => setStatusOfHiddenPost(true)}
-            >
-              <div className="post__item__navbar__column-end__setting__collapse__item--icon">
-                <IconContext.Provider
-                  value={{
-                    className:
-                      "post__item__navbar__column-end__setting__collapse__item--icon--customize",
-                  }}
-                >
-                  <BsEyeSlash />
-                </IconContext.Provider>
-              </div>
-              <div className="post__item__navbar__column-end__setting__collapse__item--name">
-                <span className="post__item__navbar__column-end__setting__collapse__item--name--span">
-                  {hiddenPostText}
-                </span>
-              </div>
-            </div>
-            <div
-              className="post__item__navbar__column-end__setting__collapse__item"
-              onClick={() =>
-                muteUser({
-                  idMuteUser: idUser,
-                  posts,
-                  setPosts,
-                })
-              }
-            >
-              <div className="post__item__navbar__column-end__setting__collapse__item--icon">
-                <IconContext.Provider
-                  value={{
-                    className:
-                      "post__item__navbar__column-end__setting__collapse__item--icon--customize",
-                  }}
-                >
-                  <FiVolumeX />
-                </IconContext.Provider>
-              </div>
-              <div className="post__item__navbar__column-end__setting__collapse__item--name">
-                <span className="post__item__navbar__column-end__setting__collapse__item--name--span">
-                  {muteUserText}
-                </span>
-              </div>
-            </div>
-            <div
-              className="post__item__navbar__column-end__setting__collapse__item"
-              onClick={() => setStatusOfReport(true)}
-            >
-              <div className="post__item__navbar__column-end__setting__collapse__item--icon">
-                <IconContext.Provider
-                  value={{
-                    className:
-                      "post__item__navbar__column-end__setting__collapse__item--icon--customize",
-                  }}
-                >
-                  <FiFlag />
-                </IconContext.Provider>
-              </div>
-              <div className="post__item__navbar__column-end__setting__collapse__item--name">
-                <span className="post__item__navbar__column-end__setting__collapse__item--name--span">
-                  {reportPostText}
-                </span>
-              </div>
-            </div>
-            <div
-              className="post__item__navbar__column-end__setting__collapse__item"
-              onClick={() =>
-                blockUser({ idBlockUser: idUser, posts, setPosts })
-              }
-            >
-              <div className="post__item__navbar__column-end__setting__collapse__item--icon">
-                <IconContext.Provider
-                  value={{
-                    className:
-                      "post__item__navbar__column-end__setting__collapse__item--icon--customize",
-                  }}
-                >
-                  <MdBlock />
-                </IconContext.Provider>
-              </div>
-              <div className="post__item__navbar__column-end__setting__collapse__item--name">
-                <span className="post__item__navbar__column-end__setting__collapse__item--name--span">
-                  {blockUserText}
-                </span>
-              </div>
-            </div>
+            {user.id == owner.id ? (
+              <OwnerSettings setStatusOfEdit={setStatusOfEdit} />
+            ) : (
+              <UserSettings
+                posts={posts}
+                setPosts={setPosts}
+                setStatusOfHiddenPost={setStatusOfHiddenPost}
+                setStatusOfReport={setStatusOfReport}
+                idUser={idUser}
+              />
+            )}
           </div>
         </div>
       </div>

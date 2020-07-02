@@ -246,4 +246,18 @@ router.post("/share", async (req, res) => {
   }
 });
 
+router.post("/edit", async (req, res) => {
+  const { idPost, content } = req.body;
+
+  const editPostQuery = `update posts set content=$1 where id=$2`;
+
+  try {
+    await client.query(editPostQuery, [content, idPost]);
+
+    res.status(200).json({ success: true });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
 module.exports = router;
