@@ -15,6 +15,7 @@ const NavBar = ({
   focusCollapse,
   focusIcon,
   setStatusOfHiddenPost,
+  post,
   posts,
   setPosts,
   setStatusOfReport,
@@ -125,8 +126,16 @@ const NavBar = ({
             className="post__item__navbar__column-end__setting__collapse is-close"
             data-testid="post-setting"
           >
-            {user.id == owner.id ? (
-              <OwnerSettings setStatusOfEdit={setStatusOfEdit} />
+            {post.idUserShare == owner.id || post.idUser == owner.id ? (
+              <OwnerSettings
+                setStatusOfEdit={setStatusOfEdit}
+                isShare={post.idUserShare !== null}
+                selfShare={post.idUserShare == post.idUser}
+                idShare={post.idShare}
+                idPost={post.idPost}
+                posts={posts}
+                setPosts={setPosts}
+              />
             ) : (
               <UserSettings
                 posts={posts}

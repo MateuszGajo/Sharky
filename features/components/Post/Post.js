@@ -70,6 +70,8 @@ const Post = ({
   newComment,
   setNewComment,
   owner,
+  newContent,
+  setNewContent,
 }) => {
   const { t } = useTranslation(["component"]);
   const loadMoreComments = t("component:post.comments.load-more-comments");
@@ -138,6 +140,7 @@ const Post = ({
         shareUser={users[p?.idUserShare]}
         idUser={p.idUserShare || p.idUser}
         posts={posts}
+        post={post}
         setPosts={setPosts}
         focusCollapse={focusCollapse}
         focusIcon={focusIcon}
@@ -145,7 +148,13 @@ const Post = ({
         setStatusOfReport={setStatusOfReport}
         setStatusOfEdit={setStatusOfEdit}
       />
-      <Content post={post} isEdit={isEdit} />
+      <Content
+        post={post}
+        isEdit={isEdit}
+        setStatusOfEdit={setStatusOfEdit}
+        newContent={newContent}
+        setNewContent={setNewContent}
+      />
       <div className="post__item__downbar">
         <DownBarButtons
           post={post}

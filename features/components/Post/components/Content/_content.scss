@@ -3,7 +3,23 @@
    
 }
 .post__item__content__form{
+    position:relative;
     width:100%;
+}
+
+.post__item__content__form__button{
+    position:absolute;
+    right:2px;
+    bottom:100%;
+    border:none;
+    color:$primaryColor;
+    font-size: 1.3rem;
+    background-color: transparent;
+    cursor:pointer;
+    transition:transform 0.2s;
+    &:hover{
+        transform: scale(1.05);
+    }
 }
 
 .post__item__content__form--textarea{
@@ -13,6 +29,8 @@
     height: unset;
     resize: none;
 }
+
+
 
 .post__item__content--pre{
     padding-bottom:$smallMargin;

@@ -157,25 +157,6 @@ export const unlikePost = ({ idLike, idPost, setNewLike }) => {
     .catch((err) => console.log(err));
 };
 
-export const getComments = ({
-  idPost,
-  from,
-  users,
-  setUsers,
-  comments,
-  setComments,
-  setStatusOfMoreData,
-}) => {
-  axios
-    .post("/comment/get", { idPost, from })
-    .then(async ({ data: { comments: newComments, isMore } }) => {
-      await getUsers(users, setUsers, newComments);
-      setComments([...comments, ...newComments]);
-      setStatusOfMoreData(isMore);
-    })
-    .catch((err) => console.log(err));
-};
-
 export const sharePost = ({ post, posts, setPosts }) => {
   const date = new Date();
   axios
@@ -199,10 +180,57 @@ export const sharePost = ({ post, posts, setPosts }) => {
     .catch((err) => console.log(err));
 };
 
-export const editPost = ({ idPost, content }) => {
+export const editPost = ({
+  idPost,
+  content,
+  setNewContent,
+  setStatusOfEdit,
+}) => {
   axios
     .post("/post/edit", { idPost, content })
-    .then((resp) => console.log(resp))
+    .then((resp) => {
+      setNewContent({ text: content, idPost });
+      setStatusOfEdit(false);
+    })
+    .catch((err) => console.log(err));
+};
+
+export const deletePost = ({ idPost, posts, setPosts }) => {
+  axios
+    .post("/post/delete", { idPost })
+    .then((resp) => {
+      const newPosts = posts.filter((post) => post.idPost != idPost);
+      setPosts(newPosts);
+    })
+    .catch((err) => console.log(err));
+};
+
+export const deletePostShare = ({ idShare, posts, setPosts }) => {
+  axios
+    .post("/post/share/delete", { idShare })
+    .then((resp) => {
+      const newPosts = posts.filter((post) => post.idShare != idShare);
+      setPosts(newPosts);
+    })
+    .catch((err) => console.log(err));
+};
+
+export const getComments = ({
+  idPost,
+  from,
+  users,
+  setUsers,
+  comments,
+  setComments,
+  setStatusOfMoreData,
+}) => {
+  axios
+    .post("/comment/get", { idPost, from })
+    .then(async ({ data: { comments: newComments, isMore } }) => {
+      await getUsers(users, setUsers, newComments);
+      setComments([...comments, ...newComments]);
+      setStatusOfMoreData(isMore);
+    })
     .catch((err) => console.log(err));
 };
 

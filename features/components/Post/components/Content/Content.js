@@ -1,9 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
+import { AiOutlineCheck } from "react-icons/ai";
 import Router from "../../../../route/routes";
 import { editPost } from "../../services/Functions/index";
-import PrimaryButton from "../../../../common/PrimaryButton/PrimaryButton";
 
-const Content = ({ post, isEdit }) => {
+const Content = ({
+  post,
+  isEdit,
+  setStatusOfEdit,
+  newContent,
+  setNewContent,
+}) => {
   const textareaRef = useRef(null);
   const [rows, setRows] = useState(1);
   const [content, setContent] = useState(post.content);
@@ -16,7 +22,7 @@ const Content = ({ post, isEdit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    editPost({ idPost: post.idPost, content });
+    editPost({ idPost: post.idPost, content, setNewContent, setStatusOfEdit });
   };
 
   useEffect(() => {
@@ -25,6 +31,12 @@ const Content = ({ post, isEdit }) => {
       setRows(rows);
     }
   }, [isEdit]);
+
+  useEffect(() => {
+    if (newContent.idPost == post.idPost) {
+      setContent(newContent.text);
+    }
+  }, [newContent]);
   return (
     <>
       <div
@@ -35,6 +47,9 @@ const Content = ({ post, isEdit }) => {
       >
         {isEdit ? (
           <form className="post__item__content__form" onSubmit={handleSubmit}>
+            <button className="post__item__content__form__button">
+              <AiOutlineCheck />
+            </button>
             <textarea
               className="post__item__content__form--textarea"
               ref={textareaRef}
@@ -43,11 +58,10 @@ const Content = ({ post, isEdit }) => {
               onChange={(e) => handleChange(e)}
               autoFocus
             ></textarea>
-            <button>zapisz</button>
           </form>
         ) : (
           <pre className="post__item__content--pre" data-testid="post-content">
-            {post.content}
+            {content}
           </pre>
         )}
       </div>

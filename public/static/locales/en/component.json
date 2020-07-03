@@ -50,7 +50,8 @@
             "report":"Report post",
             "block":"Block user",
             "edit":"Edit post",
-            "delete":"Delete post"
+            "delete":"Delete post",
+            "delete-share":"Delete Share"
         },
         "comments":{
             "settings":{

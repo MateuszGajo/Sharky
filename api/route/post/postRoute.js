@@ -260,4 +260,32 @@ router.post("/edit", async (req, res) => {
   }
 });
 
+router.post("/delete", async (req, res) => {
+  const { idPost } = req.body;
+
+  const deletePostQuery = `delete from posts where id=$1`;
+
+  try {
+    await client.query(deletePostQuery, [idPost]);
+
+    res.status(200).json({ success: true });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
+router.post("/share/delete", async (req, res) => {
+  const { idShare } = req.body;
+
+  const deleteSharePostQuery = `delete from post_share where id=$1`;
+
+  try {
+    await client.query(deleteSharePostQuery, [idShare]);
+
+    res.status(200).json({ success: true });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
 module.exports = router;

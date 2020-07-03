@@ -60,7 +60,6 @@ const withContainer = (WrappedComponent) => {
     };
 
     const gReplies = () => {
-      console.log(replies);
       getReplies({
         idComment: comment.id,
         from: replies.length,

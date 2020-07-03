@@ -24,6 +24,7 @@ const Index = () => {
     date: null,
   });
   const [owner, setOwner] = useState({});
+  const [newContent, setNewContent] = useState({ text: "", idPost: null });
 
   const [users, setUsers] = useState({
     1: {
@@ -100,6 +101,8 @@ const Index = () => {
           owner={owner}
           newComment={newComment}
           setNewComment={setNewComment}
+          newContent={newContent}
+          setNewContent={setNewContent}
         />
       ))}
     </>
