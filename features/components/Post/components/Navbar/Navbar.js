@@ -20,6 +20,7 @@ const NavBar = ({
   setPosts,
   setStatusOfReport,
   setStatusOfEdit,
+  setMuteUser,
 }) => {
   const { lang } = useTranslation(["component"]);
 
@@ -143,6 +144,7 @@ const NavBar = ({
                 setStatusOfHiddenPost={setStatusOfHiddenPost}
                 setStatusOfReport={setStatusOfReport}
                 idUser={idUser}
+                setMuteUser={setMuteUser}
               />
             )}
           </div>

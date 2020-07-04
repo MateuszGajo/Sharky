@@ -12,7 +12,7 @@ router.post("/add", async (req, res) => {
     {
       exp: Math.floor(Date.now() / 1000) + 60 * 60,
       data: {
-        id: "1",
+        id: 1,
       },
     },
     jwtSecret
@@ -45,7 +45,7 @@ router.post("/get", async (req, res) => {
     {
       exp: Math.floor(Date.now() / 1000) + 60 * 60,
       data: {
-        id: "1",
+        id: 1,
       },
     },
     jwtSecret
@@ -95,7 +95,7 @@ router.post("/like", async (req, res) => {
     {
       exp: Math.floor(Date.now() / 1000) + 60 * 60,
       data: {
-        id: "1",
+        id: 1,
       },
     },
     jwtSecret

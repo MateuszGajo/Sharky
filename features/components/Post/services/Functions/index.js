@@ -31,18 +31,13 @@ export const getUsers = async (users, setUsers, elements) => {
       .catch((err) => console.log(err));
 };
 
-export const muteUser = ({ idMuteUser, posts, setPosts }) => {
+export const muteUser = ({ idMuteUser, setMuteUser }) => {
   axios
     .post("/user/mute", {
       idMuteUser,
     })
     .then((resp) => {
-      const filtredPosts = posts.filter((post) => {
-        const idUser = post.idUserShare || post.idUser;
-
-        return idMuteUser != idUser;
-      });
-      setPosts(filtredPosts);
+      setMuteUser({ idUser: idMuteUser });
     })
     .catch((err) => console.log(err));
 };

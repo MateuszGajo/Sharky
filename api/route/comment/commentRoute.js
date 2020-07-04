@@ -11,7 +11,7 @@ router.post("/add", async (req, res) => {
     {
       exp: Math.floor(Date.now() / 1000) + 60 * 60,
       data: {
-        id: "1",
+        id: 1,
       },
     },
     jwtSecret
@@ -30,7 +30,6 @@ router.post("/add", async (req, res) => {
       content,
       date,
     ]);
-    console.log(comment);
     return res.status(200).json({
       idComment: comment.rows[0].id,
     });
@@ -47,7 +46,7 @@ router.post("/get", async (req, res) => {
     {
       exp: Math.floor(Date.now() / 1000) + 60 * 60,
       data: {
-        id: "1",
+        id: 1,
       },
     },
     jwtSecret
@@ -98,7 +97,7 @@ router.post("/like", async (req, res) => {
     {
       exp: Math.floor(Date.now() / 1000) + 60 * 60,
       data: {
-        id: "1",
+        id: 1,
       },
     },
     jwtSecret

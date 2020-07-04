@@ -11,7 +11,7 @@ router.post("/add", async (req, res) => {
     {
       exp: Math.floor(Date.now() / 1000) + 60 * 60,
       data: {
-        id: "1",
+        id: 1,
       },
     },
     jwtSecret
@@ -45,7 +45,7 @@ router.post("/get", async (req, res) => {
     {
       exp: Math.floor(Date.now() / 1000) + 60 * 60,
       data: {
-        id: "1",
+        id: 1,
       },
     },
     jwtSecret
@@ -79,12 +79,12 @@ router.post("/get", async (req, res) => {
         select id_user_1  
         from friends 
         where id_user_2=$1 and id_user_1 
-        not in (select id_user_2 from mute_users where id_user_1=$1)
+        not in (select id_user_2 from user_mute where id_user_1=$1)
         union
         select id_user_2 
         from friends 
         where id_user_1=$1 and id_user_2 
-        not in (select id_user_2 from mute_users where id_user_1=$1))
+        not in (select id_user_2 from user_mute where id_user_1=$1))
       union
       select  thirdResult.*, posts.id_user as "idUser", posts.content, posts.photo, posts.date, post_share.id as "idShare", post_share.id_user as "idShareUser"
       from(
@@ -109,12 +109,12 @@ router.post("/get", async (req, res) => {
           select id_user_1  
           from friends 
           where id_user_2=$1 and id_user_1 
-          not in (select id_user_2 from mute_users where id_user_1=$1)
+          not in (select id_user_2 from user_mute where id_user_1=$1)
         union
           select id_user_2 
           from friends 
           where id_user_1=$1 and id_user_2 
-          not in (select id_user_2 from mute_users where id_user_1=$1))) as fourthResult
+          not in (select id_user_2 from user_mute where id_user_1=$1))) as fourthResult
   left join post_like on "idPost" = post_like.id_post and post_like.id_user = $1
   order by date desc
   limit 21 offset $2`;
@@ -129,7 +129,7 @@ router.post("/get", async (req, res) => {
           from(
           SELECT  count(id_post), id_post
           FROM post_comments
-          where id_post = any($1)
+          where id_post = any($1) and id_user not in(select id_user_2 from user_mute where id_user_1=$2)
           group by id_post
           ) as a
         left join post_comments on post_comments.id_post = a.id_post) as b
@@ -187,7 +187,7 @@ router.post("/like", async (req, res) => {
     {
       exp: Math.floor(Date.now() / 1000) + 60 * 60,
       data: {
-        id: "1",
+        id: 1,
       },
     },
     jwtSecret
@@ -223,7 +223,7 @@ router.post("/share", async (req, res) => {
     {
       exp: Math.floor(Date.now() / 1000) + 60 * 60,
       data: {
-        id: "1",
+        id: 1,
       },
     },
     jwtSecret

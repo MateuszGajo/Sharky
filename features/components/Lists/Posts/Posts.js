@@ -1,45 +1,58 @@
-import React, { useRef } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import Post from "../../Post/Post";
+import withPosts from "./withPosts";
+import PostsContext from "./context/PostsContext";
+import { getPosts } from "../../Post/services/Functions/index";
+import { getOwner } from "../../../service/Functions/index";
 
-const PostList = ({
-  posts = [
-    {
-      id: 1,
-      userId: 123,
-      content: "dasdsa",
-      date: new Date("2019-03-25"),
-      photo: "profile.png",
-    },
-    {
-      id: 2,
-      userId: 123,
-      content: "dasdsa",
-      date: new Date("2015-03-25"),
-      photo: null,
-    },
-  ],
-  users = {
-    123: {
-      id: 123,
-      firstName: "Jan",
-      lastName: "Kowalski",
-      photo: "profile.png",
-    },
-  },
-  isComment = false,
-}) => {
+const PostList = ({}) => {
+  const {
+    posts,
+    setPosts,
+    users,
+    setUsers,
+    setStatusOfMoreComments,
+    setStatusOfMorePosts,
+    muteUser,
+    setOwner,
+  } = useContext(PostsContext);
+
+  useEffect(() => {
+    getPosts({
+      posts,
+      setPosts,
+      from: 0,
+      users,
+      setUsers,
+      setStatusOfMorePosts,
+      setStatusOfMoreComments,
+    });
+    getOwner(setOwner);
+  }, []);
+
+  useEffect(() => {
+    if (muteUser.idUser !== null) {
+      const newPosts = posts?.filter((post) => {
+        const idUser = post.idUserShare || post.idUser;
+
+        return muteUser.idUser != idUser;
+      });
+      setPosts(newPosts);
+    }
+  }, [muteUser]);
+
   const focusElement = useRef(null);
   return (
     <div className="post-list">
       {posts.map((post) => {
-        const user = users[post.userId];
         return (
           <div className="post-list__post" key={post.id}>
             <Post
               post={post}
-              user={user}
+              user={users[post.idUser]}
+              userShare={users[post.idUserShare]}
               focusElement={focusElement}
-              isComment={isComment}
+              single={false}
             />
           </div>
         );
@@ -48,4 +61,4 @@ const PostList = ({
   );
 };
 
-export default PostList;
+export default withPosts(PostList);

@@ -3,7 +3,6 @@ import Comment from "./Comment";
 import SecondaryInput from "../../../../common/SecondaryInput/SecondaryInput";
 import i18next from "../../../../../i18n";
 import { getReplies, addReply } from "../../services/Functions/index";
-import { setupCache } from "axios-cache-adapter";
 const { useTranslation } = i18next;
 
 const withContainer = (WrappedComponent) => {
@@ -33,6 +32,9 @@ const withContainer = (WrappedComponent) => {
     newComment,
     setNewComment,
     owner,
+    setStatusOfReport,
+    muteUser,
+    setMuteUser,
   }) => {
     const { t } = useTranslation(["component"]);
 
@@ -88,6 +90,15 @@ const withContainer = (WrappedComponent) => {
         setNumberOfReplies(numberOfReplies + 1);
       }
     }, [newComment]);
+
+    useEffect(() => {
+      if (muteUser.idUser != null) {
+        const newReplies = replies?.filter(
+          (reply) => reply.idUser != muteUser.idUser
+        );
+        setReplies(newReplies);
+      }
+    }, [muteUser]);
     return (
       <>
         <WrappedComponent
@@ -103,6 +114,7 @@ const withContainer = (WrappedComponent) => {
           setNewLike={setNewLike}
           newComment={newComment}
           setNewComment={setNewComment}
+          setStatusOfReport={setStatusOfReport}
         />
 
         {isRepliesOpen && (
@@ -128,6 +140,7 @@ const withContainer = (WrappedComponent) => {
                   setNewLike={setNewLike}
                   newComment={newComment}
                   setNewComment={setNewComment}
+                  setStatusOfReport={setStatusOfReport}
                 />
               );
             })}

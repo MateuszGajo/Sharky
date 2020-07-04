@@ -10,6 +10,7 @@ import {
   unlikeComment,
   likeReply,
   unlikeReply,
+  muteUser,
 } from "../../services/Functions/index";
 
 const { useTranslation } = i18next;
@@ -25,6 +26,7 @@ const Commnet = ({
   getReplies,
   newLike,
   setNewLike,
+  setStatusOfReport,
 }) => {
   const { t } = useTranslation(["component"]);
 
@@ -134,7 +136,10 @@ const Commnet = ({
             >
               <BsThreeDots />
               <div className="post__item__comments__container__item__content__item__top-bar__icon__collapse is-close">
-                <div className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item">
+                <div
+                  className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item"
+                  onClick={() => muteUser({ idMuteUser: user.id, posts })}
+                >
                   <div className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item--icon">
                     <IconContext.Provider
                       value={{

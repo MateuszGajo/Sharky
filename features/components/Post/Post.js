@@ -1,95 +1,24 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
 import DownBarButtons from "./components/DownBarButtons/DownBarButtons";
 import Navbar from "./components/Navbar/Navbar";
 import Content from "./components/Content/Content";
 import Comment from "./components/Comments/CommentsContainer";
 import SecondaryInput from "../../common/SecondaryInput/SecondaryInput";
 import Report from "../../common/PopUp/Report/Report";
+import withPost from "./withPost";
+import PostContext from "./context/PostContext";
 import i18next from "../../../i18n";
 import { addComent, getComments } from "./services/Functions/index";
-import { cx } from "emotion";
 const { useTranslation } = i18next;
-const Post = ({
-  post: p = {
-    id: 1,
-    idUser: 1,
-    idLike: 1,
-    idUserShare: 1,
-    idShare: null,
-    numberOfShares: 2,
-    numberOfComments: 5,
-    numberOfLikes: 6,
-    isMoreComments,
-    content: "dasdsa",
-    date: new Date("2019-03-25"),
-    photo: "profile.png",
-    comments: [
-      {
-        id: 1,
-        idUser: 1,
-        idLike: null,
-        numberOfLikes: 20,
-        numberOfReplies: 5,
-        content: "ble",
-        date: new Date(),
-      },
-      {
-        id: 2,
-        idUser: 1,
-        idLike: null,
-        numberOfLikes: 19,
-        numberOfReplies: 4,
-        content: "ble fds as",
-        date: new Date(),
-      },
-    ],
-  },
-  users = {
-    1: {
-      id: 1,
-      firstName: "Janek",
-      lastName: "Kowalski",
-      photo: "profile.png",
-      idLiked: null,
-    },
-    2: {
-      id: 2,
-      firstName: "Janek",
-      lastName: "Kowalski",
-      photo: "profile.png",
-      idLiked: null,
-    },
-  },
-  posts,
-  setPosts,
-  setUsers,
-  isComment = true,
-  focusElement,
-  newLike,
-  setNewLike,
-  newComment,
-  setNewComment,
-  owner,
-  newContent,
-  setNewContent,
-}) => {
+
+const Post = ({ post: p, user, userShare, focusElement, single }) => {
   const { t } = useTranslation(["component"]);
   const loadMoreComments = t("component:post.comments.load-more-comments");
 
   const focusCollapse = useRef(focusElement?.current || null);
   const focusIcon = useRef(null);
 
-  const [user, setUser] = useState(users[p.idUser]);
   const [commentText, setCommentText] = useState("");
-  const [comments, setComments] = useState(p.comments);
-  const [post, setPost] = useState(p);
-  const [isMoreComments, setStatusOfMoreComments] = useState(p.isMoreComments);
-  const [numberOfComments, setNumberOfComments] = useState(
-    Number(post.numberOfComments)
-  );
-  const [isHidenPost, setStatusOfHiddenPost] = useState(false);
-  const [isReport, setStatusOfReport] = useState(false);
-  const [isEdit, setStatusOfEdit] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -120,6 +49,15 @@ const Post = ({
     }
   }, [newComment]);
 
+  useEffect(() => {
+    if (muteUser.idUser != null) {
+      const newComments = comments?.filter(
+        (comment) => comment.idUser != muteUser.idUser
+      );
+      setComments(newComments);
+    }
+  }, [muteUser]);
+
   return (
     <div
       className={cx("post__item", {
@@ -133,39 +71,10 @@ const Post = ({
           setStatusOfReport={setStatusOfReport}
         />
       )}
-      <Navbar
-        date={post.date}
-        user={user}
-        owner={owner}
-        shareUser={users[p?.idUserShare]}
-        idUser={p.idUserShare || p.idUser}
-        posts={posts}
-        post={post}
-        setPosts={setPosts}
-        focusCollapse={focusCollapse}
-        focusIcon={focusIcon}
-        setStatusOfHiddenPost={setStatusOfHiddenPost}
-        setStatusOfReport={setStatusOfReport}
-        setStatusOfEdit={setStatusOfEdit}
-      />
-      <Content
-        post={post}
-        isEdit={isEdit}
-        setStatusOfEdit={setStatusOfEdit}
-        newContent={newContent}
-        setNewContent={setNewContent}
-      />
+      <Navbar focusCollapse={focusCollapse} focusIcon={focusIcon} />
+      <Content post={post} />
       <div className="post__item__downbar">
-        <DownBarButtons
-          post={post}
-          posts={posts}
-          setPosts={setPosts}
-          newLike={newLike}
-          setNewLike={setNewLike}
-          numberOfComments={numberOfComments}
-          numberOfLikes={post.numberOfLikes}
-          numberOfShares={post.numberOfShares}
-        />
+        <DownBarButtons />
       </div>
       {isComment && (
         <div className="post__item__comments" data-testid="post-comments">
@@ -184,13 +93,6 @@ const Post = ({
                 comment={comment}
                 focusCollapse={focusCollapse}
                 focusIcon={focusIcon}
-                users={users}
-                owner={owner}
-                setUsers={setUsers}
-                newLike={newLike}
-                setNewLike={setNewLike}
-                newComment={newComment}
-                setNewComment={setNewComment}
               />
             </div>
           ))}
@@ -218,4 +120,4 @@ const Post = ({
   );
 };
 
-export default Post;
+export default withPost(Post);

@@ -13,6 +13,7 @@ const UserSettings = ({
   posts,
   setPosts,
   setStatusOfReport,
+  setMuteUser,
 }) => {
   const { t } = useTranslation(["component"]);
   const hiddenPostText = t("component:post.settings.hidden");
@@ -46,8 +47,7 @@ const UserSettings = ({
         onClick={() =>
           muteUser({
             idMuteUser: idUser,
-            posts,
-            setPosts,
+            setMuteUser,
           })
         }
       >

@@ -26,7 +26,7 @@ router.post("/mute", async (req, res) => {
     {
       exp: Math.floor(Date.now() / 1000) + 60 * 60,
       data: {
-        id: "1",
+        id: 1,
       },
     },
     jwtSecret
@@ -37,7 +37,7 @@ router.post("/mute", async (req, res) => {
   } = jwt.verify(token, jwtSecret);
 
   const date = new Date();
-  const muteUserQuery = `insert into mute_users(id_user_1, id_user_2, date) values($1, $2, $3)`;
+  const muteUserQuery = `insert into user_mute(id_user_1, id_user_2, date) values($1, $2, $3)`;
 
   try {
     await client.query(muteUserQuery, [idUser, idMuteUser, date]);
@@ -56,7 +56,7 @@ router.post("/block", async (req, res) => {
     {
       exp: Math.floor(Date.now() / 1000) + 60 * 60,
       data: {
-        id: "1",
+        id: 1,
       },
     },
     jwtSecret
