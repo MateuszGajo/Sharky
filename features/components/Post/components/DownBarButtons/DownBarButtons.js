@@ -1,29 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import { FiMessageCircle } from "react-icons/fi";
 import { AiOutlineShareAlt } from "react-icons/ai";
 import { IoIosHeartEmpty } from "react-icons/io";
 import cx from "classnames";
-import axios from "axios";
 import {
   sharePost,
   likePost,
   unlikePost,
 } from "../../services/Functions/index";
 import Router from "../../../../route/routes";
+import PostContext from "../../context/PostContext";
+import WizzardContext from "../../context/WizzardContext";
 
-const DownBarButtons = ({
-  numberOfLikes: nof,
-  numberOfComments,
-  numberOfShares: nos,
-  post,
-  posts,
-  setPosts,
-  newLike,
-  setNewLike,
-}) => {
+const DownBarButtons = () => {
+  const { post, numberOfComments } = useContext(PostContext);
+  const { posts, setPosts, newLike, setNewLike } = useContext(WizzardContext);
+
   const [idLike, setIdLike] = useState(post?.idLike);
-  const [numberOfLikes, setNumberOfLikes] = useState(Number(nof));
-  const [numberOfShares, setNumberOfShares] = useState(Number(nos));
+  const [numberOfLikes, setNumberOfLikes] = useState(
+    Number(post.numberOfLikes)
+  );
+  const [numberOfShares, setNumberOfShares] = useState(
+    Number(post.numberOfShares)
+  );
 
   useEffect(() => {
     if (
@@ -37,6 +36,7 @@ const DownBarButtons = ({
         : setNumberOfLikes(numberOfLikes - 1);
     }
   }, [newLike]);
+
   return (
     <div className="post__item__downbar__buttons">
       <div

@@ -1,16 +1,16 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { AiOutlineCheck } from "react-icons/ai";
 import Router from "../../../../route/routes";
 import { editPost } from "../../services/Functions/index";
+import PostContext from "../../context/PostContext";
+import WizzardContext from "../../context/WizzardContext";
 
-const Content = ({
-  post,
-  isEdit,
-  setStatusOfEdit,
-  newContent,
-  setNewContent,
-}) => {
+const Content = () => {
   const textareaRef = useRef(null);
+
+  const { post, isEdit, setStatusOfEdit } = useContext(PostContext);
+  const { newContent, setNewContent } = useContext(WizzardContext);
+
   const [rows, setRows] = useState(1);
   const [content, setContent] = useState(post.content);
 

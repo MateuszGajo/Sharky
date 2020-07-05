@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { FiEdit } from "react-icons/fi";
 import { AiOutlineDelete } from "react-icons/ai";
 import { IconContext } from "react-icons";
@@ -7,18 +7,20 @@ import {
   deletePost,
   deletePostShare,
 } from "../../../../services/Functions/index";
+import PostContext from "../../../../context/PostContext";
+import WizzardContext from "../../../../context/WizzardContext";
 const { useTranslation } = i18next;
 
-const OwnerSettings = ({
-  setStatusOfEdit,
-  isShare,
-  selfShare,
-  idPost,
-  idShare,
-  posts,
-  setPosts,
-}) => {
+const OwnerSettings = () => {
   const { t } = useTranslation(["component"]);
+
+  const { setStatusOfEdit, post } = useContext(PostContext);
+  const { posts, setPosts } = useContext(WizzardContext);
+
+  const isShare = post.idUserShare !== null;
+  const selfShare = post.idUserShare == post.idUser;
+  const { idShare, idPost } = post;
+
   const editPostText = t("component:post.settings.edit");
   const deletePostText = t("component:post.settings.delete");
   const deletePostShareText = t("component:post.settings.delete-share");

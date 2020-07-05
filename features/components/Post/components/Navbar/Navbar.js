@@ -4,35 +4,25 @@ import { IoMdShareAlt } from "react-icons/io";
 import i18next from "../../../../../i18n";
 import UserSettings from "./components/UserSettings/UserSettings";
 import OwnerSettings from "./components/OwnerSettings/OwnerSettings";
+import PostContext from "../../context/PostContext";
+import WizzardContext from "../../context/WizzardContext";
+import { useContext } from "react";
 const { useTranslation } = i18next;
 
-const NavBar = ({
-  date,
-  user,
-  owner,
-  shareUser,
-  idUser,
-  focusCollapse,
-  focusIcon,
-  setStatusOfHiddenPost,
-  post,
-  posts,
-  setPosts,
-  setStatusOfReport,
-  setStatusOfEdit,
-  setMuteUser,
-}) => {
+const NavBar = ({ focusCollapse, focusIcon }) => {
   const { lang } = useTranslation(["component"]);
 
   const settingRef = useRef(null);
 
+  const { user, userShare, post } = useContext(PostContext);
+  const { owner } = useContext(WizzardContext);
   const dtf = new Intl.DateTimeFormat(lang || "pl", {
     year: "numeric",
     month: "long",
     day: "2-digit",
   });
   const [{ value: da }, , { value: mo }, , { value: ye }] = dtf.formatToParts(
-    new Date(date)
+    new Date(post.date)
   );
 
   const clickHandle = () => {
@@ -66,11 +56,11 @@ const NavBar = ({
 
   return (
     <div className="post__item__navbar">
-      {shareUser && (
+      {userShare && (
         <div className="post__item__navbar__user">
           <div className="post__item__navbar__user--photo">
             <img
-              src={"/static/images/" + shareUser.photo}
+              src={"/static/images/" + userShare.photo}
               alt="Zdjęcie użytkownika"
               className="post__item__navbar__user--photo--img"
             />
@@ -80,7 +70,7 @@ const NavBar = ({
               className="post__item__navbar__user--name--span"
               data-testid="post-username"
             >
-              {shareUser.firstName + " " + shareUser.lastName}
+              {userShare.firstName + " " + userShare.lastName}
             </span>
           </div>
           <div className="post__item__navbar__user--share">
@@ -129,22 +119,22 @@ const NavBar = ({
           >
             {post.idUserShare == owner.id || post.idUser == owner.id ? (
               <OwnerSettings
-                setStatusOfEdit={setStatusOfEdit}
-                isShare={post.idUserShare !== null}
-                selfShare={post.idUserShare == post.idUser}
-                idShare={post.idShare}
-                idPost={post.idPost}
-                posts={posts}
-                setPosts={setPosts}
+              // setStatusOfEdit={setStatusOfEdit}
+              // isShare={post.idUserShare !== null}
+              // selfShare={post.idUserShare == post.idUser}
+              // idShare={post.idShare}
+              // idPost={post.idPost}
+              // posts={posts}
+              // setPosts={setPosts}
               />
             ) : (
               <UserSettings
-                posts={posts}
-                setPosts={setPosts}
-                setStatusOfHiddenPost={setStatusOfHiddenPost}
-                setStatusOfReport={setStatusOfReport}
-                idUser={idUser}
-                setMuteUser={setMuteUser}
+              // posts={posts}
+              // setPosts={setPosts}
+              // setStatusOfHiddenPost={setStatusOfHiddenPost}
+              // setStatusOfReport={setStatusOfReport}
+              // idUser={idUser}
+              // setMuteUser={setMuteUser}
               />
             )}
           </div>

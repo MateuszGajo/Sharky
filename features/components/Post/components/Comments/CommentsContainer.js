@@ -1,42 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Comment from "./Comment";
 import SecondaryInput from "../../../../common/SecondaryInput/SecondaryInput";
 import i18next from "../../../../../i18n";
 import { getReplies, addReply } from "../../services/Functions/index";
+import PostContext from "../../context/PostContext";
+import WizzardContext from "../../context/WizzardContext";
 const { useTranslation } = i18next;
 
 const withContainer = (WrappedComponent) => {
-  const WithContainer = ({
-    comment = {
-      id: 1,
-      idUser: 1,
-      idLike: null,
-      numberOfLikes: 20,
-      numberOfReplies: 10,
-      content: "ble",
-      date: new Date(),
-    },
-    users = {
-      1: {
-        id: 1,
-        firstName: "Janek",
-        lastName: "Kowalski",
-        photo: "profile.png",
-      },
-    },
-    setUsers,
-    focusCollapse,
-    focusIcon,
-    newLike,
-    setNewLike,
-    newComment,
-    setNewComment,
-    owner,
-    setStatusOfReport,
-    muteUser,
-    setMuteUser,
-  }) => {
+  const WithContainer = ({ comment, focusCollapse, focusIcon }) => {
     const { t } = useTranslation(["component"]);
+
+    const {
+      users,
+      setUsers,
+      owner,
+      muteUser,
+      newComment,
+      setNewComment,
+    } = useContext(WizzardContext);
 
     const loadMoreComments = t("component:post.comments.load-more-comments");
     const [user, setUser] = useState(users[comment.idUser]);
@@ -99,22 +81,18 @@ const withContainer = (WrappedComponent) => {
         setReplies(newReplies);
       }
     }, [muteUser]);
+
     return (
       <>
         <WrappedComponent
           comment={comment}
           numberOfReplies={numberOfReplies}
-          user={user}
           setStatusOfOpenReplies={setStatusOfOpenReplies}
           isRepliesOpen={isRepliesOpen}
           focusCollapse={focusCollapse}
           focusIcon={focusIcon}
           getReplies={gReplies}
-          newLike={newLike}
-          setNewLike={setNewLike}
-          newComment={newComment}
-          setNewComment={setNewComment}
-          setStatusOfReport={setStatusOfReport}
+          user={user}
         />
 
         {isRepliesOpen && (
@@ -133,14 +111,9 @@ const withContainer = (WrappedComponent) => {
                 <WrappedComponent
                   key={comment.id}
                   comment={comment}
-                  user={user}
                   focusCollapse={focusCollapse}
                   focusIcon={focusIcon}
-                  newLike={newLike}
-                  setNewLike={setNewLike}
-                  newComment={newComment}
-                  setNewComment={setNewComment}
-                  setStatusOfReport={setStatusOfReport}
+                  user={user}
                 />
               );
             })}

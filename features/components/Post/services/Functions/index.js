@@ -293,8 +293,6 @@ export const getReplies = async ({
     })
     .then(async ({ data: { replies: r, isMore } }) => {
       await getUsers(users, setUsers, r);
-      console.log(r);
-      console.log(replies);
       setReplies([...replies, ...r]);
       setStatusOfMoreData(isMore);
     })

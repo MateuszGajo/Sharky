@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useContext } from "react";
 import { IoIosHeartEmpty } from "react-icons/io";
 import { FiMessageCircle, FiVolumeX, FiFlag } from "react-icons/fi";
 import { BsThreeDots } from "react-icons/bs";
@@ -10,25 +10,25 @@ import {
   unlikeComment,
   likeReply,
   unlikeReply,
-  muteUser,
 } from "../../services/Functions/index";
+import PostContext from "../../context/PostContext";
+import WizzardContext from "../../context/WizzardContext";
 
 const { useTranslation } = i18next;
 
 const Commnet = ({
   comment,
-  user,
   setStatusOfOpenReplies,
   numberOfReplies,
   isRepliesOpen,
   focusCollapse,
   focusIcon,
   getReplies,
-  newLike,
-  setNewLike,
-  setStatusOfReport,
+  user,
 }) => {
   const { t } = useTranslation(["component"]);
+
+  const { newLike, setNewLike } = useContext(WizzardContext);
 
   const settingRef = useRef(null);
   const reportComment = t("component:post.comments.settings.report");
@@ -102,9 +102,6 @@ const Commnet = ({
       newLike.idElement == comment.id &&
       numberOfReplies == undefined
     ) {
-      {
-        console.log("wchodze", newLike.idElement, comment.id);
-      }
       setIdLike(newLike.idLike);
       newLike.idLike
         ? setNumberOfLikes(numberOfLikes + 1)

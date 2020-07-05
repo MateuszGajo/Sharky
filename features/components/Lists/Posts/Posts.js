@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef } from "react";
 import Post from "../../Post/Post";
 import withPosts from "./withPosts";
-import PostsContext from "./context/PostsContext";
+import WizzardContext from "../../Post/context/WizzardContext";
 import { getPosts } from "../../Post/services/Functions/index";
 import { getOwner } from "../../../service/Functions/index";
 
@@ -14,8 +14,9 @@ const PostList = ({}) => {
     setStatusOfMoreComments,
     setStatusOfMorePosts,
     muteUser,
+    owner,
     setOwner,
-  } = useContext(PostsContext);
+  } = useContext(WizzardContext);
 
   useEffect(() => {
     getPosts({
@@ -27,7 +28,6 @@ const PostList = ({}) => {
       setStatusOfMorePosts,
       setStatusOfMoreComments,
     });
-    getOwner(setOwner);
   }, []);
 
   useEffect(() => {

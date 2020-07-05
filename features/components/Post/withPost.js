@@ -2,13 +2,18 @@ import React, { useState } from "react";
 import PostContext from "./context/PostContext";
 
 const withPost = (WrappedComponent) => {
-  return ({ user: u, userShare: us, single, post: p }) => {
+  return (props) => {
+    const { user: u, userShare: us, single, post: p } = props;
     const [user, setUser] = useState(u);
     const [userShare, setUserShare] = useState(us);
-    const [comments, setComments] = useState();
+    const [comments, setComments] = useState(p.comments);
     const [post, setPost] = useState(p);
-    const [isMoreComments, setStatusOfMoreComments] = useState();
-    const [numberOfComments, setNumberOfComments] = useState();
+    const [isMoreComments, setStatusOfMoreComments] = useState(
+      p.isMoreComments
+    );
+    const [numberOfComments, setNumberOfComments] = useState(
+      Number(p.numberOfComments)
+    );
     const [isHidenPost, setStatusOfHiddenPost] = useState(false);
     const [isReport, setStatusOfReport] = useState(false);
     const [isEdit, setStatusOfEdit] = useState(false);
@@ -24,7 +29,7 @@ const withPost = (WrappedComponent) => {
           comments,
           setComments,
           post,
-          setPosts,
+          setPost,
           isMoreComments,
           setStatusOfMoreComments,
           numberOfComments,
@@ -39,7 +44,7 @@ const withPost = (WrappedComponent) => {
           setStatusOfSingle,
         }}
       >
-        <WrappedComponent />
+        <WrappedComponent {...props} />
       </PostContext.Provider>
     );
   };

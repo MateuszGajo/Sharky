@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import PostsContext from "./context/PostsContext";
+import React, { useState, useEffect } from "react";
+import WizzardContext from "../../Post/context/WizzardContext";
+import { getOwner } from "../../../service/Functions/index";
 
 const withPosts = (WrappedComponent) => {
   return () => {
@@ -29,43 +30,14 @@ const withPosts = (WrappedComponent) => {
         idLiked: null,
       },
     });
-    const [posts, setPosts] = useState([
-      {
-        id: "21sd",
-        idPost: 1,
-        idUser: 1,
-        idLike: 1,
-        idUserShare: 1,
-        idShare: null,
-        numberOfShares: 2,
-        numberOfComments: 5,
-        numberOfLikes: 6,
-        isMoreComments: true,
-        content: "dasdsa",
-        date: new Date("2019-03-25"),
-        photo: "profile.png",
-        comments: [
-          {
-            id: 1,
-            idUser: 1,
-            likes: 20,
-            content: "ble",
-            numberOfReplies: 1,
-            numberOfLikes: 5,
-          },
-          {
-            id: 2,
-            idUser: 1,
-            likes: 20,
-            content: "ble",
-            numberOfReplies: 2,
-            numberOfLikes: 2,
-          },
-        ],
-      },
-    ]);
+
+    useEffect(() => {
+      getOwner(setOwner);
+    }, []);
+    const [posts, setPosts] = useState([]);
+
     return (
-      <PostsContext.Provider
+      <WizzardContext.Provider
         value={{
           isMoreComment,
           setStatusOfMoreComments,
@@ -88,7 +60,7 @@ const withPosts = (WrappedComponent) => {
         }}
       >
         <WrappedComponent />
-      </PostsContext.Provider>
+      </WizzardContext.Provider>
     );
   };
 };
