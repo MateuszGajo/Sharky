@@ -3,7 +3,7 @@ import PostContext from "./context/PostContext";
 
 const withPost = (WrappedComponent) => {
   return (props) => {
-    const { user: u, userShare: us, single, post: p } = props;
+    const { user: u, userShare: us, single = false, post: p } = props;
     const [user, setUser] = useState(u);
     const [userShare, setUserShare] = useState(us);
     const [comments, setComments] = useState(p.comments);

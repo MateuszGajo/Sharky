@@ -66,7 +66,7 @@ const Post = ({ post, focusElement }) => {
           content: newComment.content,
           date: newComment.date,
         },
-        ...comments,
+        ...(comments ? comments : []),
       ]);
       setNumberOfComments(numberOfComments + 1);
     }

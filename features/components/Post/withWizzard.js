@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import WizzardContext from "../../Post/context/WizzardContext";
-import { getOwner } from "../../../service/Functions/index";
+import WizzardContext from "./context/WizzardContext";
+import { getOwner } from "../../service/Functions/index";
 
-const withPosts = (WrappedComponent) => {
+const withWizzard = (WrappedComponent) => {
   return () => {
     const [isMoreComment, setStatusOfMoreComments] = useState();
     const [isMorePosts, setStatusOfMorePosts] = useState();
@@ -65,4 +65,4 @@ const withPosts = (WrappedComponent) => {
   };
 };
 
-export default withPosts;
+export default withWizzard;

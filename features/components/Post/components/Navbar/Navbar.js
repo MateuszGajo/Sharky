@@ -117,7 +117,7 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
             className="post__item__navbar__column-end__setting__collapse is-close"
             data-testid="post-setting"
           >
-            {post.idUserShare == owner.id || post.idUser == owner.id ? (
+            {post?.idUserShare == owner.id || post.idUser == owner.id ? (
               <OwnerSettings
               // setStatusOfEdit={setStatusOfEdit}
               // isShare={post.idUserShare !== null}

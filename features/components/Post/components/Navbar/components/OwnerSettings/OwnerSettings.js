@@ -53,9 +53,9 @@ const OwnerSettings = () => {
         className="post__item__navbar__column-end__setting__collapse__item"
         onClick={() => {
           if (isShare) {
-            deletePostShare({ idShare, posts, setPosts });
+            deletePostShare({ idShare, posts, setPosts, isSingle });
           } else {
-            deletePost({ idPost, posts, setPosts });
+            deletePost({ idPost, posts, setPosts, isSingle });
           }
         }}
       >

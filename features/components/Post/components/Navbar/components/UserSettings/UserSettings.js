@@ -12,11 +12,14 @@ const { useTranslation } = i18next;
 const UserSettings = () => {
   const { t } = useTranslation(["component"]);
 
-  const { setStatusOfHiddenPost, setStatusOfReport, user } = useContext(
-    PostContext
-  );
+  const {
+    setStatusOfHiddenPost,
+    setStatusOfReport,
+    isSingle,
+    post,
+  } = useContext(PostContext);
   const { posts, setPosts, setMuteUser } = useContext(WizzardContext);
-  const { id: idUser } = user;
+  const idOwnerPost = post.idUserShare || post.idUser;
 
   const hiddenPostText = t("component:post.settings.hidden");
   const reportPostText = t("component:post.settings.report");
@@ -24,32 +27,36 @@ const UserSettings = () => {
   const blockUserText = t("component:post.settings.block");
   return (
     <>
-      <div
-        className="post__item__navbar__column-end__setting__collapse__item"
-        onClick={() => setStatusOfHiddenPost(true)}
-      >
-        <div className="post__item__navbar__column-end__setting__collapse__item--icon">
-          <IconContext.Provider
-            value={{
-              className:
-                "post__item__navbar__column-end__setting__collapse__item--icon--customize",
-            }}
-          >
-            <BsEyeSlash />
-          </IconContext.Provider>
+      {!isSingle && (
+        <div
+          className="post__item__navbar__column-end__setting__collapse__item"
+          onClick={() => setStatusOfHiddenPost(true)}
+        >
+          <div className="post__item__navbar__column-end__setting__collapse__item--icon">
+            <IconContext.Provider
+              value={{
+                className:
+                  "post__item__navbar__column-end__setting__collapse__item--icon--customize",
+              }}
+            >
+              <BsEyeSlash />
+            </IconContext.Provider>
+          </div>
+          <div className="post__item__navbar__column-end__setting__collapse__item--name">
+            <span className="post__item__navbar__column-end__setting__collapse__item--name--span">
+              {hiddenPostText}
+            </span>
+          </div>
         </div>
-        <div className="post__item__navbar__column-end__setting__collapse__item--name">
-          <span className="post__item__navbar__column-end__setting__collapse__item--name--span">
-            {hiddenPostText}
-          </span>
-        </div>
-      </div>
+      )}
+
       <div
         className="post__item__navbar__column-end__setting__collapse__item"
         onClick={() =>
           muteUser({
-            idMuteUser: idUser,
+            idMuteUser: idOwnerPost,
             setMuteUser,
+            isSingle,
           })
         }
       >
@@ -91,7 +98,9 @@ const UserSettings = () => {
       </div>
       <div
         className="post__item__navbar__column-end__setting__collapse__item"
-        onClick={() => blockUser({ idBlockUser: idUser, posts, setPosts })}
+        onClick={() =>
+          blockUser({ idBlockUser: idOwnerPost, posts, setPosts, isSingle })
+        }
       >
         <div className="post__item__navbar__column-end__setting__collapse__item--icon">
           <IconContext.Provider

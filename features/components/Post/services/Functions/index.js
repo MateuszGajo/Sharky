@@ -1,5 +1,6 @@
 import axios from "axios";
 import { uuid } from "uuidv4";
+import Router from "next/router";
 
 export const getUsers = async (users, setUsers, elements) => {
   const idUsers = [];
@@ -31,21 +32,23 @@ export const getUsers = async (users, setUsers, elements) => {
       .catch((err) => console.log(err));
 };
 
-export const muteUser = ({ idMuteUser, setMuteUser }) => {
+export const muteUser = ({ idMuteUser, setMuteUser, isSingle }) => {
   axios
     .post("/user/mute", {
       idMuteUser,
     })
     .then((resp) => {
+      isSingle && Router.push("/");
       setMuteUser({ idUser: idMuteUser });
     })
     .catch((err) => console.log(err));
 };
 
-export const blockUser = ({ idBlockUser, posts, setPosts }) => {
+export const blockUser = ({ idBlockUser, posts, setPosts, isSingle }) => {
   axios
     .post("/user/block", { idBlockUser })
     .then((resp) => {
+      isSingle && Router.push("/");
       const filtredPosts = posts.filter((post) => {
         const idUser = post.idUserShare || post.idUser;
         return idUser != idBlockUser;
@@ -70,7 +73,6 @@ export const getPosts = ({
       async ({ data: { posts: p, comments, isMorePosts, isMoreComments } }) => {
         await getUsers(users, setUsers, p);
         await getUsers(users, setUsers, comments);
-
         const commentsKey = {};
         for (let i = 0; i < comments.length; i++) {
           if (!commentsKey[comments[i].idPost])
@@ -190,20 +192,22 @@ export const editPost = ({
     .catch((err) => console.log(err));
 };
 
-export const deletePost = ({ idPost, posts, setPosts }) => {
+export const deletePost = ({ idPost, posts, setPosts, isSingle }) => {
   axios
     .post("/post/delete", { idPost })
     .then((resp) => {
+      isSingle && Router.push("/");
       const newPosts = posts.filter((post) => post.idPost != idPost);
       setPosts(newPosts);
     })
     .catch((err) => console.log(err));
 };
 
-export const deletePostShare = ({ idShare, posts, setPosts }) => {
+export const deletePostShare = ({ idShare, posts, setPosts, isSingle }) => {
   axios
     .post("/post/share/delete", { idShare })
     .then((resp) => {
+      isSingle && Router.push("/");
       const newPosts = posts.filter((post) => post.idShare != idShare);
       setPosts(newPosts);
     })

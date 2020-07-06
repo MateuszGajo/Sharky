@@ -41,6 +41,9 @@
             "friend":"Znajomy",
             "family":"Rodzina",
             "pal":"Przyjaciel"
+        },
+        "posts":{
+            "end-of-content":"Widziałeś wszystkie wpisy"
         }
     },
     "post":{

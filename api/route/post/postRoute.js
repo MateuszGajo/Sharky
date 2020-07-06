@@ -144,8 +144,8 @@ router.post("/get", async (req, res) => {
   `;
 
   let postsResult, commentsResult;
-  let isMorePosts,
-    isMoreComments = true;
+  let isMorePosts = true;
+  let isMoreComments = true;
 
   try {
     postsResult = await client.query(getPostsQuery, [idUser, from]);
