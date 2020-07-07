@@ -7,6 +7,8 @@ const commentRoute = require("./api/route/comment/commentRoute");
 const replyRoute = require("./api/route/reply/replyRoute");
 const postRoute = require("./api/route/post/postRoute");
 const userRoute = require("./api/route/user/userRoute");
+const friendRoute = require("./api/route/friend/friendRoute");
+const messageRoute = require("./api/route/message/messageRoute");
 const bodyParser = require("body-parser");
 const router = express.Router();
 
@@ -20,6 +22,21 @@ server.use(bodyParser.json());
 const httpServer = http.createServer(server);
 const socketIO = io(httpServer);
 
+socketIO.sockets.on("connection", (socket) => {
+  socket.on("chat", (id) => {
+    console.log(id);
+    console.log("joining room");
+    socket.join(id);
+  });
+
+  socket.on("sendChatMessage", ({ chat, message, date }) => {
+    console.log(chat);
+    console.log("wiadomośc wysłana");
+    // socket.broadcast.to(chat).emit("message", { message, date });
+    socketIO.sockets.in(chat).emit("message", { message, date });
+  });
+});
+
 (async () => {
   await app.prepare();
 
@@ -29,6 +46,8 @@ const socketIO = io(httpServer);
   server.use("/reply", replyRoute);
   server.use("/post", postRoute);
   server.use("/user", userRoute);
+  server.use("/friend", friendRoute);
+  server.use("/message", messageRoute);
   server.get("*", (req, res) => {
     handle(req, res);
   });

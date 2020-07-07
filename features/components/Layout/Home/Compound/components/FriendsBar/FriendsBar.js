@@ -1,40 +1,19 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 import cx from "classnames";
 import { WizzardContext } from "../../context/WizzardContext";
+import { getFriends } from "../../services/Functions/index";
+import AppContext from "../../../../../../context/AppContext";
 
 const FriendsBar = () => {
   const friendsBar = useRef(null);
 
+  const { socket } = useContext(AppContext);
+
   const [isFriendsBarScrolling, setStatusOfFriendsBarScrolling] = useState(
     false
   );
-  const { setStatusOfMessenger } = useContext(WizzardContext);
-  const [users, setUser] = useState({
-    234: {
-      id: 234,
-      firstName: "Zbigniew",
-      lastName: "Niedziółka-Domański",
-      online: true,
-      photo: "profile.png",
-    },
-    453: {
-      id: 453,
-      firstName: "Witek",
-      lastName: "Zbigniewski",
-      online: false,
-      photo: "profile.png",
-    },
-  });
-  const [listOfFriends, setListOfFirends] = useState([
-    {
-      userId: 234,
-      relationShip: "friend",
-    },
-    {
-      userId: 453,
-      relationShip: "family",
-    },
-  ]);
+  const { setStatusOfMessenger, setChat } = useContext(WizzardContext);
+  const [users, setUsers] = useState([]);
 
   let timeout = {
     friendsBar: null,
@@ -53,6 +32,8 @@ const FriendsBar = () => {
 
   useEffect(() => {
     friendsBar.current.addEventListener("wheel", showScroll);
+
+    getFriends({ users, setUsers, socket });
   }, []);
 
   return (
@@ -64,34 +45,44 @@ const FriendsBar = () => {
         })}
       >
         <div className="home_friends__list">
-          {listOfFriends.map((item, index) => {
-            const friend = users[item.userId];
+          {users.map((user, index) => {
             return (
               <div
                 className="home_friends__list__item"
-                key={friend.id}
+                key={user.id}
                 data-testid={`friend${index}`}
-                onClick={() => setStatusOfMessenger(false)}
+                onClick={() => {
+                  setChat({
+                    user: {
+                      id: user.idUser,
+                      firstName: user.firstName,
+                      lastName: user.lastName,
+                      photo: user.photo,
+                    },
+                    idChat: user.idChat,
+                  });
+                  setStatusOfMessenger(false);
+                }}
               >
                 <div className="home_friends__list__item__user">
                   <div className="home_friends__list__item__user__photo">
                     <img
-                      src={"/static/images/" + friend.photo}
+                      src={"/static/images/" + user.photo}
                       alt=""
                       className="home_friends__list__item__user__photo--img"
                     />
                   </div>
                   <div className="home_friends__list__item__user--name">
                     <span className="home_friends__list__item__user--name--span">
-                      {friend.firstName} {friend.lastName}
+                      {user.firstName} {user.lastName}
                     </span>
                   </div>
                 </div>
-                {friend.online ? (
+                {/* {friend.online ? (
                   <div className="home_friends__list__item--online">
                     <div className="home_friends__list__item--online--circle"></div>
                   </div>
-                ) : null}
+                ) : null} */}
               </div>
             );
           })}
