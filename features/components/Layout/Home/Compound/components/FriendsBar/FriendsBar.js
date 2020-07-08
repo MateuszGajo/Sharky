@@ -32,7 +32,6 @@ const FriendsBar = () => {
 
   useEffect(() => {
     friendsBar.current.addEventListener("wheel", showScroll);
-
     getFriends({ users, setUsers, socket });
   }, []);
 

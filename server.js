@@ -35,6 +35,10 @@ socketIO.sockets.on("connection", (socket) => {
     // socket.broadcast.to(chat).emit("message", { message, date });
     socketIO.sockets.in(chat).emit("message", { message, date });
   });
+
+  socket.on("disconnect", () => {
+    // socket.leave()
+  });
 });
 
 (async () => {

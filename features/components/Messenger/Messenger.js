@@ -27,12 +27,14 @@ const Messenger = ({
   const [messages, setMessages] = useState([]);
   const [user, setUser] = useState({ id: null });
 
-  socket.on("message", ({ message, date }) => {
-    console.log(message);
-    setMessages([...messages, { idUser: user.id, message, date }]);
-  });
-
-  useEffect(() => {}, []);
+  useEffect(() => {
+    socket.on("message", ({ message, date }) => {
+      setMessages((messages) => [
+        ...messages,
+        { idUser: user.id, message, date },
+      ]);
+    });
+  }, []);
 
   useEffect(() => {
     if (user.id !== chat.user.id) {
