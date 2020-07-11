@@ -13,29 +13,28 @@ const Messenger = ({
   windowMessenger = false,
   setStatusOfDisplayMobile,
   chat,
-  conversation = {
-    id: 1212,
-    type: "group",
-    name: "Grupowa konwersacja",
-    photo: "group",
-    members: [123, 124, 125],
-  },
 }) => {
-  const { socket } = useContext(AppContext);
+  const { newMessage } = useContext(AppContext);
 
   const [isLoading, setStatusOfLoading] = useState(true);
   const [messages, setMessages] = useState([]);
   const [user, setUser] = useState({ id: null });
 
   useEffect(() => {
-    socket.on("message", ({ message, date }) => {
-      setMessages((messages) => [
+    if (newMessage.idChat == 2) {
+      setMessages([
         ...messages,
-        { idUser: user.id, message, date },
+        {
+          id: 1,
+          idChat: newMessage.idChat,
+          message: newMessage.message,
+          date: newMessage.date,
+          idUser: user.id,
+        },
       ]);
-    });
-  }, []);
-
+    }
+  }, [newMessage]);
+  console.log(newMessage);
   useEffect(() => {
     if (user.id !== chat.user.id) {
       getMesseges({

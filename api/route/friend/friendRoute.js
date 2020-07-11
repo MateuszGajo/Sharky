@@ -2,8 +2,10 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const { client } = require("../../../config/pgAdaptor");
 const { jwtSecret } = require("../../../config/keys");
-
 const router = express.Router();
+const io = require("socket.io")();
+// const Server = require("../../../server");
+// console.log(Server.socket);
 
 router.get("/get", async (req, res) => {
   const token = jwt.sign(
@@ -38,6 +40,20 @@ router.get("/get", async (req, res) => {
   } catch {
     res.status(400).json("bad-request");
   }
+});
+
+router.post("/chat/join", (req, res) => {
+  const { users } = req.body;
+  const { io } = req;
+  const session = req.session;
+  console.log("route");
+  // console.log(session);
+  // console.log(io.sockets.connected);
+  for (let i = 0; i < users.length; i++) {
+    io.sockets.connected[session.socketio].join(users[i].idChat);
+  }
+
+  res.status(200);
 });
 
 module.exports = router;

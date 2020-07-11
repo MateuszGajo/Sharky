@@ -25,6 +25,7 @@
     "emotion": "^10.0.27",
     "esm": "^3.2.25",
     "express": "^4.17.1",
+    "express-session": "^1.17.1",
     "http": "0.0.1-security",
     "i18next": "^19.4.5",
     "i18next-browser-languagedetector": "^4.2.0",

@@ -19,7 +19,7 @@ const Downbar = ({ idChat, setMessages, messages }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const date = new Date();
-    socket.emit("sendChatMessage", { chat: idChat, message, date });
+    socket.emit("sendChatMessage", { idChat, message, date });
     setMessages([...messages, { idUser: owner.id, message, date }]);
   };
 

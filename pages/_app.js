@@ -3,19 +3,31 @@ import socketIOClient from "socket.io-client";
 import AppContext from "../features/context/AppContext";
 import { SERVER_URL } from "../config/config";
 import { getOwner } from "../features/service/Functions/index";
-
+let socket;
 const MyApp = ({ Component, pageProps }) => {
-  const socket = socketIOClient(SERVER_URL);
   const [owner, setOwner] = useState({});
+  const [newMessage, setNewMessage] = useState({});
 
   useEffect(() => {
     getOwner(setOwner);
   }, []);
+
+  useEffect(() => {
+    socket = socketIOClient(SERVER_URL);
+    socket.on("message", ({ message, date, idChat }) => {
+      console.log(message);
+      setNewMessage({ idChat, message, date });
+    });
+    socket.emit("joinChat", { idChat: "room" });
+  }, [SERVER_URL]);
+
+  useEffect(() => {}, [SERVER_URL]);
   return (
     <AppContext.Provider
       value={{
         socket,
         owner,
+        newMessage,
       }}
     >
       <Component {...pageProps} />

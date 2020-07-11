@@ -4,10 +4,11 @@ export const getFriends = ({ users, setUsers, socket }) => {
   axios
     .get("/friend/get")
     .then(({ data: { friends } }) => {
-      for (let i = 0; i < friends.length; i++) {
-        socket.emit("chat", friends[i].idChat);
-      }
       setUsers([...users, ...friends]);
     })
     .catch((err) => console.log(err));
+};
+
+export const joinChat = ({ users }) => {
+  axios.post("/friend/chat/join", { users }).then((resp) => console.log(resp));
 };

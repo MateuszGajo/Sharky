@@ -1,7 +1,11 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 import cx from "classnames";
 import { WizzardContext } from "../../context/WizzardContext";
-import { getFriends } from "../../services/Functions/index";
+import {
+  getFriends,
+  joinChat,
+  removeChat,
+} from "../../services/Functions/index";
 import AppContext from "../../../../../../context/AppContext";
 
 const FriendsBar = () => {
@@ -34,6 +38,12 @@ const FriendsBar = () => {
     friendsBar.current.addEventListener("wheel", showScroll);
     getFriends({ users, setUsers, socket });
   }, []);
+
+  useEffect(() => {
+    if (users.length > 0) {
+      joinChat({ users });
+    }
+  }, [users]);
 
   return (
     <div className="home__wrapper home__wrapper--medium">
