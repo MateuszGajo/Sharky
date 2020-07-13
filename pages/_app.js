@@ -15,13 +15,10 @@ const MyApp = ({ Component, pageProps }) => {
   useEffect(() => {
     socket = socketIOClient(SERVER_URL);
     socket.on("message", ({ message, date, idChat }) => {
-      console.log(message);
       setNewMessage({ idChat, message, date });
     });
-    socket.emit("joinChat", { idChat: "room" });
   }, [SERVER_URL]);
 
-  useEffect(() => {}, [SERVER_URL]);
   return (
     <AppContext.Provider
       value={{

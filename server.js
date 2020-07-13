@@ -4,12 +4,15 @@ const http = require("http");
 const express = require("express");
 const expsession = require("express-session");
 const nextI18NextMiddleware = require("next-i18next/middleware").default;
+const jwt = require("jsonwebtoken");
 const commentRoute = require("./api/route/comment/commentRoute");
 const replyRoute = require("./api/route/reply/replyRoute");
 const postRoute = require("./api/route/post/postRoute");
 const userRoute = require("./api/route/user/userRoute");
 const friendRoute = require("./api/route/friend/friendRoute");
 const messageRoute = require("./api/route/message/messageRoute");
+const { client } = require("./config/pgAdaptor");
+const { jwtSecret } = require("./config/keys");
 const bodyParser = require("body-parser");
 const { expressSessionSecret } = require("./config/keys");
 
@@ -24,66 +27,50 @@ const socketIO = io(httpServer);
 
 server.use(bodyParser.json());
 
-const sessionMiddleware = expsession({
-  secret: expressSessionSecret,
-  saveUninitialized: true,
-  resave: true,
-});
-server.use(sessionMiddleware);
-
-server.use((req, res, next) => {
-  req.io = socketIO;
-  next();
-});
-
 socketIO.sockets.on("connection", (socket) => {
-  console.log("połączone w serwerze");
   socket.on("sendChatMessage", ({ idChat, message, date }) => {
-    socket.request.session.socketio = socket.id;
-    socket.broadcast.to("room").emit("message", { message, date, idChat });
+    socket.broadcast.to(idChat).emit("message", { message, date, idChat });
   });
 
-  socket.on("joinChat", ({ idChat }) => {
-    console.log("joinujemy");
-    socket.join(idChat);
+  socket.on("joinChat", async () => {
+    const token = jwt.sign(
+      {
+        exp: Math.floor(Date.now() / 1000) + 60 * 60,
+        data: {
+          id: 1,
+        },
+      },
+      jwtSecret
+    );
+    if (token) {
+      const {
+        data: { id: idUser },
+      } = jwt.verify(token, jwtSecret);
+      const getChatsQuery = `
+          select  chats.id as "idChat"
+      from(select id_user_1 
+            from friends 
+            where id_user_2=$1
+            union
+            select id_user_2
+            from friends 
+            where id_user_1=$1) as result
+      inner join chats on chats.id_user_1 = result.id_user_1 or chats.id_user_2 = result.id_user_1
+      left join users on users.id = result.id_user_1`;
+
+      const { rows: chats } = await client.query(getChatsQuery, [idUser]);
+      for (let i = 0; i < chats.length; i++) {
+        socket.join(chats[i].idChat);
+      }
+    }
   });
-
-  socket.request.session.socketio = socket.id;
-  socket.request.session.save();
 });
 
-server.post("/friend/chat/join", (req, res) => {
-  const { users } = req.body;
-  // const { io } = req;
-  const session = req.session;
-  console.log(session);
-  console.log("robimy nasłuchiwanie");
-  // console.log(socketIO.sockets.connected[session.socketio]);
-  //console.log(socketIO.sockets.connected[session.socketio]);
-
-  // socketIO.sockets.connected[session.socketio].join("room");
-
-  // const { io } = req;
-  // io.on("connect", (socket) => {
-  //   console.log("połączone");
-  // });
-  // for (let i = 0; i < users.length; i++) {
-  //   // io.join("room");
-  // }
-  res.status(200);
-  // console.log(Server.socket.adapter.rooms[2]);
-});
-
-// socketIO.local.emit("chat", 2);
 (async () => {
   await app.prepare();
 
   await nextI18Next.initPromise;
   server.use(nextI18NextMiddleware(nextI18Next));
-
-  socketIO.use((socket, next) => {
-    sessionMiddleware(socket.request, socket.request.res || {}, next);
-  });
 
   server.use("/comment", commentRoute);
   server.use("/reply", replyRoute);

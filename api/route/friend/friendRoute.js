@@ -3,9 +3,6 @@ const jwt = require("jsonwebtoken");
 const { client } = require("../../../config/pgAdaptor");
 const { jwtSecret } = require("../../../config/keys");
 const router = express.Router();
-const io = require("socket.io")();
-// const Server = require("../../../server");
-// console.log(Server.socket);
 
 router.get("/get", async (req, res) => {
   const token = jwt.sign(

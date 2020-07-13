@@ -21,11 +21,11 @@ const Messenger = ({
   const [user, setUser] = useState({ id: null });
 
   useEffect(() => {
-    if (newMessage.idChat == 2) {
+    if (newMessage.idChat == chat.idChat) {
       setMessages([
         ...messages,
         {
-          id: 1,
+          id: chat.idChat,
           idChat: newMessage.idChat,
           message: newMessage.message,
           date: newMessage.date,
@@ -34,7 +34,7 @@ const Messenger = ({
       ]);
     }
   }, [newMessage]);
-  console.log(newMessage);
+
   useEffect(() => {
     if (user.id !== chat.user.id) {
       getMesseges({
