@@ -36,16 +36,17 @@ const Messenger = ({
   }, [newMessage]);
 
   useEffect(() => {
+    const { idChat } = chat;
     if (user.id !== chat.user.id) {
       getMesseges({
-        idChat: chat.idChat,
+        idChat: idChat,
         messages: [],
         setMessages,
         setStatusOfLoading,
       });
       setUser(chat.user);
     }
-  }, [chat.user]);
+  }, [chat.idChat]);
   if (isLoading) return <Spinner />;
   return (
     <div
@@ -67,6 +68,7 @@ const Messenger = ({
         idChat={chat.idChat}
         messages={messages}
         setMessages={setMessages}
+        converser={user.id}
       />
     </div>
   );

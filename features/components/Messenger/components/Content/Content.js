@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useRef, useContext, useEffect } from "react";
 import Router from "../../../../route/routes";
 import AppContext from "../../../../context/AppContext";
 // import { ConsoleView } from "react-device-detect";
@@ -6,8 +6,19 @@ import AppContext from "../../../../context/AppContext";
 const Content = ({ messages, user }) => {
   const { owner } = useContext(AppContext);
 
+  const contentRef = useRef(null);
+
+  useEffect(() => {
+    const { current: content } = contentRef;
+    content.scrollTop = content.scrollHeight;
+  }, []);
+
   return (
-    <div className="messenger__text" data-testid="messenger-chat">
+    <div
+      className="messenger__text"
+      ref={contentRef}
+      data-testid="messenger-chat"
+    >
       {messages.map((message, index) => {
         const addAuthor =
           index + 1 === messages.length ||

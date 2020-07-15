@@ -2,9 +2,10 @@ import React, { useState, useRef, useEffect, useContext } from "react";
 import { MdSend } from "react-icons/md";
 import AppContext from "../../../../context/AppContext";
 import i18next from "../../../../../i18n";
+import { addMessage } from "../../services/functions/index";
 const { useTranslation } = i18next;
 
-const Downbar = ({ idChat, setMessages, messages }) => {
+const Downbar = ({ idChat, setMessages, messages, converser }) => {
   const { t } = useTranslation(["component"]);
 
   const placeholder = t("component:messenger.placeholder");
@@ -19,8 +20,15 @@ const Downbar = ({ idChat, setMessages, messages }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const date = new Date();
-    socket.emit("sendChatMessage", { idChat, message, date });
     setMessages([...messages, { idUser: owner.id, message, date }]);
+    addMessage({
+      idChat,
+      message,
+      date,
+      idUser: owner.id,
+      socket,
+      messageTo: converser,
+    });
   };
 
   useEffect(() => {

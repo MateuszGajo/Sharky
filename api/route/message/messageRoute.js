@@ -36,4 +36,26 @@ router.post("/get", async (req, res) => {
   }
 });
 
+router.post("/add", async (req, res) => {
+  const { idChat, message, idUser, date } = req.body;
+
+  const addMessageQuery = `
+  insert into chat_messages(id_chat, id_user, message, date)
+  values($1, $2, $3, $4)
+  returning id
+    `;
+
+  try {
+    const { rows } = await client.query(addMessageQuery, [
+      idChat,
+      idUser,
+      message,
+      date,
+    ]);
+    res.status(200).json({ idMessage: rows[0].id });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
 module.exports = router;

@@ -15,6 +15,7 @@ const { client } = require("./config/pgAdaptor");
 const { jwtSecret } = require("./config/keys");
 const bodyParser = require("body-parser");
 const { expressSessionSecret } = require("./config/keys");
+const { userJoin, userLeave, existUser } = require("./utils/users");
 
 const nextI18Next = require("./i18n/server");
 
@@ -28,8 +29,22 @@ const socketIO = io(httpServer);
 server.use(bodyParser.json());
 
 socketIO.sockets.on("connection", (socket) => {
-  socket.on("sendChatMessage", ({ idChat, message, date }) => {
-    socket.broadcast.to(idChat).emit("message", { message, date, idChat });
+  socket.on(
+    "sendChatMessage",
+    ({ idMessage, idChat, idUser, message, date, messageTo }) => {
+      const unReadMessageQuery = `update chats set message_to=$1 where id=$2;`;
+      if (!existUser(messageTo))
+        client.query(unReadMessageQuery, [messageTo, idChat]);
+
+      socket.broadcast
+        .to(idChat)
+        .emit("message", { idMessage, idChat, idUser, message, date });
+    }
+  );
+
+  socket.on("isMessageRead", ({ isRead, idChat, messageTo }) => {
+    const unReadMessageQuery = `update chats set message_to=$1 where id=$2;`;
+    if (!isRead) client.query(unReadMessageQuery, [messageTo, idChat]);
   });
 
   socket.on("joinChat", async () => {
@@ -46,6 +61,9 @@ socketIO.sockets.on("connection", (socket) => {
       const {
         data: { id: idUser },
       } = jwt.verify(token, jwtSecret);
+
+      userJoin(idUser);
+
       const getChatsQuery = `
           select  chats.id as "idChat"
       from(select id_user_1 
@@ -62,6 +80,24 @@ socketIO.sockets.on("connection", (socket) => {
       for (let i = 0; i < chats.length; i++) {
         socket.join(chats[i].idChat);
       }
+    }
+  });
+
+  socket.on("disconnet", (socket) => {
+    const token = jwt.sign(
+      {
+        exp: Math.floor(Date.now() / 1000) + 60 * 60,
+        data: {
+          id: 1,
+        },
+      },
+      jwtSecret
+    );
+    if (token) {
+      const {
+        data: { id: idUser },
+      } = jwt.verify(token, jwtSecret);
+      userLeave(idUser);
     }
   });
 });

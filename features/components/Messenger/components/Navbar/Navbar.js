@@ -10,7 +10,6 @@ const Navbar = ({
   user,
   windowMessenger,
 }) => {
-  console.log(user);
   return (
     <div className="messenger__navbar">
       <div

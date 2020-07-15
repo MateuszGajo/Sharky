@@ -19,7 +19,7 @@ router.get("/get", async (req, res) => {
   } = jwt.verify(token, jwtSecret);
 
   const getFriendsQuery = `
-  select result.id_user_1 as "idUser", chats.id as "idChat", users.first_name as "firstName", users.last_name as "lastName", users.photo
+  select result.id_user_1 as "idUser", chats.id as "idChat", chats.message_to as "messageTo", users.first_name as "firstName", users.last_name as "lastName", users.photo
 	from(select id_user_1 
         from friends 
         where id_user_2=$1
@@ -43,14 +43,20 @@ router.post("/chat/join", (req, res) => {
   const { users } = req.body;
   const { io } = req;
   const session = req.session;
-  console.log("route");
-  // console.log(session);
-  // console.log(io.sockets.connected);
+
   for (let i = 0; i < users.length; i++) {
     io.sockets.connected[session.socketio].join(users[i].idChat);
   }
 
   res.status(200);
+});
+
+router.post("/message/read", (req, res) => {
+  const { idChat } = req.body;
+
+  const readMessageQuery = `update chats set message_to=null where id=$1;`;
+
+  client.query(readMessageQuery, [idChat]);
 });
 
 module.exports = router;
