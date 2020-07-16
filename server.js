@@ -36,15 +36,20 @@ socketIO.sockets.on("connection", (socket) => {
       if (!existUser(messageTo))
         client.query(unReadMessageQuery, [messageTo, idChat]);
 
-      socket.broadcast
-        .to(idChat)
-        .emit("message", { idMessage, idChat, idUser, message, date });
+      socket.broadcast.to(idChat).emit("message", {
+        idMessage,
+        idChat,
+        idUser,
+        message,
+        date,
+        messageTo,
+      });
     }
   );
 
-  socket.on("isMessageRead", ({ isRead, idChat, messageTo }) => {
+  socket.on("isMessageUnRead", ({ idChat, messageTo }) => {
     const unReadMessageQuery = `update chats set message_to=$1 where id=$2;`;
-    if (!isRead) client.query(unReadMessageQuery, [messageTo, idChat]);
+    client.query(unReadMessageQuery, [messageTo, idChat]);
   });
 
   socket.on("joinChat", async () => {

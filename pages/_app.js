@@ -14,9 +14,12 @@ const MyApp = ({ Component, pageProps }) => {
 
   useEffect(() => {
     socket = socketIOClient(SERVER_URL);
-    socket.on("message", ({ idMessage, idChat, idUser, message, date }) => {
-      setNewMessage({ idMessage, idChat, idUser, message, date });
-    });
+    socket.on(
+      "message",
+      ({ idMessage, idChat, idUser, message, date, messageTo }) => {
+        setNewMessage({ idMessage, idChat, idUser, message, date, messageTo });
+      }
+    );
   }, [SERVER_URL]);
 
   return (

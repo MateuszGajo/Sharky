@@ -10,10 +10,13 @@ const Item = ({ user }) => {
   const [isNewMessage, setStatusOfNewMessage] = useState(
     owner.id === user?.messageTo
   );
-
   useEffect(() => {
-    const { idChat } = newMessage;
-    if (idChat == user.idChat && chat.idChat != user.idChat) {
+    const { idChat, messageTo } = newMessage;
+    if (
+      idChat == user.idChat &&
+      chat.idChat != user.idChat &&
+      messageTo == owner.id
+    ) {
       setStatusOfNewMessage(true);
     }
   }, [newMessage]);
