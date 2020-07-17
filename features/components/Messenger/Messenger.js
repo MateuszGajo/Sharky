@@ -3,9 +3,9 @@ import cx from "classnames";
 import Navbar from "./components/Navbar/Navbar";
 import Content from "./components/Content/Content";
 import Downbar from "./components/Downbar/Downbar";
-import Spinner from "../Spinner/Spinner";
+import Spinner from "@components/Spinner/Spinner";
 import { getMesseges } from "./services/functions/index";
-import AppContext from "../../context/AppContext";
+import AppContext from "@features/context/AppContext";
 
 const Messenger = ({
   setStatusOfMessenger = null,

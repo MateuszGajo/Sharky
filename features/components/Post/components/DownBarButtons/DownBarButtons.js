@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useCallback } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { FiMessageCircle } from "react-icons/fi";
 import { AiOutlineShareAlt } from "react-icons/ai";
 import { IoIosHeartEmpty } from "react-icons/io";
@@ -8,10 +8,10 @@ import {
   likePost,
   unlikePost,
 } from "../../services/functions/index";
-import Router from "../../../../route/routes";
+import Router from "@features/route/routes";
 import PostContext from "../../context/PostContext";
 import WizzardContext from "../../context/WizzardContext";
-import AppContext from "../../../../context/AppContext";
+import AppContext from "@features/context/AppContext";
 
 const DownBarButtons = () => {
   const { setStatusOfError: setError } = useContext(AppContext);

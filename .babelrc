@@ -1,3 +1,16 @@
 {
-  "presets": ["next/babel"]
+  "presets": ["next/babel"],
+  "plugins": [
+    [
+      "module-resolver",{
+        "alias":{
+          "@i18n":"./i18n",
+          "@pages":"./pages",
+          "@features":"./features",
+          "@components":"./features/components",
+          "@common":"./features/common"
+        }
+      }
+    ]
+  ]
 }

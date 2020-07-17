@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import { MdSend } from "react-icons/md";
-import AppContext from "../../../../context/AppContext";
-import i18next from "../../../../../i18n";
+import AppContext from "@features/context/AppContext";
+import i18next from "@i18n";
 import { addMessage } from "../../services/functions/index";
 const { useTranslation } = i18next;
 

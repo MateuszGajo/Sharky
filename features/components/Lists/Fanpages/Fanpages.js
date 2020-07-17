@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Card from "../Card/Card";
-import i18next from '../../../../i18n';
+import i18next from "@i18n";
 const { useTranslation } = i18next;
 
 const Fanpages = ({

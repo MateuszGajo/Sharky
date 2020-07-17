@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import Mess from "../../../../../Messenger/Messenger";
+import Mess from "@components/Messenger/Messenger";
 import { WizzardContext } from "../../context/WizzardContext";
 
 const Messenger = () => {

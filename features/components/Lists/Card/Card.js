@@ -1,6 +1,6 @@
 import React from "react";
 import cx from "classnames";
-import Router from "../../../route/routes";
+import Router from "@features/route/routes";
 
 const Card = ({
   data = {

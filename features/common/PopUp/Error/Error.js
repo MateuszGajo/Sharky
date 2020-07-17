@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { MdErrorOutline } from "react-icons/md";
-import AppContext from "../../../context/AppContext";
-import i18next from "../../../../i18n/server";
+import AppContext from "@features/context/AppContext";
+import i18next from "@i18n";
 import { useEffect } from "react";
 const { useTranslation } = i18next;
 

@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useRef } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import Post from "../../Post/Post";
-import Spinner from "../../Spinner/Spinner";
-import withWizzard from "../../Post/withWizzard";
-import WizzardContext from "../../Post/context/WizzardContext";
-import { getPosts } from "../../Post/services/functions/index";
-import i18next from "../../../../i18n";
+import Post from "@components/Post/Post";
+import Spinner from "@components/Spinner/Spinner";
+import withWizzard from "@components/Post/withWizzard";
+import WizzardContext from "@components/Post/context/WizzardContext";
+import { getPosts } from "@components/Post/services/functions/index";
+import i18next from "@i18n";
 
 const { useTranslation } = i18next;
 

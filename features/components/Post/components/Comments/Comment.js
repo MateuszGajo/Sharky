@@ -4,7 +4,7 @@ import { FiMessageCircle, FiVolumeX, FiFlag } from "react-icons/fi";
 import { BsThreeDots } from "react-icons/bs";
 import { IconContext } from "react-icons";
 import cx from "classnames";
-import i18next from "../../../../../i18n";
+import i18next from "@i18n";
 import {
   likeComment,
   unlikeComment,

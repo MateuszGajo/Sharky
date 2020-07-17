@@ -3,8 +3,7 @@ import cx from "classnames";
 import Item from "./components/Item/Item";
 import { getFriends } from "../../services/functions/index";
 import { WizzardContext } from "../../context/WizzardContext";
-import AppContext from "../../../../../../context/AppContext";
-import { getOwner } from "../../../../../../service/functions";
+import AppContext from "@features/context/AppContext";
 
 const FriendsBar = () => {
   const friendsBar = useRef(null);

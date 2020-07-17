@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import { AiOutlineCheck } from "react-icons/ai";
-import Router from "../../../../route/routes";
+import Router from "@features/route/routes";
 import { editPost } from "../../services/functions/index";
 import PostContext from "../../context/PostContext";
 import WizzardContext from "../../context/WizzardContext";
-import AppContext from "../../../../context/AppContext";
+import AppContext from "@features/context/AppContext";
 
 const Content = () => {
   const textareaRef = useRef(null);

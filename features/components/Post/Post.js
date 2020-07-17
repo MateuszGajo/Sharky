@@ -4,13 +4,13 @@ import DownBarButtons from "./components/DownBarButtons/DownBarButtons";
 import Navbar from "./components/Navbar/Navbar";
 import Content from "./components/Content/Content";
 import Comment from "./components/Comments/CommentsContainer";
-import SecondaryInput from "../../common/SecondaryInput/SecondaryInput";
-import Report from "../../common/PopUp/Report/Report";
+import SecondaryInput from "@common/SecondaryInput/SecondaryInput";
+import Report from "@common/PopUp/Report/Report";
 import withPost from "./withPost";
 import PostContext from "./context/PostContext";
 import WizzardContext from "./context/WizzardContext";
-import AppContext from "../../context/AppContext";
-import i18next from "../../../i18n";
+import AppContext from "@features/context/AppContext";
+import i18next from "@i18n";
 import { addComent, getComments } from "./services/functions/index";
 const { useTranslation } = i18next;
 

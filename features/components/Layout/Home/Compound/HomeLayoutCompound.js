@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { WizzardContext } from "./context/WizzardContext";
 import NavBar from "./components/NavBar/Navbar";
 import Main from "./components/Main/Main";

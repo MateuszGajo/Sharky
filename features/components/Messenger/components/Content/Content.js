@@ -1,6 +1,6 @@
 import React, { useRef, useContext, useEffect } from "react";
-import Router from "../../../../route/routes";
-import AppContext from "../../../../context/AppContext";
+import Router from "@features/route/routes";
+import AppContext from "@features/context/AppContext";
 // import { ConsoleView } from "react-device-detect";
 
 const Content = ({ messages, user }) => {

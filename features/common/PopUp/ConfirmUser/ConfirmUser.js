@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import cx from "classnames";
-import PrimaryInput from "../../PrimaryInput/PrimaryInput";
-import PrimaryButton from "../../PrimaryButton/PrimaryButton";
-import i18next from '../../../../i18n';
+import PrimaryInput from "@common/PrimaryInput/PrimaryInput";
+import PrimaryButton from "@common/PrimaryButton/PrimaryButton";
+import i18next from "@i18n";
 const { useTranslation } = i18next;
 
-const ConfirmUser = ({ setVerify, isOpen = true, setOpen }) => {
+const ConfirmUser = ({ isOpen = true, setOpen }) => {
   const { t } = useTranslation();
   const title = t("common:pop-up.confirm-user.title");
   const buttonText = t("common:pop-up.confirm-user.button");

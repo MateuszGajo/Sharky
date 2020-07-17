@@ -1,12 +1,12 @@
 import React, { useEffect, useRef } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import { IoMdShareAlt } from "react-icons/io";
-import i18next from "../../../../../i18n";
 import UserSettings from "./components/UserSettings/UserSettings";
 import OwnerSettings from "./components/OwnerSettings/OwnerSettings";
 import PostContext from "../../context/PostContext";
 import WizzardContext from "../../context/WizzardContext";
 import { useContext } from "react";
+import i18next from "@i18n";
 const { useTranslation } = i18next;
 
 const NavBar = ({ focusCollapse, focusIcon }) => {
@@ -118,24 +118,9 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
             data-testid="post-setting"
           >
             {post?.idUserShare == owner.id || post.idUser == owner.id ? (
-              <OwnerSettings
-              // setStatusOfEdit={setStatusOfEdit}
-              // isShare={post.idUserShare !== null}
-              // selfShare={post.idUserShare == post.idUser}
-              // idShare={post.idShare}
-              // idPost={post.idPost}
-              // posts={posts}
-              // setPosts={setPosts}
-              />
+              <OwnerSettings />
             ) : (
-              <UserSettings
-              // posts={posts}
-              // setPosts={setPosts}
-              // setStatusOfHiddenPost={setStatusOfHiddenPost}
-              // setStatusOfReport={setStatusOfReport}
-              // idUser={idUser}
-              // setMuteUser={setMuteUser}
-              />
+              <UserSettings />
             )}
           </div>
         </div>

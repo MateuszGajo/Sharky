@@ -2,14 +2,14 @@ import React, { useContext } from "react";
 import { FiEdit } from "react-icons/fi";
 import { AiOutlineDelete } from "react-icons/ai";
 import { IconContext } from "react-icons";
-import i18next from "../../../../../../../i18n";
 import {
   deletePost,
   deletePostShare,
-} from "../../../../services/functions/index";
-import PostContext from "../../../../context/PostContext";
-import WizzardContext from "../../../../context/WizzardContext";
-import AppContext from "../../../../../../context/AppContext";
+} from "@components/Post/services/functions/index";
+import PostContext from "@components/Post/context/PostContext";
+import WizzardContext from "@components/Post/context/WizzardContext";
+import AppContext from "@features/context/AppContext";
+import i18next from "@i18n";
 const { useTranslation } = i18next;
 
 const OwnerSettings = () => {

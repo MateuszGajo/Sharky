@@ -1,8 +1,6 @@
 import React from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { IoMdArrowBack } from "react-icons/io";
-import { MdGroup } from "react-icons/md";
-import { IconContext } from "react-icons";
 
 const Navbar = ({
   setStatusOfDisplayMobile,

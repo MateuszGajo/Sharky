@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import socketIOClient from "socket.io-client";
-import AppContext from "../features/context/AppContext";
+import AppContext from "@features/context/AppContext";
 import { SERVER_URL } from "../config/config";
-import { getOwner } from "../features/service/Functions/index";
+import { getOwner } from "@features/service/functions/index";
 let socket;
 const MyApp = ({ Component, pageProps }) => {
   const [owner, setOwner] = useState({});
