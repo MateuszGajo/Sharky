@@ -27,8 +27,8 @@
             },
             "button":"Send"
         },
-        "bad-request":{
-            "text":"Request failed"
+        "error":{
+            "bad-request":"Request failed"
         }
     }  
 }

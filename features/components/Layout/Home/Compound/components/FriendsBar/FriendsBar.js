@@ -1,10 +1,10 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 import cx from "classnames";
 import Item from "./components/Item/Item";
-import { getFriends } from "../../services/Functions/index";
+import { getFriends } from "../../services/functions/index";
 import { WizzardContext } from "../../context/WizzardContext";
 import AppContext from "../../../../../../context/AppContext";
-import { getOwner } from "../../../../../../service/Functions";
+import { getOwner } from "../../../../../../service/functions";
 
 const FriendsBar = () => {
   const friendsBar = useRef(null);

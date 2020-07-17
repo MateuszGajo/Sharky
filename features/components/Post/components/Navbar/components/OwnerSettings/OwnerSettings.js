@@ -6,14 +6,16 @@ import i18next from "../../../../../../../i18n";
 import {
   deletePost,
   deletePostShare,
-} from "../../../../services/Functions/index";
+} from "../../../../services/functions/index";
 import PostContext from "../../../../context/PostContext";
 import WizzardContext from "../../../../context/WizzardContext";
+import AppContext from "../../../../../../context/AppContext";
 const { useTranslation } = i18next;
 
 const OwnerSettings = () => {
   const { t } = useTranslation(["component"]);
 
+  const { setStatusOfError: setError } = useContext(AppContext);
   const { setStatusOfEdit, post } = useContext(PostContext);
   const { posts, setPosts } = useContext(WizzardContext);
 
@@ -53,9 +55,9 @@ const OwnerSettings = () => {
         className="post__item__navbar__column-end__setting__collapse__item"
         onClick={() => {
           if (isShare) {
-            deletePostShare({ idShare, posts, setPosts, isSingle });
+            deletePostShare({ idShare, posts, setPosts, isSingle, setError });
           } else {
-            deletePost({ idPost, posts, setPosts, isSingle });
+            deletePost({ idPost, posts, setPosts, isSingle, setError });
           }
         }}
       >

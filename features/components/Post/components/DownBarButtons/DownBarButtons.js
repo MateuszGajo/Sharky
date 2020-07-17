@@ -7,12 +7,14 @@ import {
   sharePost,
   likePost,
   unlikePost,
-} from "../../services/Functions/index";
+} from "../../services/functions/index";
 import Router from "../../../../route/routes";
 import PostContext from "../../context/PostContext";
 import WizzardContext from "../../context/WizzardContext";
+import AppContext from "../../../../context/AppContext";
 
 const DownBarButtons = () => {
+  const { setStatusOfError: setError } = useContext(AppContext);
   const { post, numberOfComments } = useContext(PostContext);
   const { posts, setPosts, newLike, setNewLike } = useContext(WizzardContext);
 
@@ -60,8 +62,8 @@ const DownBarButtons = () => {
         })}
         onClick={() => {
           idLike
-            ? unlikePost({ idPost: post.idPost, setNewLike, idLike })
-            : likePost({ idPost: post.idPost, setNewLike });
+            ? unlikePost({ idPost: post.idPost, setNewLike, idLike, setError })
+            : likePost({ idPost: post.idPost, setNewLike, setError });
         }}
       >
         <IoIosHeartEmpty />
@@ -76,7 +78,7 @@ const DownBarButtons = () => {
         className="post__item__downbar__buttons__icon  hover-family-color"
         onClick={() => {
           setNumberOfShares(numberOfShares + 1);
-          sharePost({ post, posts, setPosts });
+          sharePost({ post, posts, setPosts, setError });
         }}
       >
         <AiOutlineShareAlt />

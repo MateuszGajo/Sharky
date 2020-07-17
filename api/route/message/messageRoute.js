@@ -41,7 +41,7 @@ router.post("/add", async (req, res) => {
 
   const addMessageQuery = `
   insert into chat_messages(id_chat, id_user, message, date)
-  values($1, $2, $3, $4)
+  values($1, $2, $3, $44)
   returning id
     `;
 

@@ -3,15 +3,17 @@ import { BsEyeSlash } from "react-icons/bs";
 import { FiVolumeX, FiFlag } from "react-icons/fi";
 import { MdBlock } from "react-icons/md";
 import { IconContext } from "react-icons";
-import { muteUser, blockUser } from "../../../../services/Functions/index";
+import { muteUser, blockUser } from "../../../../services/functions/index";
 import i18next from "../../../../../../../i18n";
 import PostContext from "../../../../context/PostContext";
 import WizzardContext from "../../../../context/WizzardContext";
+import AppContext from "../../../../../../context/AppContext";
 const { useTranslation } = i18next;
 
 const UserSettings = () => {
   const { t } = useTranslation(["component"]);
 
+  const { setStatusOfError: setError } = useContext(AppContext);
   const {
     setStatusOfHiddenPost,
     setStatusOfReport,
@@ -57,6 +59,7 @@ const UserSettings = () => {
             idMuteUser: idOwnerPost,
             setMuteUser,
             isSingle,
+            setError,
           })
         }
       >
@@ -99,7 +102,13 @@ const UserSettings = () => {
       <div
         className="post__item__navbar__column-end__setting__collapse__item"
         onClick={() =>
-          blockUser({ idBlockUser: idOwnerPost, posts, setPosts, isSingle })
+          blockUser({
+            idBlockUser: idOwnerPost,
+            posts,
+            setPosts,
+            isSingle,
+            setError,
+          })
         }
       >
         <div className="post__item__navbar__column-end__setting__collapse__item--icon">

@@ -2,15 +2,16 @@ import React, { useState, useEffect, useContext } from "react";
 import Comment from "./Comment";
 import SecondaryInput from "../../../../common/SecondaryInput/SecondaryInput";
 import i18next from "../../../../../i18n";
-import { getReplies, addReply } from "../../services/Functions/index";
-import PostContext from "../../context/PostContext";
+import { getReplies, addReply } from "../../services/functions/index";
 import WizzardContext from "../../context/WizzardContext";
+import AppContext from "../../../../context/AppContext";
 const { useTranslation } = i18next;
 
 const withContainer = (WrappedComponent) => {
   const WithContainer = ({ comment, focusCollapse, focusIcon }) => {
     const { t } = useTranslation(["component"]);
 
+    const { setStatusOfError: setError } = useContext(AppContext);
     const {
       users,
       setUsers,
@@ -40,6 +41,7 @@ const withContainer = (WrappedComponent) => {
         date: new Date(),
         clearText: setReply,
         setNewComment,
+        setError,
       });
     };
 

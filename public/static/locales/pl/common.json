@@ -27,8 +27,8 @@
             },
             "button":"Prześlij"
         },
-        "bad-request":{
-            "text":"Żądanie nie powiodło się"
+        "error":{
+            "bad-request":"Żądanie nie powiodło się"
         }
     }
 }

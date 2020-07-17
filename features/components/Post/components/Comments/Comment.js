@@ -10,8 +10,9 @@ import {
   unlikeComment,
   likeReply,
   unlikeReply,
-} from "../../services/Functions/index";
+} from "../../services/functions/index";
 import WizzardContext from "../../context/WizzardContext";
+import AppContext from "../../../../context/AppContext";
 
 const { useTranslation } = i18next;
 
@@ -27,6 +28,7 @@ const Commnet = ({
 }) => {
   const { t } = useTranslation(["component"]);
 
+  const { setStatusOfError: setError } = useContext(AppContext);
   const { newLike, setNewLike } = useContext(WizzardContext);
 
   const settingRef = useRef(null);
@@ -52,12 +54,12 @@ const Commnet = ({
   const setlikeComment = () => {
     if (idLike) {
       "numberOfReplies" in comment
-        ? unlikeComment({ idLike, idComment: comment.id, setNewLike })
-        : unlikeReply({ idLike, idReply: comment.id, setNewLike });
+        ? unlikeComment({ idLike, idComment: comment.id, setNewLike, setError })
+        : unlikeReply({ idLike, idReply: comment.id, setNewLike, setError });
     } else {
       "numberOfReplies" in comment
-        ? likeComment({ idComment: comment.id, setNewLike })
-        : likeReply({ idReply: comment.id, setNewLike });
+        ? likeComment({ idComment: comment.id, setNewLike, setError })
+        : likeReply({ idReply: comment.id, setNewLike, setError });
     }
   };
 

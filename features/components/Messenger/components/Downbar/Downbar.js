@@ -10,7 +10,7 @@ const Downbar = ({ idChat, setMessages, messages, converser }) => {
 
   const placeholder = t("component:messenger.placeholder");
 
-  const { socket, owner } = useContext(AppContext);
+  const { socket, owner, setStatusOfError: setError } = useContext(AppContext);
 
   const [message, setMessage] = useState("");
 
@@ -28,6 +28,7 @@ const Downbar = ({ idChat, setMessages, messages, converser }) => {
       idUser: owner.id,
       socket,
       messageTo: converser,
+      setError,
     });
   };
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import WizzardContext from "./context/WizzardContext";
-import { getOwner } from "../../service/Functions/index";
+import { getOwner } from "../../service/functions/index";
 
 const withWizzard = (WrappedComponent) => {
   return () => {

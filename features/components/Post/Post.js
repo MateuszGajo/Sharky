@@ -9,18 +9,16 @@ import Report from "../../common/PopUp/Report/Report";
 import withPost from "./withPost";
 import PostContext from "./context/PostContext";
 import WizzardContext from "./context/WizzardContext";
+import AppContext from "../../context/AppContext";
 import i18next from "../../../i18n";
-import { addComent, getComments } from "./services/Functions/index";
+import { addComent, getComments } from "./services/functions/index";
 const { useTranslation } = i18next;
 
 const Post = ({ post, focusElement }) => {
   const { t } = useTranslation(["component"]);
   const loadMoreComments = t("component:post.comments.load-more-comments");
 
-  const focusCollapse = useRef(focusElement?.current || null);
-  const focusIcon = useRef(null);
-
-  const [commentText, setCommentText] = useState("");
+  const { setStatusOfError: setError } = useContext(AppContext);
 
   const {
     newComment,
@@ -30,6 +28,11 @@ const Post = ({ post, focusElement }) => {
     users,
     setUsers,
   } = useContext(WizzardContext);
+
+  const focusCollapse = useRef(focusElement?.current || null);
+  const focusIcon = useRef(null);
+
+  const [commentText, setCommentText] = useState("");
 
   const {
     isHidenPost,
@@ -51,6 +54,7 @@ const Post = ({ post, focusElement }) => {
       date: new Date(),
       clearText: setCommentText,
       setNewComment,
+      setError,
     });
   };
 

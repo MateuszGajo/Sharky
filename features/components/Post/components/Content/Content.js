@@ -1,13 +1,15 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import { AiOutlineCheck } from "react-icons/ai";
 import Router from "../../../../route/routes";
-import { editPost } from "../../services/Functions/index";
+import { editPost } from "../../services/functions/index";
 import PostContext from "../../context/PostContext";
 import WizzardContext from "../../context/WizzardContext";
+import AppContext from "../../../../context/AppContext";
 
 const Content = () => {
   const textareaRef = useRef(null);
 
+  const { setStatusOfError: setError } = useContext(AppContext);
   const { post, isEdit, setStatusOfEdit } = useContext(PostContext);
   const { newContent, setNewContent } = useContext(WizzardContext);
 
@@ -22,7 +24,13 @@ const Content = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    editPost({ idPost: post.idPost, content, setNewContent, setStatusOfEdit });
+    editPost({
+      idPost: post.idPost,
+      content,
+      setNewContent,
+      setStatusOfEdit,
+      setError,
+    });
   };
 
   useEffect(() => {

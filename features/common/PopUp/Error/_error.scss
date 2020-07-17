@@ -1,4 +1,4 @@
-.bad-request{
+.error{
     position:fixed;
     top:0;
     bottom:0;
@@ -11,7 +11,7 @@
     z-index:5;
 }
 
-.bad-request__container{
+.error__container{
     width: 40vw;
     height:50vh;
     padding:20px 5px;
@@ -22,16 +22,16 @@
     align-items: center;
 }
 
-.bad-request__container__icon{
+.error__container__icon{
     font-size: 3.5rem;
 }
 
-.bad-request__container__text--span{
+.error__container__text--span{
     font-size: 2rem;
 }
 
 @media(max-width:1023px){
-    .bad-request__container{
+    .error__container{
         width: 80vw;
         height:80vh;
     }

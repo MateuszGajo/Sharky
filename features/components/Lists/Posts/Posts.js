@@ -4,7 +4,7 @@ import Post from "../../Post/Post";
 import Spinner from "../../Spinner/Spinner";
 import withWizzard from "../../Post/withWizzard";
 import WizzardContext from "../../Post/context/WizzardContext";
-import { getPosts } from "../../Post/services/Functions/index";
+import { getPosts } from "../../Post/services/functions/index";
 import i18next from "../../../../i18n";
 
 const { useTranslation } = i18next;

@@ -6,13 +6,10 @@ export const getMesseges = ({
   setMessages,
   setStatusOfLoading,
 }) => {
-  axios
-    .post("/message/get", { idChat })
-    .then(({ data: { messages } }) => {
-      setMessages([...messages, ...m]);
-      setStatusOfLoading(false);
-    })
-    .catch((err) => console.log(err));
+  axios.post("/message/get", { idChat }).then(({ data: { messages } }) => {
+    setMessages([...messages, ...m]);
+    setStatusOfLoading(false);
+  });
 };
 
 export const addMessage = ({
@@ -22,6 +19,7 @@ export const addMessage = ({
   date,
   messageTo,
   socket,
+  setError,
 }) => {
   axios
     .post("/message/add", { idChat, message, idUser, date })
@@ -35,5 +33,10 @@ export const addMessage = ({
         messageTo,
       })
     )
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const {
+        response: { data: message },
+      } = err;
+      setError({ occur: true, message });
+    });
 };

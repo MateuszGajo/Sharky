@@ -32,7 +32,7 @@ export const getUsers = async (users, setUsers, elements) => {
       .catch((err) => console.log(err));
 };
 
-export const muteUser = ({ idMuteUser, setMuteUser, isSingle }) => {
+export const muteUser = ({ idMuteUser, setMuteUser, isSingle, setError }) => {
   axios
     .post("/user/mute", {
       idMuteUser,
@@ -41,10 +41,21 @@ export const muteUser = ({ idMuteUser, setMuteUser, isSingle }) => {
       isSingle && Router.push("/");
       setMuteUser({ idUser: idMuteUser });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const {
+        response: { data: message },
+      } = err;
+      setError({ occur: true, message });
+    });
 };
 
-export const blockUser = ({ idBlockUser, posts, setPosts, isSingle }) => {
+export const blockUser = ({
+  idBlockUser,
+  posts,
+  setPosts,
+  isSingle,
+  setError,
+}) => {
   axios
     .post("/user/block", { idBlockUser })
     .then((resp) => {
@@ -55,7 +66,12 @@ export const blockUser = ({ idBlockUser, posts, setPosts, isSingle }) => {
       });
       setPosts(filtredPosts);
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const {
+        response: { data: message },
+      } = err;
+      setError({ occur: true, message });
+    });
 };
 
 export const getPosts = ({
@@ -108,6 +124,7 @@ export const addPost = ({
   posts,
   setPosts,
   clearText,
+  setError,
 }) => {
   axios
     .post("/post/add", {
@@ -133,28 +150,43 @@ export const addPost = ({
       ]);
       clearText("");
     })
-    .catch((err) => console.log(err.response));
+    .catch((err) => {
+      const {
+        response: { data: message },
+      } = err;
+      setError({ occur: true, message });
+    });
 };
 
-export const likePost = ({ idPost, setNewLike }) => {
+export const likePost = ({ idPost, setNewLike, setError }) => {
   axios
     .post("/post/like", { idPost })
     .then(({ data: { idPostLike } }) =>
       setNewLike({ idLike: idPostLike, idElement: idPost, type: "post" })
     )
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const {
+        response: { data: message },
+      } = err;
+      setError({ occur: true, message });
+    });
 };
 
-export const unlikePost = ({ idLike, idPost, setNewLike }) => {
+export const unlikePost = ({ idLike, idPost, setNewLike, setError }) => {
   axios
     .post("/post/unlike", { idLike })
     .then((resp) =>
       setNewLike({ idLike: null, idElement: idPost, type: "post" })
     )
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const {
+        response: { data: message },
+      } = err;
+      setError({ occur: true, message });
+    });
 };
 
-export const sharePost = ({ post, posts, setPosts }) => {
+export const sharePost = ({ post, posts, setPosts, setError }) => {
   const date = new Date();
   axios
     .post("/post/share", {
@@ -174,7 +206,12 @@ export const sharePost = ({ post, posts, setPosts }) => {
         ...posts,
       ]);
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const {
+        response: { data: message },
+      } = err;
+      setError({ occur: true, message });
+    });
 };
 
 export const editPost = ({
@@ -182,6 +219,7 @@ export const editPost = ({
   content,
   setNewContent,
   setStatusOfEdit,
+  setError,
 }) => {
   axios
     .post("/post/edit", { idPost, content })
@@ -189,10 +227,15 @@ export const editPost = ({
       setNewContent({ text: content, idPost });
       setStatusOfEdit(false);
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const {
+        response: { data: message },
+      } = err;
+      setError({ occur: true, message });
+    });
 };
 
-export const deletePost = ({ idPost, posts, setPosts, isSingle }) => {
+export const deletePost = ({ idPost, posts, setPosts, isSingle, setError }) => {
   axios
     .post("/post/delete", { idPost })
     .then((resp) => {
@@ -200,10 +243,21 @@ export const deletePost = ({ idPost, posts, setPosts, isSingle }) => {
       const newPosts = posts.filter((post) => post.idPost != idPost);
       setPosts(newPosts);
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const {
+        response: { data: message },
+      } = err;
+      setError({ occur: true, message });
+    });
 };
 
-export const deletePostShare = ({ idShare, posts, setPosts, isSingle }) => {
+export const deletePostShare = ({
+  idShare,
+  posts,
+  setPosts,
+  isSingle,
+  setError,
+}) => {
   axios
     .post("/post/share/delete", { idShare })
     .then((resp) => {
@@ -211,7 +265,12 @@ export const deletePostShare = ({ idShare, posts, setPosts, isSingle }) => {
       const newPosts = posts.filter((post) => post.idShare != idShare);
       setPosts(newPosts);
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const {
+        response: { data: message },
+      } = err;
+      setError({ occur: true, message });
+    });
 };
 
 export const getComments = ({
@@ -239,6 +298,7 @@ export const addComent = ({
   date,
   clearText,
   setNewComment,
+  setError,
 }) => {
   axios
     .post("/comment/add", {
@@ -256,10 +316,15 @@ export const addComent = ({
       });
       clearText("");
     })
-    .catch((err) => console.log("err"));
+    .catch((err) => {
+      const {
+        response: { data: message },
+      } = err;
+      setError({ occur: true, message });
+    });
 };
 
-export const likeComment = ({ idComment, setNewLike }) => {
+export const likeComment = ({ idComment, setNewLike, setError }) => {
   axios
     .post("/comment/like", { idComment })
     .then(({ data: { idCommentLike } }) => {
@@ -269,16 +334,26 @@ export const likeComment = ({ idComment, setNewLike }) => {
         type: "comment",
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const {
+        response: { data: message },
+      } = err;
+      setError({ occur: true, message });
+    });
 };
 
-export const unlikeComment = ({ idLike, idComment, setNewLike }) => {
+export const unlikeComment = ({ idLike, idComment, setNewLike, setError }) => {
   axios
     .post("/comment/unlike", { idLike })
     .then((resp) =>
       setNewLike({ idLike: null, idElement: idComment, type: "comment" })
     )
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const {
+        response: { data: message },
+      } = err;
+      setError({ occur: true, message });
+    });
 };
 
 export const getReplies = async ({
@@ -309,6 +384,7 @@ export const addReply = ({
   date,
   clearText,
   setNewComment,
+  setError,
 }) => {
   axios
     .post("/reply/add", {
@@ -326,23 +402,43 @@ export const addReply = ({
       });
       clearText("");
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const {
+        response: { data: message },
+      } = err;
+      setError({ occur: true, message });
+    });
 };
 
-export const likeReply = async ({ idReply, setNewLike }) => {
+export const likeReply = async ({ idReply, setNewLike, setError }) => {
   axios
     .post("/reply/like", { idReply })
     .then(({ data: { idReplyLike } }) =>
       setNewLike({ idLike: idReplyLike, idElement: idReply, type: "reply" })
     )
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const {
+        response: { data: message },
+      } = err;
+      setError({ occur: true, message });
+    });
 };
 
-export const unlikeReply = async ({ idLike, idReply, setNewLike }) => {
+export const unlikeReply = async ({
+  idLike,
+  idReply,
+  setNewLike,
+  setError,
+}) => {
   axios
     .post("/reply/unlike", { idLike })
     .then((resp) =>
       setNewLike({ idLike: null, idElement: idReply, type: "reply" })
     )
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const {
+        response: { data: message },
+      } = err;
+      setError({ occur: true, message });
+    });
 };
