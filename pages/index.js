@@ -4,13 +4,14 @@ import Spinner from "../features/components/Spinner/Spinner";
 import Posts from "../features/components/Lists/Posts/Posts";
 import HomeLayout from "../features/components/Layout/Home/HomeLayout";
 import AppContext from "../features/context/AppContext";
+import BadRequest from "../features/common/PopUp/BadRequest/BadRequest";
 import "../styles/main.scss";
 
 const Index = () => {
   const [initialized, setInitialized] = useState(false);
   // const [text, setText] = useState("");
 
-  const { socket } = useContext(AppContext);
+  const { socket, isBadRequest } = useContext(AppContext);
 
   useEffect(() => {
     i18next.initPromise.then((resp) => setInitialized(true));
@@ -29,13 +30,16 @@ const Index = () => {
   if (!initialized) return <Spinner />;
 
   return (
-    <HomeLayout>
-      {/* <form onSubmit={handleSubmit}>
+    <>
+      {isBadRequest && <BadRequest />}
+      <HomeLayout>
+        {/* <form onSubmit={handleSubmit}>
         <input type="text" onChange={(e) => setText(e.target.value)} />
         <button>wyslij</button>
       </form> */}
-      <Posts />
-    </HomeLayout>
+        <Posts />
+      </HomeLayout>
+    </>
   );
 };
 

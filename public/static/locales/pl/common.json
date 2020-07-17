@@ -26,6 +26,9 @@
                 "spam":"spam"
             },
             "button":"Prześlij"
+        },
+        "bad-request":{
+            "text":"Żądanie nie powiodło się"
         }
     }
 }

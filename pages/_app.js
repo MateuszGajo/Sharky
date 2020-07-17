@@ -7,6 +7,7 @@ let socket;
 const MyApp = ({ Component, pageProps }) => {
   const [owner, setOwner] = useState({});
   const [newMessage, setNewMessage] = useState({});
+  const [isBadRequest, setStatusOfBadRequest] = useState(true);
 
   useEffect(() => {
     getOwner(setOwner);
@@ -28,6 +29,8 @@ const MyApp = ({ Component, pageProps }) => {
         socket,
         owner,
         newMessage,
+        isBadRequest,
+        setStatusOfBadRequest,
       }}
     >
       <Component {...pageProps} />
