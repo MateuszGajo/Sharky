@@ -59,4 +59,17 @@ router.post("/message/read", (req, res) => {
   client.query(readMessageQuery, [idChat]);
 });
 
+router.post("/update/relation", async (req, res) => {
+  const { idRelation, idUser, relation } = req.body;
+
+  const updateRelationQuery = `update friend_relation set new_relation=$1, id_user=$2 where id_friendship=$3;`;
+
+  try {
+    await client.query(updateRelationQuery, [relation, idUser, idRelation]);
+    res.status(200);
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
 module.exports = router;

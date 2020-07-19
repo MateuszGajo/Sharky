@@ -10,13 +10,17 @@ import i18next from "@i18n";
 const { useTranslation } = i18next;
 
 const NavBar = ({ focusCollapse, focusIcon }) => {
-  const { lang } = useTranslation(["component"]);
+  const {
+    i18n: { language },
+  } = useTranslation(["component"]);
+  console.log(useTranslation(["component"]));
+  console.log(language);
 
   const settingRef = useRef(null);
 
   const { user, userShare, post } = useContext(PostContext);
   const { owner } = useContext(WizzardContext);
-  const dtf = new Intl.DateTimeFormat(lang || "pl", {
+  const dtf = new Intl.DateTimeFormat(language, {
     year: "numeric",
     month: "long",
     day: "2-digit",

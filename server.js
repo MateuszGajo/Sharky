@@ -11,6 +11,8 @@ const postRoute = require("./api/route/post/postRoute");
 const userRoute = require("./api/route/user/userRoute");
 const friendRoute = require("./api/route/friend/friendRoute");
 const messageRoute = require("./api/route/message/messageRoute");
+const groupRoute = require("./api/route/group/groupRoute");
+const fanpageRoute = require("./api/route/fanpage/fanpageRoute");
 const { client } = require("./config/pgAdaptor");
 const { jwtSecret } = require("./config/keys");
 const bodyParser = require("body-parser");
@@ -119,6 +121,8 @@ socketIO.sockets.on("connection", (socket) => {
   server.use("/user", userRoute);
   server.use("/friend", friendRoute);
   server.use("/message", messageRoute);
+  server.use("/group", groupRoute);
+  server.use("/fanpage", fanpageRoute);
   server.get("*", (req, res) => {
     handle(req, res);
   });

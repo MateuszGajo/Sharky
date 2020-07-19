@@ -2,39 +2,11 @@ import React from "react";
 import cx from "classnames";
 import Router from "@features/route/routes";
 
-const Card = ({
-  data = {
-    refType: "profile",
-    refId: "123",
-    photo: "profile.png",
-    radiusPhoto: true,
-    name: "Janek Kowalski",
-    description: "Coś tam",
-    button: "join",
-    buttonName: "pal",
-    title: "Przyjaciel",
-    collapse: true,
-    collapseItems: {
-      pink: {
-        name: "pal",
-        title: "Przyjaciel",
-      },
-      blue: {
-        name: "family",
-        title: "Rodzina",
-      },
-      green: {
-        name: "friend",
-        title: "Znajomy",
-      },
-    },
-  },
-  updateRelation = null,
-  join = null,
-}) => {
+const Card = ({ data, setRelation, join }) => {
   const {
     refType,
     refId,
+    idRelation,
     photo,
     name,
     description,
@@ -143,8 +115,8 @@ const Card = ({
                       )}
                       onClick={() => {
                         if (buttonName !== greenC.name) {
-                          updateRelation({
-                            id: refId,
+                          setRelation({
+                            id: idRelation,
                             name: greenC.name,
                           });
                         }
@@ -163,8 +135,8 @@ const Card = ({
                       )}
                       onClick={() => {
                         if (buttonName !== pinkC.name) {
-                          updateRelation({
-                            id: refId,
+                          setRelation({
+                            id: idRelation,
                             name: pinkC.name,
                           });
                         }
@@ -183,8 +155,8 @@ const Card = ({
                       )}
                       onClick={() => {
                         if (buttonName !== blueC.name) {
-                          updateRelation({
-                            id: refId,
+                          setRelation({
+                            id: idRelation,
                             name: blueC.name,
                           });
                         }

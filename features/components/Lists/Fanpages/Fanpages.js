@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import axios from "axios";
 import Card from "../Card/Card";
 import i18next from "@i18n";
+import AppContext from "@features/context/AppContext";
 const { useTranslation } = i18next;
 
 const Fanpages = ({
@@ -29,10 +31,17 @@ const Fanpages = ({
   const description = t("component:lists.fanpages.description");
   const buttonText = t("component:lists.fanpages.button");
 
-  const [fanpage, setFanpage] = useState("");
+  const { owner, setStatusOfError: setError } = useContext(AppContext);
+
+  const [fanpage, setFanpage] = useState({ id: null, name: "" });
 
   useEffect(() => {
-    // console.log(fanpage);
+    if (fanpage.id)
+      axios
+        .post("/fanpage/add", { idUser: owner.id, idFanpage: fanpage.id })
+        .catch(({ reponse: { data: message } }) =>
+          setError({ occur: true, message })
+        );
   }, [fanpage]);
 
   return (

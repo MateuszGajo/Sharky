@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import axios from "axios";
 import Card from "../Card/Card";
 import i18next from "@i18n";
+import AppContext from "@features/context/AppContext";
 const { useTranslation } = i18next;
 
 const Groups = ({
@@ -29,10 +31,17 @@ const Groups = ({
   const description = t("component:lists.groups.description");
   const buttonText = t("component:lists.groups.button");
 
-  const [group, setGroup] = useState("");
+  const { owner, setStatusOfError: setError } = useContext(AppContext);
+
+  const [group, setGroup] = useState({ id: null, name: "" });
 
   useEffect(() => {
-    // console.log(group);
+    if (group.id)
+      axios
+        .post("/group/add", { idUser: owner.id, idGroup: group.id })
+        .catch(({ reponse: { data: message } }) =>
+          setError({ occur: true, message })
+        );
   }, [group]);
 
   return (

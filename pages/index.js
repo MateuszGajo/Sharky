@@ -5,6 +5,9 @@ import Posts from "@components/Lists/Posts/Posts";
 import HomeLayout from "@components/Layout/Home/HomeLayout";
 import AppContext from "@features/context/AppContext";
 import Error from "@common/PopUp/Error/Error";
+import People from "@components/Lists/People/People";
+import Groups from "@components/Lists/Groups/Groups";
+import Fanpages from "@components/Lists/Fanpages/Fanpages";
 import "../styles/main.scss";
 
 const Index = () => {
@@ -23,6 +26,7 @@ const Index = () => {
     <>
       {isError.occur && <Error message={isError.message} />}
       <HomeLayout>
+        <Fanpages />
         <Posts />
       </HomeLayout>
     </>
