@@ -5,6 +5,43 @@ const { jwtSecret } = require("../../../config/keys");
 
 const router = express.Router();
 
+router.post("/get", async (req, res) => {
+  const { idUser, from } = req.body;
+  const getFanpagesQuery = `
+  select a.*, b.name, b.description, b.photo
+  from(select id_fanpage as "idFanpage", count(id)  as "numberOfSubscribes"
+    from fanpage_users 
+    where id_fanpage in(
+      select a.id_fanpage
+      from fanpage_users as a
+      where id_user=$1
+    )
+    group by id_fanpage
+  ) as a
+  left join fanpages as b
+  on a."idFanpage" = b.id
+  limit 21 offset $2
+  `;
+
+  let getFanpages;
+  try {
+    getFanpages = await client.query(getFanpagesQuery, [idUser, from]);
+  } catch {
+    return res.status(400).json("bad-request");
+  }
+
+  let { rows: fanpages } = getFanpages;
+  let isMore = true;
+
+  if (fanpages.length < 21) {
+    isMore = false;
+  } else {
+    fanpages = fanpages.slice(0, -1);
+  }
+
+  res.status(200).json({ isMore, fanpages });
+});
+
 router.post("/user/add", async (req, res) => {
   const { idUser, idFanpage } = req.body;
 
