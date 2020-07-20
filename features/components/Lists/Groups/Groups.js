@@ -9,6 +9,7 @@ const Groups = ({
   listOfGroups = [
     {
       id: 12,
+      idSub: 5,
       name: "dsa",
       photo: "profile.png",
       numberOfMembers: 123,
@@ -29,19 +30,24 @@ const Groups = ({
 }) => {
   const { t } = useTranslation(["component"]);
   const description = t("component:lists.groups.description");
-  const buttonText = t("component:lists.groups.button");
+  const buttonJoin = t("component:lists.groups.button-join");
+  const buttonLeave = t("component:lists.groups.button-leave");
 
   const { owner, setStatusOfError: setError } = useContext(AppContext);
 
-  const [group, setGroup] = useState({ id: null, name: "" });
+  const [group, setGroup] = useState({ id: null, name: "", idSub: null });
 
   useEffect(() => {
-    if (group.id)
+    if (group.idSub)
       axios
-        .post("/group/add", { idUser: owner.id, idGroup: group.id })
-        .catch(({ reponse: { data: message } }) =>
-          setError({ occur: true, message })
-        );
+        .post("/group/user/delete", { idSub: group.idSub })
+        .then(() => group.setIdSub(null))
+        .catch(({ response: { data: message } }) => setError(message));
+    else if (group.id)
+      axios
+        .post("/group/user/add", { idUser: owner.id, idGroup: group.id })
+        .then(({ data: { id } }) => group.setIdSub(id))
+        .catch(({ response: { data: message } }) => setError(message));
   }, [group]);
 
   return (
@@ -51,15 +57,17 @@ const Groups = ({
         const data = {
           refType: "group",
           refId: id,
+          idSub: group.idSub || null,
           photo,
           radiusPhoto: true,
           name,
           description: description + ": " + numberOfMembers,
           button: "join",
-          title: buttonText,
+          subTitle: buttonJoin,
+          unsubTitle: buttonLeave,
           collapse: false,
         };
-        return <Card data={data} key={id} join={setGroup} />;
+        return <Card data={data} key={id} handleClick={setGroup} />;
       })}
     </div>
   );

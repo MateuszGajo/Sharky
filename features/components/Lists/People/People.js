@@ -46,9 +46,7 @@ const People = ({
           idUser: owner.id,
           relation: relation.name,
         })
-        .catch(({ response: { data: message } }) =>
-          setError({ occur: true, message })
-        );
+        .catch(({ response: { data: message } }) => setError(message));
   }, [relation]);
 
   const { t } = useTranslation(["component"]);

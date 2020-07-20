@@ -37,6 +37,6 @@ export const addMessage = ({
       const {
         response: { data: message },
       } = err;
-      setError({ occur: true, message });
+      setError(message);
     });
 };

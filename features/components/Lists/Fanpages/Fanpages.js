@@ -9,6 +9,7 @@ const Fanpages = ({
   listOfFanPage = [
     {
       id: 1,
+      idSub: 3,
       name: "dassa",
       photo: "profile.png",
       numberOfLikes: 123,
@@ -29,19 +30,24 @@ const Fanpages = ({
 }) => {
   const { t } = useTranslation(["component"]);
   const description = t("component:lists.fanpages.description");
-  const buttonText = t("component:lists.fanpages.button");
+  const buttonSubscribe = t("component:lists.fanpages.button-subscribe");
+  const buttonUnsubscribe = t("component:lists.fanpages.button-unsubscribe");
 
   const { owner, setStatusOfError: setError } = useContext(AppContext);
 
-  const [fanpage, setFanpage] = useState({ id: null, name: "" });
+  const [fanpage, setFanpage] = useState({ id: null, name: "", idSub: null });
 
   useEffect(() => {
-    if (fanpage.id)
+    if (fanpage.idSub)
       axios
-        .post("/fanpage/add", { idUser: owner.id, idFanpage: fanpage.id })
-        .catch(({ reponse: { data: message } }) =>
-          setError({ occur: true, message })
-        );
+        .post("/fanpage/user/delete", { idSub: fanpage.idSub })
+        .then(() => fanpage.setIdSub(null))
+        .catch(({ response: { data: message } }) => setError(message));
+    else if (fanpage.id)
+      axios
+        .post("/fanpage/user/add", { idUser: owner.id, idFanpage: fanpage.id })
+        .then(({ data: { id } }) => fanpage.setIdSub(id))
+        .catch(({ response: { data: message } }) => setError(message));
   }, [fanpage]);
 
   return (
@@ -51,15 +57,17 @@ const Fanpages = ({
         const data = {
           refType: "fanpage",
           refId: id,
+          idSub: fanpage.idSub || null,
           photo,
           radiusPhoto: true,
           name,
           description: description + ": " + numberOfLikes,
           button: "join",
-          title: buttonText,
+          subTitle: buttonSubscribe,
+          unsubTitle: buttonUnsubscribe,
           collapse: false,
         };
-        return <Card data={data} key={id} join={setFanpage} />;
+        return <Card data={data} key={id} handleClick={setFanpage} />;
       })}
     </div>
   );

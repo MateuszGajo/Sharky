@@ -30,11 +30,13 @@
     "lists":{
         "fanpages":{
             "description":"Subscribers",
-            "button":"Subscribe"
+            "button-subscribe":"Subscribe",
+            "button-unsubscribe":"Unsubscribe"
         },
         "groups":{
             "description":"Number of members",
-            "button":"Join"
+            "button-join":"Join",
+            "button-leave":"Leave"
         },
         "people":{
             "description":"Number of friends",

@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import cx from "classnames";
 import Router from "@features/route/routes";
 
-const Card = ({ data, setRelation, join }) => {
+const Card = ({ data, setRelation, handleClick }) => {
   const {
     refType,
     refId,
@@ -11,13 +11,16 @@ const Card = ({ data, setRelation, join }) => {
     name,
     description,
     button,
-    title,
+    subTitle = null,
+    unsubTitle,
     buttonName = null,
     collapse,
     collapseItems = null,
     radiusPhoto,
   } = data;
   const { green: greenC, blue: blueC, pink: pinkC } = collapseItems || {};
+
+  const [idSub, setIdSub] = useState(data.idSub);
 
   return (
     <div className="card">
@@ -62,7 +65,7 @@ const Card = ({ data, setRelation, join }) => {
           </div>
 
           <div className="card__item__info__second-column">
-            {title ? (
+            {button == "join" ? (
               <div
                 className="card__item__info__second-column__buttons"
                 data-testid="card-buttons"
@@ -86,8 +89,10 @@ const Card = ({ data, setRelation, join }) => {
                   data-testid="card-button"
                   onClick={() => {
                     if (button == "join") {
-                      join({
+                      handleClick({
                         name: refType,
+                        idSub,
+                        setIdSub,
                         id: refId,
                       });
                     }
@@ -97,7 +102,7 @@ const Card = ({ data, setRelation, join }) => {
                     className="card__item__info__second-column__buttons--main-button--span"
                     data-testid="card-button-text"
                   >
-                    {title}
+                    {idSub ? unsubTitle : subTitle}
                   </span>
                 </div>
                 {collapse ? (

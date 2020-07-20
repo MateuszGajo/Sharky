@@ -10,18 +10,15 @@ const Error = ({ message }) => {
 
   const ErrorText = t(`common:pop-up.error.${message}`);
   const { setStatusOfError } = useContext(AppContext);
-  const handleClick = () => {
-    console.log("click");
-  };
 
   useEffect(() => {
     setTimeout(() => {
-      setStatusOfError({ occur: false, message: "" });
+      setStatusOfError("");
     }, 1200);
   });
 
   return (
-    <section className="error" onClick={handleClick}>
+    <section className="error">
       <div className="error__container" onClick={(e) => e.stopPropagation()}>
         <div className="error__container__icon">
           <MdErrorOutline />

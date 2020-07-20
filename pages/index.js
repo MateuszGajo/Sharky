@@ -11,7 +11,6 @@ import Fanpages from "@components/Lists/Fanpages/Fanpages";
 import "../styles/main.scss";
 
 const Index = () => {
-  console.log(i18next);
   const [initialized, setInitialized] = useState(false);
 
   const { isError } = useContext(AppContext);
@@ -24,8 +23,9 @@ const Index = () => {
 
   return (
     <>
-      {isError.occur && <Error message={isError.message} />}
+      {isError && <Error message={isError} />}
       <HomeLayout>
+        <Groups />
         <Fanpages />
         <Posts />
       </HomeLayout>

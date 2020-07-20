@@ -45,7 +45,7 @@ export const muteUser = ({ idMuteUser, setMuteUser, isSingle, setError }) => {
       const {
         response: { data: message },
       } = err;
-      setError({ occur: true, message });
+      setError(message);
     });
 };
 
@@ -70,7 +70,7 @@ export const blockUser = ({
       const {
         response: { data: message },
       } = err;
-      setError({ occur: true, message });
+      setError(message);
     });
 };
 
@@ -154,7 +154,7 @@ export const addPost = ({
       const {
         response: { data: message },
       } = err;
-      setError({ occur: true, message });
+      setError(message);
     });
 };
 
@@ -168,7 +168,7 @@ export const likePost = ({ idPost, setNewLike, setError }) => {
       const {
         response: { data: message },
       } = err;
-      setError({ occur: true, message });
+      setError(message);
     });
 };
 
@@ -182,7 +182,7 @@ export const unlikePost = ({ idLike, idPost, setNewLike, setError }) => {
       const {
         response: { data: message },
       } = err;
-      setError({ occur: true, message });
+      setError(message);
     });
 };
 
@@ -210,7 +210,7 @@ export const sharePost = ({ post, posts, setPosts, setError }) => {
       const {
         response: { data: message },
       } = err;
-      setError({ occur: true, message });
+      setError(message);
     });
 };
 
@@ -231,7 +231,7 @@ export const editPost = ({
       const {
         response: { data: message },
       } = err;
-      setError({ occur: true, message });
+      setError(message);
     });
 };
 
@@ -247,7 +247,7 @@ export const deletePost = ({ idPost, posts, setPosts, isSingle, setError }) => {
       const {
         response: { data: message },
       } = err;
-      setError({ occur: true, message });
+      setError(message);
     });
 };
 
@@ -269,7 +269,7 @@ export const deletePostShare = ({
       const {
         response: { data: message },
       } = err;
-      setError({ occur: true, message });
+      setError(message);
     });
 };
 
@@ -320,7 +320,7 @@ export const addComent = ({
       const {
         response: { data: message },
       } = err;
-      setError({ occur: true, message });
+      setError(message);
     });
 };
 
@@ -338,7 +338,7 @@ export const likeComment = ({ idComment, setNewLike, setError }) => {
       const {
         response: { data: message },
       } = err;
-      setError({ occur: true, message });
+      setError(message);
     });
 };
 
@@ -352,7 +352,7 @@ export const unlikeComment = ({ idLike, idComment, setNewLike, setError }) => {
       const {
         response: { data: message },
       } = err;
-      setError({ occur: true, message });
+      setError(message);
     });
 };
 
@@ -406,7 +406,7 @@ export const addReply = ({
       const {
         response: { data: message },
       } = err;
-      setError({ occur: true, message });
+      setError(message);
     });
 };
 
@@ -420,7 +420,7 @@ export const likeReply = async ({ idReply, setNewLike, setError }) => {
       const {
         response: { data: message },
       } = err;
-      setError({ occur: true, message });
+      setError(message);
     });
 };
 
@@ -439,6 +439,6 @@ export const unlikeReply = async ({
       const {
         response: { data: message },
       } = err;
-      setError({ occur: true, message });
+      setError(message);
     });
 };
