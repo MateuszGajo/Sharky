@@ -105,7 +105,6 @@ const Card = ({ data, setRelation, handleClick }) => {
                     data-testid="card-button-text"
                   >
                     {idSub ? unsubTitle : subTitle}
-                    {console.log(title)}
                     {title && title}
                   </span>
                 </div>
