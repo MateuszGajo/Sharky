@@ -1,51 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import cx from "classnames";
-import Router from "../../../route/routes";
+import Router from "@features/route/routes";
 
-const Card = ({
-  data = {
-    refType: "profile",
-    refId: "123",
-    photo: "profile.png",
-    radiusPhoto: true,
-    name: "Janek Kowalski",
-    description: "Coś tam",
-    button: "join",
-    buttonName: "pal",
-    title: "Przyjaciel",
-    collapse: true,
-    collapseItems: {
-      pink: {
-        name: "pal",
-        title: "Przyjaciel",
-      },
-      blue: {
-        name: "family",
-        title: "Rodzina",
-      },
-      green: {
-        name: "friend",
-        title: "Znajomy",
-      },
-    },
-  },
-  updateRelation = null,
-  join = null,
-}) => {
+const Card = ({ data, setRelation, handleClick }) => {
   const {
     refType,
     refId,
+    idRelation,
     photo,
     name,
     description,
     button,
+    subTitle = null,
+    unsubTitle,
     title,
     buttonName = null,
     collapse,
     collapseItems = null,
     radiusPhoto,
   } = data;
+  console.log(title);
   const { green: greenC, blue: blueC, pink: pinkC } = collapseItems || {};
+
+  const [idSub, setIdSub] = useState(data.idSub);
 
   return (
     <div className="card">
@@ -90,7 +67,7 @@ const Card = ({
           </div>
 
           <div className="card__item__info__second-column">
-            {title ? (
+            {button ? (
               <div
                 className="card__item__info__second-column__buttons"
                 data-testid="card-buttons"
@@ -114,8 +91,10 @@ const Card = ({
                   data-testid="card-button"
                   onClick={() => {
                     if (button == "join") {
-                      join({
+                      handleClick({
                         name: refType,
+                        idSub,
+                        setIdSub,
                         id: refId,
                       });
                     }
@@ -125,7 +104,8 @@ const Card = ({
                     className="card__item__info__second-column__buttons--main-button--span"
                     data-testid="card-button-text"
                   >
-                    {title}
+                    {idSub ? unsubTitle : subTitle}
+                    {title && title}
                   </span>
                 </div>
                 {collapse ? (
@@ -143,8 +123,8 @@ const Card = ({
                       )}
                       onClick={() => {
                         if (buttonName !== greenC.name) {
-                          updateRelation({
-                            id: refId,
+                          setRelation({
+                            id: idRelation,
                             name: greenC.name,
                           });
                         }
@@ -163,8 +143,8 @@ const Card = ({
                       )}
                       onClick={() => {
                         if (buttonName !== pinkC.name) {
-                          updateRelation({
-                            id: refId,
+                          setRelation({
+                            id: idRelation,
                             name: pinkC.name,
                           });
                         }
@@ -183,8 +163,8 @@ const Card = ({
                       )}
                       onClick={() => {
                         if (buttonName !== blueC.name) {
-                          updateRelation({
-                            id: refId,
+                          setRelation({
+                            id: idRelation,
                             name: blueC.name,
                           });
                         }

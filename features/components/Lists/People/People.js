@@ -1,22 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Card from "../Card/Card";
-import i18next from "../../../../i18n";
+import axios from "axios";
+import i18next from "@i18n";
+import AppContext from "@features/context/AppContext";
 const { useTranslation } = i18next;
 
 const People = ({
   listOfPeople = [
     {
-      userId: 123,
+      id: 1,
+      userId: 2,
       relation: "family",
     },
     {
+      id: 2,
       userId: 124,
       relation: "pal",
     },
   ],
   users = {
-    123: {
-      id: 123,
+    2: {
+      id: 2,
       firstName: "Jan",
       lastName: "Kowalski",
       photo: "profile.png",
@@ -31,11 +35,19 @@ const People = ({
     },
   },
 }) => {
-  const [updatedRelation, updateRelationShip] = useState(null);
+  const { setStatusOfError: setError, owner } = useContext(AppContext);
+  const [relation, setRelation] = useState({ id: null, name: "" });
 
   useEffect(() => {
-    //console.log(updatedRelation);
-  }, [updatedRelation]);
+    if (relation.id != null)
+      axios
+        .post("/friend/update/relation", {
+          idRelation: relation.id,
+          idUser: owner.id,
+          relation: relation.name,
+        })
+        .catch(({ response: { data: message } }) => setError(message));
+  }, [relation]);
 
   const { t } = useTranslation(["component"]);
   const description = t("component:lists.people.description");
@@ -45,13 +57,14 @@ const People = ({
   return (
     <div className="list">
       {listOfPeople.map((person) => {
-        const { userId, relation } = person;
+        const { userId, relation, id: idRelation } = person;
         const { id, firstName, lastName, photo, numberOfFriends } = users[
           userId
         ];
         const data = {
           ref: "profile",
           refId: id,
+          idRelation,
           photo,
           radiusPhoto: false,
           name: `${firstName + " " + lastName}`,
@@ -75,9 +88,7 @@ const People = ({
             },
           },
         };
-        return (
-          <Card data={data} key={id} updateRelation={updateRelationShip} />
-        );
+        return <Card data={data} key={id} setRelation={setRelation} />;
       })}
     </div>
   );

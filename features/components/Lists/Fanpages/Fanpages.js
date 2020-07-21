@@ -1,56 +1,79 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import axios from "axios";
+import InfiniteScroll from "react-infinite-scroll-component";
 import Card from "../Card/Card";
-import i18next from "../../../../i18n";
+import i18next from "@i18n";
+import AppContext from "@features/context/AppContext";
+import Spinner from "@components/Spinner/Spinner";
 const { useTranslation } = i18next;
 
-const Fanpages = ({
-  listOfFanPage = [
-    {
-      id: 1,
-      name: "dassa",
-      photo: "profile.png",
-      numberOfLikes: 123,
-    },
-    {
-      id: 2,
-      name: "dassa",
-      photo: "profile.png",
-      numberOfLikes: 123,
-    },
-    {
-      id: 3,
-      name: "dassa",
-      photo: "profile.png",
-      numberOfLikes: 123,
-    },
-  ],
-}) => {
+const Fanpages = () => {
   const { t } = useTranslation(["component"]);
   const description = t("component:lists.fanpages.description");
-  const buttonText = t("component:lists.fanpages.button");
+  const buttonSubscribe = t("component:lists.fanpages.button-subscribe");
+  const buttonUnsubscribe = t("component:lists.fanpages.button-unsubscribe");
 
-  const [fanpage, setFanpage] = useState("");
+  const { owner, setStatusOfError: setError } = useContext(AppContext);
 
-  useEffect(() => {}, [fanpage]);
+  const [fanpage, setFanpage] = useState({ id: null, name: "", idSub: null });
+  const [fanpages, setFanpages] = useState([]);
+  const [isMore, setStatusOfMore] = useState();
 
+  const fetchData = (from) => {
+    axios
+      .post("/fanpage/get", { from })
+      .then(({ data: { fanpages, isMore } }) => {
+        setFanpages(fanpages);
+        setStatusOfMore(isMore);
+      })
+      .catch(({ response: { data: message } }) => setError(message));
+  };
+
+  useEffect(() => {
+    fetchData(0);
+  }, []);
+
+  useEffect(() => {
+    if (fanpage.idSub)
+      axios
+        .post("/fanpage/user/delete", { idSub: fanpage.idSub })
+        .then(() => fanpage.setIdSub(null))
+        .catch(({ response: { data: message } }) => setError(message));
+    else if (fanpage.id)
+      axios
+        .post("/fanpage/user/add", { idFanpage: fanpage.id })
+        .then(({ data: { id } }) => fanpage.setIdSub(id))
+        .catch(({ response: { data: message } }) => setError(message));
+  }, [fanpage]);
+
+  if (!fanpages) return <Spinner />;
   return (
-    <div className="list">
-      {listOfFanPage.map((fanpage) => {
-        const { id, name, photo, numberOfLikes } = fanpage;
-        const data = {
-          refType: "fanpage",
-          refId: id,
-          photo,
-          radiusPhoto: true,
-          name,
-          description: description + ": " + numberOfLikes,
-          button: "join",
-          title: buttonText,
-          collapse: false,
-        };
-        return <Card data={data} key={id} join={setFanpage} />;
-      })}
-    </div>
+    <InfiniteScroll
+      dataLength={fanpages.length}
+      next={() => fetchData(fanpages.length)}
+      hasMore={isMore}
+      loader={<Spinner />}
+    >
+      <div className="list">
+        {fanpages.map((fanpage) => {
+          const { idFanpage, name, photo, numberOfSubscribes } = fanpage;
+          const data = {
+            refType: "fanpage",
+            refId: idFanpage,
+            idSub: fanpage.idSub || null,
+            photo,
+            radiusPhoto: true,
+            name,
+            description: description + ": " + numberOfSubscribes,
+            button: "join",
+            subTitle: buttonSubscribe,
+            unsubTitle: buttonUnsubscribe,
+            collapse: false,
+          };
+          return <Card data={data} key={idFanpage} handleClick={setFanpage} />;
+        })}
+      </div>
+    </InfiniteScroll>
   );
 };
 

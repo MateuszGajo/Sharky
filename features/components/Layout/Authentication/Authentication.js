@@ -1,6 +1,6 @@
 import React from "react";
-import PrimaryButton from "../../../common/PrimaryButton/PrimaryButton";
-import i18next from "../../../../i18n";
+import PrimaryButton from "@common/PrimaryButton/PrimaryButton";
+import i18next from "@i18n";
 const { useTranslation } = i18next;
 
 const authentication__container = ({ children, type }) => {

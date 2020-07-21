@@ -15,6 +15,20 @@
         "confirm-user":{
             "title":"Re-enter you account password",
             "button":"Continue"
+        },
+        "report":{
+            "title-post":"Report post",
+            "title-comment":"Report comment",
+            "title-user":"Report user",
+            "subtitle":"Reason",
+            "select":{
+                "offensive-content":"offensive content",
+                "spam":"spam"
+            },
+            "button":"Send"
+        },
+        "error":{
+            "bad-request":"Request failed"
         }
     }  
 }

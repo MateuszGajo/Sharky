@@ -1,40 +1,20 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 import cx from "classnames";
+import Item from "./components/Item/Item";
+import { getFriends } from "../../services/functions/index";
 import { WizzardContext } from "../../context/WizzardContext";
+import AppContext from "@features/context/AppContext";
 
 const FriendsBar = () => {
   const friendsBar = useRef(null);
+  const { socket, newMessage, owner } = useContext(AppContext);
+  const { chat } = useContext(WizzardContext);
 
   const [isFriendsBarScrolling, setStatusOfFriendsBarScrolling] = useState(
     false
   );
-  const { setStatusOfMessenger } = useContext(WizzardContext);
-  const [users, setUser] = useState({
-    234: {
-      id: 234,
-      firstName: "Zbigniew",
-      lastName: "Niedziółka-Domański",
-      online: true,
-      photo: "profile.png",
-    },
-    453: {
-      id: 453,
-      firstName: "Witek",
-      lastName: "Zbigniewski",
-      online: false,
-      photo: "profile.png",
-    },
-  });
-  const [listOfFriends, setListOfFirends] = useState([
-    {
-      userId: 234,
-      relationShip: "friend",
-    },
-    {
-      userId: 453,
-      relationShip: "family",
-    },
-  ]);
+
+  const [users, setUsers] = useState([]);
 
   let timeout = {
     friendsBar: null,
@@ -53,7 +33,22 @@ const FriendsBar = () => {
 
   useEffect(() => {
     friendsBar.current.addEventListener("wheel", showScroll);
+    getFriends({ users, setUsers });
   }, []);
+
+  useEffect(() => {
+    if (users.length > 0) {
+      socket.emit("joinChat");
+    }
+  }, [users]);
+
+  useEffect(() => {
+    const { idChat, messageTo } = newMessage;
+
+    if (idChat != chat.idChat && messageTo == owner.id) {
+      socket.emit("isMessageUnRead", { idChat, messageTo });
+    }
+  }, [newMessage]);
 
   return (
     <div className="home__wrapper home__wrapper--medium">
@@ -64,36 +59,8 @@ const FriendsBar = () => {
         })}
       >
         <div className="home_friends__list">
-          {listOfFriends.map((item, index) => {
-            const friend = users[item.userId];
-            return (
-              <div
-                className="home_friends__list__item"
-                key={friend.id}
-                data-testid={`friend${index}`}
-                onClick={() => setStatusOfMessenger(false)}
-              >
-                <div className="home_friends__list__item__user">
-                  <div className="home_friends__list__item__user__photo">
-                    <img
-                      src={"/static/images/" + friend.photo}
-                      alt=""
-                      className="home_friends__list__item__user__photo--img"
-                    />
-                  </div>
-                  <div className="home_friends__list__item__user--name">
-                    <span className="home_friends__list__item__user--name--span">
-                      {friend.firstName} {friend.lastName}
-                    </span>
-                  </div>
-                </div>
-                {friend.online ? (
-                  <div className="home_friends__list__item--online">
-                    <div className="home_friends__list__item--online--circle"></div>
-                  </div>
-                ) : null}
-              </div>
-            );
+          {users.map((user) => {
+            return <Item key={user.idChat} user={user} />;
           })}
         </div>
       </div>
