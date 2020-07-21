@@ -46,7 +46,7 @@ const Messenger = ({
       setUser(chat.user);
     }
   }, [chat.idChat]);
-  if (isLoading) return <Spinner />;
+
   return (
     <div
       className={cx("messenger", {
@@ -62,7 +62,7 @@ const Messenger = ({
         user={user}
         windowMessenger={windowMessenger}
       />
-      <Content messages={messages} user={user} />
+      {isLoading ? <Spinner /> : <Content messages={messages} user={user} />}
       <Downbar
         idChat={chat.idChat}
         messages={messages}

@@ -13,7 +13,6 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
   const {
     i18n: { language },
   } = useTranslation(["component"]);
-  console.log(useTranslation(["component"]));
 
   const settingRef = useRef(null);
 

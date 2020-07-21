@@ -21,7 +21,7 @@ const Groups = () => {
 
   const fetchData = (from) => {
     axios
-      .post("/group/get", { idUser: owner.id, from })
+      .post("/group/get", { from })
       .then(({ data: { groups, isMore } }) => {
         setGroups(groups);
         setStatusOfMore(isMore);
@@ -34,6 +34,7 @@ const Groups = () => {
   }, []);
 
   useEffect(() => {
+    console.log(group);
     if (group.idSub)
       axios
         .post("/group/user/delete", { idSub: group.idSub })
@@ -41,7 +42,7 @@ const Groups = () => {
         .catch(({ response: { data: message } }) => setError(message));
     else if (group.id)
       axios
-        .post("/group/user/add", { idUser: owner.id, idGroup: group.id })
+        .post("/group/user/add", { idGroup: group.id })
         .then(({ data: { id } }) => group.setIdSub(id))
         .catch(({ response: { data: message } }) => setError(message));
   }, [group]);
@@ -56,10 +57,12 @@ const Groups = () => {
     >
       <div className="list">
         {groups.map((group) => {
-          const { id, name, photo, numberOfMembers } = group;
+          const { idGroup, idSub, name, photo, numberOfMembers } = group;
+          console.log(idSub);
+          console.log(group);
           const data = {
             refType: "group",
-            refId: id,
+            refId: idGroup,
             idSub: group.idSub || null,
             photo,
             radiusPhoto: true,
@@ -70,7 +73,7 @@ const Groups = () => {
             unsubTitle: buttonLeave,
             collapse: false,
           };
-          return <Card data={data} key={id} handleClick={setGroup} />;
+          return <Card data={data} key={idGroup} handleClick={setGroup} />;
         })}
       </div>
     </InfiniteScroll>

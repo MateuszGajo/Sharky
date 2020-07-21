@@ -21,7 +21,7 @@ const Fanpages = () => {
 
   const fetchData = (from) => {
     axios
-      .post("/fanpage/get", { idUser: owner.id, from })
+      .post("/fanpage/get", { from })
       .then(({ data: { fanpages, isMore } }) => {
         setFanpages(fanpages);
         setStatusOfMore(isMore);
@@ -41,7 +41,7 @@ const Fanpages = () => {
         .catch(({ response: { data: message } }) => setError(message));
     else if (fanpage.id)
       axios
-        .post("/fanpage/user/add", { idUser: owner.id, idFanpage: fanpage.id })
+        .post("/fanpage/user/add", { idFanpage: fanpage.id })
         .then(({ data: { id } }) => fanpage.setIdSub(id))
         .catch(({ response: { data: message } }) => setError(message));
   }, [fanpage]);
@@ -56,10 +56,10 @@ const Fanpages = () => {
     >
       <div className="list">
         {fanpages.map((fanpage) => {
-          const { id, name, photo, numberOfSubscribes } = fanpage;
+          const { idFanpage, name, photo, numberOfSubscribes } = fanpage;
           const data = {
             refType: "fanpage",
-            refId: id,
+            refId: idFanpage,
             idSub: fanpage.idSub || null,
             photo,
             radiusPhoto: true,
@@ -70,7 +70,7 @@ const Fanpages = () => {
             unsubTitle: buttonUnsubscribe,
             collapse: false,
           };
-          return <Card data={data} key={id} handleClick={setFanpage} />;
+          return <Card data={data} key={idFanpage} handleClick={setFanpage} />;
         })}
       </div>
     </InfiniteScroll>
