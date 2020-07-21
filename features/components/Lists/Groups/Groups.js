@@ -34,7 +34,6 @@ const Groups = () => {
   }, []);
 
   useEffect(() => {
-    console.log(group);
     if (group.idSub)
       axios
         .post("/group/user/delete", { idSub: group.idSub })

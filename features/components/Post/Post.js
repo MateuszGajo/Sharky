@@ -103,7 +103,7 @@ const Post = ({ post, focusElement }) => {
       <div className="post__item__downbar">
         <DownBarButtons />
       </div>
-      <div className="post__item__comments" data-testid="post-comments">
+      <div className="post__item__comments">
         <div className="post__item__comments__input">
           <form onSubmit={handleSubmit}>
             <SecondaryInput
@@ -114,7 +114,7 @@ const Post = ({ post, focusElement }) => {
           </form>
         </div>
         {comments?.map((comment) => (
-          <div className="post__item__comments__container" key={comment.id}>
+          <div className="post__item__comments__container" key={comment.id} data-test="comments">
             <Comment
               comment={comment}
               focusCollapse={focusCollapse}

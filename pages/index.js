@@ -25,6 +25,7 @@ const Index = () => {
     <>
       {isError && <Error message={isError} />}
       <HomeLayout>
+        <People />
         <Groups />
         <Fanpages />
         <Posts />
