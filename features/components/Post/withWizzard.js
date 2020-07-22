@@ -8,7 +8,7 @@ const withWizzard = (WrappedComponent) => {
   return (props) => {
     const { newPost } = props;
 
-    const { setStatusOfError: setError, owner } = useContext(AppContext);
+    const { setError, owner } = useContext(AppContext);
     const [isMoreComment, setStatusOfMoreComments] = useState();
     const [isMorePosts, setStatusOfMorePosts] = useState();
     const [newLike, setNewLike] = useState({

@@ -42,7 +42,9 @@
             "description":"Number of friends",
             "friend":"friend",
             "family":"family",
-            "pal":"pal"
+            "pal":"pal",
+            "relation-change":"Change relationship request has been sent"
+
         },
         "posts":{
             "end-of-content":"You have seen all posts"

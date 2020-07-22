@@ -7,7 +7,7 @@ const Prompt = ({ message }) => {
   useEffect(() => {
     const hidePopUp = setTimeout(() => {
       setPrompt("");
-    }, [2000]);
+    }, [2500]);
 
     return () => {
       clearTimeout(hidePopUp);

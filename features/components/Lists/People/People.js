@@ -2,44 +2,21 @@ import React, { useState, useEffect, useContext } from "react";
 import Card from "../Card/Card";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
-import i18next from "@i18n";
 import Spinner from "@components/Spinner/Spinner";
 import AppContext from "@features/context/AppContext";
+import i18n from "@i18n";
+const { useTranslation } = i18n;
 
-const { useTranslation } = i18next;
+const People = ({ idUser }) => {
+  const { t } = useTranslation(["component"]);
 
-const People = ({
-  listOfPeople = [
-    {
-      id: 1,
-      userId: 2,
-      relation: "family",
-    },
-    {
-      id: 2,
-      userId: 124,
-      relation: "pal",
-    },
-  ],
-  users = {
-    2: {
-      id: 2,
-      firstName: "Jan",
-      lastName: "Kowalski",
-      photo: "profile.png",
-      numberOfFriends: 123,
-    },
-    124: {
-      id: 124,
-      firstName: "Jan",
-      lastName: "Kowalski",
-      photo: "profile.png",
-      numberOfFriends: 123,
-    },
-  },
-  idUser,
-}) => {
-  const { setStatusOfError: setError, owner } = useContext(AppContext);
+  const relationChangeText = t("component:lists.people.relation-change");
+  const description = t("component:lists.people.description");
+  const friendName = t("component:lists.people.friend");
+  const familyName = t("component:lists.people.family");
+  const palName = t("component:lists.people.pal");
+
+  const { setError, setPrompt, owner } = useContext(AppContext);
   const [relation, setRelation] = useState({ id: null, name: "" });
   const [friends, setFriends] = useState([]);
   const [isMore, setStatusOfMore] = useState(false);
@@ -54,25 +31,22 @@ const People = ({
   };
 
   useEffect(() => {
-    if (relation.id != null) console.log(relation);
-    axios
-      .post("/friend/update/relation", {
-        idRelation: relation.id,
-        idUser: owner.id,
-        relation: relation.name,
-      })
-      .catch(({ response: { data: message } }) => setError(message));
+    if (relation.id != null) {
+      setPrompt(relationChangeText);
+      axios
+        .post("/friend/update/relation", {
+          idRelation: relation.id,
+          idUser: owner.id,
+          relation: relation.name,
+        })
+        .catch(({ response: { data: message } }) => setError(message));
+    }
   }, [relation]);
 
   useEffect(() => {
     fetchData(0);
   }, []);
 
-  const { t } = useTranslation(["component"]);
-  const description = t("component:lists.people.description");
-  const friendName = t("component:lists.people.friend");
-  const familyName = t("component:lists.people.family");
-  const palName = t("component:lists.people.pal");
   return (
     <InfiniteScroll
       dataLength={friends.length}
@@ -99,7 +73,8 @@ const People = ({
             photo,
             radiusPhoto: false,
             name: `${firstName + " " + lastName}`,
-            description: description + ": " + numberOfFriends,
+            description: description,
+            number: numberOfFriends,
             button: "relation",
             title: t(`component:lists.people.${relation.toLowerCase()}`),
             buttonName: relation,

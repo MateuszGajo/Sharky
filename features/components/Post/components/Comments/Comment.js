@@ -28,7 +28,7 @@ const Commnet = ({
 }) => {
   const { t } = useTranslation(["component"]);
 
-  const { setStatusOfError: setError } = useContext(AppContext);
+  const { setError } = useContext(AppContext);
   const { newLike, setNewLike } = useContext(WizzardContext);
 
   const settingRef = useRef(null);
@@ -39,7 +39,7 @@ const Commnet = ({
     Number(comment.numberOfLikes)
   );
 
-  const clickHandle = (e) => {
+  const handleClick = () => {
     const { current: fCollapse } = focusCollapse;
     const { current: fIcon } = focusIcon;
     if (!fCollapse.classList.contains("is-close"))
@@ -48,7 +48,7 @@ const Commnet = ({
     if (fIcon.classList.contains("is-visible"))
       fIcon.classList.remove("is-visible");
 
-    window.removeEventListener("click", clickHandle);
+    window.removeEventListener("click", handleClick);
   };
 
   const setlikeComment = () => {
@@ -63,29 +63,36 @@ const Commnet = ({
     }
   };
 
-  useEffect(() => {
+  const openSetting = () => {
     const { current } = settingRef;
-    current.addEventListener("click", (e) => {
-      const collapseItem = current.querySelector(
-        ".post__item__comments__container__item__content__item__top-bar__icon__collapse "
-      );
-      const { current: fCollapse } = focusCollapse;
-      const { current: fItem } = focusIcon;
-      if (fCollapse !== collapseItem && fCollapse !== null) {
-        fCollapse.classList.add("is-close");
-      }
+    const collapseItem = current.querySelector(
+      ".post__item__comments__container__item__content__item__top-bar__icon__collapse "
+    );
+    const { current: fCollapse } = focusCollapse;
+    const { current: fItem } = focusIcon;
+    if (fCollapse !== collapseItem && fCollapse !== null) {
+      fCollapse.classList.add("is-close");
+    }
 
-      if (fItem !== null && !fItem.classList.contains("is-visible"))
-        fItem.classList.remove("is-visible");
+    if (fItem !== null && !fItem.classList.contains("is-visible"))
+      fItem.classList.remove("is-visible");
 
-      window.addEventListener("click", clickHandle);
+    window.addEventListener("click", handleClick);
 
-      current.classList.toggle("is-visible");
-      focusIcon.current = current;
+    current.classList.toggle("is-visible");
+    focusIcon.current = current;
 
-      collapseItem.classList.toggle("is-close");
-      focusCollapse.current = collapseItem;
-    });
+    collapseItem.classList.toggle("is-close");
+    focusCollapse.current = collapseItem;
+  };
+
+  useEffect(() => {
+    settingRef.current.addEventListener("click", openSetting);
+
+    return () => {
+      removeEventListener(openSetting);
+      removeEventListener(handleClick);
+    };
   }, []);
 
   useEffect(() => {

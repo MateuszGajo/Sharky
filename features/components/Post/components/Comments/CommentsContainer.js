@@ -11,7 +11,7 @@ const withContainer = (WrappedComponent) => {
   const WithContainer = ({ comment, focusCollapse, focusIcon }) => {
     const { t } = useTranslation(["component"]);
 
-    const { setStatusOfError: setError, owner } = useContext(AppContext);
+    const { setError, owner } = useContext(AppContext);
     const { users, setUsers, muteUser, newComment, setNewComment } = useContext(
       WizzardContext
     );

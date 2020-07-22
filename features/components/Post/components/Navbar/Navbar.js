@@ -27,33 +27,42 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
     new Date(post.date)
   );
 
-  const clickHandle = () => {
+  const handleClick = () => {
     const { current: fCollapse } = focusCollapse;
     if (!fCollapse.classList.contains("is-close"))
       fCollapse.classList.add("is-close");
-    window.removeEventListener("click", clickHandle);
+    window.removeEventListener("click", handleClick);
+  };
+
+  const openSetting = () => {
+    console.log(focusCollapse);
+    const { current } = settingRef;
+    const collapseItem = current.querySelector(
+      ".post__item__navbar__column-end__setting__collapse"
+    );
+    const { current: fCollapse } = focusCollapse;
+    const { current: fIcon } = focusIcon;
+    if (fCollapse !== collapseItem && fCollapse !== null) {
+      fCollapse.classList.add("is-close");
+    }
+
+    if (fIcon !== null && fIcon.classList.contains("is-visible"))
+      fIcon.classList.remove("is-visible");
+
+    window.addEventListener("click", handleClick);
+    focusCollapse.current = collapseItem;
+    console.log(focusCollapse);
+
+    collapseItem.classList.toggle("is-close");
   };
 
   useEffect(() => {
-    const { current } = settingRef;
-    current.addEventListener("click", () => {
-      const collapseItem = current.querySelector(
-        ".post__item__navbar__column-end__setting__collapse"
-      );
-      const { current: fCollapse } = focusCollapse;
-      const { current: fIcon } = focusIcon;
-      if (fCollapse !== collapseItem && fCollapse !== null) {
-        fCollapse.classList.add("is-close");
-      }
+    settingRef.current.addEventListener("click", openSetting);
 
-      if (fIcon !== null && fIcon.classList.contains("is-visible"))
-        fIcon.classList.remove("is-visible");
-
-      window.addEventListener("click", clickHandle);
-      focusCollapse.current = collapseItem;
-
-      collapseItem.classList.toggle("is-close");
-    });
+    return () => {
+      removeEventListener(openSetting);
+      removeEventListener(handleClick);
+    };
   }, []);
 
   return (

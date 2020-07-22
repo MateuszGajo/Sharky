@@ -13,7 +13,7 @@ const Groups = ({ idUser }) => {
   const buttonJoin = t("component:lists.groups.button-join");
   const buttonLeave = t("component:lists.groups.button-leave");
 
-  const { owner, setStatusOfError: setError } = useContext(AppContext);
+  const { owner, setError } = useContext(AppContext);
 
   const [group, setGroup] = useState({ id: null, name: "", idSub: null });
   const [groups, setGroups] = useState([]);
@@ -64,7 +64,8 @@ const Groups = ({ idUser }) => {
             photo,
             radiusPhoto: true,
             name,
-            description: description + ": " + numberOfMembers,
+            description,
+            number: numberOfMembers,
             button: "join",
             subTitle: buttonJoin,
             unsubTitle: buttonLeave,

@@ -10,7 +10,7 @@ const Downbar = ({ idChat, setMessages, messages, converser }) => {
 
   const placeholder = t("component:messenger.placeholder");
 
-  const { socket, owner, setStatusOfError: setError } = useContext(AppContext);
+  const { socket, owner, setError } = useContext(AppContext);
 
   const [message, setMessage] = useState("");
 
@@ -32,12 +32,18 @@ const Downbar = ({ idChat, setMessages, messages, converser }) => {
     });
   };
 
+  const addKeySubmit = (e) => {
+    if (e.keyCode == 13) {
+      messageForm.current.dispatchEvent(new Event("submit"));
+    }
+  };
+
   useEffect(() => {
-    messageArea.current.addEventListener("keydown", function textAreaSubmit(e) {
-      if (e.keyCode == 13) {
-        messageForm.current.dispatchEvent(new Event("submit"));
-      }
-    });
+    messageArea.current.addEventListener("keydown", addKeySubmit);
+
+    return () => {
+      removeEventListener(addKeySubmit);
+    };
   }, []);
 
   return (

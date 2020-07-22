@@ -13,7 +13,7 @@ const Fanpages = ({ idUser }) => {
   const buttonSubscribe = t("component:lists.fanpages.button-subscribe");
   const buttonUnsubscribe = t("component:lists.fanpages.button-unsubscribe");
 
-  const { owner, setStatusOfError: setError } = useContext(AppContext);
+  const { owner, setError } = useContext(AppContext);
 
   const [fanpage, setFanpage] = useState({ id: null, name: "", idSub: null });
   const [fanpages, setFanpages] = useState([]);
@@ -64,7 +64,8 @@ const Fanpages = ({ idUser }) => {
             photo,
             radiusPhoto: true,
             name,
-            description: description + ": " + numberOfSubscribes,
+            description,
+            number: numberOfSubscribes,
             button: "join",
             subTitle: buttonSubscribe,
             unsubTitle: buttonUnsubscribe,

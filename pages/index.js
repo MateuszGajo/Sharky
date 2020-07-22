@@ -28,9 +28,10 @@ const Index = () => {
       {isError && <Error message={isError} />}
       {isPrompt && <Prompt message={isPrompt} />}
       <HomeLayout>
-        <People />
-        <Groups idUser={owner.id} />
-        <Fanpages idUser={owner.id} />
+        {owner.id && <People idUser={owner.id} />}
+        {owner.id && <Groups idUser={owner.id} />}
+        {owner.id && <Fanpages idUser={owner.id} />}
+
         <Posts newPost={newPost} />
       </HomeLayout>
     </>
