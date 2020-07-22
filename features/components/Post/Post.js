@@ -18,16 +18,11 @@ const Post = ({ post, focusElement }) => {
   const { t } = useTranslation(["component"]);
   const loadMoreComments = t("component:post.comments.load-more-comments");
 
-  const { setStatusOfError: setError } = useContext(AppContext);
+  const { setStatusOfError: setError, owner } = useContext(AppContext);
 
-  const {
-    newComment,
-    setNewComment,
-    muteUser,
-    owner,
-    users,
-    setUsers,
-  } = useContext(WizzardContext);
+  const { newComment, setNewComment, muteUser, users, setUsers } = useContext(
+    WizzardContext
+  );
 
   const focusCollapse = useRef(focusElement?.current || null);
   const focusIcon = useRef(null);
@@ -114,7 +109,11 @@ const Post = ({ post, focusElement }) => {
           </form>
         </div>
         {comments?.map((comment) => (
-          <div className="post__item__comments__container" key={comment.id} data-test="comments">
+          <div
+            className="post__item__comments__container"
+            key={comment.id}
+            data-test="comments"
+          >
             <Comment
               comment={comment}
               focusCollapse={focusCollapse}

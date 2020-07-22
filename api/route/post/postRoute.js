@@ -31,7 +31,6 @@ router.post("/add", async (req, res) => {
     ]);
 
     return res.status(200).json({
-      idUser,
       idPost: newPost.rows[0].id,
     });
   } catch {

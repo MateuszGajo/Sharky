@@ -11,15 +11,10 @@ const withContainer = (WrappedComponent) => {
   const WithContainer = ({ comment, focusCollapse, focusIcon }) => {
     const { t } = useTranslation(["component"]);
 
-    const { setStatusOfError: setError } = useContext(AppContext);
-    const {
-      users,
-      setUsers,
-      owner,
-      muteUser,
-      newComment,
-      setNewComment,
-    } = useContext(WizzardContext);
+    const { setStatusOfError: setError, owner } = useContext(AppContext);
+    const { users, setUsers, muteUser, newComment, setNewComment } = useContext(
+      WizzardContext
+    );
 
     const loadMoreComments = t("component:post.comments.load-more-comments");
     const [user, setUser] = useState(users[comment.idUser]);

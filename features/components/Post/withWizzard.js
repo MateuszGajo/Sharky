@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { uuid } from "uuidv4";
+import axios from "axios";
 import WizzardContext from "./context/WizzardContext";
-import { getOwner } from "@features/service/functions/index";
+import AppContext from "@features/context/AppContext";
 
 const withWizzard = (WrappedComponent) => {
-  return () => {
+  return (props) => {
+    const { newPost } = props;
+
+    const { setStatusOfError: setError, owner } = useContext(AppContext);
     const [isMoreComment, setStatusOfMoreComments] = useState();
     const [isMorePosts, setStatusOfMorePosts] = useState();
     const [newLike, setNewLike] = useState({
@@ -18,23 +23,45 @@ const withWizzard = (WrappedComponent) => {
       type: "",
       date: null,
     });
-    const [owner, setOwner] = useState({});
     const [newContent, setNewContent] = useState({ text: "", idPost: null });
     const [muteUser, setMuteUser] = useState({ idUser: null });
-    const [users, setUsers] = useState({
-      1: {
-        id: 1,
-        firstName: "Janek",
-        lastName: "Kowalski",
-        photo: "profile.png",
-        idLiked: null,
-      },
-    });
+
+    const [users, setUsers] = useState({});
+
+    const [posts, setPosts] = useState([]);
 
     useEffect(() => {
-      getOwner(setOwner);
-    }, []);
-    const [posts, setPosts] = useState([]);
+      if (newPost?.content) {
+        const { content, photo } = newPost;
+        const date = new Date();
+        axios
+          .post("/post/add", {
+            content,
+            date,
+            photo,
+          })
+          .then(({ data: { idPost } }) => {
+            setPosts([
+              {
+                id: uuid(),
+                idPost,
+                idUser: owner.id,
+                content,
+                date,
+                photo,
+                numberOfShares: 0,
+                numberOfComments: 0,
+                numerOfLikes: 0,
+                idShare: null,
+                idUserShare: null,
+                idLike: null,
+              },
+              ...posts,
+            ]);
+          })
+          .catch(({ response: { data: message } }) => setError(message));
+      }
+    }, [newPost]);
 
     return (
       <WizzardContext.Provider
@@ -49,8 +76,6 @@ const withWizzard = (WrappedComponent) => {
           setNewComment,
           newContent,
           setNewContent,
-          owner,
-          setOwner,
           muteUser,
           setMuteUser,
           users,
@@ -59,7 +84,7 @@ const withWizzard = (WrappedComponent) => {
           setPosts,
         }}
       >
-        <WrappedComponent />
+        <WrappedComponent {...props} />
       </WizzardContext.Provider>
     );
   };

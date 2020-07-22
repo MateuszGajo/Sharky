@@ -7,7 +7,7 @@ import AppContext from "@features/context/AppContext";
 import Spinner from "@components/Spinner/Spinner";
 const { useTranslation } = i18next;
 
-const Groups = () => {
+const Groups = ({ idUser }) => {
   const { t } = useTranslation(["component"]);
   const description = t("component:lists.groups.description");
   const buttonJoin = t("component:lists.groups.button-join");
@@ -21,7 +21,7 @@ const Groups = () => {
 
   const fetchData = (from) => {
     axios
-      .post("/group/get", { from })
+      .post("/group/get", { from, idUser })
       .then(({ data: { groups, isMore } }) => {
         setGroups(groups);
         setStatusOfMore(isMore);
@@ -57,8 +57,6 @@ const Groups = () => {
       <div className="list">
         {groups.map((group) => {
           const { idGroup, idSub, name, photo, numberOfMembers } = group;
-          console.log(idSub);
-          console.log(group);
           const data = {
             refType: "group",
             refId: idGroup,

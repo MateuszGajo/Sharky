@@ -4,7 +4,7 @@ import { IoMdShareAlt } from "react-icons/io";
 import UserSettings from "./components/UserSettings/UserSettings";
 import OwnerSettings from "./components/OwnerSettings/OwnerSettings";
 import PostContext from "../../context/PostContext";
-import WizzardContext from "../../context/WizzardContext";
+import AppContext from "@features/context/AppContext";
 import { useContext } from "react";
 import i18next from "@i18n";
 const { useTranslation } = i18next;
@@ -17,7 +17,7 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
   const settingRef = useRef(null);
 
   const { user, userShare, post } = useContext(PostContext);
-  const { owner } = useContext(WizzardContext);
+  const { owner } = useContext(AppContext);
   const dtf = new Intl.DateTimeFormat(language, {
     year: "numeric",
     month: "long",

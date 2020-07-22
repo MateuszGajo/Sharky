@@ -7,7 +7,7 @@ import AppContext from "@features/context/AppContext";
 import Spinner from "@components/Spinner/Spinner";
 const { useTranslation } = i18next;
 
-const Fanpages = () => {
+const Fanpages = ({ idUser }) => {
   const { t } = useTranslation(["component"]);
   const description = t("component:lists.fanpages.description");
   const buttonSubscribe = t("component:lists.fanpages.button-subscribe");
@@ -21,7 +21,7 @@ const Fanpages = () => {
 
   const fetchData = (from) => {
     axios
-      .post("/fanpage/get", { from })
+      .post("/fanpage/get", { from, idUser })
       .then(({ data: { fanpages, isMore } }) => {
         setFanpages(fanpages);
         setStatusOfMore(isMore);

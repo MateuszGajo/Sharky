@@ -19,7 +19,6 @@ const Card = ({ data, setRelation, handleClick }) => {
     collapseItems = null,
     radiusPhoto,
   } = data;
-  console.log(title);
   const { green: greenC, blue: blueC, pink: pinkC } = collapseItems || {};
 
   const [idSub, setIdSub] = useState(data.idSub);

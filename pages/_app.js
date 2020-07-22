@@ -8,6 +8,9 @@ const MyApp = ({ Component, pageProps }) => {
   const [owner, setOwner] = useState({});
   const [newMessage, setNewMessage] = useState({});
   const [isError, setStatusOfError] = useState("");
+  const [isPrompt, setPrompt] = useState(
+    "Message bardzo długa wiadomosc az sie nie miesci, a ty dalej ja miescisz hmmm"
+  );
 
   useEffect(() => {
     getOwner(setOwner);
@@ -30,6 +33,8 @@ const MyApp = ({ Component, pageProps }) => {
         owner,
         newMessage,
         isError,
+        isPrompt,
+        setPrompt,
         setStatusOfError,
       }}
     >
