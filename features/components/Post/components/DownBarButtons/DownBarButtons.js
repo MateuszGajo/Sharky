@@ -14,7 +14,7 @@ import WizzardContext from "../../context/WizzardContext";
 import AppContext from "@features/context/AppContext";
 
 const DownBarButtons = () => {
-  const { setStatusOfError: setError } = useContext(AppContext);
+  const { setError } = useContext(AppContext);
   const { post, numberOfComments } = useContext(PostContext);
   const { posts, setPosts, newLike, setNewLike } = useContext(WizzardContext);
 

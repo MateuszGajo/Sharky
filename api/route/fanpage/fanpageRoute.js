@@ -6,7 +6,7 @@ const { jwtSecret } = require("../../../config/keys");
 const router = express.Router();
 
 router.post("/get", async (req, res) => {
-  const { from } = req.body;
+  const { from, idUser } = req.body;
 
   const token = jwt.sign(
     {
@@ -18,7 +18,7 @@ router.post("/get", async (req, res) => {
     jwtSecret
   );
   const {
-    data: { id: idUser },
+    data: { id: idOwner },
   } = jwt.verify(token, jwtSecret);
 
   const getFanpagesQuery = `
@@ -33,13 +33,13 @@ router.post("/get", async (req, res) => {
       )as a
   left join fanpages as b
   on a."idFanpage" = b.id
-  where a.id_user=$1
-  limit 21 offset $2
+  where a.id_user=$2
+  limit 21 offset $3
   `;
 
   let getFanpages;
   try {
-    getFanpages = await client.query(getFanpagesQuery, [idUser, from]);
+    getFanpages = await client.query(getFanpagesQuery, [idUser, idOwner, from]);
   } catch {
     return res.status(400).json("bad-request");
   }
@@ -88,7 +88,6 @@ router.post("/user/add", async (req, res) => {
 
 router.post("/user/delete", async (req, res) => {
   const { idSub } = req.body;
-  console.log(idSub);
 
   const deleteUserQuery = `delete from fanpage_users where id=$1`;
 

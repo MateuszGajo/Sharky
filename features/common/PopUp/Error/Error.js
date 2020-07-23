@@ -9,12 +9,16 @@ const Error = ({ message }) => {
   const { t } = useTranslation();
 
   const ErrorText = t(`common:pop-up.error.${message}`);
-  const { setStatusOfError } = useContext(AppContext);
+  const { setError } = useContext(AppContext);
 
   useEffect(() => {
-    setTimeout(() => {
-      setStatusOfError("");
+    const hidePopUp = setTimeout(() => {
+      setError("");
     }, 1200);
+
+    return () => {
+      clearTimeout(hidePopUp);
+    };
   });
 
   return (

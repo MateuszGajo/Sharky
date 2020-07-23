@@ -9,7 +9,6 @@ export const getUsers = async (users, setUsers, elements) => {
     const { idUser } = elements[i];
     if (users[idUser] === undefined) idUsers.push(idUser);
   }
-
   if (idUsers.length > 0)
     await axios
       .post("/user/get", {
@@ -27,7 +26,10 @@ export const getUsers = async (users, setUsers, elements) => {
             photo,
           };
         }
-        setUsers({ ...users, ...usersKey });
+        setUsers({
+          ...users,
+          ...usersKey,
+        });
       })
       .catch((err) => console.log(err));
 };
@@ -108,7 +110,6 @@ export const getPosts = ({
                 : true,
           };
         });
-
         setStatusOfMorePosts(isMorePosts);
         setStatusOfMoreComments(isMoreComments);
         setPosts([...posts, ...newPosts]);

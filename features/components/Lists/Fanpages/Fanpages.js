@@ -7,13 +7,13 @@ import AppContext from "@features/context/AppContext";
 import Spinner from "@components/Spinner/Spinner";
 const { useTranslation } = i18next;
 
-const Fanpages = () => {
+const Fanpages = ({ idUser }) => {
   const { t } = useTranslation(["component"]);
   const description = t("component:lists.fanpages.description");
   const buttonSubscribe = t("component:lists.fanpages.button-subscribe");
   const buttonUnsubscribe = t("component:lists.fanpages.button-unsubscribe");
 
-  const { owner, setStatusOfError: setError } = useContext(AppContext);
+  const { owner, setError } = useContext(AppContext);
 
   const [fanpage, setFanpage] = useState({ id: null, name: "", idSub: null });
   const [fanpages, setFanpages] = useState([]);
@@ -21,7 +21,7 @@ const Fanpages = () => {
 
   const fetchData = (from) => {
     axios
-      .post("/fanpage/get", { from })
+      .post("/fanpage/get", { from, idUser })
       .then(({ data: { fanpages, isMore } }) => {
         setFanpages(fanpages);
         setStatusOfMore(isMore);
@@ -64,7 +64,8 @@ const Fanpages = () => {
             photo,
             radiusPhoto: true,
             name,
-            description: description + ": " + numberOfSubscribes,
+            description,
+            number: numberOfSubscribes,
             button: "join",
             subTitle: buttonSubscribe,
             unsubTitle: buttonUnsubscribe,

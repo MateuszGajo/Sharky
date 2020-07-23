@@ -9,7 +9,7 @@ import AppContext from "@features/context/AppContext";
 const Content = () => {
   const textareaRef = useRef(null);
 
-  const { setStatusOfError: setError } = useContext(AppContext);
+  const { setError } = useContext(AppContext);
   const { post, isEdit, setStatusOfEdit } = useContext(PostContext);
   const { newContent, setNewContent } = useContext(WizzardContext);
 

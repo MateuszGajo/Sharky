@@ -10,6 +10,7 @@ const Card = ({ data, setRelation, handleClick }) => {
     photo,
     name,
     description,
+    number: n,
     button,
     subTitle = null,
     unsubTitle,
@@ -19,10 +20,10 @@ const Card = ({ data, setRelation, handleClick }) => {
     collapseItems = null,
     radiusPhoto,
   } = data;
-  console.log(title);
   const { green: greenC, blue: blueC, pink: pinkC } = collapseItems || {};
 
   const [idSub, setIdSub] = useState(data.idSub);
+  const [number, setNumber] = useState(n);
 
   return (
     <div className="card">
@@ -60,7 +61,7 @@ const Card = ({ data, setRelation, handleClick }) => {
                   className="card__item__info__first-column--amounts-of-friends--span"
                   data-testid="card-description"
                 >
-                  {description}
+                  {description + ":" + number}
                 </span>
               </div>
             ) : null}
@@ -91,6 +92,7 @@ const Card = ({ data, setRelation, handleClick }) => {
                   data-testid="card-button"
                   onClick={() => {
                     if (button == "join") {
+                      idSub ? setNumber(number - 1) : setNumber(number + 1);
                       handleClick({
                         name: refType,
                         idSub,

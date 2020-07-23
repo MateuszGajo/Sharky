@@ -39,6 +39,90 @@ router.get("/get", async (req, res) => {
   }
 });
 
+router.post("/get/people", async (req, res) => {
+  const { idUser, from } = req.body;
+  console.log(idUser, from);
+  const getFriendsQuery = `
+  select c.*, friend_relation.relation, 	users.first_name as "firstName", users.last_name as "lastName", users.photo
+  from(select b.*, friends.id as "idRelation"
+    from(select a."idUser", sum(a.count) as "numberOfFriends"
+      from(select id_user_1 as "idUser", count(*) over (partition by id_user_1) as "count" 
+        from friends 
+        where id_user_1 in(		
+            select id_user_1
+            from friends 
+            where id_user_2=$1
+            union
+            select id_user_2
+            from friends 
+            where id_user_1=$1
+            )
+        union
+        select id_user_2 as "user", count(*) over (partition by id_user_2) as "count" 
+        from friends 
+        where id_user_2 in(		
+            select id_user_1
+            from friends 
+            where id_user_2=$1
+            union
+            select id_user_2
+            from friends 
+            where id_user_1=$1
+            )
+        ) as a
+      group by a."idUser") as b
+    inner join friends on friends.id_user_1 = b."idUser" and friends.id_user_2 = $1
+    union
+    select b.*, friends.id as "idRelation"
+    from(select a."idUser", sum(a.count) as "numberOfFriends"
+      from(select id_user_1 as "idUser", count(*) over (partition by id_user_1) as "count" 
+        from friends 
+        where id_user_1 in(		
+            select id_user_1
+            from friends 
+            where id_user_2=$1
+            union
+            select id_user_2
+            from friends 
+            where id_user_1=$1
+            )
+        union
+        select id_user_2 as "user", count(*) over (partition by id_user_2) as "count" 
+        from friends 
+        where id_user_2 in(		
+            select id_user_1
+            from friends 
+            where id_user_2=$1
+            union
+            select id_user_2
+            from friends 
+            where id_user_1=$1
+            )
+        ) as a
+      group by a."idUser") as b
+    inner join friends on friends.id_user_2 = b."idUser" and friends.id_user_1 = $1) as c
+  left join users on users.id = c."idUser"
+  left join friend_relation on friend_relation.id_friendship = c."idRelation"
+  limit 21 offset $2
+  `;
+  let result;
+  try {
+    result = await client.query(getFriendsQuery, [idUser, from]);
+  } catch {
+    return res.status(400).json("bad-request");
+  }
+  let { rows: friends } = result;
+  let isMore = true;
+
+  if (friends.length < 21) {
+    isMore = false;
+  } else {
+    friends = friends.slice(0, -1);
+  }
+
+  res.status(200).json({ friends, isMore });
+});
+
 router.post("/chat/join", (req, res) => {
   const { users } = req.body;
   const { io } = req;

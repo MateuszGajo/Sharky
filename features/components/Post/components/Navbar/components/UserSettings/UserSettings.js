@@ -13,7 +13,7 @@ const { useTranslation } = i18next;
 const UserSettings = () => {
   const { t } = useTranslation(["component"]);
 
-  const { setStatusOfError: setError } = useContext(AppContext);
+  const { setError } = useContext(AppContext);
   const {
     setStatusOfHiddenPost,
     setStatusOfReport,

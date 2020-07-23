@@ -42,7 +42,9 @@
             "description":"Liczba znajomych",
             "friend":"Znajomy",
             "family":"Rodzina",
-            "pal":"Przyjaciel"
+            "pal":"Przyjaciel",
+            "relation-change":"Prośba zmiany relacji została wysłana"
+
         },
         "posts":{
             "end-of-content":"Widziałeś wszystkie wpisy"

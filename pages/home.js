@@ -7,15 +7,21 @@ import "../styles/main.scss";
 const { useTranslation } = i18next;
 
 const Home = () => {
-  const [postText, setPostText] = useState("");
+  const [content, setContent] = useState("");
+  const [newPost, setNewPost] = useState();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setNewPost({ content, photo: "profile.png" });
+  };
 
   return (
     <HomeLayout>
       <form onSubmit={handleSubmit}>
-        <MessageBox btnSize="small" value={postText} onChange={setPostText} />
+        <MessageBox btnSize="small" value={content} onChange={setContent} />
       </form>
       <section className="home-page">
-        <Posts />
+        <Posts newPost={newPost} />
       </section>
     </HomeLayout>
   );

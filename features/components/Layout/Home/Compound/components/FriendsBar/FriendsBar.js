@@ -13,20 +13,17 @@ const FriendsBar = () => {
   const [isFriendsBarScrolling, setStatusOfFriendsBarScrolling] = useState(
     false
   );
-
   const [users, setUsers] = useState([]);
 
-  let timeout = {
-    friendsBar: null,
-  };
+  let timeout;
 
   const showScroll = () => {
-    if (timeout.friendsBar) {
-      clearTimeout(timeout.friendsBar);
+    if (timeout) {
+      clearTimeout(timeout);
     }
     setStatusOfFriendsBarScrolling(true);
 
-    timeout.friendsBar = setTimeout(() => {
+    timeout = setTimeout(() => {
       setStatusOfFriendsBarScrolling(false);
     }, 1000);
   };
@@ -34,12 +31,15 @@ const FriendsBar = () => {
   useEffect(() => {
     friendsBar.current.addEventListener("wheel", showScroll);
     getFriends({ users, setUsers });
+
+    return () => {
+      removeEventListener(showScroll);
+      clearTimeout(timeout);
+    };
   }, []);
 
   useEffect(() => {
-    if (users.length > 0) {
-      socket.emit("joinChat");
-    }
+    if (users.length) socket.emit("joinChat");
   }, [users]);
 
   useEffect(() => {

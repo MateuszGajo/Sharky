@@ -18,18 +18,12 @@ const Post = ({ post, focusElement }) => {
   const { t } = useTranslation(["component"]);
   const loadMoreComments = t("component:post.comments.load-more-comments");
 
-  const { setStatusOfError: setError } = useContext(AppContext);
+  const { setError, owner } = useContext(AppContext);
 
-  const {
-    newComment,
-    setNewComment,
-    muteUser,
-    owner,
-    users,
-    setUsers,
-  } = useContext(WizzardContext);
+  const { newComment, setNewComment, muteUser, users, setUsers } = useContext(
+    WizzardContext
+  );
 
-  const focusCollapse = useRef(focusElement?.current || null);
   const focusIcon = useRef(null);
 
   const [commentText, setCommentText] = useState("");
@@ -98,7 +92,7 @@ const Post = ({ post, focusElement }) => {
           setStatusOfReport={setStatusOfReport}
         />
       )}
-      <Navbar focusCollapse={focusCollapse} focusIcon={focusIcon} />
+      <Navbar focusCollapse={focusElement} focusIcon={focusIcon} />
       <Content />
       <div className="post__item__downbar">
         <DownBarButtons />
@@ -121,7 +115,7 @@ const Post = ({ post, focusElement }) => {
           >
             <Comment
               comment={comment}
-              focusCollapse={focusCollapse}
+              focusCollapse={focusElement}
               focusIcon={focusIcon}
             />
           </div>

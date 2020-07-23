@@ -15,7 +15,7 @@ const { useTranslation } = i18next;
 const OwnerSettings = () => {
   const { t } = useTranslation(["component"]);
 
-  const { setStatusOfError: setError } = useContext(AppContext);
+  const { setError } = useContext(AppContext);
   const { setStatusOfEdit, post } = useContext(PostContext);
   const { posts, setPosts } = useContext(WizzardContext);
 
