@@ -35,7 +35,6 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
   };
 
   const openSetting = () => {
-    console.log(focusCollapse);
     const { current } = settingRef;
     const collapseItem = current.querySelector(
       ".post__item__navbar__column-end__setting__collapse"
@@ -51,7 +50,6 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
 
     window.addEventListener("click", handleClick);
     focusCollapse.current = collapseItem;
-    console.log(focusCollapse);
 
     collapseItem.classList.toggle("is-close");
   };

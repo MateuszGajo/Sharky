@@ -47,7 +47,8 @@
 
         },
         "posts":{
-            "end-of-content":"You have seen all posts"
+            "end-of-content":"You have seen all posts",
+            "no-content": "There aren't any new posts"
         }
     },
     "post":{

@@ -41,7 +41,6 @@ router.get("/get", async (req, res) => {
 
 router.post("/get/people", async (req, res) => {
   const { idUser, from } = req.body;
-  console.log(idUser, from);
   const getFriendsQuery = `
   select c.*, friend_relation.relation, 	users.first_name as "firstName", users.last_name as "lastName", users.photo
   from(select b.*, friends.id as "idRelation"

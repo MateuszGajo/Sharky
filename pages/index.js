@@ -9,11 +9,15 @@ import Prompt from "@common/PopUp/Prompt/Prompt";
 import People from "@components/Lists/People/People";
 import Groups from "@components/Lists/Groups/Groups";
 import Fanpages from "@components/Lists/Fanpages/Fanpages";
+import MessageBox from "@common/MessageBox/MessageBox";
 import "../styles/main.scss";
 
 const Index = () => {
   const [initialized, setInitialized] = useState(false);
-  const [newPost, setNewPost] = useState({ photo: "", content: "" });
+  // const [newPost, setNewPost] = useState({ photo: "", content: "" });
+  const [content, setContent] = useState("");
+  const [file, setFile] = useState(null);
+  const [newPost, setNewPost] = useState();
 
   const { isError, isPrompt, owner } = useContext(AppContext);
 
@@ -23,15 +27,29 @@ const Index = () => {
 
   if (!initialized) return <Spinner />;
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    setNewPost({ content, file });
+  };
+
   return (
     <>
       {isError && <Error message={isError} />}
       {isPrompt && <Prompt message={isPrompt} />}
       <HomeLayout>
-        {owner.id && <People idUser={owner.id} />}
+        {/* {owner.id && <People idUser={owner.id} />}
         {owner.id && <Groups idUser={owner.id} />}
         {owner.id && <Fanpages idUser={owner.id} />}
-
+        */}
+        <form onSubmit={handleSubmit}>
+          <MessageBox
+            value={content}
+            onChange={setContent}
+            file={file}
+            setFile={setFile}
+          />
+        </form>
         <Posts newPost={newPost} />
       </HomeLayout>
     </>

@@ -1,12 +1,12 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
+const multer = require("multer");
 const { client } = require("../../../config/pgAdaptor");
 const { jwtSecret } = require("../../../config/keys");
 
 const router = express.Router();
 
 router.post("/add", async (req, res) => {
-  const { content, date, photo } = req.body;
   const token = jwt.sign(
     {
       exp: Math.floor(Date.now() / 1000) + 60 * 60,
@@ -20,22 +20,51 @@ router.post("/add", async (req, res) => {
     data: { id: idUser },
   } = jwt.verify(token, jwtSecret);
 
-  const addPostQuery =
-    "insert into posts(id_user, content, date, photo) values($1, $2, $3, $4) RETURNING id";
-  try {
-    const newPost = await client.query(addPostQuery, [
-      idUser,
-      content,
-      date,
-      photo,
-    ]);
+  const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, "./public/static/images");
+    },
+    filename: (req, file, cb) => {
+      cb(null, Date.now() + file.originalname);
+    },
+  });
 
-    return res.status(200).json({
-      idPost: newPost.rows[0].id,
-    });
-  } catch {
-    return res.status(400).json("bad-request");
-  }
+  const upload = multer({ storage }).single("file");
+
+  await upload(req, res, async (err) => {
+    if (err) {
+      return res.status(400).json("bad-request");
+    }
+
+    const {
+      file: { mimetype, filename: fileName, size },
+    } = req;
+    if (mimetype !== "image/jpeg" && mimetype !== "image/png") {
+      return res.status(415).json("wrong-file-type");
+    }
+    if (size > 200000) {
+      return res.status(413).json("file-too-large");
+    }
+
+    const { content, date } = req.body;
+    const addPostQuery =
+      "insert into posts(id_user, content, date, photo) values($1, $2, $3, $4) RETURNING id";
+
+    try {
+      const newPost = await client.query(addPostQuery, [
+        1,
+        content,
+        date,
+        fileName,
+      ]);
+      return res.status(200).json({
+        idPost: newPost.rows[0].id,
+        fileName,
+      });
+    } catch {
+      return res.status(400).json("bad-request");
+    }
+  });
 });
 
 router.post("/get", async (req, res) => {

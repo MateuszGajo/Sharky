@@ -12,6 +12,7 @@ const { useTranslation } = i18next;
 const PostList = ({}) => {
   const { t } = useTranslation(["component"]);
   const endOfContent = t("component:lists.posts.end-of-content");
+  const noContent = t("component:lists.posts.no-content");
 
   const {
     posts,
@@ -61,8 +62,6 @@ const PostList = ({}) => {
 
   const focusElement = useRef(null);
 
-  if (posts.length == 0) return <Spinner />;
-
   return (
     <div className="post-list">
       <InfiniteScroll
@@ -72,7 +71,7 @@ const PostList = ({}) => {
         loader={<Spinner />}
         endMessage={
           <p className="post-list__end-of-content">
-            <b>{endOfContent}</b>
+            <b>{posts.length ? endOfContent : noContent}</b>
           </p>
         }
       >
