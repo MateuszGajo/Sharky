@@ -68,8 +68,7 @@ socketIO.sockets.on("connection", (socket) => {
       const {
         data: { id: idUser },
       } = jwt.verify(token, jwtSecret);
-
-      userJoin(idUser);
+      userJoin(idUser, socket.id);
 
       const getChatsQuery = `
           select  chats.id as "idChat"
@@ -90,7 +89,7 @@ socketIO.sockets.on("connection", (socket) => {
     }
   });
 
-  socket.on("disconnet", (socket) => {
+  socket.on("disconnect", () => {
     const token = jwt.sign(
       {
         exp: Math.floor(Date.now() / 1000) + 60 * 60,
@@ -104,7 +103,7 @@ socketIO.sockets.on("connection", (socket) => {
       const {
         data: { id: idUser },
       } = jwt.verify(token, jwtSecret);
-      userLeave(idUser);
+      userLeave(idUser, socket.id);
     }
   });
 });
