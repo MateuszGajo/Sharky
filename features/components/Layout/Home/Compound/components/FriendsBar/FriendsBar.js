@@ -33,7 +33,7 @@ const FriendsBar = () => {
     getFriends({ users, setUsers });
 
     return () => {
-      removeEventListener(showScroll);
+      removeEventListener("whell", showScroll);
       clearTimeout(timeout);
     };
   }, []);

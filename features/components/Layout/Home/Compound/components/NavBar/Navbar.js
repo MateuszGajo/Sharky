@@ -107,7 +107,7 @@ const NavBar = () => {
     navbar.current.addEventListener("wheel", showScroll);
 
     return () => {
-      removeEventListener(showScroll);
+      removeEventListener("whell", showScroll);
       clearTimeout(timeout);
     };
   }, []);

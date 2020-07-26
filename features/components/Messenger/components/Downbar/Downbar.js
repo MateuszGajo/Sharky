@@ -42,7 +42,7 @@ const Downbar = ({ idChat, setMessages, messages, converser }) => {
     messageArea.current.addEventListener("keydown", addKeySubmit);
 
     return () => {
-      removeEventListener(addKeySubmit);
+      removeEventListener("keydown", addKeySubmit);
     };
   }, []);
 

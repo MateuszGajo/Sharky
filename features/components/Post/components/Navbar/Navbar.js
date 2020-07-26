@@ -58,8 +58,8 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
     settingRef.current.addEventListener("click", openSetting);
 
     return () => {
-      removeEventListener(openSetting);
-      removeEventListener(handleClick);
+      removeEventListener("click", openSetting);
+      removeEventListener("click", handleClick);
     };
   }, []);
 
