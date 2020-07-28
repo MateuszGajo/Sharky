@@ -10,6 +10,7 @@ import People from "@components/Lists/People/People";
 import Groups from "@components/Lists/Groups/Groups";
 import Fanpages from "@components/Lists/Fanpages/Fanpages";
 import MessageBox from "@common/MessageBox/MessageBox";
+import Search from "@common/Search/Search";
 import "../styles/main.scss";
 
 const Index = () => {
@@ -18,6 +19,8 @@ const Index = () => {
   const [content, setContent] = useState("");
   const [file, setFile] = useState(null);
   const [newPost, setNewPost] = useState();
+  const [user, setUser] = useState("");
+  const [keyWords, setKeyWords] = useState("");
 
   const { isError, isPrompt, owner } = useContext(AppContext);
 
@@ -33,15 +36,23 @@ const Index = () => {
     setNewPost({ content, file });
   };
 
+  const handleSubmitt = (e) => {
+    e.preventDefault();
+    setKeyWords(user);
+  };
+
   return (
     <>
       {isError && <Error message={isError} />}
       {isPrompt && <Prompt message={isPrompt} />}
       <HomeLayout>
-        {/* {owner.id && <People idUser={owner.id} />}
-        {owner.id && <Groups idUser={owner.id} />}
-        {owner.id && <Fanpages idUser={owner.id} />}
-        */}
+        <form onSubmit={handleSubmitt}>
+          <Search value={user} onChange={setUser} />
+        </form>
+        <People idUser={2} keyWords={keyWords} />
+        {/* {owner.id && <Groups idUser={owner.id} />}
+        {owner.id && <Fanpages idUser={owner.id} />} */}
+
         <form onSubmit={handleSubmit}>
           <MessageBox
             value={content}

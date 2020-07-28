@@ -41,7 +41,16 @@ router.get("/get", async (req, res) => {
 
 router.post("/get/people", async (req, res) => {
   const { idUser, from } = req.body;
-  const getFriendsQuery = `
+  let { keyWords } = req.body;
+  if (keyWords) keyWords = keyWords.split(/\s+/);
+  if (keyWords.length > 2)
+    return res.status(200).json({ friends: [], isMore: false });
+
+  let getFriendsQuery;
+  let result;
+  console.log(keyWords);
+  if (!keyWords) {
+    getFriendsQuery = `
   select c.*, friend_relation.relation, 	users.first_name as "firstName", users.last_name as "lastName", users.photo
   from(select b.*, friends.id as "idRelation"
     from(select a."idUser", sum(a.count) as "numberOfFriends"
@@ -104,12 +113,96 @@ router.post("/get/people", async (req, res) => {
   left join friend_relation on friend_relation.id_friendship = c."idRelation"
   limit 21 offset $2
   `;
-  let result;
-  try {
-    result = await client.query(getFriendsQuery, [idUser, from]);
-  } catch {
-    return res.status(400).json("bad-request");
+    try {
+      result = await client.query(getFriendsQuery, [idUser, from]);
+    } catch {
+      return res.status(400).json("bad-request");
+    }
+  } else {
+    getFriendsQuery = `
+    with idUsers as(
+      select id_user_1 as "idUser"
+      from friends 
+      where id_user_2=$1
+      union
+      select id_user_2 as "idUser"
+      from friends 
+      where id_user_1=$1
+      )
+
+    select d.*	
+    from(select a."idUser", sum(a."numberOfFriends") as "numberOfFriends", null as "idRelation", null as "relation", users.first_name as "firstName", users.last_name as "lastName", users.photo	
+    from(select  id_user_2 as "idUser", count(id_user_2) as "numberOfFriends"
+      from friends 
+      where id_user_2 in
+            (select id from users
+            where (lower(users.first_name)  like lower($3) and lower(users.last_name) like lower($4) or lower(users.first_name)  like lower($4) and lower(users.last_name) like lower($3))
+            and id not in(select "idUser" from idUsers)
+            )
+      group by id_user_2
+      union
+      select  id_user_1 as "idUser", count(id_user_1) as "numberOfFriends"
+      from friends 
+      where id_user_1 in
+            (select id from users
+            where (lower(users.first_name)  like lower($3) and lower(users.last_name) like lower($4) or lower(users.first_name)  like lower($4) and lower(users.last_name) like lower($3))
+            and id not in(select "idUser" from idUsers)
+            )
+      group by id_user_1
+      union
+      select id,0 as "numberOfFriends" 
+      from users
+      where (lower(users.first_name)  like lower($3) and lower(users.last_name) like lower($4) or lower(users.first_name)  like lower($4) and lower(users.last_name) like lower($3))
+      and id not in(select "idUser" from idUsers)
+      ) as a
+    left join users on a."idUser" = users.id 
+    group by a."idUser", users.first_name, users.last_name, users.photo
+    union
+      select c.*, friend_relation.relation, 	users.first_name as "firstName", users.last_name as "lastName", users.photo
+      from(select b.*, friends.id as "idRelation"
+      from(select a."idUser", sum(a.count) as "numberOfFriends"
+        from(select id_user_1 as "idUser", count(*) over (partition by id_user_1) as "count" 
+        from friends 
+        where id_user_1 in(	select "idUser" from idUsers )
+        union
+        select id_user_2 as "user", count(*) over (partition by id_user_2) as "count" 
+        from friends 
+        where id_user_2 in(select "idUser" from idUsers )
+        ) as a
+        group by a."idUser") as b
+      inner join friends on friends.id_user_1 = b."idUser" and friends.id_user_2 = $1
+      union
+      select b.*, friends.id as "idRelation"
+      from(select a."idUser", sum(a.count) as "numberOfFriends"
+        from(select id_user_1 as "idUser", count(*) over (partition by id_user_1) as "count" 
+        from friends 
+        where id_user_1 in(	select "idUser" from idUsers )
+        union
+        select id_user_2 as "user", count(*) over (partition by id_user_2) as "count" 
+        from friends 
+        where id_user_2 in(	select "idUser" from idUsers)
+        ) as a
+        group by a."idUser") as b
+      inner join friends on friends.id_user_2 = b."idUser" and friends.id_user_1 = $1) as c
+      left join users on users.id = c."idUser"
+      left join friend_relation on friend_relation.id_friendship = c."idRelation"
+      where lower(users.first_name)  like lower($3) and lower(users.last_name) like lower($4) or lower(users.first_name)  like lower($4) and lower(users.last_name) like lower($3)
+    ) as d
+    order by d."idRelation", d."firstName"
+    limit 21 offset $2
+  `;
+    try {
+      result = await client.query(getFriendsQuery, [
+        idUser,
+        from,
+        keyWords[0] + "%",
+        keyWords[1] ? keyWords[1] : "" + "%",
+      ]);
+    } catch {
+      return res.status(400).json("bad-request");
+    }
   }
+
   let { rows: friends } = result;
   let isMore = true;
 

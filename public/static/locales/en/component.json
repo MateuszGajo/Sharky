@@ -40,10 +40,11 @@
         },
         "people":{
             "description":"Number of friends",
-            "friend":"friend",
-            "family":"family",
-            "pal":"pal",
-            "relation-change":"Change relationship request has been sent"
+            "friend":"Friend",
+            "family":"Family",
+            "pal":"Pal",
+            "relation-change":"Change relationship request has been sent",
+            "add":"Add"
 
         },
         "posts":{

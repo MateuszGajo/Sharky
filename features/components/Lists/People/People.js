@@ -7,7 +7,7 @@ import AppContext from "@features/context/AppContext";
 import i18n from "@i18n";
 const { useTranslation } = i18n;
 
-const People = ({ idUser }) => {
+const People = ({ idUser, keyWords = "" }) => {
   const { t } = useTranslation(["component"]);
 
   const relationChangeText = t("component:lists.people.relation-change");
@@ -22,10 +22,11 @@ const People = ({ idUser }) => {
   const [isMore, setStatusOfMore] = useState(false);
 
   const fetchData = (from) => {
+    console.log(idUser, from, keyWords);
     axios
-      .post("/friend/get/people", { idUser: owner.id, from })
-      .then(({ data: { friends, isMore } }) => {
-        setFriends(friends);
+      .post("/friend/get/people", { idUser, from, keyWords })
+      .then(({ data: { friends: f, isMore } }) => {
+        setFriends([...friends, ...f]);
         setStatusOfMore(isMore);
       });
   };
@@ -36,12 +37,22 @@ const People = ({ idUser }) => {
       axios
         .post("/friend/update/relation", {
           idRelation: relation.id,
-          idUser: owner.id,
+          idUser,
           relation: relation.name,
         })
         .catch(({ response: { data: message } }) => setError(message));
     }
   }, [relation]);
+
+  useEffect(() => {
+    if (keyWords)
+      axios
+        .post("/friend/get/people", { idUser, from: 0, keyWords })
+        .then(({ data: { friends, isMore } }) => {
+          setFriends(friends);
+          setStatusOfMore(isMore);
+        });
+  }, [keyWords]);
 
   useEffect(() => {
     fetchData(0);
@@ -75,10 +86,14 @@ const People = ({ idUser }) => {
             name: `${firstName + " " + lastName}`,
             description: description,
             number: numberOfFriends,
-            button: "relation",
-            title: t(`component:lists.people.${relation.toLowerCase()}`),
+            button: relation ? "relation" : "join",
+            title: t(
+              `component:lists.people.${
+                relation ? relation.toLowerCase() : "add"
+              }`
+            ),
             buttonName: relation,
-            collapse: true,
+            collapse: relation && idUser == owner.id ? true : false,
             collapseItems: {
               pink: {
                 name: "pal",

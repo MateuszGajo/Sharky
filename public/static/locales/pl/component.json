@@ -43,7 +43,8 @@
             "friend":"Znajomy",
             "family":"Rodzina",
             "pal":"Przyjaciel",
-            "relation-change":"Prośba zmiany relacji została wysłana"
+            "relation-change":"Prośba zmiany relacji została wysłana",
+            "add":"Dodaj"
 
         },
         "posts":{
