@@ -34,15 +34,15 @@ const Groups = ({ idUser }) => {
   }, []);
 
   useEffect(() => {
-    if (group.idSub)
+    if (group.idRef)
       axios
-        .post("/group/user/delete", { idSub: group.idSub })
-        .then(() => group.setIdSub(null))
+        .post("/group/user/delete", { idSub: group.idRef })
+        .then(() => group.setIdRef(null))
         .catch(({ response: { data: message } }) => setError(message));
     else if (group.id)
       axios
         .post("/group/user/add", { idGroup: group.id })
-        .then(({ data: { id } }) => group.setIdSub(id))
+        .then(({ data: { id } }) => group.setIdRef(id))
         .catch(({ response: { data: message } }) => setError(message));
   }, [group]);
 
@@ -59,8 +59,8 @@ const Groups = ({ idUser }) => {
           const { idGroup, idSub, name, photo, numberOfMembers } = group;
           const data = {
             refType: "group",
-            refId: idGroup,
-            idSub: group.idSub || null,
+            id: idGroup,
+            idRef: group.idSub || null,
             photo,
             radiusPhoto: true,
             name,

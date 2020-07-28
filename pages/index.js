@@ -49,9 +49,9 @@ const Index = () => {
         <form onSubmit={handleSubmitt}>
           <Search value={user} onChange={setUser} />
         </form>
-        <People idUser={2} keyWords={keyWords} />
-        {/* {owner.id && <Groups idUser={owner.id} />}
-        {owner.id && <Fanpages idUser={owner.id} />} */}
+        <People idUser={1} keyWords={keyWords} />
+        {owner.id && <Groups idUser={owner.id} />}
+        {owner.id && <Fanpages idUser={owner.id} />}
 
         <form onSubmit={handleSubmit}>
           <MessageBox

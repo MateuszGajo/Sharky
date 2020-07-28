@@ -15,10 +15,13 @@ const People = ({ idUser, keyWords = "" }) => {
   const friendName = t("component:lists.people.friend");
   const familyName = t("component:lists.people.family");
   const palName = t("component:lists.people.pal");
+  const addText = t("component:lists.people.add");
+  const removeText = t("component:lists.people.remove");
 
   const { setError, setPrompt, owner } = useContext(AppContext);
   const [relation, setRelation] = useState({ id: null, name: "" });
   const [friends, setFriends] = useState([]);
+  const [friend, setFriend] = useState({ id: null, name: "", idRef: null });
   const [isMore, setStatusOfMore] = useState(false);
 
   const fetchData = (from) => {
@@ -55,6 +58,20 @@ const People = ({ idUser, keyWords = "" }) => {
   }, [keyWords]);
 
   useEffect(() => {
+    console.log(friend);
+    if (friend.idRef)
+      axios
+        .post("/friend/remove", { idFriendShip: friend.idRef })
+        .then(() => friend.setIdRef(null))
+        .catch(({ response: { data: message } }) => setError(message));
+    else if (friend.id)
+      axios
+        .post("/friend/add", { idUser: friend.id })
+        .then(({ data: { idFriendShip: id } }) => friend.setIdRef(id))
+        .catch(({ response: { data: message } }) => setError(message));
+  }, [friend]);
+
+  useEffect(() => {
     fetchData(0);
   }, []);
 
@@ -76,11 +93,12 @@ const People = ({ idUser, keyWords = "" }) => {
             photo,
             numberOfFriends,
           } = friend;
-
           const data = {
             ref: "profile",
-            refId: id,
-            idRelation,
+            id,
+            idRef: idRelation,
+            subTitle: addText,
+            unsubTitle: removeText,
             photo,
             radiusPhoto: false,
             name: `${firstName + " " + lastName}`,
@@ -109,7 +127,14 @@ const People = ({ idUser, keyWords = "" }) => {
               },
             },
           };
-          return <Card data={data} key={id} setRelation={setRelation} />;
+          return (
+            <Card
+              data={data}
+              key={id}
+              setRelation={setRelation}
+              handleClick={setFriend}
+            />
+          );
         })}
       </div>
     </InfiniteScroll>

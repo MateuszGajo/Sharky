@@ -44,7 +44,8 @@
             "family":"Family",
             "pal":"Pal",
             "relation-change":"Change relationship request has been sent",
-            "add":"Add"
+            "add":"Add",
+            "remove":"Remove"
 
         },
         "posts":{

@@ -39,6 +39,55 @@ router.get("/get", async (req, res) => {
   }
 });
 
+router.post("/add", async (req, res) => {
+  const { idUser } = req.body;
+  console.log("dodajemy id użytkwnik" + idUser);
+
+  const token = jwt.sign(
+    {
+      exp: Math.floor(Date.now() / 1000) + 60 * 60,
+      data: {
+        id: 1,
+      },
+    },
+    jwtSecret
+  );
+  const {
+    data: { id: idOwner },
+  } = jwt.verify(token, jwtSecret);
+
+  const addUserQuery = `
+    insert into friends(id_user_1, id_user_2, status) values($1,$2,'0') returning id;
+  `;
+
+  try {
+    const { rows: addUser } = await client.query(addUserQuery, [
+      idOwner,
+      idUser,
+    ]);
+
+    res.status(200).json({ idFriendShip: addUser[0].id });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
+router.post("/remove", async (req, res) => {
+  const { idFriendShip } = req.body;
+
+  const removeUserQuery = `
+  delete from friends where id=$1;
+  `;
+
+  try {
+    await client.query(removeUserQuery, [idFriendShip]);
+
+    res.status(204);
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
 router.post("/get/people", async (req, res) => {
   const { idUser, from } = req.body;
   let { keyWords } = req.body;
@@ -51,67 +100,46 @@ router.post("/get/people", async (req, res) => {
   console.log(keyWords);
   if (!keyWords) {
     getFriendsQuery = `
-  select c.*, friend_relation.relation, 	users.first_name as "firstName", users.last_name as "lastName", users.photo
-  from(select b.*, friends.id as "idRelation"
+    with idUsers as(
+      select id_user_1 as "idUser"
+      from friends 
+      where id_user_2=$1 and (status='1' or id_user_2=$1)
+      union
+      select id_user_2 as "idUser"
+      from friends 
+      where id_user_1=$1 and (status='1' or id_user_2=$1)
+      )
+  
+  select c.*, friend_relation.relation, users.first_name as "firstName", users.last_name as "lastName", users.photo
+  from(select b.*, friends.id as "idRelation", (case when friends.status='0' then friends.id_user_2  end) as "inviteFor", friends.date
     from(select a."idUser", sum(a.count) as "numberOfFriends"
       from(select id_user_1 as "idUser", count(*) over (partition by id_user_1) as "count" 
         from friends 
-        where id_user_1 in(		
-            select id_user_1
-            from friends 
-            where id_user_2=$1
-            union
-            select id_user_2
-            from friends 
-            where id_user_1=$1
-            )
+        where id_user_1 in(	select "idUser" from idUsers)
         union
         select id_user_2 as "user", count(*) over (partition by id_user_2) as "count" 
         from friends 
-        where id_user_2 in(		
-            select id_user_1
-            from friends 
-            where id_user_2=$1
-            union
-            select id_user_2
-            from friends 
-            where id_user_1=$1
-            )
+        where id_user_2 in(	select "idUser" from idUsers )
         ) as a
       group by a."idUser") as b
     inner join friends on friends.id_user_1 = b."idUser" and friends.id_user_2 = $1
     union
-    select b.*, friends.id as "idRelation"
+    select b.*, friends.id as "idRelation",(case when friends.status='0' then friends.id_user_2  end) as "inviteFor", friends.date
     from(select a."idUser", sum(a.count) as "numberOfFriends"
       from(select id_user_1 as "idUser", count(*) over (partition by id_user_1) as "count" 
         from friends 
-        where id_user_1 in(		
-            select id_user_1
-            from friends 
-            where id_user_2=$1
-            union
-            select id_user_2
-            from friends 
-            where id_user_1=$1
-            )
+        where id_user_1 in(select "idUser" from idUsers)
         union
         select id_user_2 as "user", count(*) over (partition by id_user_2) as "count" 
         from friends 
-        where id_user_2 in(		
-            select id_user_1
-            from friends 
-            where id_user_2=$1
-            union
-            select id_user_2
-            from friends 
-            where id_user_1=$1
-            )
+        where id_user_2 in(	select "idUser" from idUsers )
         ) as a
       group by a."idUser") as b
     inner join friends on friends.id_user_2 = b."idUser" and friends.id_user_1 = $1) as c
-  left join users on users.id = c."idUser"
-  left join friend_relation on friend_relation.id_friendship = c."idRelation"
-  limit 21 offset $2
+    left join users on users.id = c."idUser"
+    left join friend_relation on friend_relation.id_friendship = c."idRelation"
+    order by relation desc, date desc
+    limit 21 offset $2
   `;
     try {
       result = await client.query(getFriendsQuery, [idUser, from]);

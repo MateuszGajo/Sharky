@@ -44,7 +44,8 @@
             "family":"Rodzina",
             "pal":"Przyjaciel",
             "relation-change":"Prośba zmiany relacji została wysłana",
-            "add":"Dodaj"
+            "add":"Dodaj",
+            "remove":"Usuń"
 
         },
         "posts":{

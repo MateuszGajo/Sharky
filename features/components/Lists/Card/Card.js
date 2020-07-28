@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import cx from "classnames";
 import Router from "@features/route/routes";
+import { useEffect } from "react";
 
 const Card = ({ data, setRelation, handleClick }) => {
   const {
     refType,
-    refId,
-    idRelation,
+    id,
     photo,
     name,
     description,
@@ -21,9 +21,54 @@ const Card = ({ data, setRelation, handleClick }) => {
     radiusPhoto,
   } = data;
   const { green: greenC, blue: blueC, pink: pinkC } = collapseItems || {};
+  console.log(unsubTitle);
+  const collapseRef = useRef(null);
 
-  const [idSub, setIdSub] = useState(data.idSub);
+  const [idRef, setIdRef] = useState(data.idRef);
   const [number, setNumber] = useState(n);
+
+  const removeFriend = () => {
+    handleClick({
+      name: refType,
+      idRef,
+      setIdRef,
+      id,
+    });
+  };
+
+  const changeFriendButton = () => {
+    collapseRef.current.classList.remove(
+      "card__item__info__second-column__buttons--relation"
+    );
+    collapseRef.current.classList.add(
+      "card__item__info__second-column__buttons--join"
+    );
+
+    collapseRef.current.addEventListener("click", removeFriend);
+
+    collapseRef.current.innerHTML = unsubTitle;
+  };
+
+  const resetFriendButton = () => {
+    collapseRef.current.classList.add(
+      "card__item__info__second-column__buttons--relation"
+    );
+    collapseRef.current.classList.remove(
+      "card__item__info__second-column__buttons--join"
+    );
+
+    removeEventListener("click", removeFriend);
+
+    collapseRef.current.innerHTML = title;
+  };
+
+  useEffect(() => {
+    if (collapse) {
+      collapseRef.current.addEventListener("mouseover", changeFriendButton);
+      collapseRef.current.addEventListener("mouseleave", resetFriendButton);
+    }
+    // console.log(collapseRef.current.style.visiblity);
+  }, []);
 
   return (
     <div className="card">
@@ -35,7 +80,7 @@ const Card = ({ data, setRelation, handleClick }) => {
               "card__item--picture--img--radius": radiusPhoto === true,
             })}
             onClick={() => {
-              Router.pushRoute(refType, { id: refId });
+              Router.pushRoute(refType, { id });
             }}
             data-testid="card-photo"
           />
@@ -48,7 +93,7 @@ const Card = ({ data, setRelation, handleClick }) => {
                 data-testid="card-name"
                 onClick={() => {
                   Router.pushRoute(refType, {
-                    id: refId,
+                    id,
                   });
                 }}
               >
@@ -89,15 +134,16 @@ const Card = ({ data, setRelation, handleClick }) => {
                         pinkC?.name === buttonName && collapseItems,
                     }
                   )}
+                  ref={collapseRef}
                   data-testid="card-button"
                   onClick={() => {
                     if (button == "join") {
-                      idSub ? setNumber(number - 1) : setNumber(number + 1);
+                      idRef ? setNumber(number - 1) : setNumber(number + 1);
                       handleClick({
                         name: refType,
-                        idSub,
-                        setIdSub,
-                        id: refId,
+                        idRef,
+                        setIdRef,
+                        id,
                       });
                     }
                   }}
@@ -106,7 +152,7 @@ const Card = ({ data, setRelation, handleClick }) => {
                     className="card__item__info__second-column__buttons--main-button--span"
                     data-testid="card-button-text"
                   >
-                    {idSub ? unsubTitle : subTitle}
+                    {!title ? (idRef ? unsubTitle : subTitle) : null}
                     {title && title}
                   </span>
                 </div>
@@ -126,7 +172,7 @@ const Card = ({ data, setRelation, handleClick }) => {
                       onClick={() => {
                         if (buttonName !== greenC.name) {
                           setRelation({
-                            id: idRelation,
+                            id: idRef,
                             name: greenC.name,
                           });
                         }
@@ -146,7 +192,7 @@ const Card = ({ data, setRelation, handleClick }) => {
                       onClick={() => {
                         if (buttonName !== pinkC.name) {
                           setRelation({
-                            id: idRelation,
+                            id: idRef,
                             name: pinkC.name,
                           });
                         }
@@ -166,7 +212,7 @@ const Card = ({ data, setRelation, handleClick }) => {
                       onClick={() => {
                         if (buttonName !== blueC.name) {
                           setRelation({
-                            id: idRelation,
+                            id: idRef,
                             name: blueC.name,
                           });
                         }
