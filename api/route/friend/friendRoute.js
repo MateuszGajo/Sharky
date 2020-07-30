@@ -41,7 +41,6 @@ router.get("/get", async (req, res) => {
 
 router.post("/add", async (req, res) => {
   const { idUser } = req.body;
-  console.log("dodajemy id użytkwnik" + idUser);
 
   const token = jwt.sign(
     {
@@ -81,8 +80,24 @@ router.post("/remove", async (req, res) => {
 
   try {
     await client.query(removeUserQuery, [idFriendShip]);
+    res.status(200).json({ success: true });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
 
-    res.status(204);
+router.post("/accept", async (req, res) => {
+  const { idFriendShip } = req.body;
+  const relation = "friend";
+
+  const acceptRequest = `update friends set status='1' where id=$1`;
+  const setRelation = `insert into friend_relation(id_friendship, relation) values($1,$2) returning relation`;
+
+  try {
+    await client.query(acceptRequest, [idFriendShip]);
+    await client.query(setRelation, [idFriendShip, relation]);
+
+    res.status(200).json({ relation });
   } catch {
     res.status(400).json("bad-request");
   }
@@ -97,7 +112,7 @@ router.post("/get/people", async (req, res) => {
 
   let getFriendsQuery;
   let result;
-  console.log(keyWords);
+
   if (!keyWords) {
     getFriendsQuery = `
     with idUsers as(
@@ -110,8 +125,8 @@ router.post("/get/people", async (req, res) => {
       where id_user_1=$1 and (status='1' or id_user_2=$1)
       )
   
-  select c.*, friend_relation.relation, users.first_name as "firstName", users.last_name as "lastName", users.photo
-  from(select b.*, friends.id as "idRelation", (case when friends.status='0' then friends.id_user_2  end) as "inviteFor", friends.date
+  select c.*, friend_relation.relation,  users.first_name as "firstName", users.last_name as "lastName", users.photo
+  from(select b.*, friends.id as "idFriendShip", (case when friends.status='0' then friends.id_user_2  end) as "inviteFor", friends.date
     from(select a."idUser", sum(a.count) as "numberOfFriends"
       from(select id_user_1 as "idUser", count(*) over (partition by id_user_1) as "count" 
         from friends 
@@ -124,7 +139,7 @@ router.post("/get/people", async (req, res) => {
       group by a."idUser") as b
     inner join friends on friends.id_user_1 = b."idUser" and friends.id_user_2 = $1
     union
-    select b.*, friends.id as "idRelation",(case when friends.status='0' then friends.id_user_2  end) as "inviteFor", friends.date
+    select b.*, friends.id as "idFriendShip",(case when friends.status='0' then friends.id_user_2  end) as "inviteFor", friends.date
     from(select a."idUser", sum(a.count) as "numberOfFriends"
       from(select id_user_1 as "idUser", count(*) over (partition by id_user_1) as "count" 
         from friends 
@@ -137,7 +152,7 @@ router.post("/get/people", async (req, res) => {
       group by a."idUser") as b
     inner join friends on friends.id_user_2 = b."idUser" and friends.id_user_1 = $1) as c
     left join users on users.id = c."idUser"
-    left join friend_relation on friend_relation.id_friendship = c."idRelation"
+    left join friend_relation on friend_relation.id_friendship = c."idFriendShip"
     order by relation desc, date desc
     limit 21 offset $2
   `;
@@ -264,12 +279,12 @@ router.post("/message/read", (req, res) => {
 });
 
 router.post("/update/relation", async (req, res) => {
-  const { idRelation, idUser, relation } = req.body;
+  const { idFriendShip, idUser, relation } = req.body;
 
   const updateRelationQuery = `update friend_relation set new_relation=$1, id_user=$2 where id_friendship=$3;`;
 
   try {
-    await client.query(updateRelationQuery, [relation, idUser, idRelation]);
+    await client.query(updateRelationQuery, [relation, idUser, idFriendShip]);
     res.status(200);
   } catch {
     res.status(400).json("bad-request");

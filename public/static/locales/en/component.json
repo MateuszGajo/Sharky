@@ -45,7 +45,9 @@
             "pal":"Pal",
             "relation-change":"Change relationship request has been sent",
             "add":"Add",
-            "remove":"Remove"
+            "remove":"Remove",
+            "accept":"Accept",
+            "decline":"Decline"
 
         },
         "posts":{

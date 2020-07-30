@@ -17,15 +17,17 @@ const People = ({ idUser, keyWords = "" }) => {
   const palName = t("component:lists.people.pal");
   const addText = t("component:lists.people.add");
   const removeText = t("component:lists.people.remove");
+  const acceptInvite = t("component:lists.people.accept");
+  const declineInvite = t("component:lists.people.decline");
 
   const { setError, setPrompt, owner } = useContext(AppContext);
   const [relation, setRelation] = useState({ id: null, name: "" });
   const [friends, setFriends] = useState([]);
   const [friend, setFriend] = useState({ id: null, name: "", idRef: null });
   const [isMore, setStatusOfMore] = useState(false);
+  const [invite, setInvite] = useState({ inviteType: "", idRelation: null });
 
   const fetchData = (from) => {
-    console.log(idUser, from, keyWords);
     axios
       .post("/friend/get/people", { idUser, from, keyWords })
       .then(({ data: { friends: f, isMore } }) => {
@@ -35,17 +37,45 @@ const People = ({ idUser, keyWords = "" }) => {
   };
 
   useEffect(() => {
-    if (relation.id != null) {
+    const { idFriendShip } = relation;
+    if (idFriendShip != null) {
       setPrompt(relationChangeText);
       axios
         .post("/friend/update/relation", {
-          idRelation: relation.id,
+          idFriendShip,
           idUser,
           relation: relation.name,
         })
         .catch(({ response: { data: message } }) => setError(message));
     }
   }, [relation]);
+
+  useEffect(() => {
+    const {
+      inviteType,
+      setInviteType,
+      setButton,
+      setTitle,
+      idFriendShip,
+      setCollapse,
+      setButtonName,
+      number,
+      setNumber,
+    } = invite;
+
+    if (inviteType == "accept")
+      axios
+        .post("/friend/accept", { idFriendShip })
+        .then(({ data: { relation } }) => {
+          setInviteType("");
+          setButton("relation");
+          setTitle(t(`component:lists.people.${relation}`));
+          setButtonName(relation);
+          setCollapse(idUser == owner.id && relation ? true : false);
+          setNumber(Number(number) + 1);
+        })
+        .catch(({ response: { data: message } }) => setError(message));
+  }, [invite]);
 
   useEffect(() => {
     if (keyWords)
@@ -58,11 +88,16 @@ const People = ({ idUser, keyWords = "" }) => {
   }, [keyWords]);
 
   useEffect(() => {
-    console.log(friend);
     if (friend.idRef)
       axios
         .post("/friend/remove", { idFriendShip: friend.idRef })
-        .then(() => friend.setIdRef(null))
+        .then(() => {
+          const newFriends = friends.filter((item) => {
+            return item.idFriendShip != friend.idRef;
+          });
+
+          setFriends(newFriends);
+        })
         .catch(({ response: { data: message } }) => setError(message));
     else if (friend.id)
       axios
@@ -85,25 +120,29 @@ const People = ({ idUser, keyWords = "" }) => {
       <div className="list">
         {friends.map((friend) => {
           const {
-            idRelation,
+            idFriendShip,
             relation,
             idUser: id,
             firstName,
             lastName,
+            inviteFor,
             photo,
             numberOfFriends,
           } = friend;
           const data = {
             ref: "profile",
             id,
-            idRef: idRelation,
+            idRef: idFriendShip,
             subTitle: addText,
             unsubTitle: removeText,
+            inviteFor,
             photo,
             radiusPhoto: false,
             name: `${firstName + " " + lastName}`,
             description: description,
             number: numberOfFriends,
+            acceptInvite,
+            declineInvite,
             button: relation ? "relation" : "join",
             title: t(
               `component:lists.people.${
@@ -133,6 +172,7 @@ const People = ({ idUser, keyWords = "" }) => {
               key={id}
               setRelation={setRelation}
               handleClick={setFriend}
+              setInvite={setInvite}
             />
           );
         })}

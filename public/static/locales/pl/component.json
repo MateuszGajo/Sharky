@@ -45,7 +45,9 @@
             "pal":"Przyjaciel",
             "relation-change":"Prośba zmiany relacji została wysłana",
             "add":"Dodaj",
-            "remove":"Usuń"
+            "remove":"Usuń",
+            "accept":"Zaakceptuj",
+            "decline":"Odrzuć"
 
         },
         "posts":{
