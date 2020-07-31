@@ -7,7 +7,7 @@ import AppContext from "@features/context/AppContext";
 import Spinner from "@components/Spinner/Spinner";
 const { useTranslation } = i18next;
 
-const Fanpages = ({ idUser }) => {
+const Fanpages = ({ idUser, keyWords }) => {
   const { t } = useTranslation(["component"]);
   const description = t("component:lists.fanpages.description");
   const buttonSubscribe = t("component:lists.fanpages.button-subscribe");
@@ -21,9 +21,9 @@ const Fanpages = ({ idUser }) => {
 
   const fetchData = (from) => {
     axios
-      .post("/fanpage/get", { from, idUser })
-      .then(({ data: { fanpages, isMore } }) => {
-        setFanpages(fanpages);
+      .post("/fanpage/get", { from, idUser, keyWords })
+      .then(({ data: { fanpages: f, isMore } }) => {
+        setFanpages([...fanpages, ...f]);
         setStatusOfMore(isMore);
       })
       .catch(({ response: { data: message } }) => setError(message));
@@ -45,6 +45,17 @@ const Fanpages = ({ idUser }) => {
         .then(({ data: { id } }) => fanpage.setIdRef(id))
         .catch(({ response: { data: message } }) => setError(message));
   }, [fanpage]);
+
+  useEffect(() => {
+    if (keyWords)
+      axios
+        .post("/fanpage/get", { from: 0, idUser, keyWords })
+        .then(({ data: { fanpages, isMore } }) => {
+          setFanpages(fanpages);
+          setStatusOfMore(isMore);
+        })
+        .catch(({ response: { data: message } }) => setError(message));
+  }, [keyWords]);
 
   if (!fanpages) return <Spinner />;
   return (

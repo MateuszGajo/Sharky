@@ -6,8 +6,7 @@ const { jwtSecret } = require("../../../config/keys");
 const router = express.Router();
 
 router.post("/get", async (req, res) => {
-  const { from, idUser } = req.body;
-
+  const { from, idUser, keyWords } = req.body;
   const token = jwt.sign(
     {
       exp: Math.floor(Date.now() / 1000) + 60 * 60,
@@ -21,27 +20,95 @@ router.post("/get", async (req, res) => {
     data: { id: idOwner },
   } = jwt.verify(token, jwtSecret);
 
-  const getGroupsQuery = `
-  select a."idSub",a."idGroup",a."numberOfMembers", b.name, b.description, b.photo
-  from(select id as "idSub",id_group as "idGroup", count(*) over (partition by id_group)  as "numberOfMembers",id_user
-      from group_users 
-      where id_group in(
+  let getGroupsQuery;
+  let getGroups;
+
+  if (!keyWords) {
+    getGroupsQuery = `
+  with idGroups as(
+    select b.id_group
+      from(select a.id_group
+      from group_users as a
+      where id_user=$1) as b
+    left join(
+      select a.id_group
+      from group_users as a
+      where id_user=$2) as c
+    on c.id_group = b.id_group
+    where c.id_group is null
+    )
+    
+    select a."idSub",a."idGroup",a."numberOfMembers", b.name, b.description, b.photo
+    from(select id as "idSub",id_group as "idGroup", count(*) over (partition by id_group)  as "numberOfMembers",id_user
+         from group_users 
+         where id_group in(
+              select a.id_group
+              from group_users as a
+              where id_user=$1
+            )
+          ) as a
+       left join groups as b
+    on a."idGroup" = b.id
+    where a.id_user =$2
+    union
+    select null as "idSub", b.*, groups.name, groups.description, groups.photo
+    from(select a.id as "idGroup", count(*) as "numberOfMembers"
+      from(select groups.id 
+         from groups
+         left join group_users on
+         groups.id = group_users.id_group
+         where groups.id in(select * from idGroups)
+        ) as a
+      group by a.id) as b
+    inner join groups on b."idGroup" = groups.id
+    limit 21 offset $3
+  `;
+    try {
+      getGroups = await client.query(getGroupsQuery, [idUser, idOwner, from]);
+    } catch {
+      return res.status(400).json("bad-request");
+    }
+  } else {
+    getGroupsQuery = `
+  select c.*
+  from(select a."idSub",a."idGroup",a."numberOfMembers", b.name, b.description, b.photo
+    from(select id as "idSub",id_group as "idGroup", count(*) over (partition by id_group)  as "numberOfMembers",id_user
+       from group_users 
+       where id_group in(
           select a.id_group
           from group_users as a
           where id_user=$1
-        )
-      ) as a
-  left join groups as b
-  on a."idGroup" = b.id
-  where a.id_user =$2
+        ) and id_user=$1
+        ) as a
+       left join groups as b
+    on a."idGroup" = b.id
+    union
+    select null as "idSub", b.*, groups.name, groups.description, groups.photo
+    from(select a.id as "idGroup", count(*) as "numberOfMembers"
+    from(select groups.id 
+       from groups
+       left join group_users on
+       groups.id = group_users.id_group
+       where groups.id not in(
+         select a.id_group
+          from group_users as a
+          where id_user=$1
+       )
+       ) as a
+    group by a.id) as b
+  inner join groups on b."idGroup" = groups.id ) as c
+  where lower(name) like lower($2)
   limit 21 offset $3
   `;
-
-  let getGroups;
-  try {
-    getGroups = await client.query(getGroupsQuery, [idUser, idOwner, from]);
-  } catch {
-    return res.status(400).json("bad-request");
+    try {
+      getGroups = await client.query(getGroupsQuery, [
+        idOwner,
+        `%${keyWords}%`,
+        from,
+      ]);
+    } catch {
+      return res.status(400).json("bad-request");
+    }
   }
 
   let { rows: groups } = getGroups;

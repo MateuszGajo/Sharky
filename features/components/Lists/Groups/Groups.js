@@ -38,7 +38,7 @@ const Groups = ({ idUser, keyWords = "" }) => {
       axios
         .post("/group/get", { from: 0, idUser, keyWords })
         .then(({ data: { groups, isMore } }) => {
-          setGroup(groups);
+          setGroups(groups);
           setStatusOfMore(isMore);
         })
         .catch(({ response: { data: message } }) => setError(message));

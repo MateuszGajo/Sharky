@@ -6,7 +6,7 @@ const { jwtSecret } = require("../../../config/keys");
 const router = express.Router();
 
 router.post("/get", async (req, res) => {
-  const { from, idUser } = req.body;
+  const { from, idUser, keyWords } = req.body;
 
   const token = jwt.sign(
     {
@@ -21,8 +21,24 @@ router.post("/get", async (req, res) => {
     data: { id: idOwner },
   } = jwt.verify(token, jwtSecret);
 
-  const getFanpagesQuery = `
-  select a."idSub",a."idFanpage",a."numberOfSubscribes", b.name, b.description, b.photo, b.id as "idSub"
+  let getFanpages;
+  let getFanpagesQuery;
+  if (!keyWords) {
+    getFanpagesQuery = `
+  with idFanpages as(
+    select b.id_fanpage
+      from(select a.id_fanpage
+      from fanpage_users as a
+      where id_user=$1) as b
+    left join(
+      select a.id_fanpage
+      from fanpage_users as a
+      where id_user=$2) as c
+    on c.id_fanpage = b.id_fanpage
+    where c.id_fanpage is null
+    )
+  
+  select a."idSub",a."idFanpage",a."numberOfSubscribes", b.name, b.description, b.photo
   from(select id as "idSub",id_user,id_fanpage as "idFanpage", count(*) over (partition by id_fanpage)  as "numberOfSubscribes"
       from fanpage_users 
       where id_fanpage in(
@@ -34,14 +50,70 @@ router.post("/get", async (req, res) => {
   left join fanpages as b
   on a."idFanpage" = b.id
   where a.id_user=$2
+  union
+  select null as "idSub", b.*, fanpages.name, fanpages.description, fanpages.photo
+  from(select a.id as "idFanpage", count(*) as "numberOfSubscribes"
+      from(select fanpages.id 
+         from fanpages
+         left join fanpage_users on
+         fanpages.id = fanpage_users.id_fanpage
+         where fanpages.id in(select * from idFanpages)
+        ) as a
+      group by a.id) as b
+  inner join fanpages on b."idFanpage" = fanpages.id
   limit 21 offset $3
   `;
 
-  let getFanpages;
-  try {
-    getFanpages = await client.query(getFanpagesQuery, [idUser, idOwner, from]);
-  } catch {
-    return res.status(400).json("bad-request");
+    try {
+      getFanpages = await client.query(getFanpagesQuery, [
+        idUser,
+        idOwner,
+        from,
+      ]);
+    } catch {
+      return res.status(400).json("bad-request");
+    }
+  } else {
+    getFanpagesQuery = `
+  select c.*
+  from(select a."idSub",a."idFanpage",a."numberOfSubscribes", b.name, b.description, b.photo
+    from(select id as "idSub",id_fanpage as "idFanpage", count(*) over (partition by id_fanpage)  as "numberOfSubscribes",id_user
+       from fanpage_users 
+       where id_fanpage in(
+          select a.id_fanpage
+          from fanpage_users as a
+          where id_user=$1
+        ) and id_user=$1
+        ) as a
+       left join Fanpages as b
+    on a."idFanpage" = b.id
+    union
+    select null as "idSub", b.*, fanpages.name, fanpages.description, fanpages.photo
+    from(select a.id as "idFanpage", count(*) as "numberOfSubscribes"
+    from(select fanpages.id 
+       from fanpages
+       left join fanpage_users on
+       fanpages.id = fanpage_users.id_fanpage
+       where fanpages.id not in(
+         select a.id_fanpage
+          from fanpage_users as a
+          where id_user=$1
+       )
+       ) as a
+    group by a.id) as b
+  inner join fanpages on b."idFanpage" = fanpages.id ) as c
+  where lower(name) like lower($2)
+  limit 21 offset $3
+  `;
+    try {
+      getFanpages = await client.query(getFanpagesQuery, [
+        idOwner,
+        `%${keyWords}%`,
+        from,
+      ]);
+    } catch {
+      return res.status(400).json("bad-request");
+    }
   }
 
   let { rows: fanpages } = getFanpages;

@@ -50,8 +50,8 @@ const Index = () => {
           <Search value={user} onChange={setUser} />
         </form>
         <People idUser={1} keyWords={keyWords} />
-        {owner.id && <Groups idUser={owner.id} keyWords={keyWords} />}
-        {owner.id && <Fanpages idUser={owner.id} />}
+        {owner.id && <Groups idUser={2} keyWords={keyWords} />}
+        {owner.id && <Fanpages idUser={2} keyWords={keyWords} />}
 
         <form onSubmit={handleSubmit}>
           <MessageBox
