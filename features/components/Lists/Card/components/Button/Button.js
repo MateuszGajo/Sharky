@@ -113,12 +113,14 @@ const Button = ({
               idFriendShip: idRef,
             });
           } else {
-            idRef ? setNumber(number - 1) : setNumber(number + 1);
+            // idRef ? setNumber(number - 1) : setNumber(number + 1);
             handleClick({
               name: refType,
               idRef,
               setIdRef,
               id,
+              number,
+              setNumber,
             });
           }
         }

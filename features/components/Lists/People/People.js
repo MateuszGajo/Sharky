@@ -88,21 +88,29 @@ const People = ({ idUser, keyWords = "" }) => {
   }, [keyWords]);
 
   useEffect(() => {
-    if (friend.idRef)
+    const { setNumber, number, idRef, setIdRef, id } = friend;
+    if (idRef)
       axios
         .post("/friend/remove", { idFriendShip: friend.idRef })
         .then(() => {
-          const newFriends = friends.filter((item) => {
-            return item.idFriendShip != friend.idRef;
-          });
-
-          setFriends(newFriends);
+          if (idUser == owner.id) {
+            const newFriends = friends.filter((item) => {
+              return item.idFriendShip != friend.idRef;
+            });
+            setFriends(newFriends);
+          } else {
+            setIdRef(null);
+            setNumber(Number(number) - 1);
+          }
         })
         .catch(({ response: { data: message } }) => setError(message));
-    else if (friend.id)
+    else if (id)
       axios
-        .post("/friend/add", { idUser: friend.id })
-        .then(({ data: { idFriendShip: id } }) => friend.setIdRef(id))
+        .post("/friend/add", { idUser: id })
+        .then(({ data: { idFriendShip: id } }) => {
+          console.log("zaproszenie wysłane");
+          setIdRef(id);
+        })
         .catch(({ response: { data: message } }) => setError(message));
   }, [friend]);
 

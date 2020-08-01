@@ -34,15 +34,29 @@ const Fanpages = ({ idUser, keyWords }) => {
   }, []);
 
   useEffect(() => {
-    if (fanpage.idRef)
+    const { setNumber, number, idRef, setIdRef, id } = fanpage;
+    if (idRef)
       axios
         .post("/fanpage/user/delete", { idSub: fanpage.idRef })
-        .then(() => fanpage.setIdRef(null))
+        .then(() => {
+          if (idUser == owner.id) {
+            const newFanpages = fanpages.filter(
+              (fanpage) => fanpage.idFanpage != id
+            );
+            setFanpages(newFanpages);
+          } else {
+            setIdRef(null);
+            setNumber(Number(number) - 1);
+          }
+        })
         .catch(({ response: { data: message } }) => setError(message));
-    else if (fanpage.id)
+    else if (id)
       axios
         .post("/fanpage/user/add", { idFanpage: fanpage.id })
-        .then(({ data: { id } }) => fanpage.setIdRef(id))
+        .then(({ data: { id } }) => {
+          setNumber(Number(number) + 1);
+          setIdRef(id);
+        })
         .catch(({ response: { data: message } }) => setError(message));
   }, [fanpage]);
 
@@ -70,7 +84,7 @@ const Fanpages = ({ idUser, keyWords }) => {
           const { idFanpage, name, photo, numberOfSubscribes } = fanpage;
           const data = {
             refType: "fanpage",
-            refId: idFanpage,
+            id: idFanpage,
             idRef: fanpage.idSub || null,
             photo,
             radiusPhoto: true,

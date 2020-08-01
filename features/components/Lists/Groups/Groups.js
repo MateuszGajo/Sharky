@@ -45,15 +45,27 @@ const Groups = ({ idUser, keyWords = "" }) => {
   }, [keyWords]);
 
   useEffect(() => {
-    if (group.idRef)
+    const { number, setNumber, idRef, setIdRef, id } = group;
+    if (idRef)
       axios
         .post("/group/user/delete", { idSub: group.idRef })
-        .then(() => group.setIdRef(null))
+        .then(() => {
+          if (idUser == owner.id) {
+            const newGroups = groups.filter((group) => group.idGroup != id);
+            setGroups(newGroups);
+          } else {
+            setNumber(Number(number) - 1);
+            setIdRef(null);
+          }
+        })
         .catch(({ response: { data: message } }) => setError(message));
-    else if (group.id)
+    else if (id)
       axios
         .post("/group/user/add", { idGroup: group.id })
-        .then(({ data: { id } }) => group.setIdRef(id))
+        .then(({ data: { id } }) => {
+          setIdRef(id);
+          setNumber(Number(number) + 1);
+        })
         .catch(({ response: { data: message } }) => setError(message));
   }, [group]);
 
