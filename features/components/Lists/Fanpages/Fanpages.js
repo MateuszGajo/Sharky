@@ -61,7 +61,7 @@ const Fanpages = ({ idUser, keyWords }) => {
   }, [fanpage]);
 
   useEffect(() => {
-    if (keyWords)
+    if (keyWords != null)
       axios
         .post("/fanpage/get", { from: 0, idUser, keyWords })
         .then(({ data: { fanpages, isMore } }) => {

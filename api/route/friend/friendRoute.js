@@ -106,9 +106,11 @@ router.post("/accept", async (req, res) => {
 router.post("/get/people", async (req, res) => {
   const { idUser, from } = req.body;
   let { keyWords } = req.body;
-  if (keyWords) keyWords = keyWords.split(/\s+/);
-  if (keyWords.length > 2)
-    return res.status(200).json({ friends: [], isMore: false });
+  if (keyWords) {
+    keyWords = keyWords.split(/\s+/);
+    if (keyWords.length > 2)
+      return res.status(200).json({ friends: [], isMore: false });
+  }
 
   const token = jwt.sign(
     {

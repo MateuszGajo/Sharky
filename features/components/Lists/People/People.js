@@ -78,7 +78,7 @@ const People = ({ idUser, keyWords = "" }) => {
   }, [invite]);
 
   useEffect(() => {
-    if (keyWords)
+    if (keyWords != null)
       axios
         .post("/friend/get/people", { idUser, from: 0, keyWords })
         .then(({ data: { friends, isMore } }) => {

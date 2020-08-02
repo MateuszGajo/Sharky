@@ -34,7 +34,7 @@ const Groups = ({ idUser, keyWords = "" }) => {
   }, []);
 
   useEffect(() => {
-    if (keyWords)
+    if (keyWords != null)
       axios
         .post("/group/get", { from: 0, idUser, keyWords })
         .then(({ data: { groups, isMore } }) => {

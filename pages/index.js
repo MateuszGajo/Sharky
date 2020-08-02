@@ -20,7 +20,7 @@ const Index = () => {
   const [file, setFile] = useState(null);
   const [newPost, setNewPost] = useState();
   const [user, setUser] = useState("");
-  const [keyWords, setKeyWords] = useState("");
+  const [keyWords, setKeyWords] = useState(null);
 
   const { isError, isPrompt, owner } = useContext(AppContext);
 
