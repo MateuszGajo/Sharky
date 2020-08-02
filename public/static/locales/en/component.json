@@ -1,0 +1,79 @@
+{
+    "layout":{
+        "authentication":{
+            "welcome-text":"Welcome",
+            "sign-in":{
+                "title":"Sign In",
+                "description":"If you have an account",
+                "button":"Register"
+            },
+            "sign-up":{
+                "title":"Fill in the form",
+                "description":" Fill in the form and join us",
+                "button":"Login"
+            }
+        },
+        "home":{
+            "navbar":{
+                "home":"Home",
+                "world":"World",
+                "notifications":"Notifications",
+                "messages":"Messages",
+                "friends":"Friends",
+                "groups":"Groups",
+                "fanpages":"Fanpages",
+                "profile":"Profile",
+                "settings":"Settings"
+            }
+        }
+    },
+    "lists":{
+        "fanpages":{
+            "description":"Subscribers",
+            "button-subscribe":"Subscribe",
+            "button-unsubscribe":"Unsubscribe"
+        },
+        "groups":{
+            "description":"Number of members",
+            "button-join":"Join",
+            "button-leave":"Leave"
+        },
+        "people":{
+            "description":"Number of friends",
+            "friend":"Friend",
+            "family":"Family",
+            "pal":"Pal",
+            "relation-change":"Change relationship request has been sent",
+            "add":"Add",
+            "remove":"Remove",
+            "accept":"Accept",
+            "decline":"Decline"
+
+        },
+        "posts":{
+            "end-of-content":"You have seen all posts",
+            "no-content": "There aren't any new posts"
+        }
+    },
+    "post":{
+        "settings":{
+            "hidden":"Hidden post",
+            "mute":"Mute user",
+            "report":"Report post",
+            "block":"Block user",
+            "edit":"Edit post",
+            "delete":"Delete post",
+            "delete-share":"Delete Share"
+        },
+        "comments":{
+            "settings":{
+                "report":"Report comment",
+                "mute":"Mute user"
+            },
+            "load-more-comments":"View more comments..." 
+        }
+    },
+    "messenger":{
+        "placeholder":"Write a message"
+    }
+}

@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import cx from "classnames";
 import { MdClose } from "react-icons/md";
-import Search from "../../Search/Search";
-import Card from "../../../components/Lists/Card/Card";
+import Search from "@common/Search/Search";
+import Card from "@components/Lists/Card/Card";
 
 const InvitePerson = ({ isOpen = true, setStatusOfOpen }) => {
   const people = [

@@ -1,51 +1,45 @@
-import React from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import cx from "classnames";
-import Router from "../../../routes";
+import Router from "@features/route/routes";
+import Collapse from "./components/Collapse/Collapse";
+import Button from "./components/Button/Button";
+import Description from "./components/Description/Description";
+import AppContext from "@features/context/AppContext";
 
-const Card = ({
-  data = {
-    refType: "profile",
-    refId: "123",
-    photo: "profile.png",
-    radiusPhoto: true,
-    name: "Janek Kowalski",
-    description: "Coś tam",
-    button: "join",
-    buttonName: "pal",
-    title: "Przyjaciel",
-    collapse: true,
-    collapseItems: {
-      pink: {
-        name: "pal",
-        title: "Przyjaciel",
-      },
-      blue: {
-        name: "family",
-        title: "Rodzina",
-      },
-      green: {
-        name: "friend",
-        title: "Znajomy",
-      },
-    },
-  },
-  updateRelation = null,
-  join = null,
-}) => {
+const Card = ({ data, setRelation, handleClick, setInvite }) => {
   const {
     refType,
-    refId,
+    id,
     photo,
     name,
     description,
-    button,
-    title,
-    buttonName = null,
-    collapse,
+    number: n,
+    button: btn,
+    inviteFor,
+    acceptInvite,
+    declineInvite,
+    subTitle = null,
+    unsubTitle,
+    title: t,
+    buttonName: btnName,
+    collapse: c,
     collapseItems = null,
     radiusPhoto,
   } = data;
   const { green: greenC, blue: blueC, pink: pinkC } = collapseItems || {};
+
+  const { owner } = useContext(AppContext);
+  const [idRef, setIdRef] = useState(data.idRef);
+  const [inviteType, setInviteType] = useState(
+    inviteFor == owner.id ? "accept" : ""
+  );
+  const [button, setButton] = useState(btn);
+  const [buttonName, setButtonName] = useState(btnName);
+  const [title, setTitle] = useState(t);
+  const [collapse, setCollapse] = useState(c);
+  const [number, setNumber] = useState(n);
+
+  const collapseRef = useRef(null);
 
   return (
     <div className="card">
@@ -57,143 +51,90 @@ const Card = ({
               "card__item--picture--img--radius": radiusPhoto === true,
             })}
             onClick={() => {
-              Router.pushRoute(refType, { id: refId });
+              Router.pushRoute(refType, { id });
             }}
             data-testid="card-photo"
           />
         </div>
         <div className="card__item__info">
-          <div className="card__item__info__first-column">
-            <div className="card__item__info__first-column--name">
-              <span
-                className="card__item__info__first-column--name--span"
-                data-testid="card-name"
-                onClick={() => {
-                  Router.pushRoute(refType, {
-                    id: refId,
-                  });
-                }}
-              >
-                {name}
-              </span>
-            </div>
-            {description ? (
-              <div className="card__item__info__first-column--amounts-of-friends">
-                <span
-                  className="card__item__info__first-column--amounts-of-friends--span"
-                  data-testid="card-description"
-                >
-                  {description}
-                </span>
-              </div>
-            ) : null}
-          </div>
+          <Description
+            id={id}
+            refType={refType}
+            name={name}
+            description={description}
+            number={number}
+          />
 
           <div className="card__item__info__second-column">
-            {title ? (
+            {button ? (
               <div
                 className="card__item__info__second-column__buttons"
                 data-testid="card-buttons"
               >
-                <div
-                  className={cx(
-                    "card__item__info__second-column__buttons--main-button ",
-                    {
-                      "card__item__info__second-column__buttons--relation":
-                        button === "relation",
-                      "card__item__info__second-column__buttons--join":
-                        button === "join",
-                      "primary-background":
-                        greenC?.name === buttonName && collapseItems,
-                      "family-background":
-                        blueC?.name === buttonName && collapseItems,
-                      "pal-background":
-                        pinkC?.name === buttonName && collapseItems,
-                    }
-                  )}
-                  data-testid="card-button"
-                  onClick={() => {
-                    if (button == "join") {
-                      join({
-                        name: refType,
-                        id: refId,
-                      });
-                    }
-                  }}
-                >
-                  <span
-                    className="card__item__info__second-column__buttons--main-button--span"
-                    data-testid="card-button-text"
-                  >
-                    {title}
-                  </span>
-                </div>
+                <Button
+                  button={button}
+                  setButton={setButton}
+                  greenName={greenC?.name}
+                  pinkName={pinkC?.name}
+                  blueName={blueC?.name}
+                  buttonName={buttonName}
+                  setButtonName={setButtonName}
+                  collapseItems={collapseItems}
+                  handleClick={handleClick}
+                  idRef={idRef}
+                  setIdRef={setIdRef}
+                  id={id}
+                  refType={refType}
+                  number={number}
+                  setNumber={setNumber}
+                  title={!title ? (idRef ? unsubTitle : subTitle) : title}
+                  setTitle={setTitle}
+                  collapse={collapse}
+                  setCollapse={setCollapse}
+                  unsubTitle={unsubTitle}
+                  inviteType={inviteType}
+                  setInviteType={setInviteType}
+                  acceptInvite={acceptInvite}
+                  declineInvite={declineInvite}
+                  setInvite={setInvite}
+                  collapseRef={collapseRef}
+                />
+                {inviteType && (
+                  <Button
+                    button={button}
+                    greenName={greenC?.name}
+                    pinkName={pinkC?.name}
+                    blueName={blueC?.name}
+                    buttonName={buttonName}
+                    collapseItems={collapseItems}
+                    handleClick={handleClick}
+                    idRef={idRef}
+                    setIdRef={setIdRef}
+                    id={id}
+                    refType={refType}
+                    setNumber={setNumber}
+                    title={!title ? (idRef ? unsubTitle : subTitle) : title}
+                    collapse={collapse}
+                    unsubTitle={unsubTitle}
+                    inviteType={"decline"}
+                    acceptInvite={acceptInvite}
+                    declineInvite={declineInvite}
+                    setInvite={setInvite}
+                  />
+                )}
                 {collapse ? (
-                  <div
-                    className="card__item__info__second-column__buttons--change-status"
-                    data-testid="card-update-button"
-                  >
-                    <div
-                      className={cx(
-                        "card__item__info__second-column__buttons--change-status--circle primary-background",
-                        {
-                          "brightness-reduce hover-brightness":
-                            greenC.name !== buttonName,
-                        }
-                      )}
-                      onClick={() => {
-                        if (buttonName !== greenC.name) {
-                          updateRelation({
-                            id: refId,
-                            name: greenC.name,
-                          });
-                        }
-                      }}
-                      data-testid="card-relation-button-green"
-                    >
-                      <span>{greenC.title}</span>
-                    </div>
-                    <div
-                      className={cx(
-                        "card__item__info__second-column__buttons--change-status--circle pal-background ",
-                        {
-                          "brightness-reduce hover-brightness":
-                            pinkC.name !== buttonName,
-                        }
-                      )}
-                      onClick={() => {
-                        if (buttonName !== pinkC.name) {
-                          updateRelation({
-                            id: refId,
-                            name: pinkC.name,
-                          });
-                        }
-                      }}
-                      data-testid="card-relation-button-pink"
-                    >
-                      <span>{pinkC.title}</span>
-                    </div>
-                    <div
-                      className={cx(
-                        "card__item__info__second-column__buttons--change-status--circle family-background ",
-                        {
-                          "brightness-reduce hover-brightness":
-                            blueC.name !== buttonName,
-                        }
-                      )}
-                      onClick={() => {
-                        if (buttonName !== blueC.name) {
-                          updateRelation({
-                            id: refId,
-                            name: blueC.name,
-                          });
-                        }
-                      }}
-                      data-testid="card-relation-button-blue"
-                    >
-                      <span>{blueC.title}</span>
-                    </div>
-                  </div>
+                  <Collapse
+                    idRef={idRef}
+                    buttonName={buttonName}
+                    greenName={greenC.name}
+                    greenTitle={greenC.title}
+                    pinkName={pinkC.name}
+                    pinkTitle={pinkC.title}
+                    blueName={blueC.name}
+                    blueTitle={blueC.title}
+                    setRelation={setRelation}
+                    collapseRef={collapseRef}
+                  />
                 ) : null}
               </div>
             ) : null}

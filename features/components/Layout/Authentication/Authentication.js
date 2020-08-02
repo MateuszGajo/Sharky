@@ -1,9 +1,10 @@
 import React from "react";
-import PrimaryButton from "../../../common/PrimaryButton/PrimaryButton";
-import useTranslation from "next-translate/useTranslation";
+import PrimaryButton from "@common/PrimaryButton/PrimaryButton";
+import i18next from "@i18n";
+const { useTranslation } = i18next;
 
 const authentication__container = ({ children, type }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["component"]);
 
   const welcomeText = t("component:layout.authentication.welcome-text");
   const signInTitle = t("component:layout.authentication.sign-in.title");

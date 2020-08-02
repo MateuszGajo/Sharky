@@ -1,0 +1,34 @@
+{
+    "input":{
+        "password":"Password",
+        "email":"E-mail"
+    },
+    "checkbox":{
+        "label":"Remember me"
+    },
+    "message-box":{
+        "title":"Add post",
+        "button":"Post",
+        "description":"How you doing?"
+    },
+    "pop-up":{
+        "confirm-user":{
+            "title":"Re-enter you account password",
+            "button":"Continue"
+        },
+        "report":{
+            "title-post":"Report post",
+            "title-comment":"Report comment",
+            "title-user":"Report user",
+            "subtitle":"Reason",
+            "select":{
+                "offensive-content":"offensive content",
+                "spam":"spam"
+            },
+            "button":"Send"
+        },
+        "error":{
+            "bad-request":"Request failed"
+        }
+    }  
+}
