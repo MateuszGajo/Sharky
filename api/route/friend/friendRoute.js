@@ -103,6 +103,21 @@ router.post("/accept", async (req, res) => {
   }
 });
 
+router.post("/decline", async (req, res) => {
+  const { idFriendShip } = req.body;
+
+  const removeFriendsRequest = `delete from friends where id=$1`;
+
+  try {
+    client.query(removeFriendsRequest, [idFriendShip]);
+    console.log("gites");
+    res.status(200).json({ success: true });
+  } catch {
+    console.log("tutaj");
+    res.status(400).json("bad-request");
+  }
+});
+
 router.post("/get/people", async (req, res) => {
   const { idUser, from } = req.body;
   let { keyWords } = req.body;
@@ -131,35 +146,43 @@ router.post("/get/people", async (req, res) => {
   if (!keyWords) {
     getFriendsQuery = `
       with userFriends as(
-      select id_user_1 as "users" from friends where id_user_2=$1
+      select id_user_1 as "users" from friends where CASE when $4 then id_user_2=$1 else id_user_2=$1  and status='1' end
       union
-      select id_user_2 as "users" from friends where id_user_1=$1
+      select id_user_2 as "users" from friends where CASE when $4 then  id_user_1=$1else id_user_1=$1  and status='1'  end 
       ),
       
       userFriendsCounted as(
-      select id_user_1 as "idUser",count(id_user_1) as "numberOfFriends" from friends where id_user_1 in(select * from userFriends) group by id_user_1
-      union
-      select id_user_2 as "idUser",count(id_user_2) as "numberOfFriends" from friends where id_user_2 in(select * from userFriends) group by id_user_2
+      select a."idUser", sum(a.count) as "numberOfFriends"	  
+	    from( select id_user_1 as "idUser",count(id_user_1)  from friends where id_user_1 in(select * from userFriends) group by id_user_1
+            union
+            select id_user_2 as "idUser",count(id_user_2)  from friends where id_user_2 in(select * from userFriends) group by id_user_2) as a
+      group by a."idUser"
       ),
       
       friendsStatus as(
-      select id_user_1 as "idUser",id as "idRelationShip",status,date from friends where id_user_1 in(select * from userFriends) and id_user_2 =$2
+      select id_user_1 as "idUser",id as "idFriendShip",status,date, CASE WHEN status='0'  THEN true  else null end as "isInvited", null as "isInvationSent" from friends where id_user_1 in(select * from userFriends) and id_user_2 =$2
       union
-      select id_user_2 as "idUser",id as "idRelationShip",status,date from friends where id_user_2 in(select * from userFriends) and id_user_1=$2
+      select id_user_2 as "idUser",id as "idFriendShip",status,date,null as "isInvited",CASE WHEN status='0'  THEN true  else null end as "isInvitionSent" from friends where id_user_2 in(select * from userFriends) and id_user_1=$2
       )
       
       select d.*,e.first_name as "firstName", e.last_name as "lastName", e.photo
       from(select a.*,b."numberOfFriends", c.relation 
         from friendsStatus as a 
         inner join userFriendsCounted as b on a."idUser" = b."idUser"
-        left join friend_relation as c on a."idRelationShip"= c.id_friendship
+        left join friend_relation as c on a."idFriendShip"= c.id_friendship
         union
-        select a."idUser",null as  idRelationShip,null as  status,null as  date,a."numberOfFriends",null as  relation from userFriendsCounted as a where a."idUser" not in (select "idUser" from friendsStatus)) as d
+        select a."idUser",null as  idFriendShip,null as  status,null as  date,null as "isInvited",null as "isInvationSent",a."numberOfFriends",null as  relation from userFriendsCounted as a where a."idUser" not in (select "idUser" from friendsStatus)) as d
       inner join users as e on d."idUser" = e.id
+      order by "isInvited","isInvationSent",date
       limit 21 offset $3	
   `;
     try {
-      result = await client.query(getFriendsQuery, [idUser, idOwner, from]);
+      result = await client.query(getFriendsQuery, [
+        idUser,
+        idOwner,
+        from,
+        idUser == idOwner ? true : false,
+      ]);
     } catch {
       return res.status(400).json("bad-request");
     }
@@ -180,9 +203,9 @@ router.post("/get/people", async (req, res) => {
       ),
       
       userRelation as (
-        select  id_user_1 as "idUser",id as "idFriendShip",status,date from friends where id_user_1 in (select * from userSorted) and id_user_2=$3
+        select  id_user_1 as "idUser",id as "idFriendShip",status,date, CASE WHEN status='0'  THEN true  else null end as "isInvited", null as "isInvationSent"from friends where id_user_1 in (select * from userSorted) and id_user_2=$2
         union
-        select id_user_2 as "idUser",id as "idFriendShip" ,status,date from friends where id_user_2 in (select * from userSorted) and id_user_1=$3
+        select id_user_2 as "idUser",id as "idFriendShip" ,status,date,null as "isInvited",CASE WHEN status='0'  THEN true  else null end as "isInvitionSent" from friends where id_user_2 in (select * from userSorted) and id_user_1=$2
       )
       
       select d.*,e.first_name as "firstName", e.last_name as "lastName", e.photo
@@ -191,15 +214,16 @@ router.post("/get/people", async (req, res) => {
          left join friend_relation as b on a."idFriendShip" =b.id_friendship 
          inner join userSortedCounted as c on  a."idUser" = c."idUser"
          union
-         select a."idUser",null as "idFriendShip", null as status, null as date, null as relation, b."numberOfFriends" 
+         select a."idUser",null as "idFriendShip", null as status, null as date,null as "isInvited",null as "isInvationSent", null as relation, b."numberOfFriends" 
          from userSortedCounted as a 
          inner join userSortedCounted as b on  a."idUser" = b."idUser"
          where a."idUser" not in (select "idUser" from userRelation)
          union
-         select id as "idUser", null as idFriendShip,null as status, null as date, null as relation,  0 as numberOfFriends
+         select id as "idUser", null as idFriendShip,null as status, null as date,null as "isInvited",null as "isInvationSent", null as relation,  0 as numberOfFriends
          from userSorted 
          where id not in (select "idUser" from userSortedCounted)) as d
       inner join users as e on d."idUser" = e.id
+      order by "isInvited","isInvationSent",date
       limit 21 offset $4
   `;
     try {

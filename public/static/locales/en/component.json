@@ -47,7 +47,8 @@
             "add":"Add",
             "remove":"Remove",
             "accept":"Accept",
-            "decline":"Decline"
+            "decline":"Decline",
+            "sent":"Sent"
 
         },
         "posts":{

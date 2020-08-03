@@ -24,6 +24,13 @@
         background-color:$secondaryBackgroundColor;
     }
   }
+
+  .card__item__info__second-column__buttons--join--no-cursor{
+    cursor:default;
+    &:hover{
+      background-color: transparent;
+    }
+  }
   
   .card__item__info__second-column__buttons--main-button--span{
     &::first-letter{
@@ -36,6 +43,11 @@
     &:hover + .card__item__info__second-column__buttons--change-status {
       visibility: visible;
     }
+  }
+
+  .card__item__info__second-column__buttons--main-button__icon{
+    display:flex;
+    margin-right:5px;
   }
 
   @media(max-width:1365px){
