@@ -203,9 +203,9 @@ router.post("/get/people", async (req, res) => {
       ),
       
       userRelation as (
-        select  id_user_1 as "idUser",id as "idFriendShip",status,date, CASE WHEN status='0'  THEN true  else null end as "isInvited", null as "isInvationSent"from friends where id_user_1 in (select * from userSorted) and id_user_2=$2
+        select  id_user_1 as "idUser",id as "idFriendShip",status,date, CASE WHEN status='0'  THEN true  else null end as "isInvited", null as "isInvationSent"from friends where id_user_1 in (select * from userSorted) and id_user_2=$3
         union
-        select id_user_2 as "idUser",id as "idFriendShip" ,status,date,null as "isInvited",CASE WHEN status='0'  THEN true  else null end as "isInvitionSent" from friends where id_user_2 in (select * from userSorted) and id_user_1=$2
+        select id_user_2 as "idUser",id as "idFriendShip" ,status,date,null as "isInvited",CASE WHEN status='0'  THEN true  else null end as "isInvitionSent" from friends where id_user_2 in (select * from userSorted) and id_user_1=$3
       )
       
       select d.*,e.first_name as "firstName", e.last_name as "lastName", e.photo
