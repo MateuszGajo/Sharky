@@ -17,13 +17,14 @@ const Friends = () => {
 
   return (
     <HomeLayout>
-      <div className="home-wrapper__main__content__friends">
-        {console.log(keyWords)}
-        <form onSubmit={handleSubmit}>
-          <Search value={text} onChange={setText} />
-        </form>
+      <section className="friends">
+        <div className="friends__search">
+          <form onSubmit={handleSubmit} className="friends__search__form">
+            <Search value={text} onChange={setText} />
+          </form>
+        </div>
         <People idUser={owner.id} keyWords={keyWords} />
-      </div>
+      </section>
     </HomeLayout>
   );
 };
