@@ -15,9 +15,11 @@ const Card = ({ data, setRelation, handleClick, setInvite }) => {
     description,
     number: n,
     button: btn,
-    inviteFor,
+    isInvited,
+    isInvationSent,
     acceptInvite,
     declineInvite,
+    sentInvite,
     subTitle = null,
     unsubTitle,
     title: t,
@@ -30,9 +32,7 @@ const Card = ({ data, setRelation, handleClick, setInvite }) => {
 
   const { owner } = useContext(AppContext);
   const [idRef, setIdRef] = useState(data.idRef);
-  const [inviteType, setInviteType] = useState(
-    inviteFor == owner.id ? "accept" : ""
-  );
+  const [inviteType, setInviteType] = useState(isInvited ? "accept" : "");
   const [button, setButton] = useState(btn);
   const [buttonName, setButtonName] = useState(btnName);
   const [title, setTitle] = useState(t);
@@ -90,12 +90,15 @@ const Card = ({ data, setRelation, handleClick, setInvite }) => {
                   title={!title ? (idRef ? unsubTitle : subTitle) : title}
                   setTitle={setTitle}
                   collapse={collapse}
+                  isInvited={isInvited}
+                  isInvationSent={isInvationSent}
                   setCollapse={setCollapse}
                   unsubTitle={unsubTitle}
                   inviteType={inviteType}
                   setInviteType={setInviteType}
                   acceptInvite={acceptInvite}
                   declineInvite={declineInvite}
+                  sentInvite={sentInvite}
                   setInvite={setInvite}
                   collapseRef={collapseRef}
                 />

@@ -19,6 +19,7 @@ const People = ({ idUser, keyWords = "" }) => {
   const removeText = t("component:lists.people.remove");
   const acceptInvite = t("component:lists.people.accept");
   const declineInvite = t("component:lists.people.decline");
+  const sentInvite = t("component:lists.people.sent");
 
   const { setError, setPrompt, owner } = useContext(AppContext);
   const [relation, setRelation] = useState({ id: null, name: "" });
@@ -75,6 +76,20 @@ const People = ({ idUser, keyWords = "" }) => {
           setNumber(Number(number) + 1);
         })
         .catch(({ response: { data: message } }) => setError(message));
+
+    if (inviteType == "decline") {
+      axios
+        .post("/friend/decline", { idFriendShip })
+        .then(() => {
+          console.log(friends);
+          const newFriends = friends.filter((friend) => {
+            console.log(friend.idFriendShip, idFriendShip);
+            return friend.idFriendShip != idFriendShip;
+          });
+          setFriends(newFriends);
+        })
+        .catch(({ response: { data: message } }) => setError(message));
+    }
   }, [invite]);
 
   useEffect(() => {
@@ -108,7 +123,6 @@ const People = ({ idUser, keyWords = "" }) => {
       axios
         .post("/friend/add", { idUser: id })
         .then(({ data: { idFriendShip: id } }) => {
-          console.log("zaproszenie wysłane");
           setIdRef(id);
         })
         .catch(({ response: { data: message } }) => setError(message));
@@ -133,9 +147,10 @@ const People = ({ idUser, keyWords = "" }) => {
             idUser: id,
             firstName,
             lastName,
-            inviteFor,
             photo,
             numberOfFriends,
+            isInvited,
+            isInvationSent,
           } = friend;
           const data = {
             ref: "profile",
@@ -143,20 +158,18 @@ const People = ({ idUser, keyWords = "" }) => {
             idRef: idFriendShip,
             subTitle: addText,
             unsubTitle: removeText,
-            inviteFor,
             photo,
+            isInvited,
+            isInvationSent,
             radiusPhoto: false,
             name: `${firstName + " " + lastName}`,
             description: description,
             number: numberOfFriends,
             acceptInvite,
             declineInvite,
+            sentInvite,
             button: relation ? "relation" : "join",
-            title: t(
-              `component:lists.people.${
-                relation ? relation.toLowerCase() : "add"
-              }`
-            ),
+            title: t(`component:lists.people.${relation}`),
             buttonName: relation,
             collapse: relation && idUser == owner.id ? true : false,
             collapseItems: {

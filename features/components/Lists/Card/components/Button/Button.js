@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import cx from "classnames";
+import { BsEnvelope } from "react-icons/bs";
 
 const Button = ({
   button,
@@ -16,18 +17,21 @@ const Button = ({
   refType,
   number,
   setNumber,
-  title,
+  title: t,
   setTitle,
   collapse,
   setCollapse,
   unsubTitle,
   acceptInvite,
   declineInvite,
+  sentInvite,
   inviteType,
   setInvite,
   setInviteType,
   setButton,
   collapseRef,
+  isInvited,
+  isInvationSent,
 }) => {
   const buttonRef = useRef(null);
 
@@ -52,7 +56,7 @@ const Button = ({
     setButton("relation");
     removeEventListener("click", removeFriend);
 
-    buttonRef.current.innerHTML = title;
+    buttonRef.current.innerHTML = title();
   };
 
   useEffect(() => {
@@ -67,7 +71,7 @@ const Button = ({
   }, [collapse]);
 
   useEffect(() => {
-    if (collapseRef.current) {
+    if (collapseRef?.current) {
       collapseRef.current.addEventListener("mouseover", changeFriendButton);
       collapseRef.current.addEventListener("mouseout", resetFriendButton);
     }
@@ -83,12 +87,21 @@ const Button = ({
       removeEventListener("click", removeFriend);
     };
   }, []);
+
+  const title = () => {
+    if (inviteType == "accept") return acceptInvite;
+    if (inviteType == "decline") return declineInvite;
+    if (isInvationSent) return sentInvite;
+    return t;
+  };
   return (
     <div
       className={cx("card__item__info__second-column__buttons--main-button ", {
         "card__item__info__second-column__buttons--relation":
           button === "relation",
         "card__item__info__second-column__buttons--join": button === "join",
+        "card__item__info__second-column__buttons--join--no-cursor":
+          button === "join" && isInvationSent,
         "primary-background":
           greenName === buttonName && collapseItems && button == "relation",
         "family-background":
@@ -113,7 +126,6 @@ const Button = ({
               idFriendShip: idRef,
             });
           } else {
-            // idRef ? setNumber(number - 1) : setNumber(number + 1);
             handleClick({
               name: refType,
               idRef,
@@ -126,15 +138,17 @@ const Button = ({
         }
       }}
     >
+      {isInvationSent && (
+        <span className="card__item__info__second-column__buttons--main-button__icon">
+          <BsEnvelope />
+        </span>
+      )}
+
       <span
         className="card__item__info__second-column__buttons--main-button--span"
         data-testid="card-button-text"
       >
-        {inviteType == "accept"
-          ? acceptInvite
-          : inviteType == "decline"
-          ? declineInvite
-          : title}
+        {title()}
       </span>
     </div>
   );
