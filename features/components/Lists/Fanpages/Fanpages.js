@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { AiOutlineSearch } from "react-icons/ai";
 import Card from "../Card/Card";
 import i18next from "@i18n";
 import AppContext from "@features/context/AppContext";
@@ -12,6 +13,7 @@ const Fanpages = ({ idUser, keyWords }) => {
   const description = t("component:lists.fanpages.description");
   const buttonSubscribe = t("component:lists.fanpages.button-subscribe");
   const buttonUnsubscribe = t("component:lists.fanpages.button-unsubscribe");
+  const emptyContent = t("component:lists.fanpages.empty-content");
 
   const { owner, setError } = useContext(AppContext);
 
@@ -99,6 +101,16 @@ const Fanpages = ({ idUser, keyWords }) => {
           return <Card data={data} key={idFanpage} handleClick={setFanpage} />;
         })}
       </div>
+      {!fanpages.length && (
+        <div className="empty-card">
+          <div className="empty-card__icon">
+            <AiOutlineSearch />
+          </div>
+          <div className="empty-card__text">
+            <span className="empty-card__text--span">{emptyContent}</span>
+          </div>
+        </div>
+      )}
     </InfiniteScroll>
   );
 };

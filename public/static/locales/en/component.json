@@ -31,12 +31,14 @@
         "fanpages":{
             "description":"Subscribers",
             "button-subscribe":"Subscribe",
-            "button-unsubscribe":"Unsubscribe"
+            "button-unsubscribe":"Unsubscribe",
+            "empty-content":"Use search to find fanpages"
         },
         "groups":{
             "description":"Number of members",
             "button-join":"Join",
-            "button-leave":"Leave"
+            "button-leave":"Leave",
+            "empty-content":"Use search to find groups"
         },
         "people":{
             "description":"Number of friends",
@@ -48,7 +50,8 @@
             "remove":"Remove",
             "accept":"Accept",
             "decline":"Decline",
-            "sent":"Sent"
+            "sent":"Sent",
+            "empty-content":"Use search to find friends"
 
         },
         "posts":{

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import Card from "../Card/Card";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { AiOutlineSearch } from "react-icons/ai";
 import Spinner from "@components/Spinner/Spinner";
 import AppContext from "@features/context/AppContext";
 import i18n from "@i18n";
@@ -20,6 +21,7 @@ const People = ({ idUser, keyWords = "" }) => {
   const acceptInvite = t("component:lists.people.accept");
   const declineInvite = t("component:lists.people.decline");
   const sentInvite = t("component:lists.people.sent");
+  const emptyContent = t("component:lists.people.empty-content");
 
   const { setError, setPrompt, owner } = useContext(AppContext);
   const [relation, setRelation] = useState({ id: null, name: "" });
@@ -204,6 +206,16 @@ const People = ({ idUser, keyWords = "" }) => {
           );
         })}
       </div>
+      {!friends.length && (
+        <div className="empty-card">
+          <div className="empty-card__icon">
+            <AiOutlineSearch />
+          </div>
+          <div className="empty-card__text">
+            <span className="empty-card__text--span">{emptyContent}</span>
+          </div>
+        </div>
+      )}
     </InfiniteScroll>
   );
 };
