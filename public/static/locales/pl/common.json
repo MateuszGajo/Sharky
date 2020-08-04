@@ -1,0 +1,34 @@
+{
+    "input":{
+        "password":"Hasło",
+        "email":"E-mail"
+    },
+    "checkbox":{
+        "label":"Zapamiętaj mnie"
+    },
+    "messagebox":{
+        "title":"Dodaj post",
+        "button":"Opublikuj",
+        "description":"Co słychać u Ciebie?"
+    },
+    "pop-up":{
+        "confirm-user":{
+            "title":"Wpisz swoje hasło",
+            "button":"Dalej"
+        },
+        "report":{
+            "title-post":"Zgłoś post",
+            "title-comment":"Zgłoś komentarz",
+            "title-user":"Zgłoś użytkownika",
+            "subtitle":"Powód",
+            "select":{
+                "offensive-content":"Obraźliwe treści",
+                "spam":"spam"
+            },
+            "button":"Prześlij"
+        },
+        "error":{
+            "bad-request":"Żądanie nie powiodło się"
+        }
+    }
+}

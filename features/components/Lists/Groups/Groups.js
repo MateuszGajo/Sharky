@@ -1,57 +1,103 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import axios from "axios";
+import InfiniteScroll from "react-infinite-scroll-component";
 import Card from "../Card/Card";
-import useTranslation from "next-translate/useTranslation";
+import i18next from "@i18n";
+import AppContext from "@features/context/AppContext";
+import Spinner from "@components/Spinner/Spinner";
+const { useTranslation } = i18next;
 
-const Groups = ({
-  listOfGroups = [
-    {
-      id: 12,
-      name: "dsa",
-      photo: "profile.png",
-      numberOfMembers: 123,
-    },
-    {
-      id: 13,
-      name: "dsa",
-      photo: "profile.png",
-      numberOfMembers: 123,
-    },
-    {
-      id: 14,
-      name: "dsa",
-      photo: "profile.png",
-      numberOfMembers: 123,
-    },
-  ],
-}) => {
-  const { t } = useTranslation();
+const Groups = ({ idUser, keyWords = "" }) => {
+  const { t } = useTranslation(["component"]);
   const description = t("component:lists.groups.description");
-  const buttonText = t("component:lists.groups.button");
+  const buttonJoin = t("component:lists.groups.button-join");
+  const buttonLeave = t("component:lists.groups.button-leave");
 
-  const [group, setGroup] = useState("");
+  const { owner, setError } = useContext(AppContext);
+
+  const [group, setGroup] = useState({ id: null, name: "", idSub: null });
+  const [groups, setGroups] = useState([]);
+  const [isMore, setStatusOfMore] = useState();
+
+  const fetchData = (from) => {
+    axios
+      .post("/group/get", { from, idUser, keyWords })
+      .then(({ data: { groups: g, isMore } }) => {
+        setGroups([...groups, ...g]);
+        setStatusOfMore(isMore);
+      })
+      .catch(({ response: { data: message } }) => setError(message));
+  };
 
   useEffect(() => {
-    // console.log(group);
+    fetchData(0);
+  }, []);
+
+  useEffect(() => {
+    if (keyWords != null)
+      axios
+        .post("/group/get", { from: 0, idUser, keyWords })
+        .then(({ data: { groups, isMore } }) => {
+          setGroups(groups);
+          setStatusOfMore(isMore);
+        })
+        .catch(({ response: { data: message } }) => setError(message));
+  }, [keyWords]);
+
+  useEffect(() => {
+    const { number, setNumber, idRef, setIdRef, id } = group;
+    if (idRef)
+      axios
+        .post("/group/user/delete", { idSub: group.idRef })
+        .then(() => {
+          if (idUser == owner.id) {
+            const newGroups = groups.filter((group) => group.idGroup != id);
+            setGroups(newGroups);
+          } else {
+            setNumber(Number(number) - 1);
+            setIdRef(null);
+          }
+        })
+        .catch(({ response: { data: message } }) => setError(message));
+    else if (id)
+      axios
+        .post("/group/user/add", { idGroup: group.id })
+        .then(({ data: { id } }) => {
+          setIdRef(id);
+          setNumber(Number(number) + 1);
+        })
+        .catch(({ response: { data: message } }) => setError(message));
   }, [group]);
 
+  if (!groups) return <Spinner />;
   return (
-    <div className="list">
-      {listOfGroups.map((group) => {
-        const { id, name, photo, numberOfMembers } = group;
-        const data = {
-          refType: "group",
-          refId: id,
-          photo,
-          radiusPhoto: true,
-          name,
-          description: description + ": " + numberOfMembers,
-          button: "join",
-          title: buttonText,
-          collapse: false,
-        };
-        return <Card data={data} key={id} join={setGroup} />;
-      })}
-    </div>
+    <InfiniteScroll
+      dataLength={groups.length}
+      next={() => fetchData(groups.length)}
+      hasMore={isMore}
+      loader={<Spinner />}
+    >
+      <div className="list">
+        {groups.map((group) => {
+          const { idGroup, idSub, name, photo, numberOfMembers } = group;
+          const data = {
+            refType: "group",
+            id: idGroup,
+            idRef: group.idSub || null,
+            photo,
+            radiusPhoto: true,
+            name,
+            description,
+            number: numberOfMembers,
+            button: "join",
+            subTitle: buttonJoin,
+            unsubTitle: buttonLeave,
+            collapse: false,
+          };
+          return <Card data={data} key={idGroup} handleClick={setGroup} />;
+        })}
+      </div>
+    </InfiniteScroll>
   );
 };
 
