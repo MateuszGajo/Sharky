@@ -81,9 +81,7 @@ const People = ({ idUser, keyWords = "" }) => {
       axios
         .post("/friend/decline", { idFriendShip })
         .then(() => {
-          console.log(friends);
           const newFriends = friends.filter((friend) => {
-            console.log(friend.idFriendShip, idFriendShip);
             return friend.idFriendShip != idFriendShip;
           });
           setFriends(newFriends);
@@ -103,7 +101,14 @@ const People = ({ idUser, keyWords = "" }) => {
   }, [keyWords]);
 
   useEffect(() => {
-    const { setNumber, number, idRef, setIdRef, id } = friend;
+    const {
+      setNumber,
+      number,
+      idRef,
+      setIdRef,
+      id,
+      setStatusOfInvitation,
+    } = friend;
     if (idRef)
       axios
         .post("/friend/remove", { idFriendShip: friend.idRef })
@@ -123,7 +128,7 @@ const People = ({ idUser, keyWords = "" }) => {
       axios
         .post("/friend/add", { idUser: id })
         .then(({ data: { idFriendShip: id } }) => {
-          setIdRef(id);
+          setStatusOfInvitation(true);
         })
         .catch(({ response: { data: message } }) => setError(message));
   }, [friend]);
@@ -150,8 +155,9 @@ const People = ({ idUser, keyWords = "" }) => {
             photo,
             numberOfFriends,
             isInvited,
-            isInvationSent,
+            isInvitationSent,
           } = friend;
+
           const data = {
             ref: "profile",
             id,
@@ -160,7 +166,7 @@ const People = ({ idUser, keyWords = "" }) => {
             unsubTitle: removeText,
             photo,
             isInvited,
-            isInvationSent,
+            isInvitationSent,
             radiusPhoto: false,
             name: `${firstName + " " + lastName}`,
             description: description,
