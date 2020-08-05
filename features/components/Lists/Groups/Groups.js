@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { AiOutlineSearch } from "react-icons/ai";
 import Card from "../Card/Card";
 import i18next from "@i18n";
 import AppContext from "@features/context/AppContext";
@@ -12,6 +13,7 @@ const Groups = ({ idUser, keyWords = "" }) => {
   const description = t("component:lists.groups.description");
   const buttonJoin = t("component:lists.groups.button-join");
   const buttonLeave = t("component:lists.groups.button-leave");
+  const emptyContent = t("component:lists.groups.empty-content");
 
   const { owner, setError } = useContext(AppContext);
 
@@ -97,6 +99,16 @@ const Groups = ({ idUser, keyWords = "" }) => {
           return <Card data={data} key={idGroup} handleClick={setGroup} />;
         })}
       </div>
+      {!groups.length && (
+        <div className="empty-card">
+          <div className="empty-card__icon">
+            <AiOutlineSearch />
+          </div>
+          <div className="empty-card__text">
+            <span className="empty-card__text--span">{emptyContent}</span>
+          </div>
+        </div>
+      )}
     </InfiniteScroll>
   );
 };

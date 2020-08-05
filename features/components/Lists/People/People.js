@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import Card from "../Card/Card";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { AiOutlineSearch } from "react-icons/ai";
 import Spinner from "@components/Spinner/Spinner";
 import AppContext from "@features/context/AppContext";
 import i18n from "@i18n";
@@ -20,6 +21,7 @@ const People = ({ idUser, keyWords = "" }) => {
   const acceptInvite = t("component:lists.people.accept");
   const declineInvite = t("component:lists.people.decline");
   const sentInvite = t("component:lists.people.sent");
+  const emptyContent = t("component:lists.people.empty-content");
 
   const { setError, setPrompt, owner } = useContext(AppContext);
   const [relation, setRelation] = useState({ id: null, name: "" });
@@ -81,9 +83,7 @@ const People = ({ idUser, keyWords = "" }) => {
       axios
         .post("/friend/decline", { idFriendShip })
         .then(() => {
-          console.log(friends);
           const newFriends = friends.filter((friend) => {
-            console.log(friend.idFriendShip, idFriendShip);
             return friend.idFriendShip != idFriendShip;
           });
           setFriends(newFriends);
@@ -103,7 +103,14 @@ const People = ({ idUser, keyWords = "" }) => {
   }, [keyWords]);
 
   useEffect(() => {
-    const { setNumber, number, idRef, setIdRef, id } = friend;
+    const {
+      setNumber,
+      number,
+      idRef,
+      setIdRef,
+      id,
+      setStatusOfInvitation,
+    } = friend;
     if (idRef)
       axios
         .post("/friend/remove", { idFriendShip: friend.idRef })
@@ -123,7 +130,7 @@ const People = ({ idUser, keyWords = "" }) => {
       axios
         .post("/friend/add", { idUser: id })
         .then(({ data: { idFriendShip: id } }) => {
-          setIdRef(id);
+          setStatusOfInvitation(true);
         })
         .catch(({ response: { data: message } }) => setError(message));
   }, [friend]);
@@ -150,8 +157,9 @@ const People = ({ idUser, keyWords = "" }) => {
             photo,
             numberOfFriends,
             isInvited,
-            isInvationSent,
+            isInvitationSent,
           } = friend;
+
           const data = {
             ref: "profile",
             id,
@@ -160,7 +168,7 @@ const People = ({ idUser, keyWords = "" }) => {
             unsubTitle: removeText,
             photo,
             isInvited,
-            isInvationSent,
+            isInvitationSent,
             radiusPhoto: false,
             name: `${firstName + " " + lastName}`,
             description: description,
@@ -198,6 +206,16 @@ const People = ({ idUser, keyWords = "" }) => {
           );
         })}
       </div>
+      {!friends.length && (
+        <div className="empty-card">
+          <div className="empty-card__icon">
+            <AiOutlineSearch />
+          </div>
+          <div className="empty-card__text">
+            <span className="empty-card__text--span">{emptyContent}</span>
+          </div>
+        </div>
+      )}
     </InfiniteScroll>
   );
 };
