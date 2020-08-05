@@ -1,22 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
-const About = ({
-  data = {
-    name: "Grupa",
-    numberOfMembers: 123,
-    date: new Date("2020-10-15"),
-  },
-}) => {
-  const { name, numberOfMembers, date } = data;
-  console.log(name);
+const About = ({ idFanpage }) => {
+  const [data, setData] = useState({
+    name: "aa",
+    numberOfSubscribers: null,
+    date: null,
+  });
+  console.log(data);
   const dtf = new Intl.DateTimeFormat("pl", {
     year: "numeric",
     month: "long",
     day: "2-digit",
   });
   const [{ value: da }, , { value: mo }, , { value: ye }] = dtf.formatToParts(
-    date
+    new Date(data.date)
   );
+
+  useEffect(() => {
+    axios
+      .post("/fanpage/about", { idFanpage })
+      .then(({ data: { fanpageInfo } }) => setData(fanpageInfo));
+  }, []);
 
   return (
     <div className="fanpage-about">
@@ -25,7 +30,7 @@ const About = ({
           <span className="fanpage-about__item__property--span">Nazwa:</span>
         </div>
         <div className="fanpage-about__item__name">
-          <span className="fanpage-about__item__name--span">{name}</span>
+          <span className="fanpage-about__item__name--span">{data.name}</span>
         </div>
       </div>
       <div className="fanpage-about__item">
@@ -36,7 +41,7 @@ const About = ({
         </div>
         <div className="fanpage-about__item__name">
           <span className="fanpage-about__item__name--span">
-            {numberOfMembers}
+            {data.numberOfSubscribers}
           </span>
         </div>
       </div>

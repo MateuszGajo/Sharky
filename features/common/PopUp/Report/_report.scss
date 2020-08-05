@@ -1,0 +1,104 @@
+.report-user{
+    position:fixed;
+    background-color: rgba(0,0,0,0.8);
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    z-index:5;
+}
+
+.report-user__container{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+    overflow-x: hidden;
+    display:flex;
+    justify-content: space-between;
+    flex-direction: column;
+    background-color: #fff;
+    min-width:600px;
+    max-width:800px;
+    width:50vw;
+    height:50vh;
+    min-height:400px;
+    max-height:600px;
+    padding:20px;
+    border-radius:5px;
+}
+
+.report-user__container__title{
+    text-align: center;
+}
+
+.report-user__container__title--h2{
+    font-size: 2.5rem;
+}
+
+.report-user__container__content__subtitle--h3{
+    margin-top:$smallMargin;
+    font-size: 1.8rem;
+}
+
+.report-user__container__content__select__item{
+    margin-top: $smallMargin;
+}
+
+.report-user__container__content__select__item__circle{
+    display:inline-flex;
+    border:1px solid grey;
+    padding:8px;
+    border-radius:20px;
+    font-size: 1.2rem;
+    cursor:pointer;
+    transition:background-color 0.2s;
+    &:hover{
+        background-color: $primaryBackgroundColor;
+    }
+}
+
+.report-user__container__content__select__item__circle.primary-background{
+    color:white;
+    &:hover{
+        background-color: $primaryColor;
+    }
+}
+
+.report-user__container__button{
+    align-self: flex-end;
+    display:flex;
+    justify-content: flex-end;
+}
+
+@media(max-width:1023px){
+    .report-user__container{
+        width:80%;
+        min-height:60vh;
+        min-width:70vw;
+    }
+}
+
+@media(max-width:767px){
+    .report-user__container{
+        width:80%;
+        height:70vh;
+        width:85vw;
+        max-height:95vh;
+    }
+    .report-user__container__content__select__item__circle{
+        font-size: 1.35rem;
+        padding:10px;
+    }
+    .report-user__container__content__select__item{
+        margin-top:20px;
+    }
+
+}
+
+@media(max-width:1023px) and (orientation:landscape){
+    .report-user__container{
+        width:90%;
+        height:95vh;
+    }
+}

@@ -1,0 +1,38 @@
+.error{
+    position:fixed;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0,0,0,0.7);
+    z-index:5;
+}
+
+.error__container{
+    width: 40vw;
+    height:50vh;
+    padding:20px 5px;
+    background-color: #fff;
+    display:flex;
+    flex-direction: column;
+     justify-content: center;
+    align-items: center;
+}
+
+.error__container__icon{
+    font-size: 3.5rem;
+}
+
+.error__container__text--span{
+    font-size: 2rem;
+}
+
+@media(max-width:1023px){
+    .error__container{
+        width: 80vw;
+        height:80vh;
+    }
+}

@@ -1,17 +1,22 @@
 import React, { useContext } from "react";
-import Mess from "../../../../../Messenger/Messenger";
+import Mess from "@components/Messenger/Messenger";
 import { WizzardContext } from "../../context/WizzardContext";
 
 const Messenger = () => {
-  const { isMessengerClose, setStatusOfMessenger } = useContext(WizzardContext);
+  const { isMessengerClose, setStatusOfMessenger, chat } = useContext(
+    WizzardContext
+  );
 
   return (
     <div className="home__messenger">
-      <Mess
-        windowMessenger={true}
-        isMessengerClose={isMessengerClose}
-        setStatusOfMessenger={setStatusOfMessenger}
-      />
+      {!isMessengerClose && (
+        <Mess
+          chat={chat}
+          windowMessenger={true}
+          isMessengerClose={isMessengerClose}
+          setStatusOfMessenger={setStatusOfMessenger}
+        />
+      )}
     </div>
   );
 };
