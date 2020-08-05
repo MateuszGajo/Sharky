@@ -21,6 +21,7 @@ const Button = ({
   setTitle,
   collapse,
   setCollapse,
+  subTitle,
   unsubTitle,
   acceptInvite,
   declineInvite,
@@ -31,9 +32,13 @@ const Button = ({
   setButton,
   collapseRef,
   isInvited,
-  isInvationSent,
+  isInvitationSent: statusOfSendInvitation,
 }) => {
   const buttonRef = useRef(null);
+
+  const [isInvitationSent, setStatusOfInvitation] = useState(
+    statusOfSendInvitation
+  );
 
   const removeFriend = () => {
     handleClick({
@@ -91,7 +96,8 @@ const Button = ({
   const title = () => {
     if (inviteType == "accept") return acceptInvite;
     if (inviteType == "decline") return declineInvite;
-    if (isInvationSent) return sentInvite;
+    if (isInvitationSent) return sentInvite;
+    if (!idRef) return subTitle;
     return t;
   };
   return (
@@ -101,7 +107,7 @@ const Button = ({
           button === "relation",
         "card__item__info__second-column__buttons--join": button === "join",
         "card__item__info__second-column__buttons--join--no-cursor":
-          button === "join" && isInvationSent,
+          button === "join" && isInvitationSent,
         "primary-background":
           greenName === buttonName && collapseItems && button == "relation",
         "family-background":
@@ -112,7 +118,7 @@ const Button = ({
       ref={buttonRef}
       data-testid="card-button"
       onClick={() => {
-        if (button == "join") {
+        if (button == "join" && !isInvitationSent) {
           if (inviteType) {
             setInvite({
               inviteType,
@@ -133,12 +139,13 @@ const Button = ({
               id,
               number,
               setNumber,
+              setStatusOfInvitation,
             });
           }
         }
       }}
     >
-      {isInvationSent && (
+      {isInvitationSent && (
         <span className="card__item__info__second-column__buttons--main-button__icon">
           <BsEnvelope />
         </span>
