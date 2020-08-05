@@ -70,40 +70,37 @@ router.post("/get", async (req, res) => {
     }
   } else {
     getGroupsQuery = `
-  select c.*
-  from(select a."idSub",a."idGroup",a."numberOfMembers", b.name, b.description, b.photo
-    from(select id as "idSub",id_group as "idGroup", count(*) over (partition by id_group)  as "numberOfMembers",id_user
-       from group_users 
-       where id_group in(
-          select a.id_group
-          from group_users as a
-          where id_user=$1
-        ) and id_user=$1
-        ) as a
-       left join groups as b
-    on a."idGroup" = b.id
+    with groupSorted as(
+      select id from groups where lower(name) like($1)
+    ),
+    
+    subscribedGroups as (
+    select id_group as "idGroup",count(*) as "numberOfMembers" from group_users where id_group in(select * from groupSorted) group by id_group
+    ),
+    
+    unSubscribedGroups as(
+    select id, 0 as  "numberOfMembers" from groupSorted where id not in (select "idGroup" from  subscribedGroups )
+    ),
+    
+    countedGroups as(
+    select * from subscribedGroups
     union
-    select null as "idSub", b.*, groups.name, groups.description, groups.photo
-    from(select a.id as "idGroup", count(*) as "numberOfMembers"
-    from(select groups.id 
-       from groups
-       left join group_users on
-       groups.id = group_users.id_group
-       where groups.id not in(
-         select a.id_group
-          from group_users as a
-          where id_user=$1
-       )
-       ) as a
-    group by a.id) as b
-  inner join groups on b."idGroup" = groups.id ) as c
-  where lower(name) like lower($2)
-  limit 21 offset $3
+    select * from unSubscribedGroups
+    )
+    
+   
+    select a.*, b.id as "idSub", c.name, c.photo from countedGroups as a
+    left join group_users  as b
+    on a."idGroup" = b.id_group and b.id_user =$2
+    inner join groups as c 
+    on a."idGroup" = c.id
+    order by "idSub"
+    limit 21 offset $3
   `;
     try {
       getGroups = await client.query(getGroupsQuery, [
-        idOwner,
         `%${keyWords}%`,
+        idOwner,
         from,
       ]);
     } catch {
