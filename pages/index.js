@@ -33,7 +33,7 @@ const Index = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    setNewPost({ content, file });
+    setNewPost({ content, file, idFanpage: 1 });
   };
 
   const handleSubmitt = (e) => {
@@ -46,12 +46,12 @@ const Index = () => {
       {isError && <Error message={isError} />}
       {isPrompt && <Prompt message={isPrompt} />}
       <HomeLayout>
-        <form onSubmit={handleSubmitt}>
+        {/* <form onSubmit={handleSubmitt}>
           <Search value={user} onChange={setUser} />
         </form>
         <People idUser={1} keyWords={keyWords} />
         {owner.id && <Groups idUser={1} keyWords={keyWords} />}
-        {owner.id && <Fanpages idUser={1} keyWords={keyWords} />}
+        {owner.id && <Fanpages idUser={1} keyWords={keyWords} />} */}
 
         <form onSubmit={handleSubmit}>
           <MessageBox
@@ -61,7 +61,7 @@ const Index = () => {
             setFile={setFile}
           />
         </form>
-        <Posts newPost={newPost} />
+        <Posts newPost={newPost} idFanpage={1} />
       </HomeLayout>
     </>
   );
