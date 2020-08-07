@@ -1,0 +1,24 @@
+.card__item__info__first-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 5px;
+  }
+  
+  .card__item__info__first-column--name--span {
+    cursor: pointer;
+    color: $primaryColor;
+    font-weight: bold;
+    transition: 0.2s text-decoration;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  
+  .card__item__info__first-column__number{
+    margin-top:6px;
+  }
+  
+  .card__item__info__first-column__number--span {
+    color: $greyTextAuthColor;
+  }

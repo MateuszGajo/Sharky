@@ -1,22 +1,23 @@
-import React from "react";
-import useTranslation from "next-translate/useTranslation";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import i18next from "@i18n";
+const { useTranslation } = i18next;
 
-const About = ({
-  groupInfo = {
-    name: "Lorem Ipsum",
-    date: new Date("2012-05-15"),
-    amountOfMember: 123,
-  },
-}) => {
-  const { lang } = useTranslation();
-  const dtf = new Intl.DateTimeFormat(lang, {
+const About = ({ groupInfo: data }) => {
+  const {
+    i18n: { language },
+  } = useTranslation();
+
+  const dtf = new Intl.DateTimeFormat(language, {
     year: "numeric",
     month: "long",
     day: "2-digit",
   });
+
   const [{ value: da }, , { value: mo }, , { value: ye }] = dtf.formatToParts(
-    groupInfo.date
+    new Date(data.date)
   );
+
   return (
     <div className="group-info">
       <div className="group-info__item">
@@ -24,7 +25,7 @@ const About = ({
           <span className="group-info__item__property--span">Nazwa</span>
         </div>
         <div className="group-info__item__name">
-          <span className="group-info__item__name--span">{groupInfo.name}</span>
+          <span className="group-info__item__name--span">{data.name}</span>
         </div>
       </div>
       <div className="group-info__item">
@@ -47,7 +48,7 @@ const About = ({
         </div>
         <div className="group-info__item__name">
           <span className="group-info__item__name--span">
-            {groupInfo.amountOfMember}
+            {data.numberOfMembers}
           </span>
         </div>
       </div>

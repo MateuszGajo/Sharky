@@ -1,52 +1,41 @@
-import React from "react";
-import useTranslation from "next-translate/useTranslation";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import Card from "../../Lists/Card/Card";
+import i18next from "@i18n";
 
-const Members = ({
-  members = [
-    {
-      userId: 123,
-      rank: "member",
-    },
-    {
-      userId: 124,
-      rank: "admin",
-    },
-  ],
-  users = {
-    123: {
-      id: 123,
-      firstName: "Jan",
-      lastName: "Kowalski",
-      photo: "profile.png",
-    },
-    124: {
-      id: 124,
-      firstName: "Jan",
-      lastName: "Kowalski",
-      photo: "profile.png",
-    },
-  },
-}) => {
-  const { t } = useTranslation();
+const { useTranslation } = i18next;
+
+const Members = ({ idGroup }) => {
+  const { t } = useTranslation(["group"]);
+
+  const [members, setMembers] = useState([]);
 
   const adminName = t("group:members.admin");
   const moderatorName = t("group:members.moderator");
   const memberName = t("group:members.member");
+
+  useEffect(() => {
+    axios
+      .post("/group/member/get", { idGroup })
+      .then(({ data: { members } }) => {
+        console.log(members);
+        setMembers(members);
+      });
+  }, []);
   return (
     <div className="list">
       {members.map((member) => {
-        const { userId, rank } = member;
-        const { id, firstName, lastName, photo } = users[userId];
+        const { idUser, firstName, lastName, photo, role } = member;
+        console.log(role);
         const data = {
           refType: "profile",
-          refId: id,
+          idRef: idUser,
           photo,
           radiusPhoto: false,
           name: `${firstName} ${lastName}`,
           button: "relation",
-          title: t(`group:members.${rank}`),
-          buttonName: rank,
+          title: t(`group:members.${role}`),
+          buttonName: role,
           collapse: false,
           collapseItems: {
             pink: {
@@ -63,7 +52,7 @@ const Members = ({
             },
           },
         };
-        return <Card data={data} key={userId} />;
+        return <Card data={data} key={idUser} />;
       })}
     </div>
   );

@@ -1,0 +1,15 @@
+.post__item__downbar__buttons {
+    display: flex;
+    justify-content: space-around;
+    font-size: 1.2rem;
+  }
+  
+  .post__item__downbar__buttons__icon {
+    display: flex;
+    transition: 0.2s color;
+    cursor: pointer;
+  }
+  
+  .post__item__downbar__buttons__icon--number {
+    margin-left: 5px;
+  }
