@@ -24,13 +24,11 @@ const Group = () => {
   const [section, setSection] = useState("home");
   const [isPopupOpen, setStatusOfPopup] = useState(false);
   const [idMember, setIdMember] = useState(null);
-  const [name, setName] = useState("");
+  const [role, setRole] = useState("");
+  const [groupName, setGroupName] = useState("");
+  const [numberOfMembers, setNumberOfMembers] = useState(null);
+  const [creationDate, setCreationDate] = useState(null);
   const [isLoading, setStatusOfLoading] = useState(true);
-  const [groupInfo, setGroupInfo] = useState({
-    name: "",
-    numberOfMember: null,
-    date: null,
-  });
 
   const homeName = t("group:side-bar.home");
   const membersName = t("group:side-bar.members");
@@ -44,9 +42,23 @@ const Group = () => {
       case "home":
         return <Home idGroup={idGroup} />;
       case "members":
-        return <Members idGroup={idGroup} />;
+        return (
+          <Members
+            idGroup={idGroup}
+            role={role}
+            idMember={idMember}
+            setNumberOfMembers={setNumberOfMembers}
+            numberOfMembers={numberOfMembers}
+          />
+        );
       case "about":
-        return <About groupInfo={groupInfo} />;
+        return (
+          <About
+            name={groupName}
+            numberOfMembers={numberOfMembers}
+            creationDate={creationDate}
+          />
+        );
       default:
         return <Home idGroup={idGroup} />;
     }
@@ -55,25 +67,41 @@ const Group = () => {
   const leaveGroup = () => {
     axios
       .post("/group/leave", { idMember })
-      .then(() => {})
+      .then(() => {
+        setIdMember(null);
+      })
       .catch(({ data: { message } }) => setError(message));
   };
 
+  const joinGroup = () => {
+    axios
+      .post("/group/user/add", { idGroup })
+      .then(({ data: { id } }) => {
+        setIdMember(id);
+        setRole("member");
+      })
+      .catch(({ response: { message } }) => setError(message));
+  };
+
   const getGroupInfo = () => {
-    axios.post("/group/about", { idGroup }).then(({ data: { groupInfo } }) => {
-      setGroupInfo(groupInfo);
-    });
+    axios
+      .post("/group/about", { idGroup })
+      .then(({ data: { date, numberOfMembers } }) => {
+        console.log(numberOfMembers);
+        setNumberOfMembers(numberOfMembers);
+        setCreationDate(date);
+      });
   };
 
   useEffect(() => {
     idGroup &&
       axios
         .post("/group/enter", { idGroup })
-        .then(({ data: { idMember, name } }) => {
-          console.log(name);
-          if (idMember) getGroupInfo();
+        .then(({ data: { idMember, name, role } }) => {
+          getGroupInfo();
           setIdMember(idMember);
-          setName(name);
+          idMember && setRole(role);
+          setGroupName(name);
           setStatusOfLoading(false);
         });
   }, [idGroup]);
@@ -101,7 +129,7 @@ const Group = () => {
           <div className="group__container__side-bar--fixed">
             <div className="group__container__side-bar__title">
               <h3 className="group__container__side-bar__title--h3">
-                {!idMember ? name : groupInfo.name}
+                {groupName}
               </h3>
             </div>
             {idMember ? (
@@ -179,7 +207,7 @@ const Group = () => {
               <div className="group__container__side-bar__manage">
                 <div
                   className="group__container__side-bar__manage__item"
-                  onClick={() => setStatusOfPopup(true)}
+                  onClick={() => joinGroup()}
                 >
                   <span className="group__container__side-bar__item--span">
                     {joinText}

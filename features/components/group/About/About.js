@@ -3,7 +3,7 @@ import axios from "axios";
 import i18next from "@i18n";
 const { useTranslation } = i18next;
 
-const About = ({ groupInfo: data }) => {
+const About = ({ creationDate, numberOfMembers, name }) => {
   const {
     i18n: { language },
   } = useTranslation();
@@ -15,7 +15,7 @@ const About = ({ groupInfo: data }) => {
   });
 
   const [{ value: da }, , { value: mo }, , { value: ye }] = dtf.formatToParts(
-    new Date(data.date)
+    new Date(creationDate)
   );
 
   return (
@@ -25,7 +25,7 @@ const About = ({ groupInfo: data }) => {
           <span className="group-info__item__property--span">Nazwa</span>
         </div>
         <div className="group-info__item__name">
-          <span className="group-info__item__name--span">{data.name}</span>
+          <span className="group-info__item__name--span">{name}</span>
         </div>
       </div>
       <div className="group-info__item">
@@ -48,7 +48,7 @@ const About = ({ groupInfo: data }) => {
         </div>
         <div className="group-info__item__name">
           <span className="group-info__item__name--span">
-            {data.numberOfMembers}
+            {numberOfMembers}
           </span>
         </div>
       </div>

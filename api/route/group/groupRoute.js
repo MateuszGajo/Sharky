@@ -22,20 +22,20 @@ router.post("/enter", async (req, res) => {
   } = jwt.verify(token, jwtSecret);
 
   const enterQuery = `
-  select a.name,b.id
+  select a.name,b.id, b.role
   from (select id,name from groups where id = $1) as a
   left join(
-  select id,id_group from group_users where id_group=$1 and id_user=$2) as b
+  select id,id_group, role from group_users where id_group=$1 and id_user=$2) as b
   on a.id = b.id_group
-  
   `;
 
   try {
     const { rows: info } = await client.query(enterQuery, [idGroup, idOwner]);
     const idMember = info[0].id || null;
     const name = info[0].name || null;
+    const role = info[0].role || null;
 
-    res.status(200).json({ idMember, name });
+    res.status(200).json({ idMember, name, role });
   } catch {
     res.status(400).json("bad-request");
   }
@@ -54,7 +54,9 @@ router.post("/about", async (req, res) => {
   try {
     const { rows: info } = await client.query(getInfoQuery, [idGroup]);
 
-    res.status(200).json({ groupInfo: info[0] });
+    res
+      .status(200)
+      .json({ numberOfMembers: info[0].numberOfMembers, date: info[0].date });
   } catch {
     res.status(400).json("bad-request");
   }
@@ -78,7 +80,7 @@ router.post("/member/get", async (req, res) => {
   const { idGroup } = req.body;
 
   const getMembersQuery = `
-  select b.first_name as "firstName",b.last_name as "lastName",b.id as "idUser",b.photo,a.role from group_users as a
+  select b.first_name as "firstName", b.last_name as "lastName", b.id as "idUser", b.photo, a.role, a.id "idSub" from group_users as a
   inner join users as b on b.id = a.id_user
   where a.id_group=$1
   `;
@@ -222,7 +224,7 @@ router.post("/user/add", async (req, res) => {
     data: { id: idUser },
   } = jwt.verify(token, jwtSecret);
 
-  const addUserQuery = `insert into group_users(id_group, id_user) values($1,$2) returning id`;
+  const addUserQuery = `insert into group_users(id_group, id_user, role) values($1,$2, 'member') returning id`;
 
   try {
     const { rows: addUser } = await client.query(addUserQuery, [
