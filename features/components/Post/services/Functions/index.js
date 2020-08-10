@@ -30,11 +30,6 @@ export const getUsers = async (users, setUsers, elements) => {
           ...users,
           ...usersKey,
         });
-        console.log(users);
-        console.log({
-          ...users,
-          ...usersKey,
-        });
       })
       .catch((err) => console.log(err));
 };

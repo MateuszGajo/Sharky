@@ -17,7 +17,6 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
   const settingRef = useRef(null);
 
   const { user, userShare, post } = useContext(PostContext);
-  console.log(user);
   const { owner } = useContext(AppContext);
   const dtf = new Intl.DateTimeFormat(language, {
     year: "numeric",
@@ -27,7 +26,6 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
   const [{ value: da }, , { value: mo }, , { value: ye }] = dtf.formatToParts(
     new Date(post.date)
   );
-console.log(post)
   const handleClick = () => {
     const { current: fCollapse } = focusCollapse;
     if (!fCollapse.classList.contains("is-close"))

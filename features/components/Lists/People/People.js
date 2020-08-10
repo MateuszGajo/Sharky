@@ -40,12 +40,12 @@ const People = ({ idUser, keyWords = "" }) => {
   };
 
   useEffect(() => {
-    const { idFriendShip } = relation;
-    if (idFriendShip != null) {
+    const { id } = relation;
+    if (id != null) {
       setPrompt(relationChangeText);
       axios
         .post("/friend/update/relation", {
-          idFriendShip,
+          idFriendShip: id,
           idUser,
           relation: relation.name,
         })
