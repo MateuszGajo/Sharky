@@ -29,8 +29,9 @@ const Collapse = ({
         onClick={() => {
           if (buttonName !== greenName) {
             setRelation({
-              idFriendShip: idRef,
-              name: greenName,
+              id: idRef,
+              idSub: id,
+              name: blueName,
             });
           }
         }}
@@ -48,8 +49,9 @@ const Collapse = ({
         onClick={() => {
           if (buttonName !== pinkName) {
             setRelation({
-              idFriendShip: idRef,
-              name: pinkName,
+              id: idRef,
+              idSub: id,
+              name: blueName,
             });
           }
         }}
