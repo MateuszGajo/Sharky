@@ -67,7 +67,8 @@ const Collapse = ({
         onClick={() => {
           if (buttonName !== blueName) {
             setRelation({
-              idFriendShip: idRef,
+              id: idRef,
+              idSub: id,
               name: blueName,
             });
           }

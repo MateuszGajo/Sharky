@@ -29,7 +29,6 @@ const withWizzard = (WrappedComponent) => {
     const [users, setUsers] = useState({});
 
     const [posts, setPosts] = useState([]);
-    console.log(users);
     useEffect(() => {
       if (newPost?.content) {
         const { content, file, idGroup = "", idFanpage = "" } = newPost;
