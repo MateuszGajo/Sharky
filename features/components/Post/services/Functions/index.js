@@ -30,6 +30,11 @@ export const getUsers = async (users, setUsers, elements) => {
           ...users,
           ...usersKey,
         });
+        console.log(users);
+        console.log({
+          ...users,
+          ...usersKey,
+        });
       })
       .catch((err) => console.log(err));
 };
@@ -77,6 +82,8 @@ export const blockUser = ({
 };
 
 export const getPosts = ({
+  idFanpage,
+  idGroup,
   posts,
   setPosts,
   from,
@@ -86,11 +93,11 @@ export const getPosts = ({
   setStatusOfMoreComments,
 }) => {
   axios
-    .post("/post/get", { from })
+    .post("/post/get", { from, idGroup, idFanpage })
     .then(
       async ({ data: { posts: p, comments, isMorePosts, isMoreComments } }) => {
-        await getUsers(users, setUsers, p);
-        await getUsers(users, setUsers, comments);
+        console.log(p);
+        await getUsers(users, setUsers, [...p, ...comments]);
         const commentsKey = {};
         for (let i = 0; i < comments.length; i++) {
           if (!commentsKey[comments[i].idPost])

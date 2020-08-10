@@ -7,7 +7,6 @@ const About = ({ idFanpage }) => {
     numberOfSubscribers: null,
     date: null,
   });
-  console.log(data);
   const dtf = new Intl.DateTimeFormat("pl", {
     year: "numeric",
     month: "long",

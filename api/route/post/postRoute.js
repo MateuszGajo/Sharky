@@ -3,6 +3,15 @@ const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const { client } = require("../../../config/pgAdaptor");
 const { jwtSecret } = require("../../../config/keys");
+const {
+  getPostsQuery,
+  getFanpagePostsQuery,
+  getGroupPostsQuery,
+  getCommentsQuery,
+  addGroupPostQuery,
+  addFanpagePostQuery,
+  addPostQuery,
+} = require("./query");
 
 const router = express.Router();
 
@@ -17,7 +26,7 @@ router.post("/add", async (req, res) => {
     jwtSecret
   );
   const {
-    data: { id: idUser },
+    data: { id: idOwner },
   } = jwt.verify(token, jwtSecret);
 
   const storage = multer.diskStorage({
@@ -46,17 +55,32 @@ router.post("/add", async (req, res) => {
       return res.status(413).json("file-too-large");
     }
 
-    const { content, date } = req.body;
-    const addPostQuery =
-      "insert into posts(id_user, content, date, photo) values($1, $2, $3, $4) RETURNING id";
-
+    const { content, date, idGroup, idFanpage } = req.body;
+    let newPost;
     try {
-      const newPost = await client.query(addPostQuery, [
-        1,
-        content,
-        date,
-        fileName,
-      ]);
+      if (idGroup)
+        newPost = await client.query(addGroupPostQuery, [
+          idOwner,
+          idGroup,
+          content,
+          date,
+          fileName,
+        ]);
+      else if (idFanpage)
+        newPost = await client.query(addFanpagePostQuery, [
+          idOwner,
+          idFanpage,
+          content,
+          date,
+          fileName,
+        ]);
+      else
+        newPost = await client.query(addPostQuery, [
+          idOwner,
+          content,
+          date,
+          fileName,
+        ]);
       return res.status(200).json({
         idPost: newPost.rows[0].id,
         fileName,
@@ -68,7 +92,7 @@ router.post("/add", async (req, res) => {
 });
 
 router.post("/get", async (req, res) => {
-  const { from } = req.body;
+  const { from, idFanpage, idGroup } = req.body;
   const token = jwt.sign(
     {
       exp: Math.floor(Date.now() / 1000) + 60 * 60,
@@ -79,112 +103,29 @@ router.post("/get", async (req, res) => {
     jwtSecret
   );
   const {
-    data: { id: idUser },
+    data: { id: idOwner },
   } = jwt.verify(token, jwtSecret);
 
-  const getPostsQuery = `
-  select fourthResult.*, post_like.id as "idLike" 
-  from(
-	  	select  thirdResult.id as "idPost", thirdResult.numberofshares as "numberOfShares",thirdResult.numberofcomments as "numberOfComments",thirdResult.numberoflikes as "numberOfLikes", posts.id_user as "idUser", posts.content, posts.photo, posts.date, null as "idShare", null as "idUserShare"
-	  	from(
-			  select secondResult.*, count(post_like.id_post) as "numberoflikes"
-			  from(
-            select firstResult.*, count(post_comments.id_post) as "numberofcomments" 
-            from(
-              select posts.id, count(post_share.id_post) as "numberofshares"
-              from posts
-              left join post_share on posts.id = post_share.id_post
-              group by posts.id) as firstResult
-            left join post_comments on  firstResult.id= post_comments.id_post
-            group by firstResult.id, firstResult.numberofshares) as secondResult
-			  left join post_like on secondResult.id = post_like.id_post
-			  group by secondResult.id, secondResult.numberofshares, secondResult.numberofcomments) as thirdResult
-    	left join posts on posts.id = thirdResult.id
-    	where posts.id_user 
-      in(	
-        SELECT $1 AS id_user_1
-        union
-        select id_user_1  
-        from friends 
-        where id_user_2=$1 and id_user_1 
-        not in (select id_user_2 from user_mute where id_user_1=$1)
-        union
-        select id_user_2 
-        from friends 
-        where id_user_1=$1 and id_user_2 
-        not in (select id_user_2 from user_mute where id_user_1=$1))
-      union
-      select  thirdResult.*, posts.id_user as "idUser", posts.content, posts.photo, posts.date, post_share.id as "idShare", post_share.id_user as "idShareUser"
-      from(
-          select secondResult.*, count(post_like.id_post) as "numberoflikes"
-          from(
-              select firstResult.*, count(post_comments.id_post) as "numberofcomments" 
-              from(
-                  select posts.id, count(post_share.id_post) as "numberofshares"
-                  from posts
-                  left join post_share on posts.id = post_share.id_post
-                  group by posts.id) as firstResult
-              left join post_comments on  firstResult.id= post_comments.id_post
-              group by firstResult.id, firstResult.numberofshares) as secondResult
-          left join post_like on secondResult.id = post_like.id_post
-          group by secondResult.id, secondResult.numberofshares, secondResult.numberofcomments) as thirdResult
-      left join posts on posts.id = thirdResult.id
-      inner join post_share on thirdResult.id = post_share.id_post
-      where post_share.id_user 
-      in(	
-      SELECT $1 AS id_user_1
-        union
-          select id_user_1  
-          from friends 
-          where id_user_2=$1 and id_user_1 
-          not in (select id_user_2 from user_mute where id_user_1=$1)
-        union
-          select id_user_2 
-          from friends 
-          where id_user_1=$1 and id_user_2 
-          not in (select id_user_2 from user_mute where id_user_1=$1))) as fourthResult
-  left join post_like on "idPost" = post_like.id_post and post_like.id_user = $1
-  order by date desc
-  limit 21 offset $2`;
-
-  const getCommentsQuery = `
-  
-  select d.id, d.count, d.numeroflikes as "numberOfLikes", d.numberofreplies as "numberOfReplies", post_comments.id_post as "idPost", post_comments.id_user as "idUser", post_comments.content, post_comments.date, comment_like.id as "idLike"	
-  from(select c.*, count(comment_replies.id_comment) as "numberofreplies"
-    from(select b.count, b.id,count(comment_like.id_comment) "numeroflikes"
-        from(
-        select a.count, post_comments.id, row_number() OVER (partition by post_comments.id_post order by date desc) as rn
-          from(
-          SELECT  count(id_post), id_post
-          FROM post_comments
-          where id_post = any($1) and id_user not in(select id_user_2 from user_mute where id_user_1=$2)
-          group by id_post
-          ) as a
-        left join post_comments on post_comments.id_post = a.id_post) as b
-      left join comment_like on b.id = comment_like.id_comment
-      where rn <= 3
-      group by comment_like.id_comment, b.count, b.id) as c
-    left join comment_replies on c.id = comment_replies.id_comment
-    group by c.id, c.count, c.numeroflikes) as d
-  left join post_comments on d.id = post_comments.id
-  left join comment_like on d.id = comment_like.id_comment and comment_like.id_user = $2
-  order by date desc
-  `;
-
   let postsResult, commentsResult;
-  let isMorePosts = true;
-  let isMoreComments = true;
 
   try {
-    postsResult = await client.query(getPostsQuery, [idUser, from]);
+    if (idFanpage)
+      postsResult = await client.query(getFanpagePostsQuery, [idFanpage, from]);
+    else if (idGroup)
+      postsResult = await client.query(getGroupPostsQuery, [idGroup, from]);
+    else postsResult = await client.query(getPostsQuery, [idOwner, from]);
+
     const idPosts = [];
     for (let i = 0; i < postsResult.rows.length; i++) {
       idPosts.push(postsResult.rows[i].idPost);
     }
-    commentsResult = await client.query(getCommentsQuery, [idPosts, idUser]);
+    commentsResult = await client.query(getCommentsQuery, [idPosts, idOwner]);
   } catch {
-    return res.status(400).json("bad-request");
+    res.status(400).json("bad-request");
   }
+
+  let isMorePosts = true;
+  let isMoreComments = true;
 
   let { rows: posts } = postsResult;
   let { rows: comments } = commentsResult;

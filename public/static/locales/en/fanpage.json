@@ -6,5 +6,8 @@
     "subscribed":"Subscribed",
     "user":"User",
     "moderator":"Moderator",
-    "administrator":"Administrator"
+    "admin":"Admin",
+    "delete":"delete",
+    "my-self":"You"
+
 }

@@ -29,10 +29,55 @@ router.post("/about", async (req, res) => {
   }
 });
 
+router.post("/enter", async (req, res) => {
+  const { idFanpage } = req.body;
+
+  const token = jwt.sign(
+    {
+      exp: Math.floor(Date.now() / 1000) + 60 * 60,
+      data: {
+        id: 1,
+      },
+    },
+    jwtSecret
+  );
+  const {
+    data: { id: idOwner },
+  } = jwt.verify(token, jwtSecret);
+
+  const checkUserQuery = `select id as "idSub",role from fanpage_users where id_user=$1 and id_fanpage=$2`;
+
+  try {
+    const { rows } = await client.query(checkUserQuery, [idOwner, idFanpage]);
+    const idSub = rows[0].idSub || null;
+    const role = rows[0].role || null;
+    res.status(200).json({ idSub, role });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
+router.post("/delete", async (req, res) => {
+  const { idFanpage } = req.body;
+
+  const deleteFanpageQuery = "delete from fanpages where id=$1";
+  const deleteFanpageUsersQuery =
+    "delete from fanpage_users where id_fanpage=$1";
+
+  try {
+    await client.query(deleteFanpageQuery, [idFanpage]);
+    await client.query(deleteFanpageUsersQuery, [idFanpage]);
+
+    res.status(200).json({ success: true });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
 router.post("/member/get", async (req, res) => {
   const { idFanpage, from } = req.body;
   const getMembersQuery = `
-  select a.id as "idMember", a.id_fanpage as "idFanpage", a.id_user as "idUser",a.role, b.first_name as "firstName", b.last_name as "lastName", b.photo 
+  select a.id as "idSub", a.id_user as "idUser",a.role, b.first_name as "firstName", b.last_name as "lastName", b.photo 
   from fanpage_users as a
   inner join users as b
   on b.id = a.id_user

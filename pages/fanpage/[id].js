@@ -1,13 +1,15 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useContext } from "react";
 import cx from "classnames";
-import { AiOutlineCheck } from "react-icons/ai";
+import { AiOutlineCheck, AiOutlineDelete } from "react-icons/ai";
 import { IoIosNotificationsOutline } from "react-icons/io";
+import axios from "axios";
+import { useRouter } from "next/router";
 import HomeLayout from "../../features/components/Layout/Home/HomeLayout";
 import Home from "../../features/components/Fanpage/Home/Home";
 import Members from "../../features/components/Fanpage/Members/Members";
 import About from "../../features/components/Fanpage/About/About";
 import i18next from "@i18n";
-import { useRouter } from "next/router";
+import AppContext from "@features/context/AppContext";
 import "../../styles/main.scss";
 
 const { useTranslation } = i18next;
@@ -21,6 +23,9 @@ const Fanpage = () => {
   const aboutName = t("fanpage:about");
   const subscribeName = t("fanpage:subscribe");
   const subscribedName = t("fanpage:subscribed");
+  const deleteFanpageText = t("fanpage:delete");
+
+  const { setError } = useContext(AppContext);
 
   const navbarItems = [homeName, membersName, aboutName];
 
@@ -29,21 +34,44 @@ const Fanpage = () => {
   );
   const focusItem = useRef(null);
   const [section, setSection] = useState(homeName);
+  const [idSub, setIdSub] = useState(null);
+  const [role, setRole] = useState(null);
 
   const subscribe = true;
+
+  const deleteFanpage = () => {
+    axios
+      .post("/fanpage/delete", { idFanpage })
+      .then(() => {
+        router.push("/");
+      })
+      .catch(({ response: { message } }) => {
+        setError(message);
+      });
+  };
 
   const renderComponent = (name) => {
     switch (name) {
       case homeName:
         return <Home idFanpage={idFanpage} />;
       case membersName:
-        return <Members idFanpage={idFanpage} />;
+        return <Members idFanpage={idFanpage} role={role} />;
       case aboutName:
         return <About idFanpage={idFanpage} />;
       default:
         return <Home idFanpage={idFanpage} />;
     }
   };
+
+  useEffect(() => {
+    idFanpage &&
+      axios
+        .post("/fanpage/enter", { idFanpage })
+        .then(({ data: { idSub, role } }) => {
+          setIdSub(idSub);
+          setRole(role);
+        });
+  }, [idFanpage]);
 
   useEffect(() => {
     navbarItem.current.forEach((item) => {
@@ -78,15 +106,25 @@ const Fanpage = () => {
           ))}
           <div
             className={cx("fanpage__navbar__subscribe", {
-              "fanpage__navbar__subscribe--active": subscribe,
+              "fanpage__navbar__subscribe--active": idSub,
             })}
           >
             <div className="fanpage__navbar__subscribe__icon">
-              {subscribe ? <AiOutlineCheck /> : null}
+              {idSub ? <AiOutlineCheck /> : null}
             </div>
             <span className="fanpage__navbar__subscribe--span">
-              {subscribe ? subscribedName : subscribeName}
+              {idSub ? subscribedName : subscribeName}
             </span>
+            {role == "admin" && (
+              <div className="fanpage__navbar__delete" onClick={deleteFanpage}>
+                <div className="fanpage__navbar__delete__icon">
+                  <AiOutlineDelete />
+                </div>
+                <span className="fanpage__navbar__delete__text">
+                  {deleteFanpageText}
+                </span>
+              </div>
+            )}
           </div>
           <div
             className={cx("fanpage__navbar__subscribe--mobile", {
