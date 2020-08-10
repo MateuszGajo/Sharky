@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
+import { AiOutlinePlus, AiOutlineMinus, AiOutlineDelete } from "react-icons/ai";
 import cx from "classnames";
 import axios from "axios";
 import { useRouter } from "next/router";
@@ -36,6 +36,7 @@ const Group = () => {
   const inviteText = t("group:side-bar.invite");
   const leaveText = t("group:side-bar.leave");
   const joinText = t("component:lists.groups.button-join");
+  const deleteGroupText = t("group:side-bar.delete");
 
   const renderComponent = (name) => {
     switch (name) {
@@ -91,6 +92,16 @@ const Group = () => {
         setNumberOfMembers(numberOfMembers);
         setCreationDate(date);
       });
+  };
+
+  const deleteGroup = () => {
+    console.log("wchodzimy");
+    axios
+      .post("/group/delete", { idGroup })
+      .then(() => {
+        router.push("/");
+      })
+      .catch(({ response: { message } }) => setError(message));
   };
 
   useEffect(() => {
@@ -201,6 +212,19 @@ const Group = () => {
                       <AiOutlinePlus />
                     </div>
                   </div>
+                  {role == "admin" && (
+                    <div
+                      className="group__container__side-bar__manage__item"
+                      onClick={deleteGroup}
+                    >
+                      <span className="group__container__side-bar__item--span">
+                        {deleteGroupText}
+                      </span>
+                      <div className="group__container__side-bar__manage__item__icon ">
+                        <AiOutlineDelete />
+                      </div>
+                    </div>
+                  )}
                 </div>
               </>
             ) : (

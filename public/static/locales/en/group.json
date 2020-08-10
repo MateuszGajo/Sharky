@@ -9,6 +9,7 @@
         "members":"Members",
         "about":"About",
         "invite":"Invite",
-        "leave":"Leave"
+        "leave":"Leave",
+        "delete":"Delete"
     }
 }

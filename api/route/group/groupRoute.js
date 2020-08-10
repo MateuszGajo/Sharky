@@ -76,6 +76,23 @@ router.post("/leave", async (req, res) => {
   }
 });
 
+router.post("/delete", async (req, res) => {
+  const { idGroup } = req.body;
+
+  const deleteGroupQuery = ` delete from groups where id=$1; `;
+
+  const deleteUserQuery = "delete from group_users where id_group =$1;";
+
+  try {
+    await client.query(deleteGroupQuery, [idGroup]);
+    await client.query(deleteUserQuery, [idGroup]);
+
+    res.status(200).json({ success: true });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
 router.post("/member/get", async (req, res) => {
   const { idGroup } = req.body;
 
