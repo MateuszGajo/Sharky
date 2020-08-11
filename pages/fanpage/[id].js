@@ -50,6 +50,24 @@ const Fanpage = () => {
       });
   };
 
+  const subscribeFanpage = () => {
+    axios
+      .post("/fanpage/user/add", { idFanpage })
+      .then(({ data: { id } }) => {
+        setIdSub(id);
+      })
+      .catch(({ response: { message } }) => setError(message));
+  };
+
+  const unSubscribeFanpage = () => {
+    axios
+      .post("/fanpage/user/delete", { idSub })
+      .then(() => {
+        setIdSub(null);
+      })
+      .catch(({ response: { message } }) => setError(message));
+  };
+
   const renderComponent = (name) => {
     switch (name) {
       case homeName:
@@ -108,6 +126,9 @@ const Fanpage = () => {
             className={cx("fanpage__navbar__subscribe", {
               "fanpage__navbar__subscribe--active": idSub,
             })}
+            onClick={() => {
+              idSub ? unSubscribeFanpage() : subscribeFanpage();
+            }}
           >
             <div className="fanpage__navbar__subscribe__icon">
               {idSub ? <AiOutlineCheck /> : null}
