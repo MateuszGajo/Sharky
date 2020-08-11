@@ -22,23 +22,23 @@ with idUsers as(
   select * from idPostShare
   ),
   
-  numberOfShare as(
-  select id_post as "idPost", count(*) as "numberOfShares" from post_share where id_post in(select * from idPostAndShare) group by id_post
+  numberOfShares as(
+  select a."idPost", count(b.id) as "numberOfShares" from idPostAndShare as a  left join post_share as  b on a."idPost" = b.id_post group by a."idPost"
   ),
-  
+     
   numberOfComments as(
-  select id_post as "idPost", count(*) as "numberOfComments" from post_comments where id_post in(select * from idPostAndShare) group by id_post
+  select a."idPost", count(b.id) as "numberOfComments" from idPostAndShare as a  left join post_comments as  b on a."idPost" = b.id_post group by a."idPost"
   ),
-  
+    
   numberOfLikes as(
-  select id_post as "idPost", count(*) as "numberOfLikes" from post_like where id_post in(select * from idPostAndShare) group by id_post
+  select a."idPost", count(b.id) as "numberOfLikes" from idPostAndShare as a  left join post_like as  b on a."idPost" = b.id_post group by a."idPost"
   ),
   
   postsShare as (
   select a.id_post as "idPost", c."numberOfShares", d."numberOfComments", e."numberOfLikes",b.id_user as "idUser",b.content,b.photo,a.date , a.id::text as "idShare", a.id_user::text as "idUserShare" 
   from post_share as a
   inner join posts as b on a.id_post = b.id
-  inner join numberOfShare as c on a.id_post =c."idPost"
+  inner join numberOfShares as c on a.id_post =c."idPost"
   inner join numberOfComments as d on a.id_post =d."idPost"
   inner join numberOfLikes as e on a.id_post =e."idPost"
   where id_post  in (select * from idPostShare)
@@ -46,17 +46,19 @@ with idUsers as(
   posts as (
   select a.id as "idPost",b."numberOfShares", c."numberOfComments",d."numberOfLikes",a.id_user as "idUser", a.content, a.photo, a.date, null as "idShare", null as "idUserShare" from 
   posts as a
-  inner join numberOfShare as b on a.id =b."idPost"
+  inner join numberOfShares as b on a.id =b."idPost"
   inner join numberOfComments as c on a.id =c."idPost"
   inner join numberOfLikes as d on a.id =d."idPost"
   where id in(select * from idPosts)
   )
   
-  select a.*
+  select a.*, b.id as "idLike"
   from(select * from postsShare
     union all
     select * from posts) as a
-  order by date desc desc
+  left join post_like as b on
+  a."idPost" = b.id_post and b.id_user =$1
+  order by date desc
   limit 21 offset $2
 `;
 
@@ -77,15 +79,17 @@ with idPosts as(
  select a."idPost", count(b.id) as "numberOfLikes" from idPosts as a  left join post_like as  b on a."idPost" = b.id_post group by a."idPost"
  )
  
- select e.*
+ select e.*, f.id as "idLike"
  from(select a.id as "idPost", a.id_user as "idUser", a.content, a.photo, a.date, b."numberOfShares", c."numberOfComments", d."numberOfLikes",null as "idShare", null as "idUserShare"  
    from posts as a
    inner join numberOfShares as b on a.id = b."idPost"
    inner join numberOfComments as c on a.id=c."idPost"
    inner join numberOfLikes as d on a.id =d."idPost"
    where id in (select * from idPosts)) as e
+ left join post_like as f on
+ e."idPost" = f.id_post and f.id_user =$2
  order by e.date desc
- limit 21 offset $2
+ limit 21 offset $3
 `;
 
 const getGroupPostsQuery = `
@@ -105,7 +109,7 @@ with idPosts as(
     select a."idPost", count(b.id) as "numberOfLikes" from idPosts as a  left join post_like as  b on a."idPost" = b.id_post group by a."idPost"
     )
     
-    select e.*
+    select e.*, f.id as "idLike"
     from(select a.id as "idPost", a.id_user as "idUser", a.content, a.photo, a.date, b."numberOfShares", c."numberOfComments", d."numberOfLikes",null as "idShare", null as "idUserShare"  
       from posts as a
       inner join numberOfShares as b on a.id = b."idPost"
@@ -113,6 +117,8 @@ with idPosts as(
       inner join numberOfLikes as d on a.id =d."idPost"
       where id in (select * from idPosts)) as e
     order by e.date desc
+    left join post_like as f on
+    e."idPost" = f.id_post and f.id_user =$2
     limit 21 offset $2
 `;
 

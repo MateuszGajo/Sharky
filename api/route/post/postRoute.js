@@ -44,15 +44,18 @@ router.post("/add", async (req, res) => {
     if (err) {
       return res.status(400).json("bad-request");
     }
-
-    const {
-      file: { mimetype, filename: fileName, size },
-    } = req;
-    if (mimetype !== "image/jpeg" && mimetype !== "image/png") {
-      return res.status(415).json("wrong-file-type");
-    }
-    if (size > 200000) {
-      return res.status(413).json("file-too-large");
+    let fileName = null;
+    if (req.file) {
+      const {
+        file: { mimetype, filename, size },
+      } = req;
+      fileName = filename;
+      if (mimetype !== "image/jpeg" && mimetype !== "image/png") {
+        return res.status(415).json("wrong-file-type");
+      }
+      if (size > 200000) {
+        return res.status(413).json("file-too-large");
+      }
     }
 
     const { content, date, idGroup, idFanpage } = req.body;
@@ -110,9 +113,17 @@ router.post("/get", async (req, res) => {
 
   try {
     if (idFanpage)
-      postsResult = await client.query(getFanpagePostsQuery, [idFanpage, from]);
+      postsResult = await client.query(getFanpagePostsQuery, [
+        idFanpage,
+        idOwner,
+        from,
+      ]);
     else if (idGroup)
-      postsResult = await client.query(getGroupPostsQuery, [idGroup, from]);
+      postsResult = await client.query(getGroupPostsQuery, [
+        idGroup,
+        idOwner,
+        from,
+      ]);
     else postsResult = await client.query(getPostsQuery, [idOwner, from]);
 
     const idPosts = [];

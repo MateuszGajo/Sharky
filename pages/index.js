@@ -33,7 +33,7 @@ const Index = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    setNewPost({ content, file, idFanpage: 1 });
+    setNewPost({ content, file });
   };
 
   const handleSubmitt = (e) => {
@@ -61,7 +61,7 @@ const Index = () => {
             setFile={setFile}
           />
         </form>
-        <Posts newPost={newPost} idFanpage={1} />
+        <Posts newPost={newPost} idUser={1} />
       </HomeLayout>
     </>
   );
