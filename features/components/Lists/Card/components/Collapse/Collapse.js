@@ -5,6 +5,8 @@ const Collapse = ({
   id,
   idRef,
   buttonName,
+  setButtonName,
+  setTitle,
   greenName,
   greenTitle,
   pinkName,
@@ -32,7 +34,9 @@ const Collapse = ({
             setRelation({
               id: idRef,
               idSub: id,
-              name: blueName,
+              name: greenName,
+              setButtonName,
+              setTitle,
             });
           }
         }}
@@ -52,7 +56,9 @@ const Collapse = ({
             setRelation({
               id: idRef,
               idSub: id,
-              name: blueName,
+              name: pinkName,
+              setButtonName,
+              setTitle,
             });
           }
         }}
@@ -73,6 +79,8 @@ const Collapse = ({
               id: idRef,
               idSub: id,
               name: blueName,
+              setButtonName,
+              setTitle,
             });
           }
         }}

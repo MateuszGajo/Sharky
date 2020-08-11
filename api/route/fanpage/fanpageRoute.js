@@ -102,6 +102,20 @@ router.post("/member/get", async (req, res) => {
   res.status(200).json({ members, isMore });
 });
 
+router.post("/member/relation/change", async (req, res) => {
+  const { idSub, relation } = req.body;
+
+  const updateMemberRealtionQuery = `update fanpage_users set role=$1 where id=$2`;
+
+  try {
+    await client.query(updateMemberRealtionQuery, [relation, idSub]);
+
+    res.status(200).json({ success: true });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
 router.post("/get", async (req, res) => {
   const { from, idUser, keyWords } = req.body;
 

@@ -47,7 +47,15 @@ const Members = ({ idFanpage, role: permission }) => {
   }, [removeMember]);
 
   useEffect(() => {
-    console.log(relation);
+    const { idSub, name, setButtonName, setTitle } = relation;
+    if (idSub)
+      axios
+        .post("/fanpage/member/relation/change", { idSub, relation: name })
+        .then(() => {
+          setButtonName(name);
+          setTitle(t(`fanpage:${name}`));
+        })
+        .catch(({ response: { message } }) => setError(message));
   }, [relation]);
 
   useEffect(() => {
@@ -55,8 +63,9 @@ const Members = ({ idFanpage, role: permission }) => {
   }, []);
   return (
     <div className="fanpage-members">
+      {console.log(members)}
       <InfiniteScroll
-        dataLength={members.length} //This is important field to render the next data
+        dataLength={members.length}
         next={() => fetchData(members.length)}
         hasMore={isMore}
         loader={<Spinner />}
