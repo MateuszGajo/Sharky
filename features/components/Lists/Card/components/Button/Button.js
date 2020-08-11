@@ -17,8 +17,8 @@ const Button = ({
   refType,
   number,
   setNumber,
-  title: t,
-  setTitle,
+  title,
+  setTitle: sT,
   collapse,
   setCollapse,
   subTitle,
@@ -39,6 +39,7 @@ const Button = ({
   const [isInvitationSent, setStatusOfInvitation] = useState(
     statusOfSendInvitation
   );
+  const [isOpen, setStatusOfOpen] = useState(false);
 
   const removeFriend = () => {
     handleClick({
@@ -54,14 +55,14 @@ const Button = ({
 
     buttonRef.current.addEventListener("click", removeFriend);
 
-    buttonRef.current.innerHTML = unsubTitle;
+    setStatusOfOpen(true);
   };
 
   const resetFriendButton = () => {
     setButton("relation");
     removeEventListener("click", removeFriend);
 
-    buttonRef.current.innerHTML = title();
+    setStatusOfOpen(false);
   };
 
   useEffect(() => {
@@ -93,13 +94,6 @@ const Button = ({
     };
   }, []);
 
-  const title = () => {
-    if (inviteType == "accept") return acceptInvite;
-    if (inviteType == "decline") return declineInvite;
-    if (isInvitationSent) return sentInvite;
-    if (!idRef) return subTitle;
-    return t;
-  };
   return (
     <div
       className={cx("card__item__info__second-column__buttons--main-button ", {
@@ -124,7 +118,7 @@ const Button = ({
               inviteType,
               setInviteType,
               setButton,
-              setTitle,
+              setTitle: sT,
               setCollapse,
               setButtonName,
               number,
@@ -155,7 +149,17 @@ const Button = ({
         className="card__item__info__second-column__buttons--main-button--span"
         data-testid="card-button-text"
       >
-        {title()}
+        {inviteType == "accept"
+          ? acceptInvite
+          : [
+              inviteType == "decline"
+                ? declineInvite
+                : [
+                    isInvitationSent
+                      ? sentInvite
+                      : [!idRef ? subTitle : [isOpen ? unsubTitle : title]],
+                  ],
+            ]}
       </span>
     </div>
   );

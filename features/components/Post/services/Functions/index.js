@@ -91,7 +91,6 @@ export const getPosts = ({
     .post("/post/get", { from, idGroup, idFanpage })
     .then(
       async ({ data: { posts: p, comments, isMorePosts, isMoreComments } }) => {
-        console.log(p);
         await getUsers(users, setUsers, [...p, ...comments]);
         const commentsKey = {};
         for (let i = 0; i < comments.length; i++) {
