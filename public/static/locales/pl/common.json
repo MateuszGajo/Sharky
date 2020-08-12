@@ -29,6 +29,11 @@
         },
         "error":{
             "bad-request":"Żądanie nie powiodło się"
+        },
+        "invite-person":{
+            "empty-content":"Użyj wyszukiwarka aby znaleść znajomych",
+            "invite":"Zaproś",
+            "invitation":"Zaproszenie zostało wysłane"
         }
     }
 }

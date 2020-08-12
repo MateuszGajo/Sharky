@@ -164,4 +164,19 @@ router.post("/user/delete", async (req, res) => {
   }
 });
 
+router.post("/user/invite", async (req, res) => {
+  const { idUser, idTarget } = req.body;
+
+  const inviteUserQuery =
+    "insert into group_users(id_group, id_user, status) values($1, $2, '0');";
+
+  try {
+    await client.query(inviteUserQuery, [idTarget, idUser]);
+
+    res.status(200).json({ success: true });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
 module.exports = router;

@@ -172,7 +172,7 @@ router.post("/get/people", async (req, res) => {
         select a."idUser",null as  idFriendShip,null as  status,null as  date,null as "isInvited",null as "isInvitationSent",a."numberOfFriends",null as  relation from userFriendsCounted as a where a."idUser" not in (select "idUser" from friendsStatus)) as d
       inner join users as e on d."idUser" = e.id
       order by "isInvited","isInvitationSent",date
-      limit 21 offset $3	
+      limit 5 offset $3	
   `;
     try {
       result = await client.query(getFriendsQuery, [
@@ -222,7 +222,7 @@ router.post("/get/people", async (req, res) => {
          where id not in (select "idUser" from userSortedCounted)) as d
       inner join users as e on d."idUser" = e.id
       order by "isInvited","isInvitationSent",date
-      limit 21 offset $4
+      limit 5 offset $4
   `;
     try {
       result = await client.query(getFriendsQuery, [
@@ -239,7 +239,7 @@ router.post("/get/people", async (req, res) => {
   let { rows: friends } = result;
   let isMore = true;
 
-  if (friends.length < 21) {
+  if (friends.length < 5) {
     isMore = false;
   } else {
     friends = friends.slice(0, -1);

@@ -29,6 +29,11 @@
         },
         "error":{
             "bad-request":"Request failed"
+        },
+        "invite-person":{
+            "empty-content":"Use search to find your friends",
+            "invite":"Invite",
+            "invitation":"invitation has been sent"
         }
     }  
 }

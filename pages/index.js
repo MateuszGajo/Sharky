@@ -10,6 +10,7 @@ import People from "@components/Lists/People/People";
 import Groups from "@components/Lists/Groups/Groups";
 import Fanpages from "@components/Lists/Fanpages/Fanpages";
 import MessageBox from "@common/MessageBox/MessageBox";
+import InvitePerson from "@common/PopUp/InvitePerson/InvitePerson";
 import Search from "@common/Search/Search";
 import "../styles/main.scss";
 
@@ -53,7 +54,7 @@ const Index = () => {
         {owner.id && <Groups idUser={1} keyWords={keyWords} />}
         {owner.id && <Fanpages idUser={1} keyWords={keyWords} />} */}
 
-        <form onSubmit={handleSubmit}>
+        {/* <form onSubmit={handleSubmit}>
           <MessageBox
             value={content}
             onChange={setContent}
@@ -61,7 +62,8 @@ const Index = () => {
             setFile={setFile}
           />
         </form>
-        <Posts newPost={newPost} idUser={1} />
+        <Posts newPost={newPost} idUser={1} /> */}
+        <InvitePerson type="group" idTarget={1} />
       </HomeLayout>
     </>
   );
