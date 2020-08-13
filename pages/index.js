@@ -47,6 +47,7 @@ const Index = () => {
       {isError && <Error message={isError} />}
       {isPrompt && <Prompt message={isPrompt} />}
       <HomeLayout>
+        <People idUser={1} />
         {/* <form onSubmit={handleSubmitt}>
           <Search value={user} onChange={setUser} />
         </form>
@@ -63,7 +64,7 @@ const Index = () => {
           />
         </form>
         <Posts newPost={newPost} idUser={1} /> */}
-        <InvitePerson type="group" idTarget={1} />
+        {/* <InvitePerson type="group" idTarget={1} /> */}
       </HomeLayout>
     </>
   );

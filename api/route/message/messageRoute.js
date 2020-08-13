@@ -2,6 +2,7 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const { client } = require("../../../config/pgAdaptor");
 const { jwtSecret } = require("../../../config/keys");
+const { getMessagesQuery, addMessageQuery } = require("./query");
 
 const router = express.Router();
 
@@ -22,11 +23,6 @@ router.post("/get", async (req, res) => {
   );
   const { data: user } = jwt.verify(token, jwtSecret);
 
-  const getMessagesQuery = `
-    select c.id, c.id_chat as "idChat", c.id_user as "idUser", c.message, c.date  from chat_messages as c
-    where id_chat = $1
-    `;
-
   try {
     const messages = await client.query(getMessagesQuery, [idChat]);
 
@@ -38,12 +34,6 @@ router.post("/get", async (req, res) => {
 
 router.post("/add", async (req, res) => {
   const { idChat, message, idUser, date } = req.body;
-
-  const addMessageQuery = `
-  insert into chat_messages(id_chat, id_user, message, date)
-  values($1, $2, $3, $4)
-  returning id
-    `;
 
   try {
     const { rows } = await client.query(addMessageQuery, [

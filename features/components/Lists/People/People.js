@@ -23,7 +23,7 @@ const People = ({ idUser, keyWords = "" }) => {
   const sentInvite = t("component:lists.people.sent");
   const emptyContent = t("component:lists.people.empty-content");
 
-  const { setError, setPrompt, owner } = useContext(AppContext);
+  const { setError, setPrompt, owner, setNewChat } = useContext(AppContext);
   const [relation, setRelation] = useState({ id: null, name: "" });
   const [friends, setFriends] = useState([]);
   const [friend, setFriend] = useState({ id: null, name: "", idRef: null });
@@ -64,20 +64,23 @@ const People = ({ idUser, keyWords = "" }) => {
       setButtonName,
       number,
       setNumber,
+      id,
     } = invite;
 
     if (inviteType == "accept")
       axios
-        .post("/friend/accept", { idFriendShip })
-        .then(({ data: { relation } }) => {
+        .post("/friend/accept", { idFriendShip, idUser: id })
+        .then(({ data: { newFriend, relation } }) => {
           setInviteType("");
           setButton("relation");
           setTitle(t(`component:lists.people.${relation}`));
           setButtonName(relation);
           setCollapse(idUser == owner.id && relation ? true : false);
           setNumber(Number(number) + 1);
+
+          setNewChat(newFriend);
         })
-        .catch(({ response: { data: message } }) => setError(message));
+        .catch(({ response }) => console.log(response));
 
     if (inviteType == "decline") {
       axios

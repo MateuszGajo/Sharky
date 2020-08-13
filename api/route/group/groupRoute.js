@@ -2,7 +2,13 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const { client } = require("../../../config/pgAdaptor");
 const { jwtSecret } = require("../../../config/keys");
-
+const {
+  getGroupsQuery,
+  getSortedGroupsQuery,
+  addUserQuery,
+  deleteUserQuery,
+  inviteUserQuery,
+} = require("./query");
 const router = express.Router();
 
 router.post("/get", async (req, res) => {
@@ -20,85 +26,17 @@ router.post("/get", async (req, res) => {
     data: { id: idOwner },
   } = jwt.verify(token, jwtSecret);
 
-  let getGroupsQuery;
   let getGroups;
 
   if (!keyWords) {
-    getGroupsQuery = `
-  with idGroups as(
-    select b.id_group
-      from(select a.id_group
-      from group_users as a
-      where id_user=$1) as b
-    left join(
-      select a.id_group
-      from group_users as a
-      where id_user=$2) as c
-    on c.id_group = b.id_group
-    where c.id_group is null
-    )
-    
-    select a."idSub",a."idGroup",a."numberOfMembers", b.name, b.description, b.photo
-    from(select id as "idSub",id_group as "idGroup", count(*) over (partition by id_group)  as "numberOfMembers",id_user
-         from group_users 
-         where id_group in(
-              select a.id_group
-              from group_users as a
-              where id_user=$1
-            )
-          ) as a
-       left join groups as b
-    on a."idGroup" = b.id
-    where a.id_user =$2
-    union
-    select null as "idSub", b.*, groups.name, groups.description, groups.photo
-    from(select a.id as "idGroup", count(*) as "numberOfMembers"
-      from(select groups.id 
-         from groups
-         left join group_users on
-         groups.id = group_users.id_group
-         where groups.id in(select * from idGroups)
-        ) as a
-      group by a.id) as b
-    inner join groups on b."idGroup" = groups.id
-    limit 21 offset $3
-  `;
     try {
       getGroups = await client.query(getGroupsQuery, [idUser, idOwner, from]);
     } catch {
       return res.status(400).json("bad-request");
     }
   } else {
-    getGroupsQuery = `
-    with groupSorted as(
-      select id from groups where lower(name) like($1)
-    ),
-    
-    subscribedGroups as (
-    select id_group as "idGroup",count(*) as "numberOfMembers" from group_users where id_group in(select * from groupSorted) group by id_group
-    ),
-    
-    unSubscribedGroups as(
-    select id, 0 as  "numberOfMembers" from groupSorted where id not in (select "idGroup" from  subscribedGroups )
-    ),
-    
-    countedGroups as(
-    select * from subscribedGroups
-    union
-    select * from unSubscribedGroups
-    )
-    
-   
-    select a.*, b.id as "idSub", c.name, c.photo from countedGroups as a
-    left join group_users  as b
-    on a."idGroup" = b.id_group and b.id_user =$2
-    inner join groups as c 
-    on a."idGroup" = c.id
-    order by "idSub"
-    limit 21 offset $3
-  `;
     try {
-      getGroups = await client.query(getGroupsQuery, [
+      getGroups = await client.query(getSortedGroupsQuery, [
         `%${keyWords}%`,
         idOwner,
         from,
@@ -136,8 +74,6 @@ router.post("/user/add", async (req, res) => {
     data: { id: idUser },
   } = jwt.verify(token, jwtSecret);
 
-  const addUserQuery = `insert into group_users(id_group, id_user) values($1,$2) returning id`;
-
   try {
     const { rows: addUser } = await client.query(addUserQuery, [
       idGroup,
@@ -153,8 +89,6 @@ router.post("/user/add", async (req, res) => {
 router.post("/user/delete", async (req, res) => {
   const { idSub } = req.body;
 
-  const deleteUserQuery = `delete from group_users where id=$1`;
-
   try {
     await client.query(deleteUserQuery, [idSub]);
 
@@ -166,9 +100,6 @@ router.post("/user/delete", async (req, res) => {
 
 router.post("/user/invite", async (req, res) => {
   const { idUser, idTarget } = req.body;
-
-  const inviteUserQuery =
-    "insert into group_users(id_group, id_user, status) values($1, $2, '0');";
 
   try {
     await client.query(inviteUserQuery, [idTarget, idUser]);

@@ -123,6 +123,7 @@ const Button = ({
               setButtonName,
               number,
               setNumber,
+              id,
               idFriendShip: idRef,
             });
           } else {

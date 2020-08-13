@@ -20,8 +20,7 @@ const InvitePerson = ({
 }) => {
   const { t } = useTranslation();
 
-  const { setError, owner, setPrompt } = useContext(AppContext);
-
+  const { setError } = useContext(AppContext);
   const scrollBar = useRef(null);
 
   const [people, setPeople] = useState([]);
@@ -34,6 +33,7 @@ const InvitePerson = ({
   const description = t("component:lists.people.description");
   const inviteText = t("common:pop-up.invite-person.invite");
   const invitationSent = t("common:pop-up.invite-person.invitation");
+  const sentInvite = t("component:lists.people.sent");
 
   let navTimeout = null;
 
@@ -50,7 +50,7 @@ const InvitePerson = ({
 
   const fetchData = (from, keyWords = "", prevState = people) => {
     axios
-      .post("/friend/get/people", { idUser: owner.id, keyWords, from })
+      .post("/people/get", { idTarget, keyWords, from, type })
       .then(({ data: { friends, isMore } }) => {
         setPeople([...prevState, ...friends]);
         setStatusOfMore(isMore);
@@ -64,11 +64,11 @@ const InvitePerson = ({
   };
 
   useEffect(() => {
-    const { idRef } = invite;
+    const { idRef, setStatusOfInvitation } = invite;
     if (idRef) {
       axios
         .post(`/${type}/user/invite`, { idUser: idRef, idTarget })
-        .then(() => setPrompt(invitationSent))
+        .then(() => setStatusOfInvitation(true))
         .catch(({ response: { message } }) => setError(message));
     }
   }, [invite]);
@@ -122,12 +122,15 @@ const InvitePerson = ({
                   lastName,
                   photo,
                   numberOfFriends,
+                  isInvitationSent,
                 } = person;
-
+                console.log(isInvitationSent);
                 const data = {
                   refType: "profile",
                   idRef: idUser,
                   photo: photo,
+                  isInvitationSent,
+                  sentInvite,
                   name: `${firstName} ${lastName}`,
                   title: inviteText,
                   description,

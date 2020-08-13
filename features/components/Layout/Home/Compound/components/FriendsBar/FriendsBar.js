@@ -7,7 +7,7 @@ import AppContext from "@features/context/AppContext";
 
 const FriendsBar = () => {
   const friendsBar = useRef(null);
-  const { socket, newMessage, owner } = useContext(AppContext);
+  const { socket, newMessage, owner, newChat } = useContext(AppContext);
   const { chat } = useContext(WizzardContext);
 
   const [isFriendsBarScrolling, setStatusOfFriendsBarScrolling] = useState(
@@ -41,6 +41,14 @@ const FriendsBar = () => {
   useEffect(() => {
     if (users.length) socket.emit("joinChat");
   }, [users]);
+
+  useEffect(() => {
+    console.log(newChat);
+    if (newChat.idChat) {
+      console.log(newChat);
+      setUsers([...users, newChat]);
+    }
+  }, [newChat]);
 
   useEffect(() => {
     const { idChat, messageTo } = newMessage;

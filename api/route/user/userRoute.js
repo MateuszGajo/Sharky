@@ -4,11 +4,15 @@ const jwt = require("jsonwebtoken");
 const { client } = require("../../../config/pgAdaptor");
 const { post } = require("../post/postRoute");
 const { jwtSecret } = require("../../../config/keys");
+const {
+  getUserQuery,
+  muteUserQuery,
+  removeFriendQuery,
+  blockUserQuery,
+} = require("./query");
 
 router.post("/get", async (req, res) => {
   const { idUsers } = req.body;
-
-  const getUserQuery = `select id, first_name as "firstName", last_name as "lastName", photo from users where id = ANY($1);`;
 
   try {
     const { rows: users } = await client.query(getUserQuery, [idUsers]);
@@ -37,7 +41,6 @@ router.post("/mute", async (req, res) => {
   } = jwt.verify(token, jwtSecret);
 
   const date = new Date();
-  const muteUserQuery = `insert into user_mute(id_user_1, id_user_2, date) values($1, $2, $3)`;
 
   try {
     await client.query(muteUserQuery, [idUser, idMuteUser, date]);
@@ -65,19 +68,6 @@ router.post("/block", async (req, res) => {
   const {
     data: { id: idUser },
   } = jwt.verify(token, jwtSecret);
-
-  const removeFriendQuery = `
-  delete from friends where id =
-    (
-    select id from friends where id_user_1=$1 and id_user_2=$2
-    union
-    select id from friends where id_user_1=$2 and id_user_2=$1
-    )`;
-
-  const blockUserQuery = `
-  insert into user_block(id_user_1,id_user_2,date)
-    values($1,$2,$3)
-    `;
 
   try {
     await client.query(removeFriendQuery, [idUser, idBlockUser]);

@@ -10,6 +10,7 @@ const replyRoute = require("./api/route/reply/replyRoute");
 const postRoute = require("./api/route/post/postRoute");
 const userRoute = require("./api/route/user/userRoute");
 const friendRoute = require("./api/route/friend/friendRoute");
+const peopleRoute = require("./api/route/people/peopleRoute");
 const messageRoute = require("./api/route/message/messageRoute");
 const groupRoute = require("./api/route/group/groupRoute");
 const fanpageRoute = require("./api/route/fanpage/fanpageRoute");
@@ -18,6 +19,7 @@ const { jwtSecret } = require("./config/keys");
 const bodyParser = require("body-parser");
 const { expressSessionSecret } = require("./config/keys");
 const { userJoin, userLeave, existUser } = require("./utils/users");
+const { joinChat, chatUsers, leaveChat } = require("./utils/chats");
 
 const nextI18Next = require("./i18n/server");
 
@@ -31,14 +33,24 @@ const socketIO = io(httpServer);
 server.use(bodyParser.json());
 
 socketIO.sockets.on("connection", (socket) => {
+  const getChatsQuery = `
+  select  chats.id as "idChat"
+from(select id_user_1 
+    from friends 
+    where id_user_2=$1
+    union
+    select id_user_2
+    from friends 
+    where id_user_1=$1) as result
+inner join chats on chats.id_user_1 = result.id_user_1 or chats.id_user_2 = result.id_user_1
+left join users on users.id = result.id_user_1`;
   socket.on(
     "sendChatMessage",
     ({ idMessage, idChat, idUser, message, date, messageTo }) => {
       const unReadMessageQuery = `update chats set message_to=$1 where id=$2;`;
       if (!existUser(messageTo))
         client.query(unReadMessageQuery, [messageTo, idChat]);
-
-      socket.broadcast.to(idChat).emit("message", {
+      socket.broadcast.to(chatUsers(idChat)).emit("message", {
         idMessage,
         idChat,
         idUser,
@@ -70,26 +82,18 @@ socketIO.sockets.on("connection", (socket) => {
       } = jwt.verify(token, jwtSecret);
       userJoin(idUser, socket.id);
 
-      const getChatsQuery = `
-          select  chats.id as "idChat"
-      from(select id_user_1 
-            from friends 
-            where id_user_2=$1
-            union
-            select id_user_2
-            from friends 
-            where id_user_1=$1) as result
-      inner join chats on chats.id_user_1 = result.id_user_1 or chats.id_user_2 = result.id_user_1
-      left join users on users.id = result.id_user_1`;
-
       const { rows: chats } = await client.query(getChatsQuery, [idUser]);
       for (let i = 0; i < chats.length; i++) {
+        joinChat(chats[i].idChat, socket.id);
         socket.join(chats[i].idChat);
       }
+      console.log(chatUsers(chats[0].idChat));
     }
   });
 
-  socket.on("disconnect", () => {
+  socket.on("disconnect", async () => {
+    // console.log(socket.adapter);
+
     const token = jwt.sign(
       {
         exp: Math.floor(Date.now() / 1000) + 60 * 60,
@@ -103,6 +107,11 @@ socketIO.sockets.on("connection", (socket) => {
       const {
         data: { id: idUser },
       } = jwt.verify(token, jwtSecret);
+      const { rows: chats } = await client.query(getChatsQuery, [idUser]);
+      for (let i = 0; i < chats.length; i++) {
+        leaveChat(chats[i].idChat, socket.id);
+      }
+      // console.log(chatUsers(chats[0].idChat));
       userLeave(idUser, socket.id);
     }
   });
@@ -119,6 +128,7 @@ socketIO.sockets.on("connection", (socket) => {
   server.use("/post", postRoute);
   server.use("/user", userRoute);
   server.use("/friend", friendRoute);
+  server.use("/people", peopleRoute);
   server.use("/message", messageRoute);
   server.use("/group", groupRoute);
   server.use("/fanpage", fanpageRoute);
