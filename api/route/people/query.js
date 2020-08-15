@@ -22,7 +22,7 @@ select *, null as "idSub", null as status, null as "isInvitationSent" from userF
 ),
 		
 friendsStatus as (
-select * from invitedFriends
+select * from invitedFriends where status !='1'
 union
 select * from notInvitedFriends
 )
@@ -58,7 +58,7 @@ select id as "idUser", null as "idSub", null as status, null as "isInvitationSen
 ),
     
 usersStatus as (
-select * from invitedUsers
+select * from invitedUsers where status !='1'
 union
 select * from notInvitedUsers
 )

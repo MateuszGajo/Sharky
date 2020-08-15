@@ -100,11 +100,9 @@ router.post("/user/delete", async (req, res) => {
 
 router.post("/user/invite", async (req, res) => {
   const { idUser, idTarget } = req.body;
-  const a = await client.query(inviteUserQuery, [idTarget, idUser]);
-  console.log(a);
-  try {
-    console.log(idUser, idTarget);
 
+  try {
+    const a = await client.query(inviteUserQuery, [idTarget, idUser]);
     res.status(200).json({ success: true });
   } catch {
     res.status(400).json("bad-request");

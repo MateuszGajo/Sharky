@@ -81,7 +81,9 @@ select result.id_user_1 as "idUser", chats.id as "idChat", chats.message_to as "
 inner join chats on chats.id_user_1 = result.id_user_1 or chats.id_user_2 = result.id_user_1
 left join users on users.id = result.id_user_1`;
 
-const addUserQuery = `insert into friends(id_user_1, id_user_2, status) values($1,$2,'0') returning id;`;
+const addUserQuery = `
+insert into friends(id_user_1, id_user_2, status) values($1,$2,'0') returning id;
+`;
 
 const removeUserQuery = `delete from friends where id=$1;`;
 
@@ -91,7 +93,7 @@ const setRelation = `insert into friend_relation(id_friendship, relation) values
 
 const addChatQuery = `insert into chats(id_user_1, id_user_2) values($1, $2) returning id`;
 
-const removeFriendsRequest = `delete from friends where id=$1`;
+const removeFriendsRequest = `delete from friends where id=$1 and not exists(select id  from friends where id=$1 and status='1')`;
 
 const readMessageQuery = `update chats set message_to=null where id=$1;`;
 
