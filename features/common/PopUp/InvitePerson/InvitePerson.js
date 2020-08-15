@@ -124,7 +124,7 @@ const InvitePerson = ({
                   numberOfFriends,
                   isInvitationSent,
                 } = person;
-                console.log(isInvitationSent);
+
                 const data = {
                   refType: "profile",
                   idRef: idUser,

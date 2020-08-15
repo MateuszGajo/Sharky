@@ -27,10 +27,13 @@ const MyApp = ({ Component, pageProps }) => {
     socket.on(
       "message",
       ({ idMessage, idChat, idUser, message, date, messageTo }) => {
-        console.log("wiadomość");
         setNewMessage({ idMessage, idChat, idUser, message, date, messageTo });
       }
     );
+
+    socket.on("newChat", ({ newChat }) => {
+      setNewChat(newChat);
+    });
   }, [SERVER_URL]);
 
   return (

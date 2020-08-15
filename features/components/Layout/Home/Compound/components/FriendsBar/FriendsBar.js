@@ -43,9 +43,7 @@ const FriendsBar = () => {
   }, [users]);
 
   useEffect(() => {
-    console.log(newChat);
     if (newChat.idChat) {
-      console.log(newChat);
       setUsers([...users, newChat]);
     }
   }, [newChat]);

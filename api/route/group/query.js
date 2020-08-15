@@ -71,8 +71,13 @@ const addUserQuery = `insert into group_users(id_group, id_user, status) values(
 
 const deleteUserQuery = `delete from group_users where id=$1`;
 
-const inviteUserQuery =
-  "insert into group_users(id_group, id_user, status) values($1, $2, '0');";
+const inviteUserQuery = `
+insert into group_users(id_group, id_user, status) 
+select $1, $2, '0'
+where not exists(
+  select * from group_users where id_group=$1 and id_user=$2
+)
+`;
 
 module.exports = {
   getGroupsQuery,

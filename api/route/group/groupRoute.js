@@ -100,9 +100,10 @@ router.post("/user/delete", async (req, res) => {
 
 router.post("/user/invite", async (req, res) => {
   const { idUser, idTarget } = req.body;
-
+  const a = await client.query(inviteUserQuery, [idTarget, idUser]);
+  console.log(a);
   try {
-    await client.query(inviteUserQuery, [idTarget, idUser]);
+    console.log(idUser, idTarget);
 
     res.status(200).json({ success: true });
   } catch {

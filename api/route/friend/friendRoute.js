@@ -14,7 +14,6 @@ const {
   readMessageQuery,
   updateRelationQuery,
   addChatQuery,
-  getUserQuery,
 } = require("./query");
 const router = express.Router();
 
@@ -96,21 +95,20 @@ router.post("/accept", async (req, res) => {
   } = jwt.verify(token, jwtSecret);
 
   const relation = "friend";
-  console.log(idUser);
+  let idChat;
   try {
-    await client.query(acceptRequest, [idFriendShip]);
-    await client.query(setRelation, [idFriendShip, relation]);
-    const { rows: chat } = await client.query(addChatQuery, [idUser, idOwner]);
-    const { rows: user } = await client.query(getUserQuery, [idUser]);
-    const idChat = chat[0].id;
-    const newFriend = {
-      idUser,
-      ...user[0],
-      idChat,
-      messageTo: null,
-    };
+    const { rows } = await client.query(acceptRequest, [idFriendShip]);
+    let idChat;
+    if (rows[0]) {
+      await client.query(setRelation, [idFriendShip, relation]);
+      const { rows: chat } = await client.query(addChatQuery, [
+        idUser,
+        idOwner,
+      ]);
+      idChat = chat[0].id;
+    }
 
-    res.status(200).json({ newFriend, relation });
+    res.status(200).json({ idChat, relation, success: rows[0] ? true : false });
   } catch {
     res.status(400).json("bad-request");
   }

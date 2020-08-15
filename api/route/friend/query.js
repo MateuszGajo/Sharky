@@ -73,25 +73,23 @@ const getChatsQuery = `
 select result.id_user_1 as "idUser", chats.id as "idChat", chats.message_to as "messageTo", users.first_name as "firstName", users.last_name as "lastName", users.photo
   from(select id_user_1 
       from friends 
-      where id_user_2=$1
+      where id_user_2=$1 and status='1'
       union
       select id_user_2
       from friends 
-      where id_user_1=$1) as result
-  inner join chats on chats.id_user_1 = result.id_user_1 or chats.id_user_2 = result.id_user_1
-  left join users on users.id = result.id_user_1`;
+      where id_user_1=$1 and status='1') as result
+inner join chats on chats.id_user_1 = result.id_user_1 or chats.id_user_2 = result.id_user_1
+left join users on users.id = result.id_user_1`;
 
 const addUserQuery = `insert into friends(id_user_1, id_user_2, status) values($1,$2,'0') returning id;`;
 
 const removeUserQuery = `delete from friends where id=$1;`;
 
-const acceptRequest = `update friends set status='1' where id=$1`;
+const acceptRequest = `update friends set status='1' where id=$1 returning id`;
 
 const setRelation = `insert into friend_relation(id_friendship, relation) values($1,$2) returning relation`;
 
 const addChatQuery = `insert into chats(id_user_1, id_user_2) values($1, $2) returning id`;
-
-const getUserQuery = `select first_name as "firstName", last_name as "lastName",photo from users where id=$1`;
 
 const removeFriendsRequest = `delete from friends where id=$1`;
 
@@ -111,5 +109,4 @@ module.exports = {
   readMessageQuery,
   updateRelationQuery,
   addChatQuery,
-  getUserQuery,
 };

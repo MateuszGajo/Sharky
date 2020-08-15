@@ -9,10 +9,15 @@ const existUser = (idUser) => {
   return users[idUser].length > 0 ? true : false;
 };
 
+const getSocket = (idUser) => {
+  if (!users[idUser]) return null;
+  return users[idUser];
+};
+
 const userLeave = (idUser, idSocket) => {
   let newUser = [];
   if (users[idUser]) newUser = users[idUser].filter((user) => user != idSocket);
   users[idUser] = newUser;
 };
 
-module.exports = { userJoin, userLeave, existUser };
+module.exports = { userJoin, userLeave, existUser, getSocket };

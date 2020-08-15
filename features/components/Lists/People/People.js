@@ -23,7 +23,9 @@ const People = ({ idUser, keyWords = "" }) => {
   const sentInvite = t("component:lists.people.sent");
   const emptyContent = t("component:lists.people.empty-content");
 
-  const { setError, setPrompt, owner, setNewChat } = useContext(AppContext);
+  const { setError, setPrompt, owner, setNewChat, socket } = useContext(
+    AppContext
+  );
   const [relation, setRelation] = useState({ id: null, name: "" });
   const [friends, setFriends] = useState([]);
   const [friend, setFriend] = useState({ id: null, name: "", idRef: null });
@@ -70,15 +72,21 @@ const People = ({ idUser, keyWords = "" }) => {
     if (inviteType == "accept")
       axios
         .post("/friend/accept", { idFriendShip, idUser: id })
-        .then(({ data: { newFriend, relation } }) => {
-          setInviteType("");
-          setButton("relation");
-          setTitle(t(`component:lists.people.${relation}`));
-          setButtonName(relation);
-          setCollapse(idUser == owner.id && relation ? true : false);
-          setNumber(Number(number) + 1);
-
-          setNewChat(newFriend);
+        .then(({ data: { idChat, relation, success } }) => {
+          if (success) {
+            setInviteType("");
+            setButton("relation");
+            setTitle(t(`component:lists.people.${relation}`));
+            setButtonName(relation);
+            setCollapse(idUser == owner.id && relation ? true : false);
+            setNumber(Number(number) + 1);
+            socket.emit("joinNewChat", { idChat });
+          } else {
+            const newFriends = friends.filter((friend) => {
+              return friend.idFriendShip != idFriendShip;
+            });
+            setFriends(newFriends);
+          }
         })
         .catch(({ response }) => console.log(response));
 

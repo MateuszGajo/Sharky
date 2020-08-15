@@ -64,7 +64,7 @@ const Index = () => {
           />
         </form>
         <Posts newPost={newPost} idUser={1} /> */}
-        {/* <InvitePerson type="group" idTarget={1} /> */}
+        <InvitePerson type="group" idTarget={1} />
       </HomeLayout>
     </>
   );

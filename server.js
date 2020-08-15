@@ -18,8 +18,7 @@ const { client } = require("./config/pgAdaptor");
 const { jwtSecret } = require("./config/keys");
 const bodyParser = require("body-parser");
 const { expressSessionSecret } = require("./config/keys");
-const { userJoin, userLeave, existUser } = require("./utils/users");
-const { joinChat, chatUsers, leaveChat } = require("./utils/chats");
+const { userJoin, userLeave, getSocket, existUser } = require("./utils/users");
 
 const nextI18Next = require("./i18n/server");
 
@@ -50,7 +49,7 @@ left join users on users.id = result.id_user_1`;
       const unReadMessageQuery = `update chats set message_to=$1 where id=$2;`;
       if (!existUser(messageTo))
         client.query(unReadMessageQuery, [messageTo, idChat]);
-      socket.broadcast.to(chatUsers(idChat)).emit("message", {
+      socket.broadcast.to("chat" + idChat).emit("message", {
         idMessage,
         idChat,
         idUser,
@@ -64,6 +63,46 @@ left join users on users.id = result.id_user_1`;
   socket.on("isMessageUnRead", ({ idChat, messageTo }) => {
     const unReadMessageQuery = `update chats set message_to=$1 where id=$2;`;
     client.query(unReadMessageQuery, [messageTo, idChat]);
+  });
+
+  socket.on("joinNewChat", async ({ idChat }) => {
+    const getUsersQuery = `select id_user_1 as "idUser", id_user_2 as "idOwner" from chats where id=$1`;
+    const { rows } = await client.query(getUsersQuery, [idChat]);
+    const userSockets = getSocket(rows[0].idUser);
+    const ownerSockets = getSocket(rows[0].idOwner);
+
+    const getUserQuery = `select first_name as "firstName", last_name as "lastName",photo from users where id=$1`;
+    if (userSockets) {
+      const { rows: user } = await client.query(getUserQuery, [rows[0].idUser]);
+      for (let i = 0; i < userSockets.length; i++) {
+        const soc = socketIO.sockets.connected[userSockets[i]];
+        soc.join("chat" + idChat);
+        socketIO.to(userSockets[i]).emit("newChat", {
+          newChat: {
+            ...user[0],
+            idChat,
+            messageTo: null,
+          },
+        });
+      }
+    }
+
+    if (ownerSockets) {
+      const { rows: user } = await client.query(getUserQuery, [rows[0].idUser]);
+      for (let i = 0; i < ownerSockets.length; i++) {
+        const soc = socketIO.sockets.connected[ownerSockets[i]];
+        soc.join("chat" + idChat);
+        socketIO.to(ownerSockets[i]).emit("newChat", {
+          newChat: {
+            ...user[0],
+            idChat,
+            messageTo: null,
+          },
+        });
+      }
+    }
+
+    // soc.join('groupchat-123');
   });
 
   socket.on("joinChat", async () => {
@@ -84,16 +123,12 @@ left join users on users.id = result.id_user_1`;
 
       const { rows: chats } = await client.query(getChatsQuery, [idUser]);
       for (let i = 0; i < chats.length; i++) {
-        joinChat(chats[i].idChat, socket.id);
-        socket.join(chats[i].idChat);
+        socket.join("chat" + chats[i].idChat);
       }
-      console.log(chatUsers(chats[0].idChat));
     }
   });
 
   socket.on("disconnect", async () => {
-    // console.log(socket.adapter);
-
     const token = jwt.sign(
       {
         exp: Math.floor(Date.now() / 1000) + 60 * 60,
@@ -108,10 +143,6 @@ left join users on users.id = result.id_user_1`;
         data: { id: idUser },
       } = jwt.verify(token, jwtSecret);
       const { rows: chats } = await client.query(getChatsQuery, [idUser]);
-      for (let i = 0; i < chats.length; i++) {
-        leaveChat(chats[i].idChat, socket.id);
-      }
-      // console.log(chatUsers(chats[0].idChat));
       userLeave(idUser, socket.id);
     }
   });
