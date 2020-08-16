@@ -71,6 +71,7 @@ router.post("/block", async (req, res) => {
 
   try {
     await client.query(removeFriendQuery, [idUser, idBlockUser]);
+    await client.query(muteUserQuery, [idUser, idBlockUser, date]);
     await client.query(blockUserQuery, [idUser, idBlockUser, date]);
 
     res.status(200).json({ success: true });

@@ -64,7 +64,13 @@ on a."idFanpage" = c.id
 order by "idSub"
 limit 21 offset $3`;
 
-const addUserQuery = `insert into fanpage_users(id_fanpage, id_user) values($1,$2) returning id`;
+const addUserQuery = `
+insert into fanpage_users(id_fanpage, id_user) 
+select $1, $2 where not exists(select id from fanpage_users where id_fanpage=$1 and id_user=$2)
+returning id
+`;
+
+const getIdUserQuery = `select id from fanpage_users where id_fanpage=$1 and id_user=$2`;
 
 const deleteUserQuery = `delete from fanpage_users where id=$1`;
 
@@ -73,4 +79,5 @@ module.exports = {
   getSortedFanpagesQuery,
   addUserQuery,
   deleteUserQuery,
+  getIdUserQuery,
 };

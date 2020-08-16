@@ -82,9 +82,12 @@ const People = ({ idUser, keyWords = "" }) => {
             setNumber(Number(number) + 1);
             socket.emit("joinNewChat", { idChat });
           } else {
-            const newFriends = friends.filter((friend) => {
-              return friend.idFriendShip != idFriendShip;
-            });
+            setInviteType("");
+            setButton("relation");
+            setTitle(t(`component:lists.people.${relation}`));
+            setButtonName(relation);
+            setCollapse(idUser == owner.id && relation ? true : false);
+            setNumber(Number(number) + 1);
             setFriends(newFriends);
           }
         })
@@ -209,7 +212,7 @@ const People = ({ idUser, keyWords = "" }) => {
           return (
             <Card
               data={data}
-              key={id}
+              key={idFriendShip}
               setRelation={setRelation}
               handleClick={setFriend}
               setInvite={setInvite}

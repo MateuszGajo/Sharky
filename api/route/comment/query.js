@@ -17,8 +17,10 @@ const addCommentQuery = `INSERT INTO post_comments(id_post, id_user, content, da
 
 const likeCommentQuery = `
 insert into comment_like(id_comment, id_user)
-values($1,$2)
+select $1, $2 where not exists(select id from comment_like where id_comment=$1 and id_user=$2) 
 returning id`;
+
+const getIdLikeQuery = `select id from comment_like where id_comment=$1 and id_user=$2`;
 
 const unlikeCommentQuery = `
 delete from comment_like
@@ -30,4 +32,5 @@ module.exports = {
   addCommentQuery,
   likeCommentQuery,
   unlikeCommentQuery,
+  getIdLikeQuery,
 };

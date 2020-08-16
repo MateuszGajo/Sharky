@@ -17,6 +17,7 @@ const {
   editPostQuery,
   deletePostQuery,
   deleteSharePostQuery,
+  getIdPostQuery,
 } = require("./query");
 
 const router = express.Router();
@@ -183,8 +184,19 @@ router.post("/like", async (req, res) => {
   } = jwt.verify(token, jwtSecret);
 
   try {
-    const postLike = await client.query(postLikeQuery, [idUser, idPost]);
-    res.status(200).json({ idPostLike: postLike.rows[0].id });
+    const { rows: newLike } = await client.query(postLikeQuery, [
+      idUser,
+      idPost,
+    ]);
+
+    let idLike;
+
+    if (!newLike[0]) {
+      const { rows } = await client.query(getIdPostQuery, [idUser, idPost]);
+      idLike = rows[0].id;
+    } else idLike = newLike[0].id;
+
+    res.status(200).json({ idLike });
   } catch {
     res.status(400).json("bad-request");
   }

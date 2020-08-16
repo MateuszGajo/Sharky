@@ -7,6 +7,7 @@ const {
   getSortedFanpagesQuery,
   addUserQuery,
   deleteUserQuery,
+  getIdUserQuery,
 } = require("./query");
 
 const router = express.Router();
@@ -85,7 +86,14 @@ router.post("/user/add", async (req, res) => {
       idUser,
     ]);
 
-    res.status(200).json({ id: addUser[0].id });
+    let id;
+
+    if (!addUser[0]) {
+      const { rows } = await client.query(getIdUserQuery, [idFanpage, idUser]);
+      id = rows[0].id;
+    } else id = addUser[0].id;
+
+    res.status(200).json({ id });
   } catch {
     res.status(400).json("bad-request");
   }

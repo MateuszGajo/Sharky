@@ -163,8 +163,8 @@ export const addPost = ({
 export const likePost = ({ idPost, setNewLike, setError }) => {
   axios
     .post("/post/like", { idPost })
-    .then(({ data: { idPostLike } }) =>
-      setNewLike({ idLike: idPostLike, idElement: idPost, type: "post" })
+    .then(({ data: { idLike } }) =>
+      setNewLike({ idLike, idElement: idPost, type: "post" })
     )
     .catch((err) => {
       const {
@@ -329,9 +329,9 @@ export const addComent = ({
 export const likeComment = ({ idComment, setNewLike, setError }) => {
   axios
     .post("/comment/like", { idComment })
-    .then(({ data: { idCommentLike } }) => {
+    .then(({ data: { idLike } }) => {
       setNewLike({
-        idLike: idCommentLike,
+        idLike,
         idElement: idComment,
         type: "comment",
       });
@@ -415,8 +415,8 @@ export const addReply = ({
 export const likeReply = async ({ idReply, setNewLike, setError }) => {
   axios
     .post("/reply/like", { idReply })
-    .then(({ data: { idReplyLike } }) =>
-      setNewLike({ idLike: idReplyLike, idElement: idReply, type: "reply" })
+    .then(({ data: { idLike } }) =>
+      setNewLike({ idLike, idElement: idReply, type: "reply" })
     )
     .catch((err) => {
       const {

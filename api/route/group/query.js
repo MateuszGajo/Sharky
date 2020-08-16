@@ -67,7 +67,12 @@ order by "idSub"
 limit 21 offset $3
 `;
 
-const addUserQuery = `insert into group_users(id_group, id_user, status) values($1,$2,'1') returning id`;
+const addUserQuery = `
+insert into group_users(id_group, id_user, status) 
+select $1,$2,'0' where not exists(select id from group_users where id_group=$1 and id_user=$2) returning id;
+`;
+
+const getIdUserQuery = `select id from group_users where id_group=$1 and id_user=$2`;
 
 const deleteUserQuery = `delete from group_users where id=$1`;
 
@@ -85,4 +90,5 @@ module.exports = {
   addUserQuery,
   deleteUserQuery,
   inviteUserQuery,
+  getIdUserQuery,
 };

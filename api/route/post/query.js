@@ -162,7 +162,12 @@ const addFanpagePostQuery =
 const addPostQuery =
   "insert into posts(id_user, content, date, photo) values($1, $2, $3, $4) RETURNING id";
 
-const postLikeQuery = `INSERT INTO post_like(id_user, id_post) VALUES($1,$2) returning id`;
+const postLikeQuery = `
+INSERT INTO post_like(id_user, id_post) 
+select $1,$2 where not exists (select id from post_like where id_user=$1 and id_post=$2) 
+returning id`;
+
+const getIdPostQuery = `select id from post_like where id_user=$1 and id_post=$2`;
 
 const unLikeQuery = `delete from post_like where id=$1`;
 
@@ -188,4 +193,5 @@ module.exports = {
   editPostQuery,
   deletePostQuery,
   deleteSharePostQuery,
+  getIdPostQuery,
 };

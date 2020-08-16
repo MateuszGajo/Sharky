@@ -1,6 +1,8 @@
 const getUserQuery = `select id, first_name as "firstName", last_name as "lastName", photo from users where id = ANY($1);`;
 
-const muteUserQuery = `insert into user_mute(id_user_1, id_user_2, date) values($1, $2, $3)`;
+const muteUserQuery = `
+insert into user_mute(id_user_1, id_user_2, date) 
+select $1, $2, $3 where not exists (select id from user_mute where id_user_1 =$1 and id_user_2=$2)`;
 
 const removeFriendQuery = `
 delete from friends where id =
@@ -11,8 +13,8 @@ delete from friends where id =
   )`;
 
 const blockUserQuery = `
-  insert into user_block(id_user_1,id_user_2,date)
-    values($1,$2,$3)
+insert into user_block(id_user_1,id_user_2,date)
+select $1,$2,$3 where not exists (select id from user_block where id_user_1=$1 and id_user_2=$2)
     `;
 
 module.exports = {

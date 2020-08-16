@@ -48,14 +48,14 @@ const Index = () => {
       {isPrompt && <Prompt message={isPrompt} />}
       <HomeLayout>
         {/* <People idUser={1} /> */}
-        <form onSubmit={handleSubmitt}>
+        {/* <form onSubmit={handleSubmitt}>
           <Search value={user} onChange={setUser} />
         </form>
         <People idUser={1} keyWords={keyWords} />
         {owner.id && <Groups idUser={1} keyWords={keyWords} />}
-        {owner.id && <Fanpages idUser={1} keyWords={keyWords} />}
+        {owner.id && <Fanpages idUser={1} keyWords={keyWords} />} */}
 
-        {/* <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <MessageBox
             value={content}
             onChange={setContent}
@@ -63,7 +63,7 @@ const Index = () => {
             setFile={setFile}
           />
         </form>
-        <Posts newPost={newPost} idUser={1} /> */}
+        <Posts newPost={newPost} idUser={1} />
         {/* <InvitePerson type="group" idTarget={1} /> */}
       </HomeLayout>
     </>

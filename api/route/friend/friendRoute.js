@@ -99,6 +99,7 @@ router.post("/accept", async (req, res) => {
   try {
     const { rows } = await client.query(acceptRequest, [idFriendShip]);
     let idChat;
+
     if (rows[0]) {
       await client.query(setRelation, [idFriendShip, relation]);
       const { rows: chat } = await client.query(addChatQuery, [

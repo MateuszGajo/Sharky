@@ -7,6 +7,7 @@ const {
   replyQuery,
   likeReplyQuery,
   unlikeReplyQuery,
+  getIdLike,
 } = require("./query");
 
 const router = express.Router();
@@ -96,9 +97,19 @@ router.post("/like", async (req, res) => {
   } = jwt.verify(token, jwtSecret);
 
   try {
-    const replyLike = await client.query(likeReplyQuery, [idReply, idUser]);
+    const { rows: newLike } = await client.query(likeReplyQuery, [
+      idReply,
+      idUser,
+    ]);
 
-    return res.status(200).json({ idReplyLike: replyLike.rows[0].id });
+    let idLike;
+    if (!newLike[0]) {
+      const { rows } = await client.query(getIdLike, [idReply, idUser]);
+
+      idLike = rows[0].id;
+    } else idLike = newLike[0].id;
+
+    return res.status(200).json({ idLike });
   } catch {
     return res.status(400).json("bad-request");
   }

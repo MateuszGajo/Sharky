@@ -87,7 +87,7 @@ insert into friends(id_user_1, id_user_2, status) values($1,$2,'0') returning id
 
 const removeUserQuery = `delete from friends where id=$1;`;
 
-const acceptRequest = `update friends set status='1' where id=$1 returning id`;
+const acceptRequest = `update friends set status='1' where id=$1 and status='0' returning id`;
 
 const setRelation = `insert into friend_relation(id_friendship, relation) values($1,$2) returning relation`;
 
