@@ -28,7 +28,13 @@
             "button":"Send"
         },
         "error":{
-            "bad-request":"Request failed"
+            "bad-request":"Request failed",
+        "last-group-admin":"You're the only admin, give someone admin permission or delete the group"
+        },
+        "invite-person":{
+            "empty-content":"Use search to find your friends",
+            "invite":"Invite",
+            "invitation":"invitation has been sent"
         }
     }  
 }

@@ -28,7 +28,13 @@
             "button":"Prześlij"
         },
         "error":{
-            "bad-request":"Żądanie nie powiodło się"
+            "bad-request":"Żądanie nie powiodło się",
+            "last-group-admin":"Jesteś jedynym administratorem, przyznaj uprawnienia administratora innej osobie lub usuń grupe"
+        },
+        "invite-person":{
+            "empty-content":"Użyj wyszukiwarka aby znaleść znajomych",
+            "invite":"Zaproś",
+            "invitation":"Zaproszenie zostało wysłane"
         }
     }
 }

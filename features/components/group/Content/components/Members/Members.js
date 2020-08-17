@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
-import Card from "../../Lists/Card/Card";
+import Card from "@components/Lists/Card/Card";
 import i18next from "@i18n";
 import AppContext from "@features/context/AppContext";
 
@@ -31,7 +31,6 @@ const Members = ({
       axios
         .post("/group/user/delete", { idSub: id })
         .then(() => {
-          console.log("here");
           const newArrayOfMembers = members.filter(
             (member) => member.idUser != idRef
           );
@@ -50,8 +49,6 @@ const Members = ({
 
   return (
     <div className="list">
-      {console.log(permission)}
-      {console.log(permission == "admin")}
       {members.map((member) => {
         const { idSub, idUser, firstName, lastName, photo, role } = member;
         const data = {

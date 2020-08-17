@@ -30,11 +30,6 @@ export const getUsers = async (users, setUsers, elements) => {
           ...users,
           ...usersKey,
         });
-        console.log(users);
-        console.log({
-          ...users,
-          ...usersKey,
-        });
       })
       .catch((err) => console.log(err));
 };
@@ -96,7 +91,6 @@ export const getPosts = ({
     .post("/post/get", { from, idGroup, idFanpage })
     .then(
       async ({ data: { posts: p, comments, isMorePosts, isMoreComments } }) => {
-        console.log(p);
         await getUsers(users, setUsers, [...p, ...comments]);
         const commentsKey = {};
         for (let i = 0; i < comments.length; i++) {
@@ -169,8 +163,8 @@ export const addPost = ({
 export const likePost = ({ idPost, setNewLike, setError }) => {
   axios
     .post("/post/like", { idPost })
-    .then(({ data: { idPostLike } }) =>
-      setNewLike({ idLike: idPostLike, idElement: idPost, type: "post" })
+    .then(({ data: { idLike } }) =>
+      setNewLike({ idLike, idElement: idPost, type: "post" })
     )
     .catch((err) => {
       const {
@@ -335,9 +329,9 @@ export const addComent = ({
 export const likeComment = ({ idComment, setNewLike, setError }) => {
   axios
     .post("/comment/like", { idComment })
-    .then(({ data: { idCommentLike } }) => {
+    .then(({ data: { idLike } }) => {
       setNewLike({
-        idLike: idCommentLike,
+        idLike,
         idElement: idComment,
         type: "comment",
       });
@@ -421,8 +415,8 @@ export const addReply = ({
 export const likeReply = async ({ idReply, setNewLike, setError }) => {
   axios
     .post("/reply/like", { idReply })
-    .then(({ data: { idReplyLike } }) =>
-      setNewLike({ idLike: idReplyLike, idElement: idReply, type: "reply" })
+    .then(({ data: { idLike } }) =>
+      setNewLike({ idLike, idElement: idReply, type: "reply" })
     )
     .catch((err) => {
       const {

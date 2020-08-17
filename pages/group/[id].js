@@ -1,88 +1,37 @@
 import React, { useState, useEffect, useContext } from "react";
-import { AiOutlinePlus, AiOutlineMinus, AiOutlineDelete } from "react-icons/ai";
-import cx from "classnames";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { FiLock } from "react-icons/fi";
 import Navbar from "@components/Layout/Home/Compound/components/NavBar/Navbar";
-import About from "@components/group/About/About";
-import Members from "@components/group/Members/Members";
-import Home from "@components/group/Home/Home";
+import SideBar from "@components/group/SideBar/SideBar";
+import Content from "@components/group/Content/Content";
 import InvitePerson from "@common/PopUp/InvitePerson/InvitePerson";
 import Spinner from "@components/Spinner/Spinner";
-import AppContext from "@features/context/AppContext";
 import i18next from "@i18n";
-import "../../styles/main.scss";
-const { useTranslation } = i18next;
-const Group = () => {
-  const { t } = useTranslation(["group", "component"]);
+import PopUpError from "@common/PopUp/Error/Error";
+import AppContext from "@features/context/AppContext";
 
+const { useTranslation } = i18next;
+
+import "../../styles/main.scss";
+const Group = () => {
   const router = useRouter();
   const idGroup = router.query.id;
 
-  const { setError } = useContext(AppContext);
+  const { t } = useTranslation(["group"]);
+
+  const { isError } = useContext(AppContext);
+
+  const groupDoesNotExist = t("group:error.does-not-exist");
+
   const [section, setSection] = useState("home");
-  const [isPopupOpen, setStatusOfPopup] = useState(false);
+  const [isPopupOpen, setStatusOfPopUp] = useState(false);
   const [idMember, setIdMember] = useState(null);
   const [role, setRole] = useState("");
   const [groupName, setGroupName] = useState("");
   const [numberOfMembers, setNumberOfMembers] = useState(null);
   const [creationDate, setCreationDate] = useState(null);
   const [isLoading, setStatusOfLoading] = useState(true);
-
-  const homeName = t("group:side-bar.home");
-  const membersName = t("group:side-bar.members");
-  const aboutName = t("group:side-bar.about");
-  const inviteText = t("group:side-bar.invite");
-  const leaveText = t("group:side-bar.leave");
-  const joinText = t("component:lists.groups.button-join");
-  const deleteGroupText = t("group:side-bar.delete");
-
-  const renderComponent = (name) => {
-    switch (name) {
-      case "home":
-        return <Home idGroup={idGroup} />;
-      case "members":
-        return (
-          <Members
-            idGroup={idGroup}
-            role={role}
-            idMember={idMember}
-            setNumberOfMembers={setNumberOfMembers}
-            numberOfMembers={numberOfMembers}
-          />
-        );
-      case "about":
-        return (
-          <About
-            name={groupName}
-            numberOfMembers={numberOfMembers}
-            creationDate={creationDate}
-          />
-        );
-      default:
-        return <Home idGroup={idGroup} />;
-    }
-  };
-
-  const leaveGroup = () => {
-    axios
-      .post("/group/leave", { idMember })
-      .then(() => {
-        setIdMember(null);
-      })
-      .catch(({ data: { message } }) => setError(message));
-  };
-
-  const joinGroup = () => {
-    axios
-      .post("/group/user/add", { idGroup })
-      .then(({ data: { id } }) => {
-        setIdMember(id);
-        setRole("member");
-      })
-      .catch(({ response: { message } }) => setError(message));
-  };
+  const [isGroupExist, setStatusOfExistsGroup] = useState(true);
 
   const getGroupInfo = () => {
     axios
@@ -94,21 +43,15 @@ const Group = () => {
       });
   };
 
-  const deleteGroup = () => {
-    console.log("wchodzimy");
-    axios
-      .post("/group/delete", { idGroup })
-      .then(() => {
-        router.push("/");
-      })
-      .catch(({ response: { message } }) => setError(message));
-  };
-
   useEffect(() => {
     idGroup &&
       axios
         .post("/group/enter", { idGroup })
-        .then(({ data: { idMember, name, role } }) => {
+        .then(({ data: { id, idMember, name, role } }) => {
+          if (!id) {
+            setStatusOfExistsGroup(false);
+            return setStatusOfLoading(false);
+          }
           getGroupInfo();
           setIdMember(idMember);
           idMember && setRole(role);
@@ -120,131 +63,46 @@ const Group = () => {
 
   return (
     <section className="group">
-      <InvitePerson isOpen={isPopupOpen} setStatusOfOpen={setStatusOfPopup} />
+      {isError && <PopUpError message={isError} />}
       <Navbar />
-      <div className="group__container">
-        <div className="group__container__content">
-          {idMember ? (
-            renderComponent(section)
-          ) : (
-            <p className="group__container__content__text">
-              <span className="group__container__content__text__icon">
-                <FiLock />
-              </span>
-              Nie jesteś członkiem grupy
-            </p>
+      {isGroupExist ? (
+        <>
+          {isPopupOpen && (
+            <InvitePerson
+              isOpen={isPopupOpen}
+              setStatusOfOpen={setStatusOfPopUp}
+              idTarget={idGroup}
+              type="group"
+            />
           )}
-        </div>
 
-        <div className="group__container__side-bar">
-          <div className="group__container__side-bar--fixed">
-            <div className="group__container__side-bar__title">
-              <h3 className="group__container__side-bar__title--h3">
-                {groupName}
-              </h3>
-            </div>
-            {idMember ? (
-              <>
-                <div className="group__container__side-bar__navigation">
-                  <div
-                    className={cx(
-                      "group__container__side-bar__navigation__item",
-                      {
-                        "group__container__side-bar__navigation__item--active":
-                          section === "home",
-                      }
-                    )}
-                    onClick={() => setSection("home")}
-                  >
-                    <span className="group__container__side-bar__navigation__item--span">
-                      {homeName}
-                    </span>
-                  </div>
-                  <div
-                    className={cx(
-                      "group__container__side-bar__navigation__item",
-                      {
-                        "group__container__side-bar__navigation__item--active":
-                          section === "members",
-                      }
-                    )}
-                    onClick={() => setSection("members")}
-                  >
-                    <span className="group__container__side-bar__navigation__item--span">
-                      {membersName}
-                    </span>
-                  </div>
-                  <div
-                    className={cx(
-                      "group__container__side-bar__navigation__item",
-                      {
-                        "group__container__side-bar__navigation__item--active":
-                          section === "about",
-                      }
-                    )}
-                    onClick={() => setSection("about")}
-                  >
-                    <span className="group__container__side-bar__navigation__item--span">
-                      {aboutName}
-                    </span>
-                  </div>
-                </div>
-                <div className="group__container__side-bar__manage">
-                  <div
-                    className="group__container__side-bar__manage__item"
-                    onClick={() => leaveGroup()}
-                  >
-                    <span className="group__container__side-bar__item--span">
-                      {leaveText}
-                    </span>
-                    <div className="group__container__side-bar__manage__item__icon group__container__side-bar__manage__item__icon--leave">
-                      <AiOutlineMinus />
-                    </div>
-                  </div>
-                  <div
-                    className="group__container__side-bar__manage__item"
-                    onClick={() => setStatusOfPopup(true)}
-                  >
-                    <span className="group__container__side-bar__item--span">
-                      {inviteText}
-                    </span>
-                    <div className="group__container__side-bar__manage__item__icon group__container__side-bar__manage__item__icon--invite">
-                      <AiOutlinePlus />
-                    </div>
-                  </div>
-                  {role == "admin" && (
-                    <div
-                      className="group__container__side-bar__manage__item"
-                      onClick={deleteGroup}
-                    >
-                      <span className="group__container__side-bar__item--span">
-                        {deleteGroupText}
-                      </span>
-                      <div className="group__container__side-bar__manage__item__icon ">
-                        <AiOutlineDelete />
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </>
-            ) : (
-              <div className="group__container__side-bar__manage">
-                <div
-                  className="group__container__side-bar__manage__item"
-                  onClick={() => joinGroup()}
-                >
-                  <span className="group__container__side-bar__item--span">
-                    {joinText}
-                  </span>
-                  <div className="group__container__side-bar__manage__item__icon group__container__side-bar__manage__item__icon--invite">
-                    <AiOutlinePlus />
-                  </div>
-                </div>
-              </div>
-            )}
+          <div className="group__container">
+            <Content
+              section={section}
+              idGroup={idGroup}
+              role={role}
+              idMember={idMember}
+              setNumberOfMembers={setNumberOfMembers}
+              numberOfMembers={numberOfMembers}
+              groupName={groupName}
+              creationDate={creationDate}
+            />
+            <SideBar
+              setSection={setSection}
+              setStatusOfPopUp={setStatusOfPopUp}
+              groupName={groupName}
+              idMember={idMember}
+              idGroup={idGroup}
+              setIdMember={setIdMember}
+              setRole={setRole}
+              section={section}
+              role={role}
+            />
           </div>
-        </div>
-      </div>
+        </>
+      ) : (
+        <div className="group__does-not-exist">{groupDoesNotExist}</div>
+      )}
     </section>
   );
 };

@@ -11,7 +11,11 @@ const Index = () => {
 
   if (!initialized) return <Spinner />;
 
-  return <div>das</div>;
+  return (
+    <>
+      <div>das</div>
+    </>
+  );
 };
 
 export default Index;

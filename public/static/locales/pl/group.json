@@ -11,5 +11,9 @@
         "invite":"Zaproś",
         "leave":"Opuść",
         "delete":"Usuń"
+    },
+    "error":{
+        "does-not-exist":"Grupa nie istnieje"
     }
-}
+    }
+   

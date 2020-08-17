@@ -1,6 +1,6 @@
 import React from "react";
-import MessageBox from "../../../common/MessageBox/MessageBox";
-import Posts from "../../Lists/Posts/Posts";
+import MessageBox from "@common/MessageBox/MessageBox";
+import Posts from "@components/Lists/Posts/Posts";
 
 const Home = ({ idGroup }) => {
   return (

@@ -1,28 +1,33 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import cx from "classnames";
 import { MdClose } from "react-icons/md";
+import { AiOutlineSearch } from "react-icons/ai";
+import axios from "axios";
+import InfiniteScroll from "react-infinite-scroll-component";
 import Search from "@common/Search/Search";
 import Card from "@components/Lists/Card/Card";
+import Spinner from "@components/Spinner/Spinner";
+import AppContext from "@features/context/AppContext";
+import i18next from "@i18n";
+const { useTranslation } = i18next;
 
-const InvitePerson = ({ isOpen = true, setStatusOfOpen }) => {
-  const people = [
-    {
-      id: 123,
-      firstName: "Jan",
-      lastName: "Kowalski",
-      photo: "profile.png",
-    },
-    {
-      id: 123,
-      firstName: "Konrad",
-      lastName: "Walczak",
-      photo: "profile.png",
-    },
-  ];
+const InvitePerson = ({ isOpen = true, setStatusOfOpen, type, idTarget }) => {
+  const { t } = useTranslation();
 
+  const { setError } = useContext(AppContext);
   const scrollBar = useRef(null);
+
+  const [people, setPeople] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [isScrolling, setStatusOfScrolling] = useState(false);
+  const [invite, setInvite] = useState({ idRef: null });
+  const [isMore, setStatusOfMore] = useState(null);
+
+  const emptyContent = t("common:pop-up.invite-person.empty-content");
+  const description = t("component:lists.people.description");
+  const inviteText = t("common:pop-up.invite-person.invite");
+  const invitationSent = t("common:pop-up.invite-person.invitation");
+  const sentInvite = t("component:lists.people.sent");
 
   let navTimeout = null;
 
@@ -37,8 +42,37 @@ const InvitePerson = ({ isOpen = true, setStatusOfOpen }) => {
     }, 1000);
   };
 
+  const fetchData = (from, keyWords = "", prevState = people) => {
+    axios
+      .post("/people/get", { idTarget, keyWords, from, type })
+      .then(({ data: { friends, isMore } }) => {
+        setPeople([...prevState, ...friends]);
+        setStatusOfMore(isMore);
+      })
+      .catch(({ response: { message } }) => setError(message));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    fetchData(0, searchText, []);
+  };
+
+  useEffect(() => {
+    const { idRef, setStatusOfInvitation } = invite;
+    if (idRef) {
+      axios
+        .post(`/${type}/user/invite`, { idUser: idRef, idTarget })
+        .then(() => setStatusOfInvitation(true))
+        .catch(({ response: { message } }) => setError(message));
+    }
+  }, [invite]);
+
   useEffect(() => {
     scrollBar.current.addEventListener("wheel", showScroll);
+    fetchData(0, searchText, []);
+    return () => {
+      removeEventListener("wheel", showScroll);
+    };
   }, []);
   return (
     <section
@@ -54,30 +88,67 @@ const InvitePerson = ({ isOpen = true, setStatusOfOpen }) => {
           <MdClose />
         </div>
         <div className="invite-person__container__search">
-          <Search value={searchText} onChange={setSearchText} />
+          <form
+            onSubmit={handleSubmit}
+            className="invite-person__container__search__form"
+          >
+            <Search value={searchText} onChange={setSearchText} />
+          </form>
         </div>
-        <div
-          className={cx("invite-person__container__people primary-scroll", {
-            "primary-scroll-active": isScrolling,
-          })}
-        >
-          {people.map((person) => {
-            const { id, firstName, lastName, photo } = person;
-            const data = {
-              refType: "profile",
-              refId: id,
-              photo: photo,
-              name: `${firstName} ${lastName}`,
-              title: "Zaproś",
-              button: "join",
-            };
-            return (
-              <div className="invite-person__container__people__item">
-                <Card data={data} />
-              </div>
-            );
-          })}
-        </div>
+        {people.length ? (
+          <div
+            className={cx("invite-person__container__people primary-scroll", {
+              "primary-scroll-active": isScrolling,
+            })}
+            id="scroll"
+          >
+            <InfiniteScroll
+              dataLength={people.length}
+              next={() => fetchData(people.length, searchText)}
+              hasMore={isMore}
+              loader={<Spinner />}
+              scrollableTarget={"scroll"}
+            >
+              {people.map((person) => {
+                const {
+                  idUser,
+                  firstName,
+                  lastName,
+                  photo,
+                  numberOfFriends,
+                  isInvitationSent,
+                } = person;
+
+                const data = {
+                  refType: "profile",
+                  idRef: idUser,
+                  photo: photo,
+                  isInvitationSent,
+                  sentInvite,
+                  name: `${firstName} ${lastName}`,
+                  title: inviteText,
+                  description,
+                  number: numberOfFriends,
+                  button: "join",
+                };
+                return (
+                  <div className="invite-person__container__people__item">
+                    <Card data={data} handleClick={setInvite} />
+                  </div>
+                );
+              })}
+            </InfiniteScroll>
+          </div>
+        ) : (
+          <div className="invite-person__empty-content">
+            <div className="invite-person__empty-content__icon">
+              <AiOutlineSearch />
+            </div>
+            <span className="invite-person__empty-content__text">
+              {emptyContent}
+            </span>
+          </div>
+        )}
       </div>
     </section>
   );

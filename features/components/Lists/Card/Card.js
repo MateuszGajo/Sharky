@@ -129,7 +129,10 @@ const Card = ({ data, setRelation, handleClick, setInvite }) => {
                 )}
                 {collapse ? (
                   <Collapse
+                    id={id}
                     idRef={idRef}
+                    setButtonName={setButtonName}
+                    setTitle={setTitle}
                     buttonName={buttonName}
                     greenName={greenC.name}
                     greenTitle={greenC.title}

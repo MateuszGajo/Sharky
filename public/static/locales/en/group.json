@@ -2,7 +2,7 @@
     "members":{
         "admin":"Admin",
         "moderator":"Moderator",
-        "member":"Członek"
+        "member":"Member"
     },
     "side-bar":{
         "home":"Home",
@@ -11,5 +11,8 @@
         "invite":"Invite",
         "leave":"Leave",
         "delete":"Delete"
+    },
+    "error":{
+        "does-not-exist":"Group doesn't exist"
     }
 }

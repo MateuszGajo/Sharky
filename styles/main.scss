@@ -9,8 +9,10 @@
 @import "../features/common/PrimaryButton/primaryButton";
 @import "../features/common/PrimaryInput/primaryInput";
 @import "../features/common/SecondaryInput/secondaryInput";
-@import "../features/components/group/About/about";
-@import "../features/components/group/Home/home";
+@import "../features/components/group/Content/components/About/about";
+@import "../features/components/group/Content/components/Home/home";
+@import "../features/components/group/Content/content";
+@import "../features/components/group/SideBar/sideBar";
 @import "../features/common/PopUp/Error/error";
 @import "../features/common/PopUp/Prompt/prompt";
 @import "../features/common/PopUp/Report/report";
