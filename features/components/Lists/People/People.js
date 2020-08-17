@@ -175,7 +175,7 @@ const People = ({ idUser, keyWords = "" }) => {
           } = friend;
 
           const data = {
-            ref: "profile",
+            refType: "profile",
             id,
             idRef: idFriendShip,
             subTitle: addText,
