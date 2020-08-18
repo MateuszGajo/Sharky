@@ -28,7 +28,13 @@
             "button":"Prześlij"
         },
         "error":{
-            "bad-request":"Żądanie nie powiodło się"
+            "bad-request":"Żądanie nie powiodło się",
+            "last-fanpage-admin":"Jesteś jedynym adminem, przyznaj uprawnienia administratora innej osobie lub usuń fanpage"
+        },
+        "invite-person":{
+            "empty-content":"Użyj wyszukiwarka aby znaleść znajomych",
+            "invite":"Zaproś",
+            "invitation":"Zaproszenie zostało wysłane"
         }
     }
 }

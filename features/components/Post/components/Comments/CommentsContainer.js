@@ -31,7 +31,7 @@ const withContainer = (WrappedComponent) => {
     const handleSubmit = (e) => {
       e.preventDefault();
       addReply({
-        idComment: comment.id,
+        idComment: comment.idComment,
         content: reply,
         date: new Date(),
         clearText: setReply,
@@ -42,7 +42,7 @@ const withContainer = (WrappedComponent) => {
 
     const gReplies = () => {
       getReplies({
-        idComment: comment.id,
+        idComment: comment.idComment,
         from: replies.length,
         replies,
         setReplies,
@@ -53,7 +53,10 @@ const withContainer = (WrappedComponent) => {
     };
 
     useEffect(() => {
-      if (newComment.type == "comment" && newComment.idElement == comment.id) {
+      if (
+        newComment.type == "comment" &&
+        newComment.idElement == comment.idComment
+      ) {
         if (!isRepliesOpen) setStatusOfOpenReplies(true);
         setReplies([
           {
@@ -106,7 +109,7 @@ const withContainer = (WrappedComponent) => {
             {replies.map((comment) => {
               return (
                 <WrappedComponent
-                  key={comment.id}
+                  key={comment.idComment}
                   comment={comment}
                   focusCollapse={focusCollapse}
                   focusIcon={focusIcon}

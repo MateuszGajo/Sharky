@@ -8,6 +8,6 @@
     "moderator":"Moderator",
     "admin":"Admin",
     "delete":"delete",
-    "my-self":"You"
-
+    "my-self":"You",
+    "does-not-exist":"Fanpage dosen't exist"
 }

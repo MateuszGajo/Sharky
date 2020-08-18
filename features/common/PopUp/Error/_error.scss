@@ -14,7 +14,7 @@
 .error__container{
     width: 40vw;
     height:50vh;
-    padding:20px 5px;
+    padding:20px 10px;
     background-color: #fff;
     display:flex;
     flex-direction: column;
@@ -26,8 +26,14 @@
     font-size: 3.5rem;
 }
 
+.error__container__text{
+    display:flex;
+    justify-content: center;
+}
+
 .error__container__text--span{
     font-size: 2rem;
+    text-align: center;
 }
 
 @media(max-width:1023px){

@@ -7,6 +7,14 @@ let socket;
 const MyApp = ({ Component, pageProps }) => {
   const [owner, setOwner] = useState({});
   const [newMessage, setNewMessage] = useState({});
+  const [newChat, setNewChat] = useState({
+    idUser: null,
+    idChat: null,
+    messageTo: null,
+    firstName: "",
+    lastName: "",
+    photo: "",
+  });
   const [isError, setError] = useState("");
   const [isPrompt, setPrompt] = useState("");
 
@@ -22,6 +30,10 @@ const MyApp = ({ Component, pageProps }) => {
         setNewMessage({ idMessage, idChat, idUser, message, date, messageTo });
       }
     );
+
+    socket.on("newChat", ({ newChat }) => {
+      setNewChat(newChat);
+    });
   }, [SERVER_URL]);
 
   return (
@@ -34,6 +46,8 @@ const MyApp = ({ Component, pageProps }) => {
         isPrompt,
         setPrompt,
         setError,
+        newChat,
+        setNewChat,
       }}
     >
       <Component {...pageProps} />

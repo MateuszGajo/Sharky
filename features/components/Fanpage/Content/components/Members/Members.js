@@ -63,7 +63,6 @@ const Members = ({ idFanpage, role: permission }) => {
   }, []);
   return (
     <div className="fanpage-members">
-      {console.log(members)}
       <InfiniteScroll
         dataLength={members.length}
         next={() => fetchData(members.length)}

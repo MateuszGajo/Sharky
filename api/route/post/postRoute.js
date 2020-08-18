@@ -11,6 +11,13 @@ const {
   addGroupPostQuery,
   addFanpagePostQuery,
   addPostQuery,
+  postLikeQuery,
+  unLikeQuery,
+  postShareQuery,
+  editPostQuery,
+  deletePostQuery,
+  deleteSharePostQuery,
+  getIdPostQuery,
 } = require("./query");
 
 const router = express.Router();
@@ -44,15 +51,18 @@ router.post("/add", async (req, res) => {
     if (err) {
       return res.status(400).json("bad-request");
     }
-
-    const {
-      file: { mimetype, filename: fileName, size },
-    } = req;
-    if (mimetype !== "image/jpeg" && mimetype !== "image/png") {
-      return res.status(415).json("wrong-file-type");
-    }
-    if (size > 200000) {
-      return res.status(413).json("file-too-large");
+    let fileName = null;
+    if (req.file) {
+      const {
+        file: { mimetype, filename, size },
+      } = req;
+      fileName = filename;
+      if (mimetype !== "image/jpeg" && mimetype !== "image/png") {
+        return res.status(415).json("wrong-file-type");
+      }
+      if (size > 200000) {
+        return res.status(413).json("file-too-large");
+      }
     }
 
     const { content, date, idGroup, idFanpage } = req.body;
@@ -110,9 +120,17 @@ router.post("/get", async (req, res) => {
 
   try {
     if (idFanpage)
-      postsResult = await client.query(getFanpagePostsQuery, [idFanpage, from]);
+      postsResult = await client.query(getFanpagePostsQuery, [
+        idFanpage,
+        idOwner,
+        from,
+      ]);
     else if (idGroup)
-      postsResult = await client.query(getGroupPostsQuery, [idGroup, from]);
+      postsResult = await client.query(getGroupPostsQuery, [
+        idGroup,
+        idOwner,
+        from,
+      ]);
     else postsResult = await client.query(getPostsQuery, [idOwner, from]);
 
     const idPosts = [];
@@ -166,9 +184,19 @@ router.post("/like", async (req, res) => {
   } = jwt.verify(token, jwtSecret);
 
   try {
-    const postLikeQuery = `INSERT INTO post_like(id_user, id_post) VALUES($1,$2) returning id`;
-    const postLike = await client.query(postLikeQuery, [idUser, idPost]);
-    res.status(200).json({ idPostLike: postLike.rows[0].id });
+    const { rows: newLike } = await client.query(postLikeQuery, [
+      idUser,
+      idPost,
+    ]);
+
+    let idLike;
+
+    if (!newLike[0]) {
+      const { rows } = await client.query(getIdPostQuery, [idUser, idPost]);
+      idLike = rows[0].id;
+    } else idLike = newLike[0].id;
+
+    res.status(200).json({ idLike });
   } catch {
     res.status(400).json("bad-request");
   }
@@ -178,7 +206,6 @@ router.post("/unlike", async (req, res) => {
   const { idLike } = req.body;
 
   try {
-    const unLikeQuery = `delete from post_like where id=$1`;
     await client.query(unLikeQuery, [idLike]);
     res.status(200).json({ success: true });
   } catch {
@@ -201,8 +228,6 @@ router.post("/share", async (req, res) => {
     data: { id: idUser },
   } = jwt.verify(token, jwtSecret);
 
-  const postShareQuery = `insert into post_share(id_post, id_user, date) values($1,$2,$3) returning id`;
-
   try {
     const postShare = await client.query(postShareQuery, [
       idPost,
@@ -218,8 +243,6 @@ router.post("/share", async (req, res) => {
 router.post("/edit", async (req, res) => {
   const { idPost, content } = req.body;
 
-  const editPostQuery = `update posts set content=$1 where id=$2`;
-
   try {
     await client.query(editPostQuery, [content, idPost]);
 
@@ -232,8 +255,6 @@ router.post("/edit", async (req, res) => {
 router.post("/delete", async (req, res) => {
   const { idPost } = req.body;
 
-  const deletePostQuery = `delete from posts where id=$1`;
-
   try {
     await client.query(deletePostQuery, [idPost]);
 
@@ -245,8 +266,6 @@ router.post("/delete", async (req, res) => {
 
 router.post("/share/delete", async (req, res) => {
   const { idShare } = req.body;
-
-  const deleteSharePostQuery = `delete from post_share where id=$1`;
 
   try {
     await client.query(deleteSharePostQuery, [idShare]);

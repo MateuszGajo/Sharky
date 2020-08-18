@@ -123,6 +123,7 @@ const Button = ({
               setButtonName,
               number,
               setNumber,
+              id,
               idFriendShip: idRef,
             });
           } else {
@@ -144,7 +145,6 @@ const Button = ({
           <BsEnvelope />
         </span>
       )}
-
       <span
         className="card__item__info__second-column__buttons--main-button--span"
         data-testid="card-button-text"
