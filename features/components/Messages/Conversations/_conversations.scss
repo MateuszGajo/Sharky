@@ -2,48 +2,6 @@
     width:40%;
 }
 
-.conversations__item{
-    display:flex;
-    border-bottom:1px solid $shadowColor;
-    cursor:pointer;
-    &:hover{
-        background-color: $secondaryBackgroundColor;
-    }
-}
-
-.conversations__item__icon--group{
-    display:block;
-    width:60px;
-    height:60px;
-    color:grey;
-    background-color: $primaryBackgroundColor;
-}
-
-.conversations__item__photo--img{
-    display:block;
-    width:60px;
-    height:60px;
-    object-fit: cover;
-}
-
-.conversations__item__content{
-    display:flex;
-    flex-direction: column;
-    justify-content: space-around;
-    margin-left:10px;
-}
-
-.conversations__item__content--last-message--span{
-    display:-webkit-box;
-    text-overflow:ellipsis;
-    word-break: break-all;
-    word-wrap: break-word;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    color:#a8a6a2;
-}
-
 @media(max-width:1023px){
     .conversations{
         width:100%;

@@ -12,15 +12,16 @@ import { FaRegUser } from "react-icons/fa";
 import cx from "classnames";
 import Router from "next/router";
 import { WizzardContext } from "../../context/WizzardContext";
-import useTranslation from "next-translate/useTranslation";
+import i18next from "@i18n";
+const { useTranslation } = i18next;
 
 const NavBar = () => {
+  const { t } = useTranslation(["component"]);
+
   const { isNavOpen, setStatusOfNav } = useContext(WizzardContext);
   const navbar = useRef(null);
   const navbarWrapper = useRef(null);
   const [isNavbarScrolling, setStatusOfNavbarScrolling] = useState(false);
-
-  const { t } = useTranslation();
 
   const homeName = t("component:layout.home.navbar.home");
   const worldName = t("component:layout.home.navbar.world");
@@ -32,9 +33,7 @@ const NavBar = () => {
   const profileName = t("component:layout.home.navbar.profile");
   const settingsName = t("component:layout.home.navbar.settings");
 
-  let timeout = {
-    navbar: null,
-  };
+  let timeout;
 
   const navbarItems = [
     {
@@ -94,18 +93,23 @@ const NavBar = () => {
   ];
 
   const showScroll = () => {
-    if (timeout.navbar) {
-      clearTimeout(timeout.navbar);
+    if (timeout) {
+      clearTimeout(timeout);
     }
     setStatusOfNavbarScrolling(true);
 
-    timeout.navbar = setTimeout(() => {
+    timeout = setTimeout(() => {
       setStatusOfNavbarScrolling(false);
     }, 1000);
   };
 
   useEffect(() => {
     navbar.current.addEventListener("wheel", showScroll);
+
+    return () => {
+      removeEventListener("whell", showScroll);
+      clearTimeout(timeout);
+    };
   }, []);
 
   useEffect(() => {
