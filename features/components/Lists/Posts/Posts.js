@@ -1,51 +1,89 @@
-import React, { useRef } from "react";
-import Post from "../../Post/Post";
+import React, { useContext, useEffect, useRef } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
+import Post from "@components/Post/Post";
+import Spinner from "@components/Spinner/Spinner";
+import withWizzard from "@components/Post/withWizzard";
+import WizzardContext from "@components/Post/context/WizzardContext";
+import { getPosts } from "@components/Post/services/functions/index";
+import i18next from "@i18n";
 
-const PostList = ({
-  posts = [
-    {
-      id: 1,
-      userId: 123,
-      content: "dasdsa",
-      date: new Date("2019-03-25"),
-      photo: "profile.png",
-    },
-    {
-      id: 2,
-      userId: 123,
-      content: "dasdsa",
-      date: new Date("2015-03-25"),
-      photo: null,
-    },
-  ],
-  users = {
-    123: {
-      id: 123,
-      firstName: "Jan",
-      lastName: "Kowalski",
-      photo: "profile.png",
-    },
-  },
-  isComment = false,
-}) => {
+const { useTranslation } = i18next;
+
+const PostList = ({ idFanpage = null, idGroup = null }) => {
+  const { t } = useTranslation(["component"]);
+  const endOfContent = t("component:lists.posts.end-of-content");
+  const noContent = t("component:lists.posts.no-content");
+  const {
+    posts,
+    setPosts,
+    users,
+    setUsers,
+    setStatusOfMoreComments,
+    setStatusOfMorePosts,
+    muteUser,
+    isMorePosts,
+  } = useContext(WizzardContext);
+
+  const fetchData = (from) => {
+    getPosts({
+      idFanpage,
+      idGroup,
+      posts,
+      setPosts,
+      from,
+      users,
+      setUsers,
+      setStatusOfMorePosts,
+      setStatusOfMoreComments,
+    });
+  };
+
+  useEffect(() => {
+    fetchData(0);
+  }, []);
+
+  useEffect(() => {
+    if (muteUser.idUser !== null) {
+      const newPosts = posts?.filter((post) => {
+        const idUser = post.idUserShare || post.idUser;
+
+        return muteUser.idUser != idUser;
+      });
+      setPosts(newPosts);
+    }
+  }, [muteUser]);
+
   const focusElement = useRef(null);
+
   return (
     <div className="post-list">
-      {posts.map((post) => {
-        const user = users[post.userId];
-        return (
-          <div className="post-list__post" key={post.id}>
-            <Post
-              post={post}
-              user={user}
-              focusElement={focusElement}
-              isComment={isComment}
-            />
-          </div>
-        );
-      })}
+      <InfiniteScroll
+        dataLength={posts.length}
+        next={() => fetchData(posts.length)}
+        hasMore={isMorePosts}
+        loader={<Spinner />}
+        endMessage={
+          <p className="post-list__end-of-content">
+            <b>{posts.length ? endOfContent : noContent}</b>
+          </p>
+        }
+      >
+        {posts.map((post) => {
+          return (
+            <div className="post-list__post" key={post.id}>
+              <Post
+                post={post}
+                user={users[post.idUser]}
+                userShare={users[post.idUserShare]}
+                focusElement={focusElement}
+                single={false}
+              />
+            </div>
+          );
+        })}
+      </InfiniteScroll>
     </div>
   );
 };
 
-export default PostList;
+export default withWizzard(PostList);

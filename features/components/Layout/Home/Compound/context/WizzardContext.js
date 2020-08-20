@@ -9,4 +9,6 @@ export const WizzardContext = React.createContext({
   setPostContent: () => {},
   isNavOpen: false,
   setStatusOfNav: () => {},
+  chat: { user: {}, idChat: null },
+  setChat: () => {},
 });

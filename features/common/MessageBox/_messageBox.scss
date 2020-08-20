@@ -31,10 +31,122 @@
   margin: 0 5px 5px 0;
 }
 
+.message-box__downbar{
+  padding:0 5px 3px 5px;
+  display:flex;
+  justify-content: space-between;
+}
+
+.message-box__downbar__upload{
+  position:relative;
+  display:flex;
+  align-items: flex-end;
+}
+
+.message-box__downbar__upload__photo{
+  position:relative;
+}
+
+.message-box__downbar__upload--img{
+  display: block;
+  object-fit: cover;
+  &:hover + .message-box__downbar____upload__photo__overlay{
+    display:block;
+  }
+}
+
+.message-box__downbar__upload--img--small{
+  height:37px;
+}
+.message-box__downbar__upload--img--medium{
+  height:45px;
+}
+.message-box__downbar__upload--img--large{
+  height:50px
+}
+.message-box__downbar__upload--img--x-large{
+  height:55px;
+}
+
+
+
+.message-box__downbar____upload__photo__overlay{
+  display:none;
+  position:absolute;
+  right:0;
+  left:0;
+  top:0;
+  bottom:0;
+  background-color: rgba(0,0,0,0.6);
+  &:hover{
+    display:block;
+  }
+}
+
+.message-box__downbar____upload__photo__overlay__delete{
+  position:absolute;
+  right:0;
+  top:0;
+  color:white;
+  cursor:pointer;
+}
+
+.message-box__downbar__upload__label{
+  display: flex;
+  align-items: flex-end;
+  color:$primaryColor;
+  cursor:pointer;
+}
+
+.message-box__downbar__upload__label--small{
+  font-size: 2.5rem;
+}
+
+.message-box__downbar__upload__label--medium{
+  font-size: 3rem;
+}
+
+.message-box__downbar__upload__label--large{
+  font-size: 4rem;
+}
+
+.message-box__downbar__upload__label--x-large{
+  font-size: 4.2rem;
+}
+
+
+.message-box__downbar__upload--file{
+  display:block;
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  background-color: $primaryColor;
+}
+
+.message-box__downbar__sent-button{
+  display:flex;
+  align-items: flex-end;
+}
+
+
+
 @media(max-width:1919px){
   .message-box {
     width: 650px;
   }
+  .message-box__downbar__upload--img--small{
+    height:35px;
+  }
+  .message-box__downbar__upload--img--medium{
+    height:43px;
+  }
+  .message-box__downbar__upload--img--large{
+    height:48px
+  }
+  .message-box__downbar__upload--img--x-large{
+    height:53px;
+  }
+  
 }
 
 
@@ -42,11 +154,37 @@
   .message-box {
     width: 550px;
   }
+
+  .message-box__downbar__upload--img--small{
+    height:33px;
+  }
+  .message-box__downbar__upload--img--medium{
+    height:41px;
+  }
+  .message-box__downbar__upload--img--large{
+    height:46px
+  }
+  .message-box__downbar__upload--img--x-large{
+    height:51px;
+  }
+  
 }
 
 
 @media(max-width:1023px){
   .message-box {
     width: 100%;
+  }
+  .message-box__downbar__upload--img--small{
+    height:31px;
+  }
+  .message-box__downbar__upload--img--medium{
+    height:41px;
+  }
+  .message-box__downbar__upload--img--large{
+    height:44px
+  }
+  .message-box__downbar__upload--img--x-large{
+    height:49px;
   }
 }
