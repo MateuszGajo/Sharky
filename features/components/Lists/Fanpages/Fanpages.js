@@ -8,7 +8,7 @@ import AppContext from "@features/context/AppContext";
 import Spinner from "@components/Spinner/Spinner";
 const { useTranslation } = i18next;
 
-const Fanpages = ({ idUser, keyWords }) => {
+const Fanpages = ({ idUser, keyWords, onlySubscribed = false }) => {
   const { t } = useTranslation(["component"]);
   const description = t("component:lists.fanpages.description");
   const buttonSubscribe = t("component:lists.fanpages.button-subscribe");
@@ -23,7 +23,7 @@ const Fanpages = ({ idUser, keyWords }) => {
 
   const fetchData = (from) => {
     axios
-      .post("/fanpage/get", { from, idUser, keyWords })
+      .post("/fanpage/get", { from, idUser, keyWords, onlySubscribed })
       .then(({ data: { fanpages: f, isMore } }) => {
         setFanpages([...fanpages, ...f]);
         setStatusOfMore(isMore);
@@ -65,7 +65,7 @@ const Fanpages = ({ idUser, keyWords }) => {
   useEffect(() => {
     if (keyWords != null)
       axios
-        .post("/fanpage/get", { from: 0, idUser, keyWords })
+        .post("/fanpage/get", { from: 0, idUser, keyWords, onlySubscribed })
         .then(({ data: { fanpages, isMore } }) => {
           setFanpages(fanpages);
           setStatusOfMore(isMore);

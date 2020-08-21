@@ -31,6 +31,56 @@ order by "isInvited","isInvitationSent",date
 limit 21 offset $3`;
 
 const getSortedFriendsQuery = `
+with idFriends as (
+	select id_user_2 as "idUser" from friends where id_user_1=$3 and status='1'
+	union
+	select id_user_1 as "idUser" from friends where id_user_2=$3 and status='1'
+),
+
+userSorted as (
+  select id from users 
+  where(
+	  (lower(first_name) like lower($1) and lower(last_name) like lower($2)) 
+  	   or 
+	  (lower(last_name) like lower($1) and lower(first_name) like lower($2)))
+	   and
+	   id in (select * from idFriends)
+  ),
+  
+  userSortedCounted as(
+  select a."idUser",sum(a.count) as "numberOfFriends"
+  from(select id_user_1 as "idUser", count(id_user_1)  from friends where id_user_1 in(select * from userSorted) group by "idUser"
+    union 
+    select id_user_2 as "idUser", count(id_user_2)  from friends where id_user_2 in(select * from userSorted) group by "idUser") as a
+  group by a."idUser"
+  ),
+  
+  userRelation as (
+    select  id_user_1 as "idUser",id as "idFriendShip",status,date, CASE WHEN status='0'  THEN true  else null end as "isInvited", null as "isInvitationSent"from friends where id_user_1 in (select * from userSorted) and id_user_2=$3
+    union
+    select id_user_2 as "idUser",id as "idFriendShip" ,status,date,null as "isInvited",CASE WHEN status='0'  THEN true  else null end as "isInvitationSent" from friends where id_user_2 in (select * from userSorted) and id_user_1=$3
+  )
+  
+  select d.*,e.first_name as "firstName", e.last_name as "lastName", e.photo
+  from(select a.*,b.relation,c."numberOfFriends" 
+     from userRelation as a 
+     left join friend_relation as b on a."idFriendShip" =b.id_friendship 
+     inner join userSortedCounted as c on  a."idUser" = c."idUser"
+     union
+     select a."idUser",null as "idFriendShip", null as status, null as date,null as "isInvited",null as "isInvitationSent", null as relation, b."numberOfFriends" 
+     from userSortedCounted as a 
+     inner join userSortedCounted as b on  a."idUser" = b."idUser"
+     where a."idUser" not in (select "idUser" from userRelation)
+     union
+     select id as "idUser", null as idFriendShip,null as status, null as date,null as "isInvited",null as "isInvitationSent", null as relation,  0 as numberOfFriends
+     from userSorted 
+     where id not in (select "idUser" from userSortedCounted)) as d
+  inner join users as e on d."idUser" = e.id
+  order by "isInvited","isInvitationSent",date
+  limit 21 offset $4
+`;
+
+const getSortedUsersQuery = `
 with userSorted as (
   select id from users 
   where (lower(first_name) like lower($1) and lower(last_name) like lower($2)) 
@@ -102,6 +152,7 @@ const updateRelationQuery = `update friend_relation set new_relation=$1, id_user
 module.exports = {
   getFriendsQuery,
   getSortedFriendsQuery,
+  getSortedUsersQuery,
   getChatsQuery,
   addUserQuery,
   removeUserQuery,

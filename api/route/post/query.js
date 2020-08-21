@@ -66,6 +66,36 @@ with idUsers as(
   limit 21 offset $2
 `;
 
+const getUserPostQuery = `
+with idPosts as(
+  select id  as "idPost" from posts where id_user=$1 and id_group is null and id_fanpage is null
+  ),
+  
+  numberOfShares as(
+  select a."idPost", count(b.id) as "numberOfShares" from idPosts as a  left join post_share as  b on a."idPost" = b.id_post group by a."idPost"
+  ),
+  
+  numberOfComments as(
+  select a."idPost", count(b.id) as "numberOfComments" from idPosts as a  left join post_comments as  b on a."idPost" = b.id_post group by a."idPost"
+  ),
+  
+  numberOfLikes as(
+  select a."idPost", count(b.id) as "numberOfLikes" from idPosts as a  left join post_like as  b on a."idPost" = b.id_post group by a."idPost"
+  )
+  
+  select e.*, f.id as "idLike"
+  from(select a.id as "idPost", a.id_user as "idUser", a.content, a.photo, a.date, b."numberOfShares", c."numberOfComments", d."numberOfLikes",null as "idShare", null as "idUserShare"  
+    from posts as a
+    inner join numberOfShares as b on a.id = b."idPost"
+    inner join numberOfComments as c on a.id=c."idPost"
+    inner join numberOfLikes as d on a.id =d."idPost"
+    where id in (select * from idPosts)) as e
+  left join post_like as f on
+  e."idPost" = f.id_post and f.id_user =$2
+  order by e.date desc
+  limit 21 offset $3
+`;
+
 const getFanpagePostsQuery = `
 with idPosts as(
  select id  as "idPost" from posts where id_fanpage=$1
@@ -98,32 +128,32 @@ with idPosts as(
 
 const getGroupPostsQuery = `
 with idPosts as(
-    select id  as "idPost" from posts where id_group=$1
-    ),
-    
-    numberOfShares as(
-    select a."idPost", count(b.id) as "numberOfShares" from idPosts as a  left join post_share as  b on a."idPost" = b.id_post group by a."idPost"
-    ),
-    
-    numberOfComments as(
-    select a."idPost", count(b.id) as "numberOfComments" from idPosts as a  left join post_comments as  b on a."idPost" = b.id_post group by a."idPost"
-    ),
-    
-    numberOfLikes as(
-    select a."idPost", count(b.id) as "numberOfLikes" from idPosts as a  left join post_like as  b on a."idPost" = b.id_post group by a."idPost"
-    )
-    
-    select e.*, f.id as "idLike"
-    from(select a.id as "idPost", a.id_user as "idUser", a.content, a.photo, a.date, b."numberOfShares", c."numberOfComments", d."numberOfLikes",null as "idShare", null as "idUserShare"  
-      from posts as a
-      inner join numberOfShares as b on a.id = b."idPost"
-      inner join numberOfComments as c on a.id=c."idPost"
-      inner join numberOfLikes as d on a.id =d."idPost"
-      where id in (select * from idPosts)) as e
-    order by e.date desc
-    left join post_like as f on
-    e."idPost" = f.id_post and f.id_user =$2
-    limit 21 offset $2
+  select id  as "idPost" from posts where id_group=$1
+  ),
+  
+  numberOfShares as(
+  select a."idPost", count(b.id) as "numberOfShares" from idPosts as a  left join post_share as  b on a."idPost" = b.id_post group by a."idPost"
+  ),
+  
+  numberOfComments as(
+  select a."idPost", count(b.id) as "numberOfComments" from idPosts as a  left join post_comments as  b on a."idPost" = b.id_post group by a."idPost"
+  ),
+  
+  numberOfLikes as(
+  select a."idPost", count(b.id) as "numberOfLikes" from idPosts as a  left join post_like as  b on a."idPost" = b.id_post group by a."idPost"
+  )
+  
+  select e.*, f.id as "idLike"
+  from(select a.id as "idPost", a.id_user as "idUser", a.content, a.photo, a.date, b."numberOfShares", c."numberOfComments", d."numberOfLikes",null as "idShare", null as "idUserShare"  
+    from posts as a
+    inner join numberOfShares as b on a.id = b."idPost"
+    inner join numberOfComments as c on a.id=c."idPost"
+    inner join numberOfLikes as d on a.id =d."idPost"
+    where id in (select * from idPosts)) as e
+  order by e.date desc
+  left join post_like as f on
+  e."idPost" = f.id_post and f.id_user =$2
+  limit 21 offset $3
 `;
 
 const getCommentsQuery = `
@@ -181,6 +211,7 @@ const deleteSharePostQuery = `delete from post_share where id=$1`;
 
 module.exports = {
   getPostsQuery,
+  getUserPostQuery,
   getFanpagePostsQuery,
   getGroupPostsQuery,
   getCommentsQuery,

@@ -5,6 +5,7 @@ const { jwtSecret } = require("../../../config/keys");
 const {
   getFriendsQuery,
   getSortedFriendsQuery,
+  getSortedUsersQuery,
   getChatsQuery,
   addUserQuery,
   removeUserQuery,
@@ -127,7 +128,7 @@ router.post("/decline", async (req, res) => {
 });
 
 router.post("/get/people", async (req, res) => {
-  const { idUser, from } = req.body;
+  const { idUser, from, onlyFriends } = req.body;
   let { keyWords } = req.body;
   if (keyWords) {
     keyWords = keyWords.split(/\s+/);
@@ -163,12 +164,20 @@ router.post("/get/people", async (req, res) => {
     }
   } else {
     try {
-      result = await client.query(getSortedFriendsQuery, [
-        keyWords[0] + "%",
-        (keyWords[1] ? keyWords[1] : "") + "%",
-        idOwner,
-        from,
-      ]);
+      if (onlyFriends)
+        result = await client.query(getSortedFriendsQuery, [
+          keyWords[0] + "%",
+          (keyWords[1] ? keyWords[1] : "") + "%",
+          idOwner,
+          from,
+        ]);
+      else
+        result = await client.query(getSortedUsersQuery, [
+          keyWords[0] + "%",
+          (keyWords[1] ? keyWords[1] : "") + "%",
+          idOwner,
+          from,
+        ]);
     } catch {
       return res.status(400).json("bad-request");
     }

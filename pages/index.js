@@ -9,6 +9,7 @@ import Prompt from "@common/PopUp/Prompt/Prompt";
 import People from "@components/Lists/People/People";
 import Groups from "@components/Lists/Groups/Groups";
 import Fanpages from "@components/Lists/Fanpages/Fanpages";
+import Photos from "@components/Lists/Photos/Photos";
 import MessageBox from "@common/MessageBox/MessageBox";
 import InvitePerson from "@common/PopUp/InvitePerson/InvitePerson";
 import Search from "@common/Search/Search";
@@ -52,11 +53,15 @@ const Index = () => {
         <form onSubmit={handleSubmitt}>
           <Search value={user} onChange={setUser} />
         </form>
-        <People idUser={1} keyWords={keyWords} />
-        {owner.id && <Groups idUser={1} keyWords={keyWords} />}
-        {owner.id && <Fanpages idUser={1} keyWords={keyWords} />}
+        {/* <People idUser={1} keyWords={keyWords} onlyFriends={true} />
+        {owner.id && (
+          <Groups idUser={2} keyWords={keyWords} onlySubscribed={true} />
+        )}
+        {owner.id && (
+          <Fanpages idUser={2} keyWords={keyWords} onlySubscribed={true} />
+        )} */}
 
-        {/* <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <MessageBox
             value={content}
             onChange={setContent}
@@ -64,7 +69,8 @@ const Index = () => {
             setFile={setFile}
           />
         </form>
-        <Posts newPost={newPost} idUser={1} /> */}
+        <Posts newPost={newPost} authorPost={true} idUser={2} />
+        {/* <Photos idUser={1} /> */}
         {/* <InvitePerson type="group" idTarget={1} /> */}
       </HomeLayout>
     </>

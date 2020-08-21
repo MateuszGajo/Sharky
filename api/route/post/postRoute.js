@@ -5,6 +5,7 @@ const { client } = require("../../../config/pgAdaptor");
 const { jwtSecret } = require("../../../config/keys");
 const {
   getPostsQuery,
+  getUserPostQuery,
   getFanpagePostsQuery,
   getGroupPostsQuery,
   getCommentsQuery,
@@ -102,7 +103,7 @@ router.post("/add", async (req, res) => {
 });
 
 router.post("/get", async (req, res) => {
-  const { from, idFanpage, idGroup } = req.body;
+  const { from, idFanpage, idGroup, idUser, authorPost } = req.body;
   const token = jwt.sign(
     {
       exp: Math.floor(Date.now() / 1000) + 60 * 60,
@@ -128,6 +129,12 @@ router.post("/get", async (req, res) => {
     else if (idGroup)
       postsResult = await client.query(getGroupPostsQuery, [
         idGroup,
+        idOwner,
+        from,
+      ]);
+    else if (authorPost)
+      postsResult = await client.query(getUserPostQuery, [
+        idUser,
         idOwner,
         from,
       ]);
