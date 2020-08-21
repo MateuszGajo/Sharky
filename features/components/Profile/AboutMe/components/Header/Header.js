@@ -14,41 +14,48 @@ const Header = ({ info, setNumberOfPhotos, idUser }) => {
   const { setError, owner } = useContext(AppContex);
 
   const [photo, setPhoto] = useState(initialPhoto);
-  const [isPhotoLoading, setStuatusOfPhotoLoading] = useState(false);
-  const [uploadPhotoPrompt, setUploadPhotoPrompt] = useState({
-    status: null,
-    text: "",
-  });
+  const [uploadPhotoPrompt, setUploadPhotoPrompt] = useState();
 
   const addPhoto = t("profile:add-photo");
+  const photoAddedSuccessfully = t("profile:photo-added-successfully");
+  const changePhoto = t("profile:change-photo");
 
   const phototextTimeOut = () => {
-    setTimeout(() => {
-      setUploadPhotoPrompt({ status: null, text: "" });
-    }, 1500);
+    setTimeout(() => setUploadPhotoPrompt(""), 1500);
   };
 
   const handlePhotoUpload = (e) => {
-    setStuatusOfPhotoLoading(true);
+    const file = e.target.files[0];
+
+    if (file.type != "image/png" && file.type != "image/jpeg") {
+      return setError("wrong-file-type");
+    }
+    if (file.size > 200000) {
+      return setError("file-too-large");
+    }
     const data = new FormData();
-    data.append("file", e.target.files[0]);
+    data.append("file", file);
 
     axios
       .post("/user/add/photo", data)
       .then(() => {
-        setUploadPhotoPrompt({ status: 200, text: "text" });
+        setUploadPhotoPrompt(photoAddedSuccessfully);
         phototextTimeOut();
-        setStuatusOfPhotoLoading(false);
         setNumberOfPhotos((prev) => prev + 1);
       })
-      .catch(({ response: { status, data: message } }) => {
-        setStuatusOfPhotoLoading(false);
-        if (status == 400) setError(message);
-        else setUploadPhotoPrompt(message);
-      });
+      .catch(({ response: { data: message } }) => setError(message));
   };
 
   const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+
+    if (file.type != "image/png" && file.type != "image/jpeg") {
+      return setError("wrong-file-type");
+    }
+    if (file.size > 200000) {
+      return setError("file-too-large");
+    }
+
     const data = new FormData();
     data.append("file", e.target.files[0]);
 
@@ -81,7 +88,7 @@ const Header = ({ info, setNumberOfPhotos, idUser }) => {
         <div className="profile__container__person__photo__overlay">
           <label htmlFor="profile-change">
             <div className="profile__container__person__photo__overlay__button">
-              Button
+              {changePhoto}
             </div>
           </label>
           <input
@@ -93,19 +100,10 @@ const Header = ({ info, setNumberOfPhotos, idUser }) => {
         </div>
       </div>
       <div className="profile__container__person__add-photo">
-        {uploadPhotoPrompt.status ? (
-          <div
-            className={cx("profile__container__person__add-photo__text", {
-              "profile__container__person__add-photo__text--red":
-                uploadPhotoPrompt.status != 200,
-              "profile__container__person__add-photo__text--green":
-                uploadPhotoPrompt.status == 200,
-            })}
-          >
-            {uploadPhotoPrompt.text}
+        {uploadPhotoPrompt ? (
+          <div className="profile__container__person__add-photo__text">
+            {uploadPhotoPrompt}
           </div>
-        ) : isPhotoLoading ? (
-          <Spinner />
         ) : (
           <>
             <div className="profile__container__person__add-photo__title">

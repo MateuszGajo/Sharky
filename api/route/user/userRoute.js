@@ -8,6 +8,7 @@ const { jwtSecret } = require("../../../config/keys");
 const {
   getUserQuery,
   getUserInfoQuery,
+  getPhotosQuery,
   muteUserQuery,
   removeFriendQuery,
   blockUserQuery,
@@ -107,15 +108,6 @@ router.post("/change/photo", async (req, res) => {
 
     const fileName = filename;
 
-    if (mimetype !== "image/jpeg" && mimetype !== "image/png") {
-      return res.status(415).json("wrong-file-type");
-    }
-
-    if (size > 200000) {
-      return res.status(413).json("file-too-large");
-    }
-    console.log(fileName, idOwner);
-
     try {
       await client.query(changePhotoQuery, [fileName, idOwner]);
       await client.query(addPhotoQuery, [
@@ -153,6 +145,26 @@ router.post("/info", async (req, res) => {
   } catch {
     res.status(400).json("bad-request");
   }
+});
+
+router.post("/get/photo", async (req, res) => {
+  const { idUser, from } = req.body;
+  let result;
+  try {
+    result = await client.query(getPhotosQuery, [idUser, from]);
+  } catch {
+    res.status(400).json("bad-request");
+  }
+  let { rows: photos } = result;
+  let isMore = true;
+
+  if (photos.length < 7) {
+    isMore = false;
+  } else {
+    photos = photos.slice(0, -1);
+  }
+
+  res.status(200).json({ photos, isMore });
 });
 
 router.post("/mute", async (req, res) => {

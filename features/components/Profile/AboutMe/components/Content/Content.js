@@ -3,7 +3,13 @@ import { TiInfoLargeOutline } from "react-icons/ti";
 import i18next from "@i18n";
 const { useTranslation } = i18next;
 
-const Content = ({ info, numberOfPhotos, setChooseItem, aboutItemName }) => {
+const Content = ({
+  info,
+  numberOfPhotos,
+  setChooseItem,
+  aboutItemName,
+  setStatusOfDisplayAbout,
+}) => {
   const { t } = useTranslation();
   const {
     numberOfFriends,

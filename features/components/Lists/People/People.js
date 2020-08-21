@@ -6,9 +6,10 @@ import { AiOutlineSearch } from "react-icons/ai";
 import Spinner from "@components/Spinner/Spinner";
 import AppContext from "@features/context/AppContext";
 import i18n from "@i18n";
+import { uuid } from "uuidv4";
 const { useTranslation } = i18n;
 
-const People = ({ idUser, keyWords = "" }) => {
+const People = ({ idUser, keyWords = "", onlyFriends = false }) => {
   const { t } = useTranslation(["component"]);
 
   const relationChangeText = t("component:lists.people.relation-change");
@@ -34,8 +35,9 @@ const People = ({ idUser, keyWords = "" }) => {
 
   const fetchData = (from) => {
     axios
-      .post("/friend/get/people", { idUser, from, keyWords })
+      .post("/friend/get/people", { idUser, from, keyWords, onlyFriends })
       .then(({ data: { friends: f, isMore } }) => {
+        console.log(f);
         setFriends([...friends, ...f]);
         setStatusOfMore(isMore);
       });
@@ -109,8 +111,9 @@ const People = ({ idUser, keyWords = "" }) => {
   useEffect(() => {
     if (keyWords != null)
       axios
-        .post("/friend/get/people", { idUser, from: 0, keyWords })
+        .post("/friend/get/people", { idUser, from: 0, keyWords, onlyFriends })
         .then(({ data: { friends, isMore } }) => {
+          console.log(friends);
           setFriends(friends);
           setStatusOfMore(isMore);
         });
@@ -212,7 +215,7 @@ const People = ({ idUser, keyWords = "" }) => {
           return (
             <Card
               data={data}
-              key={idFriendShip}
+              key={id}
               setRelation={setRelation}
               handleClick={setFriend}
               setInvite={setInvite}

@@ -6,5 +6,7 @@
     "posts":"Posts",
     "about-me":"About me",
     "lack-of-information":"Lack of information",
-    "add-photo":"Add photo"
+    "add-photo":"Add photo",
+    "photo-added-successfully":"Photo added successfully",
+    "change-photo":"Change photo"
 }

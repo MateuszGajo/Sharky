@@ -58,12 +58,16 @@ select $1,$2,$3 where not exists (select id from user_block where id_user_1=$1 a
 const addPhotoQuery = `insert into user_photos(id_user, name, date) values($1, $2, $3)`;
 
 const changePhotoQuery = `update users set photo=$1 where id=$2`;
+const getPhotosQuery = `
+    select id, name, date from user_photos where id_user=$1 limit 7 offset $2
+`;
 
 module.exports = {
   getUserQuery,
   getUserInfoQuery,
   muteUserQuery,
   removeFriendQuery,
+  getPhotosQuery,
   blockUserQuery,
   addPhotoQuery,
   changePhotoQuery,

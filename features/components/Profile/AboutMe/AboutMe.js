@@ -39,6 +39,7 @@ const ProfileInfo = ({ setChooseItem, info, idUser }) => {
           numberOfPhotos={numberOfPhotos}
           setChooseItem={setChooseItem}
           aboutItemName={aboutItemName}
+          setStatusOfDisplayAbout={setStatusOfDisplayAbout}
         />
       )}
     </div>

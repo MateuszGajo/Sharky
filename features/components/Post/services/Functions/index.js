@@ -79,6 +79,8 @@ export const blockUser = ({
 export const getPosts = ({
   idFanpage,
   idGroup,
+  idUser,
+  authorPost,
   posts,
   setPosts,
   from,
@@ -88,7 +90,7 @@ export const getPosts = ({
   setStatusOfMoreComments,
 }) => {
   axios
-    .post("/post/get", { from, idGroup, idFanpage })
+    .post("/post/get", { from, idGroup, idFanpage, authorPost, idUser })
     .then(
       async ({ data: { posts: p, comments, isMorePosts, isMoreComments } }) => {
         await getUsers(users, setUsers, [...p, ...comments]);

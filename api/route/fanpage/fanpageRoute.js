@@ -5,6 +5,7 @@ const { jwtSecret } = require("../../../config/keys");
 const {
   getFanpagesQuery,
   getSortedFanpagesQuery,
+  getSortedSubscribedFanpagesQuery,
   addUserQuery,
   deleteUserQuery,
   getIdUserQuery,
@@ -13,7 +14,7 @@ const {
 const router = express.Router();
 
 router.post("/get", async (req, res) => {
-  const { from, idUser, keyWords } = req.body;
+  const { from, idUser, keyWords, onlySubscribed } = req.body;
 
   const token = jwt.sign(
     {
@@ -41,12 +42,20 @@ router.post("/get", async (req, res) => {
     }
   } else {
     try {
-      getFanpages = await client.query(getSortedFanpagesQuery, [
-        `%${keyWords}%`,
-        idOwner,
+      if (onlySubscribed)
+        getFanpages = await client.query(getSortedSubscribedFanpagesQuery, [
+          idUser,
+          `%${keyWords}%`,
+          idOwner,
+          from,
+        ]);
+      else
+        getFanpages = await client.query(getSortedFanpagesQuery, [
+          `%${keyWords}%`,
+          idOwner,
 
-        from,
-      ]);
+          from,
+        ]);
     } catch {
       return res.status(400).json("bad-request");
     }

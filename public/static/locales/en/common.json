@@ -28,7 +28,9 @@
             "button":"Send"
         },
         "error":{
-            "bad-request":"Request failed"
+            "bad-request":"Request failed",
+            "wrong-file-type":"Wrong file type",
+            "file-too-large":"File is too large"
         },
         "invite-person":{
             "empty-content":"Use search to find your friends",

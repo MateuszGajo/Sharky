@@ -69,19 +69,16 @@
   }
 
 
-  
+
   .profile__container__person__add-photo__text{
+    display:flex;
+    align-items: center;
     font-weight: bold;
     font-size: 1.3rem;
-  }
-
-  .profile__container__person__add-photo__text--green{
     color:$primaryColor;
   }
 
-  .profile__container__person__add-photo__text--red{
-    color:red;
-  }
+  
 
   .profile__container__person__add-photo__title{
     display:flex;
@@ -121,6 +118,12 @@
       height:200px;
       width:200px;
       border-radius:50%;
+    }
+  }
+
+  @media(max-width:1365px){
+    .profile__container__person__add-photo__text{
+      font-size: 1.2rem;
     }
   }
   

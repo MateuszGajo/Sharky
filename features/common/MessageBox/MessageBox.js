@@ -1,13 +1,16 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { AiOutlineClose } from "react-icons/ai";
 import cx from "classnames";
 import PrimaryButton from "../PrimaryButton/PrimaryButton";
 import i18next from "@i18n";
+import AppContext from "@features/context/AppContext";
 const { useTranslation } = i18next;
 
 const MessageBox = ({ value, onChange, btnSize = "medium", file, setFile }) => {
   const { t } = useTranslation();
+
+  const { setError } = useContext(AppContext);
   const title = t("common:message-box.title");
   const description = t("common:message-box.description");
   const buttonText = t("common:message-box.button");
@@ -15,6 +18,14 @@ const MessageBox = ({ value, onChange, btnSize = "medium", file, setFile }) => {
   const imageRef = useRef(null);
 
   const previewImage = (e) => {
+    const file = e.target.files[0];
+
+    if (file.type != "image/png" && file.type != "image/jpeg") {
+      return setError("wrong-file-type");
+    }
+    if (file.size > 200000) {
+      return setError("file-too-large");
+    }
     const reader = new FileReader();
 
     reader.onload = (e) => {
