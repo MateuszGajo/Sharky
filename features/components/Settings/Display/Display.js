@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { IoMdArrowBack } from "react-icons/io";
-import useTranslation from "next-translate/useTranslation";
-import PrimaryButton from "../../../common/PrimaryButton/PrimaryButton";
-import PrimaryInput from "../../../common/PrimaryInput/PrimaryInput";
+import PrimaryButton from "@common/PrimaryButton/PrimaryButton";
+import PrimaryInput from "@common/PrimaryInput/PrimaryInput";
+import i18next from "@i18n";
+import axios from "axios";
+const { useTranslation } = i18next;
 
 const Display = ({
   chooseSetting,
@@ -16,13 +18,25 @@ const Display = ({
   languages,
 }) => {
   const { name, title } = chooseSetting;
-  const { t } = useTranslation();
+  const { t } = useTranslation(["settings"]);
 
   const changeTitle = t("settings:change");
   const informationTitle = t("settings:information.title");
   const informationDescription = t("settings:information.description");
   const confirmPasswordName = t("settings:account.confirm-password");
   const buttonText = t("settings:button");
+
+  useEffect(() => {
+    name == "country" &&
+      axios
+        .get("/country/get")
+        .then(({ data: { countries } }) => console.log(countries));
+
+    name == "language" &&
+      axios
+        .get("/language/get")
+        .then(({ data: { languages } }) => console.log(languages));
+  }, [name]);
 
   return (
     <>

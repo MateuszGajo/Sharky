@@ -3,7 +3,6 @@ import { render, fireEvent } from "@testing-library/react";
 import * as HomeLayoutCompound from "../HomeLayoutCompound";
 import { WizzardContext } from "../context/WizzardContext";
 
-<<<<<<< HEAD
 it("is post content and search content correct", () => {
   const onsubmit = jest.fn();
   const searchContent = "something";
@@ -43,12 +42,6 @@ it("is the massanger show", () => {
   const mockContext = {
     isMessage: false,
     setStatusOfMessage: jest.fn(),
-=======
-it("does messanger shows", () => {
-  const mockContext = {
-    isMessengerClose: true,
-    setStatusOfMessenger: jest.fn(),
->>>>>>> common-layout
   };
   const { getByTestId } = render(
     <WizzardContext.Provider value={mockContext}>
@@ -56,13 +49,7 @@ it("does messanger shows", () => {
     </WizzardContext.Provider>
   );
 
-<<<<<<< HEAD
   fireEvent.click(getByTestId("friend1"));
 
   expect(mockContext.setStatusOfMessage).toBeCalledWith(true);
-=======
-  fireEvent.click(getByTestId("friend0"));
-
-  expect(mockContext.setStatusOfMessenger).toBeCalledWith(false);
->>>>>>> common-layout
 });

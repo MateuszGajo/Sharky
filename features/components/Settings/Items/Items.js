@@ -1,7 +1,8 @@
 import React from "react";
 import cx from "classnames";
 import { IoIosArrowDown } from "react-icons/io";
-import useTranslation from "next-translate/useTranslation";
+import i18next from "@i18n";
+const { useTranslation } = i18next;
 
 const Items = ({
   isAccountCollapsed,
@@ -12,7 +13,7 @@ const Items = ({
   isGeneralCollapsed,
   setStatusOfGeneralCollapse,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["settings"]);
 
   const title = t("settings:title");
   const accountTitle = t("settings:account.title");
