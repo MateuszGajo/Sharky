@@ -1,17 +1,22 @@
 {
-    "title":"Settings",
+    "title":"Ustawienia",
     "change":"Zmień",
      "account":{
         "title":"Konto",
         "email":"E-mail",
         "password":"Hasło",
         "confirm-password":"Powtórz hasło",
-        "phone":"Telefon"
+        "phone":"Telefon",
+        "email-changed":"Zmieniono e-mail",
+        "password-changed":"Zmieniono hasło",
+        "telephone-changed":"Zmieniono numer telefon"
     },
     "general":{
         "title":"Ogólne",
         "country":"Kraj",
-        "language":"Język"
+        "language":"Język",
+        "country-changed":"Zmieniono kraj",
+        "language-changed":"Zmieniono język"
     },
     "information":{
         "title":"Pamiętaj",
@@ -20,7 +25,8 @@
     "button":"Zapisz",
     "countries":{
         "poland":"Polska",
-        "usa":"USA"
+        "usa":"USA",
+        "germany":"Niemcy"
     },
     "languages":{
         "polish":"Polski",

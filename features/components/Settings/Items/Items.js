@@ -46,13 +46,12 @@ const Items = ({
           >
             {userSettings.account.map((setting) => {
               const { name, id, value } = setting;
-              const title = t(`settings:account.${name}`);
               return (
                 <div
                   className="settings__container__wrapper__account__item__item setting-item__container"
                   key={id}
                   onClick={() => {
-                    setChooseSetting({ ...setting, title });
+                    setChooseSetting({ ...setting, title: name });
                     setInputValue(value);
                   }}
                 >
@@ -84,20 +83,19 @@ const Items = ({
           >
             {userSettings.general.map((setting) => {
               const { name, id, value } = setting;
-              const title = t(`settings:general.${name}`);
               return (
                 <div
                   className="settings__container__wrapper__general__item__item setting-item__container"
                   key={id}
                   onClick={() => {
-                    setChooseSetting({ ...setting, title });
+                    setChooseSetting({ ...setting, title: name });
                     if (name == "country")
                       setInputValue(t(`settings:countries.${value}`));
                     else if (name === "language")
                       setInputValue(t(`settings:languages.${value}`));
                   }}
                 >
-                  {title}
+                  {t(`settings:general.${name}`)}
                 </div>
               );
             })}

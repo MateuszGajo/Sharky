@@ -6,12 +6,17 @@
         "email":"E-mail",
         "confirm-password":"Confirm password",
         "password":"Password",
-        "phone":"Telephone"
+        "phone":"Telephone",
+        "email-changed":"Email changed",
+        "password-changed":"Password changed",
+        "telephone-changed":"Telephone number changed"
     },
     "general":{
         "title":"General",
         "country":"Country",
-        "language":"Language"
+        "language":"Language",
+        "country-changed":"Country Changed",
+        "language-changed":"Language changed"
     },
     "information":{
         "title":"Remeber",
@@ -20,7 +25,8 @@
     "button":"save",
     "countries":{
         "poland":"Poland",
-        "usa":"USA"
+        "usa":"USA",
+        "germany":"Germany"
     },
     "languages":{
         "polish":"Polish",

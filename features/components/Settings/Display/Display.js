@@ -1,25 +1,42 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { IoMdArrowBack } from "react-icons/io";
 import PrimaryButton from "@common/PrimaryButton/PrimaryButton";
 import PrimaryInput from "@common/PrimaryInput/PrimaryInput";
 import i18next from "@i18n";
 import axios from "axios";
-const { useTranslation } = i18next;
+import AppContext from "@features/context/AppContext";
+import CountryCode from "../Utils/CountryCode";
+const { useTranslation, i18n } = i18next;
 
 const Display = ({
   chooseSetting,
   setChooseSetting,
-  handleSubmit,
   inputValue,
   setInputValue,
   confirmPassword,
   setConfirmPassword,
-  countries,
-  languages,
+  setOpenConfirmPopUp,
+  setConfirmUser,
+  confirmUser,
+  userSettings,
+  setUserSettings,
 }) => {
-  const { name, title } = chooseSetting;
-  const { t } = useTranslation(["settings"]);
+  const { name } = chooseSetting;
+  const {
+    t,
+    i18n: { language },
+  } = useTranslation(["settings"]);
 
+  const { setError, setPrompt } = useContext(AppContext);
+
+  const [countries, setCountries] = useState([]);
+  const [languages, setLanguages] = useState([]);
+
+  const title = t(
+    `settings:${chooseSetting.category == "account" ? "account" : "general"}.${
+      chooseSetting.title
+    }`
+  );
   const changeTitle = t("settings:change");
   const informationTitle = t("settings:information.title");
   const informationDescription = t("settings:information.description");
@@ -28,22 +45,97 @@ const Display = ({
 
   useEffect(() => {
     name == "country" &&
-      axios
-        .get("/country/get")
-        .then(({ data: { countries } }) => console.log(countries));
+      axios.get("/country/get").then(({ data: { countries: data } }) => {
+        const countries = data.map((item) => {
+          const { name } = item;
+          return {
+            name,
+            value: t(`settings:countries.${name}`),
+          };
+        });
+        setCountries(countries);
+      });
 
     name == "language" &&
-      axios
-        .get("/language/get")
-        .then(({ data: { languages } }) => console.log(languages));
+      axios.get("/language/get").then(({ data: { languages: data } }) => {
+        const languages = data.map((item) => {
+          const { name } = item;
+          return {
+            name,
+            value: t(`settings:languages.${name}`),
+          };
+        });
+        setLanguages(languages);
+      });
   }, [name]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (chooseSetting.category === "account") {
+      if (setting.name == "password" && inputValue != confirmPassword) {
+        return setPrompt("błąd");
+      }
+      setOpenConfirmPopUp(true);
+      setConfirmUser(true);
+    } else if (chooseSetting.category === "general") {
+      const value = (chooseSetting.name == "country"
+        ? countries
+        : chooseSetting.name == "language" && languages
+      ).find(
+        (item) =>
+          item.value.toLowerCase().trim() == inputValue.toLowerCase().trim()
+      );
+
+      if (!value) setError("invalid-value");
+
+      axios
+        .post(`/user/change/${chooseSetting.name}`, { value: value.name })
+        .then(() => {
+          const choseCountryCode = CountryCode(value.name.toLowerCase());
+          if (chooseSetting.name == "language" && language != choseCountryCode)
+            i18n.changeLanguage(choseCountryCode);
+
+          const newUserSetting = {
+            account: [...userSettings.account],
+            general: userSettings.general.map((setting) => {
+              return setting.name === chooseSetting.name
+                ? { ...setting, value: value.value }
+                : setting;
+            }),
+          };
+          setUserSettings(newUserSetting);
+          setPrompt(t(`settings:general.${chooseSetting.name}-changed`));
+        })
+        .catch(({ response }) => console.log(response));
+    }
+  };
+
+  useEffect(() => {
+    if (confirmUser === true) {
+      axios
+        .post(`/user/change/${chooseSetting.name}`, { value: inputValue })
+        .then(() => {
+          const newUserSetting = {
+            account: userSettings.account.map((item) => {
+              return item.name === chooseSetting.name
+                ? { ...item, value: inputValue }
+                : item;
+            }),
+            general: [...userSettings.general],
+          };
+          setPrompt(t(`settings:account.${chooseSetting.name}-changed`));
+          setUserSettings(newUserSetting);
+          setConfirmUser(false);
+        });
+    }
+  }, [confirmUser]);
 
   return (
     <>
       {name !== "" ? (
         <div className="settings__container__display">
           <h1 className="settings__container__display--title">
-            {changeTitle + " " + chooseSetting.title}
+            {changeTitle + " " + title}
             <span
               className="settings__container__display--title--icon"
               onClick={() => setChooseSetting({ name: "", value: "" })}
@@ -60,7 +152,7 @@ const Display = ({
                 value={inputValue}
                 onChange={setInputValue}
                 size="x-large"
-                title={chooseSetting.title}
+                title={title}
                 withOutMargin={true}
                 autocompleteData={
                   name === "country"

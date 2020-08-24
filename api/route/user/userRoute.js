@@ -10,6 +10,10 @@ const {
   muteUserQuery,
   removeFriendQuery,
   blockUserQuery,
+  verifyCountryQuery,
+  changeCountryQuery,
+  verifyLanguageQuery,
+  changeLanguageQuery,
 } = require("./query");
 
 router.post("/get", async (req, res) => {
@@ -42,6 +46,68 @@ router.post("/get/photo", async (req, res) => {
   }
 
   res.status(200).json({ photos, isMore });
+});
+
+router.post("/change/country", async (req, res) => {
+  console.log("kraj");
+  let { value } = req.body;
+  value = value.toLowerCase();
+
+  const token = jwt.sign(
+    {
+      exp: Math.floor(Date.now() / 1000) + 60 * 60,
+      data: {
+        id: 1,
+      },
+    },
+    jwtSecret
+  );
+
+  const {
+    data: { id: idOwner },
+  } = jwt.verify(token, jwtSecret);
+
+  try {
+    const country = await client.query(verifyCountryQuery, [value]);
+    if (!country.rows[0]) return res.status(406).json("country-does-not-exist");
+
+    await client.query(changeCountryQuery, [value, idOwner]);
+
+    res.status(200).json({ sucess: true });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
+router.post("/change/language", async (req, res) => {
+  console.log("zmianiamy język");
+  let { value } = req.body;
+  value = value.toLowerCase();
+  const token = jwt.sign(
+    {
+      exp: Math.floor(Date.now() / 1000) + 60 * 60,
+      data: {
+        id: 1,
+      },
+    },
+    jwtSecret
+  );
+
+  const {
+    data: { id: idOwner },
+  } = jwt.verify(token, jwtSecret);
+
+  try {
+    const language = await client.query(verifyLanguageQuery, [value]);
+    if (!language.rows[0])
+      return res.status(406).json("language-does-not-exist");
+
+    await client.query(changeLanguageQuery, [value, idOwner]);
+
+    res.status(200).json({ success: true });
+  } catch {
+    res.status(400).json("bad-request");
+  }
 });
 
 router.post("/mute", async (req, res) => {

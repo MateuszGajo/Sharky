@@ -1,17 +1,20 @@
-import React, { useState, useEffect } from "react";
-import * as HomeLayout from "../features/components/Layout/Home/Compound/HomeLayoutCompound";
-import ConfirmUser from "../features/common/PopUp/ConfirmUser/ConfirmUser";
-import Items from "../features/components/Settings/Items/Items";
-import Display from "../features/components/Settings/Display/Display";
+import React, { useState, useContext } from "react";
+import * as HomeLayout from "@components/Layout/Home/Compound/HomeLayoutCompound";
+import ConfirmUser from "@common/PopUp/ConfirmUser/ConfirmUser";
+import Items from "@components/Settings/Items/Items";
+import Display from "@components/Settings/Display/Display";
+import Error from "@common/PopUp/Error/Error";
+import Prompt from "@common/PopUp/Prompt/Prompt";
 import i18next from "@i18n";
+import AppContext from "@features/context/AppContext";
 import "../styles/main.scss";
-const { useTranslation } = i18next;
+const { useTranslation, i18n } = i18next;
 
-const Settings = ({
-  countries = ["poland", "usa"],
-  languages = ["english", "polish"],
-}) => {
+const Settings = () => {
   const { t } = useTranslation(["settings"]);
+
+  const { isPrompt, isError } = useContext(AppContext);
+
   const [isAccountCollapsed, setStatusOfAccountCollapse] = useState(true);
   const [isGeneralCollapsed, setStatusOfGeneralCollapse] = useState(true);
   const [inputValue, setInputValue] = useState("");
@@ -70,50 +73,12 @@ const Settings = ({
 
   // const countries = ["poland", "usa"];
   // let autocompleteCountries = [];
-  languages = languages.map((language) => {
-    return t(`settings:languages.${language}`);
-  });
-  countries = countries.map((country) => {
-    return t(`settings:countries.${country}`);
-  });
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (chooseSetting.category === "account") {
-      setOpenConfirmPopUp(true);
-      setConfirmUser(true);
-    } else if (chooseSetting.category === "general") {
-      const newUserSetting = {
-        account: [...userSettings.account],
-        general: userSettings.general.map((setting) => {
-          return setting.name === chooseSetting.name
-            ? { ...setting, value: inputValue }
-            : setting;
-        }),
-      };
-      //save db
-    }
-  };
-
-  useEffect(() => {
-    if (confirmUser === true) {
-      if (chooseSetting.name === "password") {
-        if (inputValue !== confirmPassword) return setConfirmUser(false);
-      }
-      const newUserSetting = {
-        account: userSettings.account.map((item) => {
-          return item.name === chooseSetting.name
-            ? { ...item, value: inputValue }
-            : item;
-        }),
-        general: [...userSettings.general],
-      };
-      setConfirmUser(false);
-    }
-  }, [confirmUser]);
 
   return (
     <div className="settings">
+      {/* <button onClick={() => i18n.changeLanguage("pl")}>click</button> */}
+      {isError && <Error message={isError} />}
+      {isPrompt && <Prompt message={isPrompt} />}
       <ConfirmUser
         isOpen={isOpenConfirmPopUp}
         setOpen={setOpenConfirmPopUp}
@@ -133,13 +98,15 @@ const Settings = ({
         <Display
           setChooseSetting={setChooseSetting}
           chooseSetting={chooseSetting}
-          handleSubmit={handleSubmit}
           inputValue={inputValue}
           setInputValue={setInputValue}
           confirmPassword={confirmPassword}
           setConfirmPassword={setConfirmPassword}
-          languages={languages}
-          countries={countries}
+          setOpenConfirmPopUp={setOpenConfirmPopUp}
+          setConfirmUser={setConfirmUser}
+          confirmUser={confirmUser}
+          userSettings={userSettings}
+          setUserSettings={setUserSettings}
         />
       </div>
       <div className="settings--mobile">
@@ -157,13 +124,15 @@ const Settings = ({
           <Display
             setChooseSetting={setChooseSetting}
             chooseSetting={chooseSetting}
-            handleSubmit={handleSubmit}
             inputValue={inputValue}
             setInputValue={setInputValue}
             confirmPassword={confirmPassword}
             setConfirmPassword={setConfirmPassword}
-            languages={languages}
-            countries={countries}
+            setOpenConfirmPopUp={setOpenConfirmPopUp}
+            setConfirmUser={setConfirmUser}
+            confirmUser={confirmUser}
+            userSettings={userSettings}
+            setUserSettings={setUserSettings}
           />
         )}
       </div>

@@ -152,7 +152,6 @@ left join users on users.id = result.id_user_1`;
 
 (async () => {
   await app.prepare();
-
   await nextI18Next.initPromise;
   server.use(nextI18NextMiddleware(nextI18Next));
 
