@@ -189,7 +189,7 @@ router.post("/change/password", async (req, res) => {
       try {
         await client.query(changePasswordQuery, [hash, idOwner]);
 
-        res.status(200).json({ success: true });
+        res.status(200).json({ idUser: idOwner });
       } catch {
         res.status(400).json("bad-request");
       }
@@ -252,6 +252,11 @@ router.post("/block", async (req, res) => {
   } catch {
     res.status(400).json("bad-request");
   }
+});
+
+router.get("/logout", async (req, res) => {
+  res.clearCookie("token");
+  res.status(200).json({ sucess: true });
 });
 
 router.get("/me", (req, res) => {

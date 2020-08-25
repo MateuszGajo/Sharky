@@ -27,7 +27,7 @@ const Display = ({
     i18n: { language },
   } = useTranslation(["settings"]);
 
-  const { setError, setPrompt } = useContext(AppContext);
+  const { setError, setPrompt, socket } = useContext(AppContext);
 
   const [countries, setCountries] = useState([]);
   const [languages, setLanguages] = useState([]);
@@ -120,7 +120,10 @@ const Display = ({
     if (confirmUser === true) {
       axios
         .post(`/user/change/${chooseSetting.name}`, { value: inputValue })
-        .then(() => {
+        .then(({ data: { idUser } }) => {
+          if (idUser) {
+            return socket.emit("changedPassword", { idUser });
+          }
           const newUserSetting = {
             account: userSettings.account.map((item) => {
               return item.name === chooseSetting.name

@@ -107,6 +107,13 @@ left join users on users.id = result.id_user_1`;
     // soc.join('groupchat-123');
   });
 
+  socket.on("changedPassword", async ({ idUser }) => {
+    const sockets = getSocket(idUser);
+    for (let i = 0; i < sockets.length; i++) {
+      socketIO.to(sockets[i]).emit("logOutChangedPassword");
+    }
+  });
+
   socket.on("joinChat", async () => {
     const token = jwt.sign(
       {
