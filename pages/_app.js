@@ -34,6 +34,7 @@ const MyApp = ({ Component, pageProps }) => {
     socket.on("newChat", ({ newChat }) => {
       setNewChat(newChat);
     });
+    socket.emit("connectUser");
   }, [SERVER_URL]);
 
   return (

@@ -43,6 +43,27 @@ from(select id_user_1
     where id_user_1=$1) as result
 inner join chats on chats.id_user_1 = result.id_user_1 or chats.id_user_2 = result.id_user_1
 left join users on users.id = result.id_user_1`;
+
+  socket.on("connectUser", () => {
+    const token = jwt.sign(
+      {
+        exp: Math.floor(Date.now() / 1000) + 60 * 60,
+        data: {
+          id: 1,
+        },
+      },
+      jwtSecret
+    );
+    if (token) {
+      const {
+        data: { id: idUser },
+      } = jwt.verify(token, jwtSecret);
+      userJoin(idUser, socket.id);
+      console.log("dodajemy");
+      console.log(getSocket(idUser));
+    }
+  });
+
   socket.on(
     "sendChatMessage",
     ({ idMessage, idChat, idUser, message, date, messageTo }) => {
@@ -119,7 +140,6 @@ left join users on users.id = result.id_user_1`;
       const {
         data: { id: idUser },
       } = jwt.verify(token, jwtSecret);
-      userJoin(idUser, socket.id);
 
       const { rows: chats } = await client.query(getChatsQuery, [idUser]);
       for (let i = 0; i < chats.length; i++) {
