@@ -41,8 +41,15 @@ const PrimaryInput = ({
   };
 
   useEffect(() => {
-    inputRef.current.addEventListener("focus", showList);
-    inputRef.current.addEventListener("focusout", hideList);
+    if (autocompleteData.length) {
+      inputRef.current.addEventListener("focus", showList);
+      inputRef.current.addEventListener("focusout", hideList);
+    }
+
+    return () => {
+      removeEventListener("focus", showList);
+      removeEventListener("focusout", hideList);
+    };
   }, []);
   return (
     <div

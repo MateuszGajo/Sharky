@@ -72,9 +72,17 @@ const Display = ({
   const handleSubmit = (e) => {
     e.preventDefault();
     if (chooseSetting.category === "account") {
-      if (setting.name == "password" && inputValue != confirmPassword) {
-        return setPrompt("błąd");
-      }
+      if (chooseSetting.name == "password" && inputValue != confirmPassword)
+        return setError("passwords-do-not-match");
+
+      const emailRegex = /^([a-zA-Z\d\.-]+)@([a-z\d-]+)\.([a-z]{2,8})(\.[a-z]{2,8})?$/;
+      if (chooseSetting.name == "email" && !emailRegex.test(inputValue))
+        return setError("invalid-value");
+
+      const numberRegex = /[\d]{9}/;
+      if (chooseSetting.name == "phone" && !numberRegex.test(inputValue))
+        return setError("invalid-value");
+
       setOpenConfirmPopUp(true);
       setConfirmUser(true);
     } else if (chooseSetting.category === "general") {
@@ -159,7 +167,7 @@ const Display = ({
                     ? countries
                     : name === "language"
                     ? languages
-                    : {}
+                    : []
                 }
               />
             </div>

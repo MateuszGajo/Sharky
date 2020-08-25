@@ -31,7 +31,8 @@
             "bad-request":"Żądanie nie powiodło się",
             "wrong-file-type":"Niewłaściwe rozserzenie pliku",
             "file-too-large":"Plik jest za duży",
-            "invalid-value":"Nieprawidłowa wartość"
+            "invalid-value":"Nieprawidłowa wartość",
+            "passwords-do-not-match":"Hasła są różne"
         },
         "invite-person":{
             "empty-content":"Użyj wyszukiwarka aby znaleść znajomych",

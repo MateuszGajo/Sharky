@@ -31,7 +31,8 @@
             "bad-request":"Request failed",
             "wrong-file-type":"Wrong file type",
             "file-too-large":"File is too large",
-            "invalid-value":"Invalid Value"
+            "invalid-value":"Invalid Value",
+            "passwords-do-not-match":"Passwords don't match"
         },
         "invite-person":{
             "empty-content":"Use search to find your friends",
