@@ -22,10 +22,10 @@ const Index = () => {
       title="input"
       name="nazwa"
       size="medium"
-      autocompleteData={[
-        { name: "poland", value: "polska" },
-        { name: "germany", value: "niemcy" },
-      ]}
+      // autocompleteData={[
+      //   { name: "poland", value: "polska" },
+      //   { name: "germany", value: "niemcy" },
+      // ]}
     />
   );
 };
