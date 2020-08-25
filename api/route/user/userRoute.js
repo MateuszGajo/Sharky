@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 const { client } = require("../../../config/pgAdaptor");
 const { post } = require("../post/postRoute");
 const { jwtSecret } = require("../../../config/keys");
@@ -10,6 +11,7 @@ const {
   muteUserQuery,
   removeFriendQuery,
   blockUserQuery,
+  getPasswordQuery,
 } = require("./query");
 
 router.post("/get", async (req, res) => {
@@ -118,6 +120,35 @@ router.get("/me", (req, res) => {
   const { data } = jwt.verify(token, jwtSecret);
 
   res.json({ user: data });
+});
+
+router.post("/check/password", async (req, res) => {
+  const { password } = req.body;
+
+  const token = jwt.sign(
+    {
+      exp: Math.floor(Date.now() / 1000) + 60 * 60,
+      data: {
+        id: 22,
+        firstName: "Jan",
+        lastName: "Kowalski",
+        photo: "profile.png",
+      },
+    },
+    jwtSecret
+  );
+
+  const {
+    data: { id: idOwner },
+  } = jwt.verify(token, jwtSecret);
+
+  const { rows } = await client.query(getPasswordQuery, [idOwner]);
+  bcrypt.compare(password, rows[0].password, function (err, result) {
+    if (result) {
+      return res.status(200).json({ success: true });
+    }
+    res.status(401).json("bad-password");
+  });
 });
 
 module.exports = router;
