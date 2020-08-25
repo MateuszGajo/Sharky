@@ -14,7 +14,8 @@
     "pop-up":{
         "confirm-user":{
             "title":"Re-enter you account password",
-            "button":"Continue"
+            "button":"Continue",
+            "bad-password":"Bad password"
         },
         "report":{
             "title-post":"Report post",

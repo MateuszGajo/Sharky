@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 const { client } = require("../../../config/pgAdaptor");
 const { post } = require("../post/postRoute");
 const { jwtSecret } = require("../../../config/keys");
@@ -14,7 +15,13 @@ const {
   changeCountryQuery,
   verifyLanguageQuery,
   changeLanguageQuery,
+  changeEmailQuery,
+  changePhoneQuery,
+  changePasswordQuery,
+  getPasswordQuery,
 } = require("./query");
+
+const saltRounds = 10;
 
 router.post("/get", async (req, res) => {
   const { idUsers } = req.body;
@@ -49,7 +56,6 @@ router.post("/get/photo", async (req, res) => {
 });
 
 router.post("/change/country", async (req, res) => {
-  console.log("kraj");
   let { value } = req.body;
   value = value.toLowerCase();
 
@@ -80,7 +86,6 @@ router.post("/change/country", async (req, res) => {
 });
 
 router.post("/change/language", async (req, res) => {
-  console.log("zmianiamy język");
   let { value } = req.body;
   value = value.toLowerCase();
   const token = jwt.sign(
@@ -108,6 +113,88 @@ router.post("/change/language", async (req, res) => {
   } catch {
     res.status(400).json("bad-request");
   }
+});
+
+router.post("/change/email", async (req, res) => {
+  const { value } = req.body;
+
+  const token = jwt.sign(
+    {
+      exp: Math.floor(Date.now() / 1000) + 60 * 60,
+      data: {
+        id: 1,
+      },
+    },
+    jwtSecret
+  );
+
+  const {
+    data: { id: idOwner },
+  } = jwt.verify(token, jwtSecret);
+
+  try {
+    await client.query(changeEmailQuery, [value, idOwner]);
+
+    res.status(200).json({ success: true });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
+router.post("/change/phone", async (req, res) => {
+  const { value } = req.body;
+  const phone = value.replace(/[\s-]/gi, "");
+
+  const token = jwt.sign(
+    {
+      exp: Math.floor(Date.now() / 1000) + 60 * 60,
+      data: {
+        id: 1,
+      },
+    },
+    jwtSecret
+  );
+
+  const {
+    data: { id: idOwner },
+  } = jwt.verify(token, jwtSecret);
+
+  try {
+    await client.query(changePhoneQuery, [phone, idOwner]);
+
+    res.status(200).json({ success: true });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
+router.post("/change/password", async (req, res) => {
+  const { value } = req.body;
+  const token = jwt.sign(
+    {
+      exp: Math.floor(Date.now() / 1000) + 60 * 60,
+      data: {
+        id: 1,
+      },
+    },
+    jwtSecret
+  );
+
+  const {
+    data: { id: idOwner },
+  } = jwt.verify(token, jwtSecret);
+
+  bcrypt.hash(value, saltRounds, async (err, hash) => {
+    if (hash) {
+      try {
+        await client.query(changePasswordQuery, [hash, idOwner]);
+
+        res.status(200).json({ success: true });
+      } catch {
+        res.status(400).json("bad-request");
+      }
+    }
+  });
 });
 
 router.post("/mute", async (req, res) => {
@@ -184,6 +271,35 @@ router.get("/me", (req, res) => {
   const { data } = jwt.verify(token, jwtSecret);
 
   res.json({ user: data });
+});
+
+router.post("/check/password", async (req, res) => {
+  const { password } = req.body;
+
+  const token = jwt.sign(
+    {
+      exp: Math.floor(Date.now() / 1000) + 60 * 60,
+      data: {
+        id: 22,
+        firstName: "Jan",
+        lastName: "Kowalski",
+        photo: "profile.png",
+      },
+    },
+    jwtSecret
+  );
+
+  const {
+    data: { id: idOwner },
+  } = jwt.verify(token, jwtSecret);
+
+  const { rows } = await client.query(getPasswordQuery, [idOwner]);
+  bcrypt.compare(password, rows[0].password, function (err, result) {
+    if (result) {
+      return res.status(200).json({ success: true });
+    }
+    res.status(401).json("bad-password");
+  });
 });
 
 module.exports = router;

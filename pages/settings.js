@@ -71,19 +71,14 @@ const Settings = () => {
     ],
   });
 
-  // const countries = ["poland", "usa"];
-  // let autocompleteCountries = [];
-
   return (
     <div className="settings">
-      {/* <button onClick={() => i18n.changeLanguage("pl")}>click</button> */}
       {isError && <Error message={isError} />}
       {isPrompt && <Prompt message={isPrompt} />}
-      <ConfirmUser
-        isOpen={isOpenConfirmPopUp}
-        setOpen={setOpenConfirmPopUp}
-        setVerify={setConfirmUser}
-      />
+      {isOpenConfirmPopUp && (
+        <ConfirmUser setOpen={setOpenConfirmPopUp} setVerify={setConfirmUser} />
+      )}
+
       <HomeLayout.NavBar />
       <div className="settings--desktop">
         <Items

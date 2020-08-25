@@ -9,7 +9,7 @@
         "phone":"Telephone",
         "email-changed":"Email changed",
         "password-changed":"Password changed",
-        "telephone-changed":"Telephone number changed"
+        "phone-changed":"Telephone number changed"
     },
     "general":{
         "title":"General",

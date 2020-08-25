@@ -9,7 +9,7 @@
         "phone":"Telefon",
         "email-changed":"Zmieniono e-mail",
         "password-changed":"Zmieniono hasło",
-        "telephone-changed":"Zmieniono numer telefon"
+        "phone-changed":"Zmieniono numer telefon"
     },
     "general":{
         "title":"Ogólne",

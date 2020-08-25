@@ -14,7 +14,8 @@
     "pop-up":{
         "confirm-user":{
             "title":"Wpisz swoje hasło",
-            "button":"Dalej"
+            "button":"Dalej",
+            "bad-password":"Bad password"
         },
         "report":{
             "title-post":"Zgłoś post",

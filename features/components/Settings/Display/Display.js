@@ -79,12 +79,11 @@ const Display = ({
       if (chooseSetting.name == "email" && !emailRegex.test(inputValue))
         return setError("invalid-value");
 
-      const numberRegex = /[\d]{9}/;
+      const numberRegex = /\d{3}[\s-]?\d{3}[\s-]?\d{3}$/;
       if (chooseSetting.name == "phone" && !numberRegex.test(inputValue))
         return setError("invalid-value");
 
       setOpenConfirmPopUp(true);
-      setConfirmUser(true);
     } else if (chooseSetting.category === "general") {
       const value = (chooseSetting.name == "country"
         ? countries
@@ -95,7 +94,6 @@ const Display = ({
       );
 
       if (!value) setError("invalid-value");
-
       axios
         .post(`/user/change/${chooseSetting.name}`, { value: value.name })
         .then(() => {
@@ -107,7 +105,7 @@ const Display = ({
             account: [...userSettings.account],
             general: userSettings.general.map((setting) => {
               return setting.name === chooseSetting.name
-                ? { ...setting, value: value.value }
+                ? { ...setting, value: value.value.toLowerCase() }
                 : setting;
             }),
           };
@@ -159,6 +157,7 @@ const Display = ({
               <PrimaryInput
                 value={inputValue}
                 onChange={setInputValue}
+                type={chooseSetting.name === "password" ? "password" : "text"}
                 size="x-large"
                 title={title}
                 withOutMargin={true}
@@ -175,6 +174,7 @@ const Display = ({
               <div className="settings__container__display--form--input">
                 <PrimaryInput
                   value={confirmPassword}
+                  type="password"
                   onChange={setConfirmPassword}
                   title={confirmPasswordName}
                   size="x-large"
