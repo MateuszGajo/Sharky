@@ -43,6 +43,7 @@ const MyApp = ({ Component, pageProps }) => {
         router.push("/signin");
       });
     });
+    socket.emit("connectUser");
   }, [SERVER_URL]);
 
   return (
