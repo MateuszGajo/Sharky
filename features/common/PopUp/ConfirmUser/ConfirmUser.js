@@ -57,6 +57,7 @@ const ConfirmUser = ({ isOpen = true, setOpen, setVerify }) => {
             <div className="confrim-user-container__content__data__form__input">
               <PrimaryInput
                 value={password}
+                type="password"
                 onChange={setPassword}
                 title={inputPasswordText}
               />
