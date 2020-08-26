@@ -1,3 +1,24 @@
+const getPostQuery = `
+  with numberOfLikes as(
+  select id_post as "idPost", count(id)  from post_like where id_post=$1 group by id_post
+  ),
+  
+  numberOfComments as(
+  select id_post as "idPost", count(id)  from post_comments where id_post=$1 group by id_post
+  ),
+  
+  numberOfShares as(
+  select id_post as "idPost", count(id)  from post_share where id_post=$1 group by id_post
+  )
+  select a.*, coalesce(b.count,0) as "numberOfLikes", coalesce(c.count ,0) as "numberOfComments", 
+  coalesce(d.count,0) as "numberOfShares", e.id as "idLike",null as "idShare", null as "idUserShare"
+  from(select id as "idPost",id_fanpage as "idFanpage", id_group as "idGroup", content, photo, date, id_user as "idUser" from posts where id=$1 ) as a
+  left join numberOfLikes as b on a."idPost" = b."idPost"
+  left join numberOfComments as c on a."idPost" = c."idPost"
+  left join numberOfShares as d on a."idPost" = d."idPost"
+  left join post_like as e on a."idPost"= e.id_post and e.id_user=$2
+`;
+
 const getPostsQuery = `
 with idUsers as(
   SELECT 1 AS "idUser"
@@ -170,17 +191,19 @@ with idComments as(
   select a."idComment",a."idPost", count(b.id) as "numberOfReplies" from idComments as a left join comment_replies as b on a."idComment" = b.id_comment group by a."idComment",a."idPost"
   ),
   
-  
   likedComment as(
   select id as "idLike", id_comment as "idComment" from comment_like where id_comment in (select "idComment" from idComments) and id_user =$2
   )
   
-  select a.id as "idComment", a.id_post as "idPost", a.id_user as "idUser", a.content, a.date, b."numberOfLikes", c."numberOfReplies", d."idLike" 
-  from post_comments as a
-  inner join numberOfLikes as b on a.id = b."idComment"
-  inner join numberOfReplies as c on a.id = c."idComment"
-  left join likedComment as d on a.id = d."idComment"
-  where id in(select "idComment" from idComments)
+  select e.* 
+  from(select a.id as "idComment", a.id_post as "idPost", a.id_user as "idUser", a.content, a.date, b."numberOfLikes", c."numberOfReplies", d."idLike" 
+	  from post_comments as a
+	  inner join numberOfLikes as b on a.id = b."idComment"
+	  inner join numberOfReplies as c on a.id = c."idComment"
+	  left join likedComment as d on a.id = d."idComment"
+	  where id in(select "idComment" from idComments)) as e
+   order by date desc
+   limit 3 offset 0
 `;
 
 const addGroupPostQuery =
@@ -207,9 +230,14 @@ const editPostQuery = `update posts set content=$1 where id=$2`;
 
 const deletePostQuery = `delete from posts where id=$1`;
 
+const deleteCommentsQuery = `delete from post_comments where id_post=$1`;
+
+const deleteRepliesQuery = `delete from comment_replies where id_comment in(select id from post_comments where id_post=$1)`;
+
 const deleteSharePostQuery = `delete from post_share where id=$1`;
 
 module.exports = {
+  getPostQuery,
   getPostsQuery,
   getUserPostQuery,
   getFanpagePostsQuery,
@@ -225,4 +253,6 @@ module.exports = {
   deletePostQuery,
   deleteSharePostQuery,
   getIdPostQuery,
+  deleteCommentsQuery,
+  deleteRepliesQuery,
 };

@@ -4,6 +4,7 @@ const multer = require("multer");
 const { client } = require("../../../config/pgAdaptor");
 const { jwtSecret } = require("../../../config/keys");
 const {
+  getPostQuery,
   getPostsQuery,
   getUserPostQuery,
   getFanpagePostsQuery,
@@ -19,6 +20,8 @@ const {
   deletePostQuery,
   deleteSharePostQuery,
   getIdPostQuery,
+  deleteCommentsQuery,
+  deleteRepliesQuery,
 } = require("./query");
 
 const router = express.Router();
@@ -174,6 +177,61 @@ router.post("/get", async (req, res) => {
   });
 });
 
+router.post("/get/single", async (req, res) => {
+  const { idPost } = req.body;
+
+  const token = jwt.sign(
+    {
+      exp: Math.floor(Date.now() / 1000) + 60 * 60,
+      data: {
+        id: 1,
+      },
+    },
+    jwtSecret
+  );
+  const {
+    data: { id: idOwner },
+  } = jwt.verify(token, jwtSecret);
+
+  try {
+    const { rows: post } = await client.query(getPostQuery, [idPost, idOwner]);
+    if (!post[0]) return res.status(404).json("post-does-not-exist");
+
+    if (post[0].idFanpage) {
+      const { rows } = await client.query(doesUserBelongToFanpageQuery, [
+        idUser,
+      ]);
+      if (!rows[0])
+        return res.status(403).json("user-does-not-have-permission");
+    }
+
+    if (post[0].idGroup) {
+      const { rows } = await client.query(doesUserBelongToGroupqQuery, [
+        idUser,
+      ]);
+      if (!rows[0])
+        return res.status(403).json("user-does-not-have-permission");
+    }
+
+    let { rows: comments } = await client.query(getCommentsQuery, [
+      [post[0].idPost],
+      idOwner,
+    ]);
+
+    let isMoreComments = true;
+
+    if (comments.length < 3) {
+      isMoreComments = false;
+    } else {
+      comments = comments.slice(0, -1);
+    }
+
+    res.status(200).json({ post: post[0], comments, isMoreComments });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
 router.post("/like", async (req, res) => {
   const { idPost } = req.body;
 
@@ -264,6 +322,8 @@ router.post("/delete", async (req, res) => {
 
   try {
     await client.query(deletePostQuery, [idPost]);
+    await client.query(deleteRepliesQuery, [idPost]);
+    await client.query(deleteCommentsQuery, [idPost]);
 
     res.status(200).json({ success: true });
   } catch {
