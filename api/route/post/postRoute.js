@@ -22,6 +22,8 @@ const {
   getIdPostQuery,
   doesUserBelongToFanpageQuery,
   doesUserBelongToGroupqQuery,
+  deleteCommentsQuery,
+  deleteRepliesQuery,
 } = require("./query");
 
 const router = express.Router();
@@ -322,6 +324,8 @@ router.post("/delete", async (req, res) => {
 
   try {
     await client.query(deletePostQuery, [idPost]);
+    await client.query(deleteRepliesQuery, [idPost]);
+    await client.query(deleteCommentsQuery, [idPost]);
 
     res.status(200).json({ success: true });
   } catch {

@@ -190,7 +190,7 @@ export const unlikePost = ({ idLike, idPost, setNewLike, setError }) => {
     });
 };
 
-export const sharePost = ({ post, posts, setPosts, setError }) => {
+export const sharePost = ({ post, posts, setPosts, setError, isSingle }) => {
   const date = new Date();
   axios
     .post("/post/share", {
@@ -198,17 +198,18 @@ export const sharePost = ({ post, posts, setPosts, setError }) => {
       date,
     })
     .then(({ data: { idShare, idUser } }) => {
-      setPosts([
-        {
-          ...post,
-          idShare,
-          id: uuid(),
-          date,
-          idUserShare: idUser,
-          numberOfShares: Number(post.numberOfShares) + 1,
-        },
-        ...posts,
-      ]);
+      !isSingle &&
+        setPosts([
+          {
+            ...post,
+            idShare,
+            id: uuid(),
+            date,
+            idUserShare: idUser,
+            numberOfShares: Number(post.numberOfShares) + 1,
+          },
+          ...posts,
+        ]);
     })
     .catch((err) => {
       const {
