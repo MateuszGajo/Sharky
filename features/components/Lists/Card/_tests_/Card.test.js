@@ -12,20 +12,30 @@ it("does card displays correct", () => {
   const data = {
     refType: "profile",
     refId: 123,
+    idRelation: null,
     photo: "profile.png",
     radiusPhoto: true,
     name: "Janek Kowalski",
     description: "Coś tam",
     button: "join",
-    title: "Przyjaciel",
+    buttonName: "przyjaciel",
+    title: "title",
     collapse: false,
     collapseItems: {
-      pink: "Przyjaciel",
-      blue: "Rodzina",
-      green: "Znajomy",
+      pink: {
+        name: "przyjaciel",
+        title: "przyjaciel",
+      },
+      blue: {
+        name: "rodzina",
+        title: "rodzina",
+      },
+      green: {
+        name: "znajomy",
+        title: "znajomy",
+      },
     },
   };
-
   const { getByTestId, queryByTestId } = render(<Card data={data} />);
 
   const cardPhoto = getByTestId("card-photo");
@@ -33,14 +43,13 @@ it("does card displays correct", () => {
   const cardDescription = getByTestId("card-description");
   const cardButton = getByTestId("card-button");
   const cardButtonText = getByTestId("card-button-text");
-  const cardButtons = getByTestId("card-buttons");
   const cardUpdateButton = queryByTestId("card-update-button");
 
   expect(cardPhoto).toHaveClass("card__item--picture--img--radius");
   expect(cardName).toHaveTextContent(data.name);
   expect(cardDescription).toHaveTextContent(data.description);
   expect(cardButton).toHaveClass(
-    "card__item__info__second-column__buttons--join pal-background"
+    "card__item__info__second-column__buttons--main-button pal-background"
   );
   expect(cardButtonText).toHaveTextContent(data.title);
   expect(cardUpdateButton).toBeNull();
@@ -50,24 +59,35 @@ it("do relation buttons work correct", () => {
   const data = {
     refType: "profile",
     refId: 123,
+    idRelation: null,
     photo: "profile.png",
     radiusPhoto: true,
     name: "Janek Kowalski",
     description: "Coś tam",
     button: "join",
-    title: "Przyjaciel",
+    buttonName: "przyjaciel",
+    title: "title",
     collapse: true,
     collapseItems: {
-      pink: "Przyjaciel",
-      blue: "Rodzina",
-      green: "Znajomy",
+      pink: {
+        name: "przyjaciel",
+        title: "przyjaciel",
+      },
+      blue: {
+        name: "rodzina",
+        title: "rodzina",
+      },
+      green: {
+        name: "znajomy",
+        title: "znajomy",
+      },
     },
   };
 
   const updateRelation = jest.fn();
 
   const { getByTestId } = render(
-    <Card data={data} updateRelation={updateRelation} />
+    <Card data={data} setRelation={updateRelation} />
   );
 
   const cardRelationButtonGreen = getByTestId("card-relation-button-green");
@@ -75,7 +95,7 @@ it("do relation buttons work correct", () => {
   fireEvent.click(cardRelationButtonGreen);
 
   expect(updateRelation).toHaveBeenCalledWith({
-    id: data.refId,
-    name: data.collapseItems.green,
+    id: null,
+    name: data.collapseItems.green.name,
   });
 });

@@ -54,6 +54,9 @@
   }
   
   .messenger__navbar__icons--icon {
+    position:absolute;
+    top:5px;
+    right:5px;
     display: flex;
     justify-content: center;
     align-items: center;
