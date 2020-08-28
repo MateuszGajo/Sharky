@@ -1,45 +1,42 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import InfiniteScroll from "react-infinite-scroll-component";
 
-const PhotoList = ({
-  photoList = [
-    {
-      id: 1,
-      name: "profile.png",
-    },
-    {
-      id: 2,
-      name: "profile.png",
-    },
-    {
-      id: 3,
-      name: "profile.png",
-    },
-    {
-      id: 4,
-      name: "profile.png",
-    },
-    {
-      id: 5,
-      name: "profile.png",
-    },
-    {
-      id: 6,
-      name: "profile.png",
-    },
-  ],
-}) => {
+const PhotoList = ({ idUser }) => {
+  const [photos, setPhotos] = useState([]);
+  const [isMore, setStatusOfMore] = useState(false);
+
+  const fetchData = (from) => {
+    axios
+      .post("/user/get/photo", { idUser, from })
+      .then(({ data: { photos, isMore } }) => {
+        setPhotos((prev) => [...prev, ...photos]);
+        setStatusOfMore(isMore);
+      });
+  };
+
+  useEffect(() => {
+    fetchData(0);
+  }, []);
+
   return (
-    <div className="photo-list">
-      {photoList.map((photo) => (
-        <div className="photo-list__item">
-          <img
-            src={"/static/images/" + photo.name}
-            alt="Zdjęcia użytkowika"
-            className="photo-list__item--img"
-          />
-        </div>
-      ))}
-    </div>
+    <InfiniteScroll
+      dataLength={photos.length}
+      next={() => fetchData(photos.length)}
+      hasMore={isMore}
+    >
+      <div className="photo-list">
+        {photos.map((photo) => (
+          <div className="photo-list__item" key={photo.id}>
+            <img
+              src={"/static/images/" + photo.name}
+              alt="Zdjęcia użytkowika"
+              className="photo-list__item--img"
+            />
+          </div>
+        ))}
+      </div>
+    </InfiniteScroll>
   );
 };
 

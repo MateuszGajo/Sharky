@@ -1,3 +1,10 @@
+.news{
+    margin:$smallMargin 0;
+}
+
+.news__message-box{
+    margin-bottom:$smallMargin;
+}
 .news__info{
     display:flex;
     justify-content: center;

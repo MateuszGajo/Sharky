@@ -1,0 +1,21 @@
+.prompt{
+    position:fixed;
+    bottom:6%;
+    right:6%;
+    max-width:30vw;
+    box-shadow:0 0 3px 0.3px black;
+    background-color: #fff;
+    z-index:10;
+    border-radius:5px;
+}
+
+.prompt__container{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    padding:10px 20px;
+}
+
+.promt__container--message{
+    font-size: 1.2rem;
+}
