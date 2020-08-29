@@ -8,30 +8,19 @@ import i18next from "@i18n";
 import "../styles/main.scss";
 const { useTranslation } = i18next;
 
-const News = ({
-  news = [
-    {
-      id: 1,
-      content:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus perferendis nesciunt corporis quidem aut non culpa perspiciatis, esse pariatur voluptate dicta illo nostrum magnam ea sint dolorem officia tempora cum.",
-      userId: 123,
-      photo: null,
-      date: new Date("2012-03-25"),
-    },
-  ],
-  users = {
-    123: {
-      userId: 123,
-      firstName: "Jan",
-      lastName: "Kowalski",
-      photo: "profile.png",
-    },
-  },
-}) => {
+const News = () => {
   const { t } = useTranslation(["news"]);
   const [permission, setPermission] = useState();
+  const [file, setFile] = useState();
+  const [content, setContent] = useState("");
+  const [newPost, setNewPost] = useState();
 
   const noPermission = t("news:no-permission");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setNewPost({ content, file });
+  };
   useEffect(() => {
     axios.get("/news/permission").then(({ data: { permission } }) => {
       console.log(permission);
@@ -39,12 +28,18 @@ const News = ({
     });
   }, []);
   return (
-    <section className="news">
-      <HomeLayout>
+    <HomeLayout>
+      <section className="news">
         {permission ? (
-          <div className="news__message-box">
-            <MessageBox btnSize="small" />
-          </div>
+          <form class="news__form" onSubmit={handleSubmit}>
+            <MessageBox
+              btnSize="small"
+              value={content}
+              onChange={setContent}
+              file={file}
+              setFile={setFile}
+            />
+          </form>
         ) : (
           <div className="news__info">
             <div className="news__info--icon">
@@ -53,9 +48,9 @@ const News = ({
             <span className="news__info--span">{noPermission}</span>
           </div>
         )}
-        <Posts posts={news} users={users} />
-      </HomeLayout>
-    </section>
+        <Posts news={true} newPost={newPost} />
+      </section>
+    </HomeLayout>
   );
 };
 
