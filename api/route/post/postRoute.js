@@ -9,10 +9,12 @@ const {
   getUserPostQuery,
   getFanpagePostsQuery,
   getGroupPostsQuery,
+  getNewsQuery,
   getCommentsQuery,
   addGroupPostQuery,
   addFanpagePostQuery,
   addPostQuery,
+  addNewsQuery,
   postLikeQuery,
   unLikeQuery,
   postShareQuery,
@@ -69,7 +71,7 @@ router.post("/add", async (req, res) => {
       }
     }
 
-    const { content, date, idGroup, idFanpage } = req.body;
+    const { content, date, idGroup, idFanpage, news } = req.body;
     let newPost;
     try {
       if (idGroup)
@@ -86,6 +88,13 @@ router.post("/add", async (req, res) => {
           idFanpage,
           content,
           date,
+          fileName,
+        ]);
+      else if (news)
+        newPost = await client.query(addNewsQuery, [
+          idOwner,
+          content,
+          data,
           fileName,
         ]);
       else
@@ -106,7 +115,7 @@ router.post("/add", async (req, res) => {
 });
 
 router.post("/get", async (req, res) => {
-  const { from, idFanpage, idGroup, idUser, authorPost } = req.body;
+  const { from, idFanpage, idGroup, news, idUser, authorPost } = req.body;
   const token = jwt.sign(
     {
       exp: Math.floor(Date.now() / 1000) + 60 * 60,
@@ -141,6 +150,8 @@ router.post("/get", async (req, res) => {
         idOwner,
         from,
       ]);
+    else if (news)
+      postsResult = await client.query(getNewsQuery, [idOwner, from]);
     else postsResult = await client.query(getPostsQuery, [idOwner, from]);
 
     const idPosts = [];

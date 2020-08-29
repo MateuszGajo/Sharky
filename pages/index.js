@@ -3,6 +3,7 @@ import i18next from "@i18n";
 import Spinner from "@components/Spinner/Spinner";
 import PrimaryInput from "@common/PrimaryInput/PrimaryInput";
 import ConfirmUser from "@common/PopUp/ConfirmUser/ConfirmUser";
+import Posts from "@components/Lists/Posts/Posts";
 
 import "../styles/main.scss";
 
@@ -20,8 +21,7 @@ const Index = () => {
 
   return (
     <>
-      {isOpen && <ConfirmUser setOpen={setOpen} setVerify={setVerify} />}
-      {console.log(verify)}
+      <Posts news={true} />
     </>
   );
 };
