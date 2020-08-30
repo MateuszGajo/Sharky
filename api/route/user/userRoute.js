@@ -1,10 +1,6 @@
 const express = require("express");
-const router = express.Router();
-const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { client } = require("../../../config/pgAdaptor");
-const { post } = require("../post/postRoute");
-const { jwtSecret } = require("../../../config/keys");
 const {
   getUserQuery,
   getPhotosQuery,
@@ -13,6 +9,9 @@ const {
   blockUserQuery,
   getPasswordQuery,
 } = require("./query");
+const decodeToken = require("../../../utils/decodeToken");
+
+const router = express.Router();
 
 router.post("/get", async (req, res) => {
   const { idUsers } = req.body;
@@ -49,24 +48,12 @@ router.post("/get/photo", async (req, res) => {
 router.post("/mute", async (req, res) => {
   const { idMuteUser } = req.body;
 
-  const token = jwt.sign(
-    {
-      exp: Math.floor(Date.now() / 1000) + 60 * 60,
-      data: {
-        id: 1,
-      },
-    },
-    jwtSecret
-  );
-
-  const {
-    data: { id: idUser },
-  } = jwt.verify(token, jwtSecret);
+  const { id: idOwner } = decodeToken(req);
 
   const date = new Date();
 
   try {
-    await client.query(muteUserQuery, [idUser, idMuteUser, date]);
+    await client.query(muteUserQuery, [idOwner, idMuteUser, date]);
 
     res.status(200).json({ success: true });
   } catch {
@@ -78,24 +65,12 @@ router.post("/block", async (req, res) => {
   const { idBlockUser } = req.body;
   const date = new Date();
 
-  const token = jwt.sign(
-    {
-      exp: Math.floor(Date.now() / 1000) + 60 * 60,
-      data: {
-        id: 1,
-      },
-    },
-    jwtSecret
-  );
-
-  const {
-    data: { id: idUser },
-  } = jwt.verify(token, jwtSecret);
+  const { id: idOwner } = decodeToken(req);
 
   try {
-    await client.query(removeFriendQuery, [idUser, idBlockUser]);
-    await client.query(muteUserQuery, [idUser, idBlockUser, date]);
-    await client.query(blockUserQuery, [idUser, idBlockUser, date]);
+    await client.query(removeFriendQuery, [idOwner, idBlockUser]);
+    await client.query(muteUserQuery, [idOwner, idBlockUser, date]);
+    await client.query(blockUserQuery, [idOwner, idBlockUser, date]);
 
     res.status(200).json({ success: true });
   } catch {
@@ -104,43 +79,15 @@ router.post("/block", async (req, res) => {
 });
 
 router.get("/me", (req, res) => {
-  const token = jwt.sign(
-    {
-      exp: Math.floor(Date.now() / 1000) + 60 * 60,
-      data: {
-        id: 1,
-        firstName: "Jan",
-        lastName: "Kowalski",
-        photo: "profile.png",
-      },
-    },
-    jwtSecret
-  );
+  const { id, firstName, lastName, photo } = decodeToken(req);
 
-  const { data } = jwt.verify(token, jwtSecret);
-
-  res.json({ user: data });
+  res.json({ user: { id, firstName, lastName, photo } });
 });
 
 router.post("/check/password", async (req, res) => {
   const { password } = req.body;
 
-  const token = jwt.sign(
-    {
-      exp: Math.floor(Date.now() / 1000) + 60 * 60,
-      data: {
-        id: 22,
-        firstName: "Jan",
-        lastName: "Kowalski",
-        photo: "profile.png",
-      },
-    },
-    jwtSecret
-  );
-
-  const {
-    data: { id: idOwner },
-  } = jwt.verify(token, jwtSecret);
+  const { id: idOwner } = decodeToken(req);
 
   const { rows } = await client.query(getPasswordQuery, [idOwner]);
   bcrypt.compare(password, rows[0].password, function (err, result) {
