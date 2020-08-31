@@ -14,7 +14,8 @@
     "pop-up":{
         "confirm-user":{
             "title":"Wpisz swoje hasło",
-            "button":"Dalej"
+            "button":"Dalej",
+            "bad-password":"Bad password"
         },
         "report":{
             "title-post":"Zgłoś post",
@@ -29,7 +30,9 @@
         },
         "error":{
             "bad-request":"Żądanie nie powiodło się",
-            "last-fanpage-admin":"Jesteś jedynym adminem, przyznaj uprawnienia administratora innej osobie lub usuń fanpage"
+            "last-fanpage-admin":"Jesteś jedynym adminem, przyznaj uprawnienia administratora innej osobie lub usuń fanpage",
+            "wrong-file-type":"Niewłaściwe rozserzenie pliku",
+            "file-too-large":"Plik jest za duży"
         },
         "invite-person":{
             "empty-content":"Użyj wyszukiwarka aby znaleść znajomych",

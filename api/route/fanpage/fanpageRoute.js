@@ -1,10 +1,9 @@
 const express = require("express");
-const jwt = require("jsonwebtoken");
 const { client } = require("../../../config/pgAdaptor");
-const { jwtSecret } = require("../../../config/keys");
 const {
   getFanpagesQuery,
   getSortedFanpagesQuery,
+  getSortedSubscribedFanpagesQuery,
   addUserQuery,
   deleteUserQuery,
   getIdUserQuery,
@@ -17,7 +16,7 @@ const {
   getMembersQuery,
   updateMemberRealtionQuery,
 } = require("./query");
-
+const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
 
 router.post("/about", async (req, res) => {
@@ -37,18 +36,7 @@ router.post("/about", async (req, res) => {
 router.post("/enter", async (req, res) => {
   const { idFanpage } = req.body;
 
-  const token = jwt.sign(
-    {
-      exp: Math.floor(Date.now() / 1000) + 60 * 60,
-      data: {
-        id: 1,
-      },
-    },
-    jwtSecret
-  );
-  const {
-    data: { id: idOwner },
-  } = jwt.verify(token, jwtSecret);
+  const { id: idOwner } = decodeToken(req);
 
   try {
     const { rows } = await client.query(checkUserQuery, [idOwner, idFanpage]);
@@ -112,21 +100,9 @@ router.post("/member/relation/change", async (req, res) => {
 });
 
 router.post("/get", async (req, res) => {
-  const { from, idUser, keyWords } = req.body;
+  const { from, idUser, keyWords, onlySubscribed } = req.body;
 
-  const token = jwt.sign(
-    {
-      exp: Math.floor(Date.now() / 1000) + 60 * 60,
-      data: {
-        id: 1,
-      },
-    },
-    jwtSecret
-  );
-  const {
-    data: { id: idOwner },
-  } = jwt.verify(token, jwtSecret);
-
+  const { id: idOwner } = decodeToken(req);
   let getFanpages;
   if (!keyWords) {
     try {
@@ -140,12 +116,20 @@ router.post("/get", async (req, res) => {
     }
   } else {
     try {
-      getFanpages = await client.query(getSortedFanpagesQuery, [
-        `%${keyWords}%`,
-        idOwner,
+      if (onlySubscribed)
+        getFanpages = await client.query(getSortedSubscribedFanpagesQuery, [
+          idUser,
+          `%${keyWords}%`,
+          idOwner,
+          from,
+        ]);
+      else
+        getFanpages = await client.query(getSortedFanpagesQuery, [
+          `%${keyWords}%`,
+          idOwner,
 
-        from,
-      ]);
+          from,
+        ]);
     } catch {
       return res.status(400).json("bad-request");
     }
@@ -166,30 +150,18 @@ router.post("/get", async (req, res) => {
 router.post("/user/add", async (req, res) => {
   const { idFanpage } = req.body;
 
-  const token = jwt.sign(
-    {
-      exp: Math.floor(Date.now() / 1000) + 60 * 60,
-      data: {
-        id: 1,
-      },
-    },
-    jwtSecret
-  );
-  const {
-    data: { id: idUser },
-  } = jwt.verify(token, jwtSecret);
+  const { id: idOwner } = decodeToken(req);
 
   try {
     const { rows: addUser } = await client.query(addUserQuery, [
       idFanpage,
-      idUser,
-      "user",
+      idOwner,
     ]);
 
     let id;
 
     if (!addUser[0]) {
-      const { rows } = await client.query(getIdUserQuery, [idFanpage, idUser]);
+      const { rows } = await client.query(getIdUserQuery, [idFanpage, idOwner]);
       id = rows[0].id;
     } else id = addUser[0].id;
 

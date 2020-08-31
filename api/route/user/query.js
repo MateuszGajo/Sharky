@@ -17,9 +17,17 @@ insert into user_block(id_user_1,id_user_2,date)
 select $1,$2,$3 where not exists (select id from user_block where id_user_1=$1 and id_user_2=$2)
     `;
 
+const getPhotosQuery = `
+    select id, name, date from user_photos where id_user=$1 limit 7 offset $2
+`;
+
+const getPasswordQuery = "select password from users where id=$1";
+
 module.exports = {
   getUserQuery,
   muteUserQuery,
   removeFriendQuery,
+  getPhotosQuery,
   blockUserQuery,
+  getPasswordQuery,
 };

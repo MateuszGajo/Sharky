@@ -2,7 +2,7 @@ const next = require("next");
 const io = require("socket.io");
 const http = require("http");
 const express = require("express");
-const expsession = require("express-session");
+const cookieParser = require("cookie-parser");
 const nextI18NextMiddleware = require("next-i18next/middleware").default;
 const jwt = require("jsonwebtoken");
 const commentRoute = require("./api/route/comment/commentRoute");
@@ -17,7 +17,6 @@ const fanpageRoute = require("./api/route/fanpage/fanpageRoute");
 const { client } = require("./config/pgAdaptor");
 const { jwtSecret } = require("./config/keys");
 const bodyParser = require("body-parser");
-const { expressSessionSecret } = require("./config/keys");
 const { userJoin, userLeave, getSocket, existUser } = require("./utils/users");
 
 const nextI18Next = require("./i18n/server");
@@ -28,7 +27,7 @@ const server = express();
 
 const httpServer = http.createServer(server);
 const socketIO = io(httpServer);
-
+server.use(cookieParser());
 server.use(bodyParser.json());
 
 socketIO.sockets.on("connection", (socket) => {
@@ -43,6 +42,25 @@ from(select id_user_1
     where id_user_1=$1) as result
 inner join chats on chats.id_user_1 = result.id_user_1 or chats.id_user_2 = result.id_user_1
 left join users on users.id = result.id_user_1`;
+
+  socket.on("connectUser", () => {
+    const token = jwt.sign(
+      {
+        exp: Math.floor(Date.now() / 1000) + 60 * 60,
+        data: {
+          id: 1,
+        },
+      },
+      jwtSecret
+    );
+    if (token) {
+      const {
+        data: { id: idUser },
+      } = jwt.verify(token, jwtSecret);
+      userJoin(idUser, socket.id);
+    }
+  });
+
   socket.on(
     "sendChatMessage",
     ({ idMessage, idChat, idUser, message, date, messageTo }) => {
@@ -101,8 +119,6 @@ left join users on users.id = result.id_user_1`;
         });
       }
     }
-
-    // soc.join('groupchat-123');
   });
 
   socket.on("joinChat", async () => {
@@ -119,7 +135,6 @@ left join users on users.id = result.id_user_1`;
       const {
         data: { id: idUser },
       } = jwt.verify(token, jwtSecret);
-      userJoin(idUser, socket.id);
 
       const { rows: chats } = await client.query(getChatsQuery, [idUser]);
       for (let i = 0; i < chats.length; i++) {

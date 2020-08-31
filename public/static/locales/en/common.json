@@ -14,7 +14,8 @@
     "pop-up":{
         "confirm-user":{
             "title":"Re-enter you account password",
-            "button":"Continue"
+            "button":"Continue",
+            "bad-password":"Bad password"
         },
         "report":{
             "title-post":"Report post",
@@ -29,7 +30,9 @@
         },
         "error":{
             "bad-request":"Request failed",
-            "last-fanpage-admin":"You're the only admin, give someone admin permission or delete the fanpage"
+            "last-fanpage-admin":"You're the only admin, give someone admin permission or delete the fanpage",
+            "wrong-file-type":"Wrong file type",
+            "file-too-large":"File is too large"
         },
         "invite-person":{
             "empty-content":"Use search to find your friends",

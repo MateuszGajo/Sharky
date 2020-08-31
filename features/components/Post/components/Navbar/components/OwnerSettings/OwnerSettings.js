@@ -16,7 +16,7 @@ const OwnerSettings = () => {
   const { t } = useTranslation(["component"]);
 
   const { setError } = useContext(AppContext);
-  const { setStatusOfEdit, post } = useContext(PostContext);
+  const { setStatusOfEdit, post, isSingle } = useContext(PostContext);
   const { posts, setPosts } = useContext(WizzardContext);
 
   const isShare = post.idUserShare !== null;
