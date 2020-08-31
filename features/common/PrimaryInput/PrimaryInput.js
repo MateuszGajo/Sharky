@@ -21,9 +21,6 @@ const PrimaryInput = ({
     if (autocompleteData.length) {
       setAutocompleteDataFiltered(
         autocompleteData.filter((item) => {
-          console.log(
-            item.value.toLowerCase().startsWith(e.target.value.toLowerCase())
-          );
           return item.value
             .toLowerCase()
             .startsWith(e.target.value.toLowerCase());

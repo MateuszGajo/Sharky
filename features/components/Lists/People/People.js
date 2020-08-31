@@ -37,7 +37,6 @@ const People = ({ idUser, keyWords = "", onlyFriends = false }) => {
     axios
       .post("/friend/get/people", { idUser, from, keyWords, onlyFriends })
       .then(({ data: { friends: f, isMore } }) => {
-        console.log(f);
         setFriends([...friends, ...f]);
         setStatusOfMore(isMore);
       });
@@ -93,7 +92,7 @@ const People = ({ idUser, keyWords = "", onlyFriends = false }) => {
             setFriends(newFriends);
           }
         })
-        .catch(({ response }) => console.log(response));
+        .catch(({ response: { data: message } }) => setError(message));
 
     if (inviteType == "decline") {
       axios
@@ -113,7 +112,6 @@ const People = ({ idUser, keyWords = "", onlyFriends = false }) => {
       axios
         .post("/friend/get/people", { idUser, from: 0, keyWords, onlyFriends })
         .then(({ data: { friends, isMore } }) => {
-          console.log(friends);
           setFriends(friends);
           setStatusOfMore(isMore);
         });

@@ -79,6 +79,7 @@ router.post("/block", async (req, res) => {
 });
 
 router.get("/me", (req, res) => {
+  if (!req.cookies.token) return res.status(401).json("un-authorized");
   const { id, firstName, lastName, photo } = decodeToken(req);
 
   res.json({ user: { id, firstName, lastName, photo } });

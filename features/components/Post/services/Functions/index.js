@@ -30,8 +30,7 @@ export const getUsers = async (users, setUsers, elements) => {
           ...users,
           ...usersKey,
         });
-      })
-      .catch((err) => console.log(err));
+      });
 };
 
 export const muteUser = ({ idMuteUser, setMuteUser, isSingle, setError }) => {
@@ -118,8 +117,7 @@ export const getPosts = ({
         setStatusOfMoreComments(isMoreComments);
         setPosts([...posts, ...newPosts]);
       }
-    )
-    .catch((err) => console.log(err));
+    );
 };
 
 export const addPost = ({
@@ -294,8 +292,7 @@ export const getComments = ({
       await getUsers(users, setUsers, newComments);
       setComments([...comments, ...newComments]);
       setStatusOfMoreData(isMore);
-    })
-    .catch((err) => console.log(err));
+    });
 };
 
 export const addComent = ({
@@ -380,8 +377,7 @@ export const getReplies = async ({
       await getUsers(users, setUsers, r);
       setReplies([...replies, ...r]);
       setStatusOfMoreData(isMore);
-    })
-    .catch((err) => console.log(err));
+    });
 };
 
 export const addReply = ({
