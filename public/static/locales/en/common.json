@@ -18,7 +18,29 @@
     "pop-up":{
         "confirm-user":{
             "title":"Re-enter you account password",
-            "button":"Continue"
+            "button":"Continue",
+            "bad-password":"Bad password"
+        },
+        "report":{
+            "title-post":"Report post",
+            "title-comment":"Report comment",
+            "title-user":"Report user",
+            "subtitle":"Reason",
+            "select":{
+                "offensive-content":"offensive content",
+                "spam":"spam"
+            },
+            "button":"Send"
+        },
+        "error":{
+            "bad-request":"Request failed",
+            "wrong-file-type":"Wrong file type",
+            "file-too-large":"File is too large"
+        },
+        "invite-person":{
+            "empty-content":"Use search to find your friends",
+            "invite":"Invite",
+            "invitation":"invitation has been sent"
         }
     }  
 }

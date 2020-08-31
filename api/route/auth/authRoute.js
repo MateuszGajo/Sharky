@@ -81,8 +81,7 @@ router.post("/signin", async (req, res) => {
   const findUserQuery = "select * from users where email=$1";
   try {
     const findUser = await client.query(findUserQuery, [email]);
-    if (findUser.rowCount == 0)
-      return res.json({ userNotExist: "user-not-exist" });
+    if (findUser.rowCount == 0) return res.status(401).json("invalid-creds");
 
     const user = findUser.rows[0];
     const pwCorrect = await bcrypt.compare(password, user.password);
@@ -90,7 +89,7 @@ router.post("/signin", async (req, res) => {
       const { first_name, last_name, email, phone, country, language } = user;
       const token = jwt.sign(
         {
-          exp: Math.floor(Date.now() / 1000) + 60 * 60,
+          exp: 60 * 60 * 24,
           data: {
             firstName: first_name,
             lastName: last_name,
@@ -103,11 +102,11 @@ router.post("/signin", async (req, res) => {
         jwtSecret
       );
       res.cookie("token", token);
-      return res.json({ error: "" });
+      return res.status(200).json({ success: true });
     }
-    return res.json({ userNotExist: "user-not-exist" });
+    return res.status(401).json("invalid-creds");
   } catch {
-    return res.json({ error: "connect-db-error" });
+    return res.status(400).json("bad-request");
   }
 });
 
@@ -117,7 +116,7 @@ router.post("/signup", async (req, res) => {
   const findUserQuery = "select * from users where email=$1";
   try {
     const findUser = await client.query(findUserQuery, [email]);
-    if (findUser.rowCount > 0) return res.json({ userExist: "user-exist" });
+    if (findUser.rowCount > 0) return res.status(403).json("user-exist");
 
     try {
       const pwHash = await bcrypt.hash(password, saltRounds);
@@ -132,8 +131,6 @@ router.post("/signup", async (req, res) => {
           lastName,
           phone,
         ]);
-        if (createUser.rowCount == 0)
-          return res.json({ error: "create-user-error" });
 
         const token = jwt.sign(
           {
@@ -150,15 +147,15 @@ router.post("/signup", async (req, res) => {
           jwtSecret
         );
         res.cookie("token", token);
-        res.redirect("/");
+        res.status(200).json({ success: true });
       } catch {
-        return res.json({ error: "connect-db-error" });
+        return res.status(400).json("bad-request");
       }
     } catch {
-      return res.json({ error: "password-hash-error" });
+      return res.status(400).json("bad-request");
     }
   } catch {
-    return res.json({ error: "connect-db-error" });
+    return res.status(400).json("bad-request");
   }
 });
 

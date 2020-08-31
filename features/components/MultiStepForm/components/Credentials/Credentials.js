@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { WizzardContext } from "../../context/WizzardContext";
-import AuthInput from "../../../../common/AuthInput/AuthInput";
-import { GlobalContext } from "../../../../contex/globalContext";
-import i18next from "../../../../../i18n";
+import AuthInput from "@common/AuthInput/AuthInput";
+import AppContext from "@features/context/AppContext";
+import i18next from "@i18n";
 const { useTranslation } = i18next;
 
 const Credentials = () => {
@@ -18,7 +18,7 @@ const Credentials = () => {
 
   const {
     signUpValidation: { emailError, passwordError, confirmPasswordError },
-  } = useContext(GlobalContext);
+  } = useContext(AppContext);
 
   const inputPassword = t("common:input.password");
   const inputConfirmPassword = t("common:input.confirm-password");

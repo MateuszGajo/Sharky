@@ -1,29 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import axios from "axios";
 import { IoMdClose } from "react-icons/io";
 import cx from "classnames";
-import PrimaryInput from "../../PrimaryInput/PrimaryInput";
-import PrimaryButton from "../../PrimaryButton/PrimaryButton";
-import i18next from "../../../../i18n";
+import PrimaryInput from "@common/PrimaryInput/PrimaryInput";
+import PrimaryButton from "@common/PrimaryButton/PrimaryButton";
+import i18next from "@i18n";
+
 const { useTranslation } = i18next;
 
-const ConfirmUser = ({ setVerify, isOpen = true, setOpen }) => {
+const ConfirmUser = ({ isOpen = true, setOpen, setVerify }) => {
   const { t } = useTranslation();
+
   const title = t("common:pop-up.confirm-user.title");
   const buttonText = t("common:pop-up.confirm-user.button");
   const inputPasswordText = t("common:input.password");
 
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    //check, is password correct. setVerify(true) if is it correct.
+    axios
+      .post("/user/check/password", { password })
+      .then(() => {
+        setError("");
+        setVerify(true);
+        setOpen(false);
+      })
+      .catch(({ response: { data: message } }) => {
+        setError(message);
+      });
   };
   return (
     <div
       data-testid="confrim-user-container"
-      className={cx("confrim-user-container", {
-        "is-close": !isOpen,
-      })}
+      className="confrim-user-container"
     >
       <div className="confrim-user-container__content">
         <div
@@ -46,6 +57,7 @@ const ConfirmUser = ({ setVerify, isOpen = true, setOpen }) => {
             <div className="confrim-user-container__content__data__form__input">
               <PrimaryInput
                 value={password}
+                type="password"
                 onChange={setPassword}
                 title={inputPasswordText}
               />
@@ -53,6 +65,11 @@ const ConfirmUser = ({ setVerify, isOpen = true, setOpen }) => {
             <div className="confrim-user-container__content__data__form--button">
               <PrimaryButton value={buttonText} />
             </div>
+            {error && (
+              <p className="confrim-user-container__content__data__form__error">
+                {t(`common:pop-up.confirm-user.${error}`)}
+              </p>
+            )}
           </form>
         </div>
       </div>

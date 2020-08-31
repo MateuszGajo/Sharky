@@ -36,17 +36,33 @@
     "lists":{
         "fanpages":{
             "description":"Liczba subskrypcji",
-            "button":"Subskrybuj"
+            "button-subscribe":"Subskrybuj",
+            "button-unsubscribe":"Odsubskrybuj",
+            "empty-content":"Użyj wyszukiwarka aby znaleść fanpage"
         },
         "groups":{
             "description":"Liczba członków",
-            "button":"Dołącz"
+            "button-join":"Dołącz",
+            "button-leave":"Opuść",
+            "empty-content":"Użyj wyszukiwarka aby znaleść grupy"
         },
         "people":{
             "description":"Liczba znajomych",
             "friend":"Znajomy",
             "family":"Rodzina",
-            "pal":"Przyjaciel"
+            "pal":"Przyjaciel",
+            "relation-change":"Prośba zmiany relacji została wysłana",
+            "add":"Dodaj",
+            "remove":"Usuń",
+            "accept":"Zaakceptuj",
+            "decline":"Odrzuć",
+            "sent":"Wysłano",
+            "empty-content":"Użyj wyszukiwarka aby znaleść znajomych"
+
+        },
+        "posts":{
+            "end-of-content":"Widziałeś wszystkie wpisy",
+            "no-content": "Nie ma nowych postów "
         }
     },
     "post":{
@@ -54,13 +70,17 @@
             "hidden":"Ukryj post",
             "mute":"Wycisz użytkownika",
             "report":"Zgłoś post",
-            "block":"Zablokuj użytkownika"
+            "block":"Zablokuj użytkownika",
+            "edit":"Edytuj post",
+            "delete":"Usuń post",
+            "delete-share":"Usuń udostępnienie"
         },
         "comments":{
             "settings":{
                 "report":"Zgłoś komentarz",
                 "mute":"Wycisz użytkownika"
-            }
+            },
+            "load-more-comments":"Pokaż więcej komentarzy..." 
         }
     },
     "messenger":{

@@ -36,17 +36,33 @@
     "lists":{
         "fanpages":{
             "description":"Subscribers",
-            "button":"Subscribe"
+            "button-subscribe":"Subscribe",
+            "button-unsubscribe":"Unsubscribe",
+            "empty-content":"Use search to find fanpages"
         },
         "groups":{
             "description":"Number of members",
-            "button":"Join"
+            "button-join":"Join",
+            "button-leave":"Leave",
+            "empty-content":"Use search to find groups"
         },
         "people":{
             "description":"Number of friends",
-            "friend":"friend",
-            "family":"family",
-            "pal":"pal"
+            "friend":"Friend",
+            "family":"Family",
+            "pal":"Pal",
+            "relation-change":"Change relationship request has been sent",
+            "add":"Add",
+            "remove":"Remove",
+            "accept":"Accept",
+            "decline":"Decline",
+            "sent":"Sent",
+            "empty-content":"Use search to find your friends"
+
+        },
+        "posts":{
+            "end-of-content":"You have seen all posts",
+            "no-content": "There aren't any new posts"
         }
     },
     "post":{
@@ -54,13 +70,17 @@
             "hidden":"Hidden post",
             "mute":"Mute user",
             "report":"Report post",
-            "block":"Block user"
+            "block":"Block user",
+            "edit":"Edit post",
+            "delete":"Delete post",
+            "delete-share":"Delete Share"
         },
         "comments":{
             "settings":{
                 "report":"Report comment",
                 "mute":"Mute user"
-            }
+            },
+            "load-more-comments":"View more comments..." 
         }
     },
     "messenger":{

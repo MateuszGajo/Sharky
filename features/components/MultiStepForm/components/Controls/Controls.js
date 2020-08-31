@@ -2,15 +2,14 @@ import React, { useContext } from "react";
 import { GoArrowLeft, GoArrowRight } from "react-icons/go";
 import cx from "classnames";
 import { WizzardContext } from "../../context/WizzardContext";
-import PrimaryButton from "../../../../common/PrimaryButton/PrimaryButton";
-import { GlobalContext } from "../../../../contex/globalContext";
-import i18next from "../../../../../i18n";
-import passport from "passport";
+import PrimaryButton from "@common/PrimaryButton/PrimaryButton";
+import AppContext from "@features/context/AppContext";
+import i18next from "@i18n";
 const { useTranslation } = i18next;
 
 const Controls = () => {
   const { page, setPage, numberOfPages } = useContext(WizzardContext);
-  const { authError } = useContext(GlobalContext);
+  const { authError } = useContext(AppContext);
 
   const { t } = useTranslation(["signup"]);
   const buttonText = t("signup:button");

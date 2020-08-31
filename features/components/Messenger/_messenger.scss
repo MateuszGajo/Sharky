@@ -53,14 +53,11 @@
     font-size: 1rem;
     font-weight: bold;
   }
-
-  .messenger__navbar__icon{
+  
+  .messenger__navbar__icons--icon {
     position:absolute;
     top:5px;
     right:5px;
-  }
-
-  .messenger__navbar__icon--close-icon{
     display: flex;
     justify-content: center;
     align-items: center;

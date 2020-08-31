@@ -1,13 +1,19 @@
 import React, { useState, useContext } from "react";
+import Router from "next/router";
 import { WizzardContext } from "./context/WizzardContext";
 import Controls from "./components/Controls/Controls";
 import StepWrapper from "./components/StepWrapper/StepWrapper";
 import Step from "./components/Step/Step";
 import Credentials from "./components/Credentials/Credentials";
 import PersonalData from "./components/PersonalData/PersonalData";
-import { GlobalContext } from "../../contex/globalContext";
+import AppContext from "@features/context/AppContext";
+import { signUp } from "@features/service/Functions/index";
+import i18next from "@i18n";
+
+const { useTranslation } = i18next;
 
 const Wizzard = ({ children }) => {
+  const { t } = useTranslation(["signup"]);
   const [numberOfPages, setNumberOfPages] = useState(0);
   const [page, setPage] = useState(1);
   const [email, setEmail] = useState("");
@@ -17,19 +23,30 @@ const Wizzard = ({ children }) => {
   const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
 
-  const { signUp, validationSignUpError, authUserError } = useContext(
-    GlobalContext
-  );
+  const {
+    validationSignUpError,
+    authUserError,
+    dispatch,
+    setValidationSignUpError,
+    setError,
+  } = useContext(AppContext);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    signUp({
+    const creds = {
       email,
       password,
       confirmPassword,
       firstName,
       lastName,
       phoneNumber,
+    };
+    signUp({
+      creds,
+      dispatch,
+      setValidationSignUpError,
+      Router,
+      setError,
     });
   };
   return (
@@ -58,9 +75,13 @@ const Wizzard = ({ children }) => {
         className="authentication__form__wrapper__form"
       >
         {validationSignUpError && (
-          <p className="input-error">{validationSignUpError}</p>
+          <p className="input-error">
+            {t(`signup:validation-errors.${validationSignUpError}`)}
+          </p>
         )}
-        {authUserError && <p className="input-error">{authUserError}</p>}
+        {authUserError && (
+          <p className="input-error">{t(`signup:error.${authUserError}`)}</p>
+        )}
         {children}
       </form>
     </WizzardContext.Provider>

@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { WizzardContext } from "../../context/WizzardContext";
-import AuthInput from "../../../../common/AuthInput/AuthInput";
-import { GlobalContext } from "../../../../contex/globalContext";
-import i18next from "../../../../../i18n";
+import AuthInput from "@common/AuthInput/AuthInput";
+import AppContext from "@features/context/AppContext";
+import i18next from "@i18n";
 const { useTranslation } = i18next;
 
 const PersonalData = () => {
@@ -17,7 +17,7 @@ const PersonalData = () => {
 
   const {
     signUpValidation: { firstNameError, lastNameError, phoneNumberError },
-  } = useContext(GlobalContext);
+  } = useContext(AppContext);
 
   const { t } = useTranslation(["signup"]);
 

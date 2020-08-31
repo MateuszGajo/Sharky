@@ -75,6 +75,25 @@
   grid-auto-rows: min-content;
 }
 
+.empty-card{
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  margin:10px 0;
+  color:grey;
+  
+}
+.empty-card__icon{
+  display:flex;
+  align-items: center;
+  font-size: 1.5rem;
+}
+
+.empty-card__text{
+  margin-left:10px;
+  font-size: 1.2rem;
+}
+
 @media(max-width:1023px) and(orientation:portrait){
   .list{
     grid-template-columns: 1fr;

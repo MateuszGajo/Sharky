@@ -1,79 +1,72 @@
-import React, { useState, useReducer } from "react";
-import axios from "axios";
-import Router from "next/router";
-import { GlobalContext } from "../features/contex/globalContext";
-import { signUpValidation } from "../features/Validation/Validation";
-import AuthReducer from "../features/contex/authReducer";
-import { authInitState } from "../features/contex/initState";
-import i18next from "../i18n";
-const { useTranslation } = i18next;
-
+import React, { useEffect, useState, useReducer } from "react";
+import socketIOClient from "socket.io-client";
+import AppContext from "@features/context/AppContext";
+import { SERVER_URL } from "../config/config";
+import AuthReducer from "@features/context/authReducer";
+import { authInitState } from "@features/context/initState";
+let socket;
 const MyApp = ({ Component, pageProps }) => {
-  const { t } = useTranslation(["component", "signin", "signup"]);
+  const [owner, setOwner] = useState({});
+  const [newMessage, setNewMessage] = useState({});
+  const [newChat, setNewChat] = useState({
+    idUser: null,
+    idChat: null,
+    messageTo: null,
+    firstName: "",
+    lastName: "",
+    photo: "",
+  });
+  const [isError, setError] = useState("");
+  const [isPrompt, setPrompt] = useState("");
+  const [isAuth, setStatusOfAuth] = useState(null);
   const [authError, setAuthError] = useState("");
   const [authUserError, setAuthUserError] = useState("");
   const [validationSignUpError, setValidationSignUpError] = useState("");
 
   const [state, dispatch] = useReducer(AuthReducer, authInitState);
 
-  const signUp = (creds) => {
-    if (signUpValidation(creds, dispatch)) {
-      setValidationSignUpError("");
-      axios
-        .post("/auth/signup", {
-          creds,
-        })
-        .then(({ data: { userExist, error } }) => {
-          if (!userExist && !error) {
-            setAuthError("");
-            setAuthUserError("");
-            Router.push("/");
-          }
-          userExist && setAuthUserError(t(`signup:error.${userExist}`));
-          error &&
-            setAuthError(t(`component:layout.authentication.error.${error}`));
-        })
-        .catch((err) => {
-          setAuthError(t(`component:layout.authentication.error.server-error`));
-        });
-    } else setValidationSignUpError(t(`signup:validation-errors.fields-error`));
-  };
+  useEffect(() => {
+    socket = socketIOClient(SERVER_URL);
+    socket.on(
+      "message",
+      ({ idMessage, idChat, idUser, message, date, messageTo }) => {
+        setNewMessage({ idMessage, idChat, idUser, message, date, messageTo });
+      }
+    );
 
-  const signIn = ({ email, password }) => {
-    axios
-      .post("/auth/signin", {
-        email,
-        password,
-      })
-      .then((resp) => {
-        const { error, userNotExist } = resp.data;
-        if (!error && !userNotExist) {
-          setAuthError("");
-          setAuthUserError("");
-          Router.push("/");
-        }
-        error &&
-          setAuthError(t(`component:layout.authentication.error.${error}`));
-        userNotExist && setAuthUserError(t(`signin:error.${userNotExist}`));
-      })
-      .catch((err) => {
-        setAuthError(t(`component:layout.authentication.error.server-error`));
-      });
-  };
+    socket.on("newChat", ({ newChat }) => {
+      setNewChat(newChat);
+    });
+    socket.emit("connectUser");
+  }, [SERVER_URL]);
+
   return (
-    <GlobalContext.Provider
+    <AppContext.Provider
       value={{
+        socket,
+        owner,
+        setOwner,
+        newMessage,
+        isError,
+        isPrompt,
+        setPrompt,
+        setError,
+        newChat,
+        setNewChat,
+        isAuth,
+        setStatusOfAuth,
         authError,
         setAuthError,
         authUserError,
-        signIn,
-        signUp,
+        setAuthUserError,
         validationSignUpError,
+        setValidationSignUpError,
+        dispatch,
         ...state,
       }}
     >
       <Component {...pageProps} />
-    </GlobalContext.Provider>
+    </AppContext.Provider>
   );
 };
 

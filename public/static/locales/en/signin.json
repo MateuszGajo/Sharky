@@ -3,6 +3,6 @@
     "forget":"Forgot password?",
     "button":"Login",
     "error":{
-        "user-not-exist":"Invalid email or password"
+        "invalid-creds":"Invalid email or password"
     }
 }

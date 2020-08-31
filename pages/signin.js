@@ -1,26 +1,33 @@
 import React, { useState, useEffect, useContext } from "react";
 import { FaGooglePlusG, FaFacebookF } from "react-icons/fa";
 import { FiTwitter } from "react-icons/fi";
-import Authentication from "../features/components/Layout/Authentication/Authentication";
-import Checkbox from "../features/common/Checkbox/Checkbox";
-import PrimaryButton from "../features/common/PrimaryButton/PrimaryButton";
-import AuthInput from "../features/common/AuthInput/AuthInput";
-import axios from "axios";
-import CacheAxios from "../features/CachceAxios/CacheAxios";
-import { GlobalContext } from "../features/contex/globalContext";
-import i18next from "../i18n";
-const { useTranslation } = i18next;
-import "../styles/main.scss";
 import Router from "next/router";
+import Authentication from "@components/Layout/Authentication/Authentication";
+import Checkbox from "@common/Checkbox/Checkbox";
+import PrimaryButton from "@common/PrimaryButton/PrimaryButton";
+import AuthInput from "@common/AuthInput/AuthInput";
+import Spinner from "@components/Spinner/Spinner";
+import AppContext from "@features/context/AppContext";
+import { signIn as sIn, getOwner } from "@features/service/Functions/index";
+import i18next from "@i18n";
+
+import "../styles/main.scss";
+const { useTranslation } = i18next;
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isRembermeChecked, setStatusOfRemberme] = useState(false);
 
-  const { authError, authUserError, setAuthError, signIn: sIn } = useContext(
-    GlobalContext
-  );
+  const {
+    authError,
+    authUserError,
+    setAuthUserError,
+    setStatusOfAuth,
+    setOwner,
+    isAuth,
+    setError,
+  } = useContext(AppContext);
   const { t } = useTranslation(["component", "signin"]);
 
   const inputPassword = t("common:input.password");
@@ -34,7 +41,7 @@ const SignIn = () => {
       localStorage.email = email;
       localStorage.password = password;
     }
-    sIn({ email, password });
+    sIn({ email, password, setAuthUserError, Router, setError });
   };
 
   useEffect(() => {
@@ -43,12 +50,14 @@ const SignIn = () => {
       setPassword(localStorage.password);
     }
 
-    axios.get("/auth/me").then(({ data: { verify } }) => {
-      if (verify) {
-        Router.push("/");
-      }
-    });
+    getOwner({ setStatusOfAuth, setOwner });
   }, []);
+
+  if (isAuth == null) return <Spinner />;
+  else if (isAuth) {
+    Router.push("/");
+    return <Spinner />;
+  }
   return (
     <Authentication type="signin">
       <>
@@ -84,7 +93,11 @@ const SignIn = () => {
             className="authentication__form__wrapper__inputs__wrapper"
             onSubmit={handleSubmit}
           >
-            {authUserError && <p className="input-error">{authUserError}</p>}
+            {authUserError && (
+              <p className="input-error">
+                {t(`signin:error.${authUserError}`)}
+              </p>
+            )}
             <div className="authentication__form__wrapper__inputs__wrapper__input--signin">
               <AuthInput
                 value={email}
@@ -120,7 +133,9 @@ const SignIn = () => {
             </div>
             {authError && (
               <div className="authentication__form__wrapper__inputs__wrapper__error">
-                <p className="input-error">{authError}</p>
+                <p className="input-error">
+                  {t(`component:layout.authentication.error.${authError}`)}
+                </p>
               </div>
             )}
           </form>
