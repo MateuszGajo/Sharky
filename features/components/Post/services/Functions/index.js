@@ -30,8 +30,7 @@ export const getUsers = async (users, setUsers, elements) => {
           ...users,
           ...usersKey,
         });
-      })
-      .catch((err) => console.log(err));
+      });
 };
 
 export const muteUser = ({ idMuteUser, setMuteUser, isSingle, setError }) => {
@@ -79,6 +78,7 @@ export const blockUser = ({
 export const getPosts = ({
   idFanpage,
   idGroup,
+  news,
   idUser,
   authorPost,
   posts,
@@ -90,7 +90,7 @@ export const getPosts = ({
   setStatusOfMoreComments,
 }) => {
   axios
-    .post("/post/get", { from, idGroup, idFanpage, authorPost, idUser })
+    .post("/post/get", { from, idGroup, idFanpage, news, authorPost, idUser })
     .then(
       async ({ data: { posts: p, comments, isMorePosts, isMoreComments } }) => {
         await getUsers(users, setUsers, [...p, ...comments]);
@@ -117,8 +117,7 @@ export const getPosts = ({
         setStatusOfMoreComments(isMoreComments);
         setPosts([...posts, ...newPosts]);
       }
-    )
-    .catch((err) => console.log(err));
+    );
 };
 
 export const addPost = ({
@@ -190,7 +189,7 @@ export const unlikePost = ({ idLike, idPost, setNewLike, setError }) => {
     });
 };
 
-export const sharePost = ({ post, posts, setPosts, setError }) => {
+export const sharePost = ({ post, posts, setPosts, setError, isSingle }) => {
   const date = new Date();
   axios
     .post("/post/share", {
@@ -198,17 +197,18 @@ export const sharePost = ({ post, posts, setPosts, setError }) => {
       date,
     })
     .then(({ data: { idShare, idUser } }) => {
-      setPosts([
-        {
-          ...post,
-          idShare,
-          id: uuid(),
-          date,
-          idUserShare: idUser,
-          numberOfShares: Number(post.numberOfShares) + 1,
-        },
-        ...posts,
-      ]);
+      !isSingle &&
+        setPosts([
+          {
+            ...post,
+            idShare,
+            id: uuid(),
+            date,
+            idUserShare: idUser,
+            numberOfShares: Number(post.numberOfShares) + 1,
+          },
+          ...posts,
+        ]);
     })
     .catch((err) => {
       const {
@@ -292,8 +292,7 @@ export const getComments = ({
       await getUsers(users, setUsers, newComments);
       setComments([...comments, ...newComments]);
       setStatusOfMoreData(isMore);
-    })
-    .catch((err) => console.log(err));
+    });
 };
 
 export const addComent = ({
@@ -378,8 +377,7 @@ export const getReplies = async ({
       await getUsers(users, setUsers, r);
       setReplies([...replies, ...r]);
       setStatusOfMoreData(isMore);
-    })
-    .catch((err) => console.log(err));
+    });
 };
 
 export const addReply = ({

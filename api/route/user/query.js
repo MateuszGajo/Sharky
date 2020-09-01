@@ -62,6 +62,8 @@ const getPhotosQuery = `
     select id, name, date from user_photos where id_user=$1 limit 7 offset $2
 `;
 
+const getPasswordQuery = "select password from users where id=$1";
+
 module.exports = {
   getUserQuery,
   getUserInfoQuery,
@@ -71,4 +73,5 @@ module.exports = {
   blockUserQuery,
   addPhotoQuery,
   changePhotoQuery,
+  getPasswordQuery,
 };

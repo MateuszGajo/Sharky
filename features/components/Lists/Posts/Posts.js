@@ -12,6 +12,7 @@ const { useTranslation } = i18next;
 const PostList = ({
   idFanpage = null,
   idGroup = null,
+  news = false,
   authorPost = false,
   idUser = null,
 }) => {
@@ -33,6 +34,7 @@ const PostList = ({
     getPosts({
       idFanpage,
       idGroup,
+      news,
       authorPost,
       idUser,
       posts,

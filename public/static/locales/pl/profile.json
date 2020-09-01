@@ -8,5 +8,9 @@
     "lack-of-information":"Brak informacji",
     "add-photo":"Dodaj zdjęcie",
     "photo-added-successfully":"Pomyślnie dodano zdjęcie",
-    "change-photo":"Zmień zdjęcie"
+    "change-photo":"Zmień zdjęcie",
+    "error":{
+        "user-does-not-exist":"Użytkownik nie istnieje"
+    }
+    
 }
