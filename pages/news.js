@@ -1,15 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
+import Router from "next/router";
 import HomeLayout from "@components/Layout/Home/HomeLayout";
 import MessageBox from "@common/MessageBox/MessageBox";
 import Posts from "@components/Lists/Posts/Posts";
+import Spinner from "@components/Spinner/Spinner";
 import { MdBlock } from "react-icons/md";
 import i18next from "@i18n";
+import { getOwner } from "@features/service/Functions/index";
+import AppContext from "@features/context/AppContext";
 import "../styles/main.scss";
 const { useTranslation } = i18next;
 
 const News = () => {
   const { t } = useTranslation(["news"]);
+
+  const { setOwner, isAuth, setStatusOfAuth } = useContext(AppContext);
+
   const [permission, setPermission] = useState();
   const [file, setFile] = useState();
   const [content, setContent] = useState("");
@@ -22,11 +29,22 @@ const News = () => {
     setNewPost({ content, file });
   };
   useEffect(() => {
-    axios.get("/news/permission").then(({ data: { permission } }) => {
-      console.log(permission);
-      setPermission(permission);
-    });
+    isAuth &&
+      axios.get("/news/permission").then(({ data: { permission } }) => {
+        console.log(permission);
+        setPermission(permission);
+      });
+  }, [isAuth]);
+
+  useEffect(() => {
+    getOwner({ setStatusOfAuth, setOwner });
   }, []);
+
+  if (isAuth == null) return <Spinner />;
+  else if (!isAuth) {
+    Router.push("/signin");
+    return <Spinner />;
+  }
   return (
     <HomeLayout>
       <section className="news">
