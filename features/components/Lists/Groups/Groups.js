@@ -1,17 +1,19 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { AiOutlineSearch } from "react-icons/ai";
 import Card from "../Card/Card";
 import i18next from "@i18n";
 import AppContext from "@features/context/AppContext";
 import Spinner from "@components/Spinner/Spinner";
 const { useTranslation } = i18next;
 
-const Groups = ({ idUser }) => {
+const Groups = ({ idUser, keyWords = "", onlySubscribed = false }) => {
   const { t } = useTranslation(["component"]);
   const description = t("component:lists.groups.description");
   const buttonJoin = t("component:lists.groups.button-join");
   const buttonLeave = t("component:lists.groups.button-leave");
+  const emptyContent = t("component:lists.groups.empty-content");
 
   const { owner, setError } = useContext(AppContext);
 
@@ -21,9 +23,9 @@ const Groups = ({ idUser }) => {
 
   const fetchData = (from) => {
     axios
-      .post("/group/get", { from, idUser })
-      .then(({ data: { groups, isMore } }) => {
-        setGroups(groups);
+      .post("/group/get", { from, idUser, keyWords, onlySubscribed })
+      .then(({ data: { groups: g, isMore } }) => {
+        setGroups([...groups, ...g]);
         setStatusOfMore(isMore);
       })
       .catch(({ response: { data: message } }) => setError(message));
@@ -34,15 +36,38 @@ const Groups = ({ idUser }) => {
   }, []);
 
   useEffect(() => {
-    if (group.idSub)
+    if (keyWords != null)
       axios
-        .post("/group/user/delete", { idSub: group.idSub })
-        .then(() => group.setIdSub(null))
+        .post("/group/get", { from: 0, idUser, keyWords, onlySubscribed })
+        .then(({ data: { groups, isMore } }) => {
+          setGroups(groups);
+          setStatusOfMore(isMore);
+        })
         .catch(({ response: { data: message } }) => setError(message));
-    else if (group.id)
+  }, [keyWords]);
+
+  useEffect(() => {
+    const { number, setNumber, idRef, setIdRef, id } = group;
+    if (idRef)
+      axios
+        .post("/group/user/delete", { idSub: group.idRef })
+        .then(() => {
+          if (idUser == owner.id) {
+            const newGroups = groups.filter((group) => group.idGroup != id);
+            setGroups(newGroups);
+          } else {
+            setNumber(Number(number) - 1);
+            setIdRef(null);
+          }
+        })
+        .catch(({ response: { data: message } }) => setError(message));
+    else if (id)
       axios
         .post("/group/user/add", { idGroup: group.id })
-        .then(({ data: { id } }) => group.setIdSub(id))
+        .then(({ data: { id } }) => {
+          setIdRef(id);
+          setNumber(Number(number) + 1);
+        })
         .catch(({ response: { data: message } }) => setError(message));
   }, [group]);
 
@@ -59,8 +84,8 @@ const Groups = ({ idUser }) => {
           const { idGroup, idSub, name, photo, numberOfMembers } = group;
           const data = {
             refType: "group",
-            refId: idGroup,
-            idSub: group.idSub || null,
+            id: idGroup,
+            idRef: group.idSub || null,
             photo,
             radiusPhoto: true,
             name,
@@ -74,6 +99,16 @@ const Groups = ({ idUser }) => {
           return <Card data={data} key={idGroup} handleClick={setGroup} />;
         })}
       </div>
+      {!groups.length && (
+        <div className="empty-card">
+          <div className="empty-card__icon">
+            <AiOutlineSearch />
+          </div>
+          <div className="empty-card__text">
+            <span className="empty-card__text--span">{emptyContent}</span>
+          </div>
+        </div>
+      )}
     </InfiniteScroll>
   );
 };

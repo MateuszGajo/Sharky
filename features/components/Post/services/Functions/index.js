@@ -30,8 +30,7 @@ export const getUsers = async (users, setUsers, elements) => {
           ...users,
           ...usersKey,
         });
-      })
-      .catch((err) => console.log(err));
+      });
 };
 
 export const muteUser = ({ idMuteUser, setMuteUser, isSingle, setError }) => {
@@ -77,6 +76,11 @@ export const blockUser = ({
 };
 
 export const getPosts = ({
+  idFanpage,
+  idGroup,
+  news,
+  idUser,
+  authorPost,
   posts,
   setPosts,
   from,
@@ -86,11 +90,10 @@ export const getPosts = ({
   setStatusOfMoreComments,
 }) => {
   axios
-    .post("/post/get", { from })
+    .post("/post/get", { from, idGroup, idFanpage, news, authorPost, idUser })
     .then(
       async ({ data: { posts: p, comments, isMorePosts, isMoreComments } }) => {
-        await getUsers(users, setUsers, p);
-        await getUsers(users, setUsers, comments);
+        await getUsers(users, setUsers, [...p, ...comments]);
         const commentsKey = {};
         for (let i = 0; i < comments.length; i++) {
           if (!commentsKey[comments[i].idPost])
@@ -114,8 +117,7 @@ export const getPosts = ({
         setStatusOfMoreComments(isMoreComments);
         setPosts([...posts, ...newPosts]);
       }
-    )
-    .catch((err) => console.log(err));
+    );
 };
 
 export const addPost = ({
@@ -162,8 +164,8 @@ export const addPost = ({
 export const likePost = ({ idPost, setNewLike, setError }) => {
   axios
     .post("/post/like", { idPost })
-    .then(({ data: { idPostLike } }) =>
-      setNewLike({ idLike: idPostLike, idElement: idPost, type: "post" })
+    .then(({ data: { idLike } }) =>
+      setNewLike({ idLike, idElement: idPost, type: "post" })
     )
     .catch((err) => {
       const {
@@ -187,7 +189,7 @@ export const unlikePost = ({ idLike, idPost, setNewLike, setError }) => {
     });
 };
 
-export const sharePost = ({ post, posts, setPosts, setError }) => {
+export const sharePost = ({ post, posts, setPosts, setError, isSingle }) => {
   const date = new Date();
   axios
     .post("/post/share", {
@@ -195,17 +197,18 @@ export const sharePost = ({ post, posts, setPosts, setError }) => {
       date,
     })
     .then(({ data: { idShare, idUser } }) => {
-      setPosts([
-        {
-          ...post,
-          idShare,
-          id: uuid(),
-          date,
-          idUserShare: idUser,
-          numberOfShares: Number(post.numberOfShares) + 1,
-        },
-        ...posts,
-      ]);
+      !isSingle &&
+        setPosts([
+          {
+            ...post,
+            idShare,
+            id: uuid(),
+            date,
+            idUserShare: idUser,
+            numberOfShares: Number(post.numberOfShares) + 1,
+          },
+          ...posts,
+        ]);
     })
     .catch((err) => {
       const {
@@ -289,8 +292,7 @@ export const getComments = ({
       await getUsers(users, setUsers, newComments);
       setComments([...comments, ...newComments]);
       setStatusOfMoreData(isMore);
-    })
-    .catch((err) => console.log(err));
+    });
 };
 
 export const addComent = ({
@@ -328,9 +330,9 @@ export const addComent = ({
 export const likeComment = ({ idComment, setNewLike, setError }) => {
   axios
     .post("/comment/like", { idComment })
-    .then(({ data: { idCommentLike } }) => {
+    .then(({ data: { idLike } }) => {
       setNewLike({
-        idLike: idCommentLike,
+        idLike,
         idElement: idComment,
         type: "comment",
       });
@@ -375,8 +377,7 @@ export const getReplies = async ({
       await getUsers(users, setUsers, r);
       setReplies([...replies, ...r]);
       setStatusOfMoreData(isMore);
-    })
-    .catch((err) => console.log(err));
+    });
 };
 
 export const addReply = ({
@@ -414,8 +415,8 @@ export const addReply = ({
 export const likeReply = async ({ idReply, setNewLike, setError }) => {
   axios
     .post("/reply/like", { idReply })
-    .then(({ data: { idReplyLike } }) =>
-      setNewLike({ idLike: idReplyLike, idElement: idReply, type: "reply" })
+    .then(({ data: { idLike } }) =>
+      setNewLike({ idLike, idElement: idReply, type: "reply" })
     )
     .catch((err) => {
       const {

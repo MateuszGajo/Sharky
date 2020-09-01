@@ -31,23 +31,32 @@
         "fanpages":{
             "description":"Subscribers",
             "button-subscribe":"Subscribe",
-            "button-unsubscribe":"Unsubscribe"
+            "button-unsubscribe":"Unsubscribe",
+            "empty-content":"Use search to find fanpages"
         },
         "groups":{
             "description":"Number of members",
             "button-join":"Join",
-            "button-leave":"Leave"
+            "button-leave":"Leave",
+            "empty-content":"Use search to find groups"
         },
         "people":{
             "description":"Number of friends",
-            "friend":"friend",
-            "family":"family",
-            "pal":"pal",
-            "relation-change":"Change relationship request has been sent"
+            "friend":"Friend",
+            "family":"Family",
+            "pal":"Pal",
+            "relation-change":"Change relationship request has been sent",
+            "add":"Add",
+            "remove":"Remove",
+            "accept":"Accept",
+            "decline":"Decline",
+            "sent":"Sent",
+            "empty-content":"Use search to find your friends"
 
         },
         "posts":{
-            "end-of-content":"You have seen all posts"
+            "end-of-content":"You have seen all posts",
+            "no-content": "There aren't any new posts"
         }
     },
     "post":{

@@ -6,11 +6,11 @@ import AppContext from "@features/context/AppContext";
 
 const withWizzard = (WrappedComponent) => {
   return (props) => {
-    const { newPost } = props;
+    const { newPost, idFanpage = null, idGroup = null, news } = props;
 
     const { setError, owner } = useContext(AppContext);
     const [isMoreComment, setStatusOfMoreComments] = useState();
-    const [isMorePosts, setStatusOfMorePosts] = useState();
+    const [isMorePosts, setStatusOfMorePosts] = useState(true);
     const [newLike, setNewLike] = useState({
       idLike: null,
       idElement: null,
@@ -29,18 +29,21 @@ const withWizzard = (WrappedComponent) => {
     const [users, setUsers] = useState({});
 
     const [posts, setPosts] = useState([]);
-
     useEffect(() => {
       if (newPost?.content) {
-        const { content, photo } = newPost;
+        const { content, file, idGroup = "", idFanpage = "" } = newPost;
         const date = new Date();
+        const data = new FormData();
+        data.append("file", file);
+        data.set("content", content);
+        data.set("date", date.toUTCString());
+        data.set("idGroup", idGroup);
+        data.set("idFanpage", idFanpage);
+        data.set("news", news);
+
         axios
-          .post("/post/add", {
-            content,
-            date,
-            photo,
-          })
-          .then(({ data: { idPost } }) => {
+          .post(`/post/add`, data)
+          .then(({ data: { idPost, fileName } }) => {
             setPosts([
               {
                 id: uuid(),
@@ -48,10 +51,10 @@ const withWizzard = (WrappedComponent) => {
                 idUser: owner.id,
                 content,
                 date,
-                photo,
+                photo: fileName,
                 numberOfShares: 0,
                 numberOfComments: 0,
-                numerOfLikes: 0,
+                numberOfLikes: 0,
                 idShare: null,
                 idUserShare: null,
                 idLike: null,

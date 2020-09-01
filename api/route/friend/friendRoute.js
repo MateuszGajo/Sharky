@@ -1,116 +1,142 @@
 const express = require("express");
-const jwt = require("jsonwebtoken");
 const { client } = require("../../../config/pgAdaptor");
-const { jwtSecret } = require("../../../config/keys");
+const {
+  getFriendsQuery,
+  getSortedFriendsQuery,
+  getSortedUsersQuery,
+  getChatsQuery,
+  addUserQuery,
+  removeUserQuery,
+  acceptRequest,
+  setRelation,
+  removeFriendsRequest,
+  readMessageQuery,
+  updateRelationQuery,
+  addChatQuery,
+} = require("./query");
+const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
 
 router.get("/get", async (req, res) => {
-  const token = jwt.sign(
-    {
-      exp: Math.floor(Date.now() / 1000) + 60 * 60,
-      data: {
-        id: 1,
-      },
-    },
-    jwtSecret
-  );
-  const {
-    data: { id: idUser },
-  } = jwt.verify(token, jwtSecret);
-
-  const getFriendsQuery = `
-  select result.id_user_1 as "idUser", chats.id as "idChat", chats.message_to as "messageTo", users.first_name as "firstName", users.last_name as "lastName", users.photo
-	from(select id_user_1 
-        from friends 
-        where id_user_2=$1
-        union
-        select id_user_2
-        from friends 
-        where id_user_1=$1) as result
-	inner join chats on chats.id_user_1 = result.id_user_1 or chats.id_user_2 = result.id_user_1
-	left join users on users.id = result.id_user_1
-      `;
+  const { id: idOwner } = decodeToken(req);
 
   try {
-    const friends = await client.query(getFriendsQuery, [idUser]);
+    const friends = await client.query(getChatsQuery, [idOwner]);
     res.status(200).json({ friends: friends.rows });
   } catch {
     res.status(400).json("bad-request");
   }
 });
 
-router.post("/get/people", async (req, res) => {
-  const { idUser, from } = req.body;
-  console.log(idUser, from);
-  const getFriendsQuery = `
-  select c.*, friend_relation.relation, 	users.first_name as "firstName", users.last_name as "lastName", users.photo
-  from(select b.*, friends.id as "idRelation"
-    from(select a."idUser", sum(a.count) as "numberOfFriends"
-      from(select id_user_1 as "idUser", count(*) over (partition by id_user_1) as "count" 
-        from friends 
-        where id_user_1 in(		
-            select id_user_1
-            from friends 
-            where id_user_2=$1
-            union
-            select id_user_2
-            from friends 
-            where id_user_1=$1
-            )
-        union
-        select id_user_2 as "user", count(*) over (partition by id_user_2) as "count" 
-        from friends 
-        where id_user_2 in(		
-            select id_user_1
-            from friends 
-            where id_user_2=$1
-            union
-            select id_user_2
-            from friends 
-            where id_user_1=$1
-            )
-        ) as a
-      group by a."idUser") as b
-    inner join friends on friends.id_user_1 = b."idUser" and friends.id_user_2 = $1
-    union
-    select b.*, friends.id as "idRelation"
-    from(select a."idUser", sum(a.count) as "numberOfFriends"
-      from(select id_user_1 as "idUser", count(*) over (partition by id_user_1) as "count" 
-        from friends 
-        where id_user_1 in(		
-            select id_user_1
-            from friends 
-            where id_user_2=$1
-            union
-            select id_user_2
-            from friends 
-            where id_user_1=$1
-            )
-        union
-        select id_user_2 as "user", count(*) over (partition by id_user_2) as "count" 
-        from friends 
-        where id_user_2 in(		
-            select id_user_1
-            from friends 
-            where id_user_2=$1
-            union
-            select id_user_2
-            from friends 
-            where id_user_1=$1
-            )
-        ) as a
-      group by a."idUser") as b
-    inner join friends on friends.id_user_2 = b."idUser" and friends.id_user_1 = $1) as c
-  left join users on users.id = c."idUser"
-  left join friend_relation on friend_relation.id_friendship = c."idRelation"
-  limit 21 offset $2
-  `;
-  let result;
+router.post("/add", async (req, res) => {
+  const { idUser } = req.body;
+  const { id: idOwner } = decodeToken(req);
+
   try {
-    result = await client.query(getFriendsQuery, [idUser, from]);
+    const { rows: addUser } = await client.query(addUserQuery, [
+      idOwner,
+      idUser,
+    ]);
+
+    res.status(200).json({ idFriendShip: addUser[0].id });
   } catch {
-    return res.status(400).json("bad-request");
+    res.status(400).json("bad-request");
   }
+});
+
+router.post("/remove", async (req, res) => {
+  const { idFriendShip } = req.body;
+
+  try {
+    await client.query(removeUserQuery, [idFriendShip]);
+    res.status(200).json({ success: true });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
+router.post("/accept", async (req, res) => {
+  const { idFriendShip, idUser } = req.body;
+
+  const { id: idOwner } = decodeToken(req);
+
+  const relation = "friend";
+  let idChat;
+  try {
+    const { rows } = await client.query(acceptRequest, [idFriendShip]);
+    let idChat;
+
+    if (rows[0]) {
+      await client.query(setRelation, [idFriendShip, relation]);
+      const { rows: chat } = await client.query(addChatQuery, [
+        idUser,
+        idOwner,
+      ]);
+      idChat = chat[0].id;
+    }
+
+    res.status(200).json({ idChat, relation, success: rows[0] ? true : false });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
+router.post("/decline", async (req, res) => {
+  const { idFriendShip } = req.body;
+
+  try {
+    client.query(removeFriendsRequest, [idFriendShip]);
+    res.status(200).json({ success: true });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
+router.post("/get/people", async (req, res) => {
+  const { idUser, from, onlyFriends } = req.body;
+  let { keyWords } = req.body;
+  if (keyWords) {
+    keyWords = keyWords.split(/\s+/);
+    if (keyWords.length > 2)
+      return res.status(200).json({ friends: [], isMore: false });
+  }
+
+  const { id: idOwner } = decodeToken(req);
+
+  let result;
+
+  if (!keyWords) {
+    try {
+      result = await client.query(getFriendsQuery, [
+        idUser,
+        idOwner,
+        from,
+        idUser == idOwner ? true : false,
+      ]);
+    } catch {
+      return res.status(400).json("bad-request");
+    }
+  } else {
+    try {
+      if (onlyFriends)
+        result = await client.query(getSortedFriendsQuery, [
+          keyWords[0] + "%",
+          (keyWords[1] ? keyWords[1] : "") + "%",
+          idOwner,
+          from,
+        ]);
+      else
+        result = await client.query(getSortedUsersQuery, [
+          keyWords[0] + "%",
+          (keyWords[1] ? keyWords[1] : "") + "%",
+          idOwner,
+          from,
+        ]);
+    } catch {
+      return res.status(400).json("bad-request");
+    }
+  }
+
   let { rows: friends } = result;
   let isMore = true;
 
@@ -138,18 +164,14 @@ router.post("/chat/join", (req, res) => {
 router.post("/message/read", (req, res) => {
   const { idChat } = req.body;
 
-  const readMessageQuery = `update chats set message_to=null where id=$1;`;
-
   client.query(readMessageQuery, [idChat]);
 });
 
 router.post("/update/relation", async (req, res) => {
-  const { idRelation, idUser, relation } = req.body;
-
-  const updateRelationQuery = `update friend_relation set new_relation=$1, id_user=$2 where id_friendship=$3;`;
+  const { idFriendShip, idUser, relation } = req.body;
 
   try {
-    await client.query(updateRelationQuery, [relation, idUser, idRelation]);
+    await client.query(updateRelationQuery, [relation, idUser, idFriendShip]);
     res.status(200);
   } catch {
     res.status(400).json("bad-request");

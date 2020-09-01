@@ -31,23 +31,32 @@
         "fanpages":{
             "description":"Liczba subskrypcji",
             "button-subscribe":"Subskrybuj",
-            "button-unsubscribe":"Odsubskrybuj"
+            "button-unsubscribe":"Odsubskrybuj",
+            "empty-content":"Użyj wyszukiwarka aby znaleść fanpage"
         },
         "groups":{
             "description":"Liczba członków",
             "button-join":"Dołącz",
-            "button-leave":"Opuść"
+            "button-leave":"Opuść",
+            "empty-content":"Użyj wyszukiwarka aby znaleść grupy"
         },
         "people":{
             "description":"Liczba znajomych",
             "friend":"Znajomy",
             "family":"Rodzina",
             "pal":"Przyjaciel",
-            "relation-change":"Prośba zmiany relacji została wysłana"
+            "relation-change":"Prośba zmiany relacji została wysłana",
+            "add":"Dodaj",
+            "remove":"Usuń",
+            "accept":"Zaakceptuj",
+            "decline":"Odrzuć",
+            "sent":"Wysłano",
+            "empty-content":"Użyj wyszukiwarka aby znaleść znajomych"
 
         },
         "posts":{
-            "end-of-content":"Widziałeś wszystkie wpisy"
+            "end-of-content":"Widziałeś wszystkie wpisy",
+            "no-content": "Nie ma nowych postów "
         }
     },
     "post":{
