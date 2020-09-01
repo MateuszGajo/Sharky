@@ -9,11 +9,16 @@ import i18next from "@i18n";
 
 const { useTranslation } = i18next;
 
-const PostList = ({}) => {
+const PostList = ({
+  idFanpage = null,
+  idGroup = null,
+  news = false,
+  authorPost = false,
+  idUser = null,
+}) => {
   const { t } = useTranslation(["component"]);
   const endOfContent = t("component:lists.posts.end-of-content");
   const noContent = t("component:lists.posts.no-content");
-
   const {
     posts,
     setPosts,
@@ -25,11 +30,16 @@ const PostList = ({}) => {
     isMorePosts,
   } = useContext(WizzardContext);
 
-  const getNewPosts = () => {
+  const fetchData = (from) => {
     getPosts({
+      idFanpage,
+      idGroup,
+      news,
+      authorPost,
+      idUser,
       posts,
       setPosts,
-      from: posts.length,
+      from,
       users,
       setUsers,
       setStatusOfMorePosts,
@@ -38,15 +48,7 @@ const PostList = ({}) => {
   };
 
   useEffect(() => {
-    getPosts({
-      posts,
-      setPosts,
-      from: 0,
-      users,
-      setUsers,
-      setStatusOfMorePosts,
-      setStatusOfMoreComments,
-    });
+    fetchData(0);
   }, []);
 
   useEffect(() => {
@@ -66,7 +68,7 @@ const PostList = ({}) => {
     <div className="post-list">
       <InfiniteScroll
         dataLength={posts.length}
-        next={() => getNewPosts()}
+        next={() => fetchData(posts.length)}
         hasMore={isMorePosts}
         loader={<Spinner />}
         endMessage={

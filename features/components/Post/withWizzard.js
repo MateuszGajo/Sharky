@@ -6,7 +6,7 @@ import AppContext from "@features/context/AppContext";
 
 const withWizzard = (WrappedComponent) => {
   return (props) => {
-    const { newPost } = props;
+    const { newPost, idFanpage = null, idGroup = null, news } = props;
 
     const { setError, owner } = useContext(AppContext);
     const [isMoreComment, setStatusOfMoreComments] = useState();
@@ -29,18 +29,20 @@ const withWizzard = (WrappedComponent) => {
     const [users, setUsers] = useState({});
 
     const [posts, setPosts] = useState([]);
-
     useEffect(() => {
       if (newPost?.content) {
-        const { content, file } = newPost;
+        const { content, file, idGroup = "", idFanpage = "" } = newPost;
         const date = new Date();
         const data = new FormData();
         data.append("file", file);
         data.set("content", content);
         data.set("date", date.toUTCString());
+        data.set("idGroup", idGroup);
+        data.set("idFanpage", idFanpage);
+        data.set("news", news);
 
         axios
-          .post("/post/add", data)
+          .post(`/post/add`, data)
           .then(({ data: { idPost, fileName } }) => {
             setPosts([
               {

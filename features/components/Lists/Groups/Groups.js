@@ -8,7 +8,7 @@ import AppContext from "@features/context/AppContext";
 import Spinner from "@components/Spinner/Spinner";
 const { useTranslation } = i18next;
 
-const Groups = ({ idUser, keyWords = "" }) => {
+const Groups = ({ idUser, keyWords = "", onlySubscribed = false }) => {
   const { t } = useTranslation(["component"]);
   const description = t("component:lists.groups.description");
   const buttonJoin = t("component:lists.groups.button-join");
@@ -23,7 +23,7 @@ const Groups = ({ idUser, keyWords = "" }) => {
 
   const fetchData = (from) => {
     axios
-      .post("/group/get", { from, idUser, keyWords })
+      .post("/group/get", { from, idUser, keyWords, onlySubscribed })
       .then(({ data: { groups: g, isMore } }) => {
         setGroups([...groups, ...g]);
         setStatusOfMore(isMore);
@@ -38,7 +38,7 @@ const Groups = ({ idUser, keyWords = "" }) => {
   useEffect(() => {
     if (keyWords != null)
       axios
-        .post("/group/get", { from: 0, idUser, keyWords })
+        .post("/group/get", { from: 0, idUser, keyWords, onlySubscribed })
         .then(({ data: { groups, isMore } }) => {
           setGroups(groups);
           setStatusOfMore(isMore);

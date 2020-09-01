@@ -1,12 +1,18 @@
-const { ConsoleView } = require("react-device-detect");
-
 const users = {};
 
 const userJoin = (idUser, idSocket) => {
   users[idUser] = [...(users[idUser] ? users[idUser] : []), idSocket];
 };
 
-const existUser = (idUser) => (users[idUser].length > 0 ? true : false);
+const existUser = (idUser) => {
+  if (!users[idUser]) return false;
+  return users[idUser].length > 0 ? true : false;
+};
+
+const getSocket = (idUser) => {
+  if (!users[idUser]) return null;
+  return users[idUser];
+};
 
 const userLeave = (idUser, idSocket) => {
   let newUser = [];
@@ -14,4 +20,4 @@ const userLeave = (idUser, idSocket) => {
   users[idUser] = newUser;
 };
 
-module.exports = { userJoin, userLeave, existUser };
+module.exports = { userJoin, userLeave, existUser, getSocket };

@@ -6,9 +6,10 @@ import { AiOutlineSearch } from "react-icons/ai";
 import Spinner from "@components/Spinner/Spinner";
 import AppContext from "@features/context/AppContext";
 import i18n from "@i18n";
+import { uuid } from "uuidv4";
 const { useTranslation } = i18n;
 
-const People = ({ idUser, keyWords = "" }) => {
+const People = ({ idUser, keyWords = "", onlyFriends = false }) => {
   const { t } = useTranslation(["component"]);
 
   const relationChangeText = t("component:lists.people.relation-change");
@@ -23,7 +24,9 @@ const People = ({ idUser, keyWords = "" }) => {
   const sentInvite = t("component:lists.people.sent");
   const emptyContent = t("component:lists.people.empty-content");
 
-  const { setError, setPrompt, owner } = useContext(AppContext);
+  const { setError, setPrompt, owner, setNewChat, socket } = useContext(
+    AppContext
+  );
   const [relation, setRelation] = useState({ id: null, name: "" });
   const [friends, setFriends] = useState([]);
   const [friend, setFriend] = useState({ id: null, name: "", idRef: null });
@@ -32,7 +35,7 @@ const People = ({ idUser, keyWords = "" }) => {
 
   const fetchData = (from) => {
     axios
-      .post("/friend/get/people", { idUser, from, keyWords })
+      .post("/friend/get/people", { idUser, from, keyWords, onlyFriends })
       .then(({ data: { friends: f, isMore } }) => {
         setFriends([...friends, ...f]);
         setStatusOfMore(isMore);
@@ -40,12 +43,12 @@ const People = ({ idUser, keyWords = "" }) => {
   };
 
   useEffect(() => {
-    const { idFriendShip } = relation;
-    if (idFriendShip != null) {
+    const { id } = relation;
+    if (id != null) {
       setPrompt(relationChangeText);
       axios
         .post("/friend/update/relation", {
-          idFriendShip,
+          idFriendShip: id,
           idUser,
           relation: relation.name,
         })
@@ -64,18 +67,30 @@ const People = ({ idUser, keyWords = "" }) => {
       setButtonName,
       number,
       setNumber,
+      id,
     } = invite;
 
     if (inviteType == "accept")
       axios
-        .post("/friend/accept", { idFriendShip })
-        .then(({ data: { relation } }) => {
-          setInviteType("");
-          setButton("relation");
-          setTitle(t(`component:lists.people.${relation}`));
-          setButtonName(relation);
-          setCollapse(idUser == owner.id && relation ? true : false);
-          setNumber(Number(number) + 1);
+        .post("/friend/accept", { idFriendShip, idUser: id })
+        .then(({ data: { idChat, relation, success } }) => {
+          if (success) {
+            setInviteType("");
+            setButton("relation");
+            setTitle(t(`component:lists.people.${relation}`));
+            setButtonName(relation);
+            setCollapse(idUser == owner.id && relation ? true : false);
+            setNumber(Number(number) + 1);
+            socket.emit("joinNewChat", { idChat });
+          } else {
+            setInviteType("");
+            setButton("relation");
+            setTitle(t(`component:lists.people.${relation}`));
+            setButtonName(relation);
+            setCollapse(idUser == owner.id && relation ? true : false);
+            setNumber(Number(number) + 1);
+            setFriends(newFriends);
+          }
         })
         .catch(({ response: { data: message } }) => setError(message));
 
@@ -95,7 +110,7 @@ const People = ({ idUser, keyWords = "" }) => {
   useEffect(() => {
     if (keyWords != null)
       axios
-        .post("/friend/get/people", { idUser, from: 0, keyWords })
+        .post("/friend/get/people", { idUser, from: 0, keyWords, onlyFriends })
         .then(({ data: { friends, isMore } }) => {
           setFriends(friends);
           setStatusOfMore(isMore);
@@ -161,7 +176,7 @@ const People = ({ idUser, keyWords = "" }) => {
           } = friend;
 
           const data = {
-            ref: "profile",
+            refType: "profile",
             id,
             idRef: idFriendShip,
             subTitle: addText,

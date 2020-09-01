@@ -26,7 +26,6 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
   const [{ value: da }, , { value: mo }, , { value: ye }] = dtf.formatToParts(
     new Date(post.date)
   );
-
   const handleClick = () => {
     const { current: fCollapse } = focusCollapse;
     if (!fCollapse.classList.contains("is-close"))
