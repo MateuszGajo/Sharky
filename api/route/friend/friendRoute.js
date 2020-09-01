@@ -1,7 +1,5 @@
 const express = require("express");
-const jwt = require("jsonwebtoken");
 const { client } = require("../../../config/pgAdaptor");
-const { jwtSecret } = require("../../../config/keys");
 const {
   getFriendsQuery,
   getSortedFriendsQuery,
@@ -16,24 +14,14 @@ const {
   updateRelationQuery,
   addChatQuery,
 } = require("./query");
+const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
 
 router.get("/get", async (req, res) => {
-  const token = jwt.sign(
-    {
-      exp: Math.floor(Date.now() / 1000) + 60 * 60,
-      data: {
-        id: 1,
-      },
-    },
-    jwtSecret
-  );
-  const {
-    data: { id: idUser },
-  } = jwt.verify(token, jwtSecret);
+  const { id: idOwner } = decodeToken(req);
 
   try {
-    const friends = await client.query(getChatsQuery, [idUser]);
+    const friends = await client.query(getChatsQuery, [idOwner]);
     res.status(200).json({ friends: friends.rows });
   } catch {
     res.status(400).json("bad-request");
@@ -42,19 +30,7 @@ router.get("/get", async (req, res) => {
 
 router.post("/add", async (req, res) => {
   const { idUser } = req.body;
-
-  const token = jwt.sign(
-    {
-      exp: Math.floor(Date.now() / 1000) + 60 * 60,
-      data: {
-        id: 1,
-      },
-    },
-    jwtSecret
-  );
-  const {
-    data: { id: idOwner },
-  } = jwt.verify(token, jwtSecret);
+  const { id: idOwner } = decodeToken(req);
 
   try {
     const { rows: addUser } = await client.query(addUserQuery, [
@@ -82,18 +58,7 @@ router.post("/remove", async (req, res) => {
 router.post("/accept", async (req, res) => {
   const { idFriendShip, idUser } = req.body;
 
-  const token = jwt.sign(
-    {
-      exp: Math.floor(Date.now() / 1000) + 60 * 60,
-      data: {
-        id: 1,
-      },
-    },
-    jwtSecret
-  );
-  const {
-    data: { id: idOwner },
-  } = jwt.verify(token, jwtSecret);
+  const { id: idOwner } = decodeToken(req);
 
   const relation = "friend";
   let idChat;
@@ -136,18 +101,7 @@ router.post("/get/people", async (req, res) => {
       return res.status(200).json({ friends: [], isMore: false });
   }
 
-  const token = jwt.sign(
-    {
-      exp: Math.floor(Date.now() / 1000) + 60 * 60,
-      data: {
-        id: 1,
-      },
-    },
-    jwtSecret
-  );
-  const {
-    data: { id: idOwner },
-  } = jwt.verify(token, jwtSecret);
+  const { id: idOwner } = decodeToken(req);
 
   let result;
 

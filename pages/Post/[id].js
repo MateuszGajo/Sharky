@@ -6,13 +6,22 @@ import SinglePost from "@components/Post/Post";
 import withWizzard from "@components/Post/withWizzard";
 import Spinner from "@components/Spinner/Spinner";
 import WizzardContext from "@components/Post/context/WizzardContext";
+import AppContext from "@features/context/AppContext";
+import { getOwner } from "@features/service/Functions/index";
+import i18next from "@i18n";
 import "../../styles/main.scss";
+const { useTranslation } = i18next;
 
 const Post = () => {
   const router = useRouter();
   const idPost = router.query.id;
+  const { t } = useTranslation(["post"]);
 
   const { posts, setPosts, users, setUsers } = useContext(WizzardContext);
+  const { owner, setOwner, isAuth, setStatusOfAuth } = useContext(AppContext);
+  const [postError, setPostError] = useState("");
+
+  const [isLoading, setStutusOfLoading] = useState(true);
 
   const getUsers = async (idUsers) => {
     await axios
@@ -36,10 +45,10 @@ const Post = () => {
 
   useEffect(() => {
     idPost &&
+      isAuth &&
       axios
         .post("/post/get/single", { idPost })
         .then(async ({ data: { post, comments, isMoreComments } }) => {
-          console.log(isMoreComments);
           const idUsers = [];
           for (let i = 0; i < comments.length; i++) {
             idUsers.push(comments[i].idUser);
@@ -47,15 +56,33 @@ const Post = () => {
           idUsers.push(post.idUser);
           await getUsers(idUsers);
           setPosts([{ ...post, comments, isMoreComments }]);
+          setStutusOfLoading(true);
+        })
+        .catch(({ response: { status, data: message } }) => {
+          if (status == 404 || status == 403) {
+            setPostError(message);
+            setStutusOfLoading(false);
+          }
         });
-  }, [idPost]);
+  }, [idPost, isAuth]);
   const focusElement = useRef(null);
 
-  if (!posts.length) return <Spinner />;
+  useEffect(() => {
+    getOwner({ setStatusOfAuth, setOwner });
+  }, []);
+
+  if (isAuth == null) return <Spinner />;
+  else if (!isAuth) {
+    router.push("/signin");
+    return <Spinner />;
+  } else if (isLoading) return <Spinner />;
 
   return (
     <HomeLayout>
       <section className="post">
+        {postError && (
+          <div className="post_error">{t(`post:error.${postError}`)}</div>
+        )}
         {posts.map((post) => (
           <SinglePost
             post={post}

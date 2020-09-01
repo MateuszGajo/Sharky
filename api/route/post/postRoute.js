@@ -1,18 +1,18 @@
 const express = require("express");
-const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const { client } = require("../../../config/pgAdaptor");
-const { jwtSecret } = require("../../../config/keys");
 const {
   getPostQuery,
   getPostsQuery,
   getUserPostQuery,
   getFanpagePostsQuery,
   getGroupPostsQuery,
+  getNewsQuery,
   getCommentsQuery,
   addGroupPostQuery,
   addFanpagePostQuery,
   addPostQuery,
+  addNewsQuery,
   postLikeQuery,
   unLikeQuery,
   postShareQuery,
@@ -25,22 +25,12 @@ const {
   deleteCommentsQuery,
   deleteRepliesQuery,
 } = require("./query");
+const decodeToken = require("../../../utils/decodeToken");
 
 const router = express.Router();
 
 router.post("/add", async (req, res) => {
-  const token = jwt.sign(
-    {
-      exp: Math.floor(Date.now() / 1000) + 60 * 60,
-      data: {
-        id: 1,
-      },
-    },
-    jwtSecret
-  );
-  const {
-    data: { id: idOwner },
-  } = jwt.verify(token, jwtSecret);
+  const { id: idOwner } = decodeToken(req);
 
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -71,7 +61,7 @@ router.post("/add", async (req, res) => {
       }
     }
 
-    const { content, date, idGroup, idFanpage } = req.body;
+    const { content, date, idGroup, idFanpage, news } = req.body;
     let newPost;
     try {
       if (idGroup)
@@ -86,6 +76,13 @@ router.post("/add", async (req, res) => {
         newPost = await client.query(addFanpagePostQuery, [
           idOwner,
           idFanpage,
+          content,
+          date,
+          fileName,
+        ]);
+      else if (news)
+        newPost = await client.query(addNewsQuery, [
+          idOwner,
           content,
           date,
           fileName,
@@ -108,19 +105,8 @@ router.post("/add", async (req, res) => {
 });
 
 router.post("/get", async (req, res) => {
-  const { from, idFanpage, idGroup, idUser, authorPost } = req.body;
-  const token = jwt.sign(
-    {
-      exp: Math.floor(Date.now() / 1000) + 60 * 60,
-      data: {
-        id: 1,
-      },
-    },
-    jwtSecret
-  );
-  const {
-    data: { id: idOwner },
-  } = jwt.verify(token, jwtSecret);
+  const { from, idFanpage, idGroup, news, idUser, authorPost } = req.body;
+  const { id: idOwner } = decodeToken(req);
 
   let postsResult, commentsResult;
 
@@ -143,6 +129,8 @@ router.post("/get", async (req, res) => {
         idOwner,
         from,
       ]);
+    else if (news)
+      postsResult = await client.query(getNewsQuery, [idOwner, from]);
     else postsResult = await client.query(getPostsQuery, [idOwner, from]);
 
     const idPosts = [];
@@ -182,18 +170,7 @@ router.post("/get", async (req, res) => {
 router.post("/get/single", async (req, res) => {
   const { idPost } = req.body;
 
-  const token = jwt.sign(
-    {
-      exp: Math.floor(Date.now() / 1000) + 60 * 60,
-      data: {
-        id: 1,
-      },
-    },
-    jwtSecret
-  );
-  const {
-    data: { id: idOwner },
-  } = jwt.verify(token, jwtSecret);
+  const { id: idOwner } = decodeToken(req);
 
   try {
     const { rows: post } = await client.query(getPostQuery, [idPost, idOwner]);
@@ -237,29 +214,18 @@ router.post("/get/single", async (req, res) => {
 router.post("/like", async (req, res) => {
   const { idPost } = req.body;
 
-  const token = jwt.sign(
-    {
-      exp: Math.floor(Date.now() / 1000) + 60 * 60,
-      data: {
-        id: 1,
-      },
-    },
-    jwtSecret
-  );
-  const {
-    data: { id: idUser },
-  } = jwt.verify(token, jwtSecret);
+  const { id: idOwner } = decodeToken(req);
 
   try {
     const { rows: newLike } = await client.query(postLikeQuery, [
-      idUser,
+      idOwner,
       idPost,
     ]);
 
     let idLike;
 
     if (!newLike[0]) {
-      const { rows } = await client.query(getIdPostQuery, [idUser, idPost]);
+      const { rows } = await client.query(getIdPostQuery, [idOwner, idPost]);
       idLike = rows[0].id;
     } else idLike = newLike[0].id;
 
@@ -282,26 +248,15 @@ router.post("/unlike", async (req, res) => {
 
 router.post("/share", async (req, res) => {
   const { idPost, date } = req.body;
-  const token = jwt.sign(
-    {
-      exp: Math.floor(Date.now() / 1000) + 60 * 60,
-      data: {
-        id: 1,
-      },
-    },
-    jwtSecret
-  );
-  const {
-    data: { id: idUser },
-  } = jwt.verify(token, jwtSecret);
+  const { id: idOwner } = decodeToken(req);
 
   try {
     const postShare = await client.query(postShareQuery, [
       idPost,
-      idUser,
+      idOwner,
       date,
     ]);
-    res.status(200).json({ idShare: postShare.rows[0].id, idUser });
+    res.status(200).json({ idShare: postShare.rows[0].id, idOwner });
   } catch {
     res.status(400).json("bad-request");
   }
