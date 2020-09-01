@@ -1,8 +1,7 @@
 const express = require("express");
-const jwt = require("jsonwebtoken");
 const { client } = require("../../../config/pgAdaptor");
-const { jwtSecret } = require("../../../config/keys");
 const { group_getPeopleQuery, group_getFriendsQuery } = require("./query");
+const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
 
 router.post("/get", async (req, res) => {
@@ -14,18 +13,7 @@ router.post("/get", async (req, res) => {
       return res.status(200).json({ friends: [], isMore: false });
   }
 
-  const token = jwt.sign(
-    {
-      exp: Math.floor(Date.now() / 1000) + 60 * 60,
-      data: {
-        id: 1,
-      },
-    },
-    jwtSecret
-  );
-  const {
-    data: { id: idOwner },
-  } = jwt.verify(token, jwtSecret);
+  const { id: idOwner } = decodeToken(req);
 
   let result;
 

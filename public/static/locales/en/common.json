@@ -14,7 +14,8 @@
     "pop-up":{
         "confirm-user":{
             "title":"Re-enter you account password",
-            "button":"Continue"
+            "button":"Continue",
+            "bad-password":"Bad password"
         },
         "report":{
             "title-post":"Report post",
@@ -28,7 +29,9 @@
             "button":"Send"
         },
         "error":{
-            "bad-request":"Request failed"
+            "bad-request":"Request failed",
+            "wrong-file-type":"Wrong file type",
+            "file-too-large":"File is too large"
         },
         "invite-person":{
             "empty-content":"Use search to find your friends",

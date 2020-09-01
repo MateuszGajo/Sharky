@@ -6,7 +6,7 @@ import AppContext from "@features/context/AppContext";
 
 const withWizzard = (WrappedComponent) => {
   return (props) => {
-    const { newPost, idFanpage = null, idGroup = null } = props;
+    const { newPost, idFanpage = null, idGroup = null, news } = props;
 
     const { setError, owner } = useContext(AppContext);
     const [isMoreComment, setStatusOfMoreComments] = useState();
@@ -39,6 +39,7 @@ const withWizzard = (WrappedComponent) => {
         data.set("date", date.toUTCString());
         data.set("idGroup", idGroup);
         data.set("idFanpage", idFanpage);
+        data.set("news", news);
 
         axios
           .post(`/post/add`, data)

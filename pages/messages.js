@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
+import Router from "next/router";
 import NavBar from "../features/components/Layout/Home/Compound/components/NavBar/Navbar";
 import Messenger from "../features/components/Messenger/Messenger";
 import Conversations from "../features/components/Messages/Conversations/Conversations";
 import Spinner from "@components/Spinner/Spinner";
 import AppContext from "@features/context/AppContext";
+import { getOwner } from "@features/service/Functions/index";
 import "../styles/main.scss";
 
 const Messages = () => {
-  const { socket } = useContext(AppContext);
+  const { socket, setOwner, isAuth, setStatusOfAuth } = useContext(AppContext);
 
   const [conversations, setConversations] = useState([]);
   const [chat, setChat] = useState({});
@@ -20,25 +22,40 @@ const Messages = () => {
   }, [conversations]);
 
   useEffect(() => {
-    axios
-      .get("/message/conversation/get")
-      .then(({ data: { conversations } }) => {
-        const { idUser, firstName, lastName, photo, idChat } = conversations[0];
-        setChat({
-          user: {
-            id: idUser,
+    isAuth &&
+      axios
+        .get("/message/conversation/get")
+        .then(({ data: { conversations } }) => {
+          const {
+            idUser,
             firstName,
             lastName,
             photo,
-          },
-          idChat,
+            idChat,
+          } = conversations[0];
+          setChat({
+            user: {
+              id: idUser,
+              firstName,
+              lastName,
+              photo,
+            },
+            idChat,
+          });
+          setConversations(conversations);
+          setStatusOfLoading(false);
         });
-        setConversations(conversations);
-        setStatusOfLoading(false);
-      });
+  }, [isAuth]);
+
+  useEffect(() => {
+    getOwner({ setStatusOfAuth, setOwner });
   }, []);
 
-  if (isLoading) return <Spinner />;
+  if (isAuth == null) return <Spinner />;
+  else if (!isAuth) {
+    Router.push("/signin");
+    return <Spinner />;
+  } else if (isLoading) return <Spinner />;
   return (
     <section className="messages">
       <NavBar />
@@ -48,19 +65,12 @@ const Messages = () => {
           <Messenger chat={chat} />
         </div>
       </div>
-      {/* <div className="messages__container messages__container--mobile">
-        {!conversation ? (
-          <Conversations items={conversations} setItem={setConversation} />
-        ) : (
-          <div className="messages__container__display--mobile">
-            <Messenger
-              conversation={
-                conversation === null ? conversations[0] : conversation
-              }
-            />
-          </div>
-        )}
-      </div> */}
+      <div className="messages__container messages__container--mobile">
+        <Conversations items={conversations} setChat={setChat} chat={chat} />
+        <div className="messages__container__display--mobile">
+          <Messenger chat={chat} />
+        </div>
+      </div>
     </section>
   );
 };
