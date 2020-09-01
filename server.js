@@ -2,7 +2,7 @@ const next = require("next");
 const io = require("socket.io");
 const http = require("http");
 const express = require("express");
-const expsession = require("express-session");
+const cookieParser = require("cookie-parser");
 const nextI18NextMiddleware = require("next-i18next/middleware").default;
 const jwt = require("jsonwebtoken");
 const commentRoute = require("./api/route/comment/commentRoute");
@@ -19,7 +19,6 @@ const languageRoute = require("./api/route/language/languageRoute");
 const { client } = require("./config/pgAdaptor");
 const { jwtSecret } = require("./config/keys");
 const bodyParser = require("body-parser");
-const { expressSessionSecret } = require("./config/keys");
 const { userJoin, userLeave, getSocket, existUser } = require("./utils/users");
 
 const nextI18Next = require("./i18n/server");
@@ -30,7 +29,7 @@ const server = express();
 
 const httpServer = http.createServer(server);
 const socketIO = io(httpServer);
-
+server.use(cookieParser());
 server.use(bodyParser.json());
 
 socketIO.sockets.on("connection", (socket) => {
@@ -61,8 +60,6 @@ left join users on users.id = result.id_user_1`;
         data: { id: idUser },
       } = jwt.verify(token, jwtSecret);
       userJoin(idUser, socket.id);
-      console.log("dodajemy");
-      console.log(getSocket(idUser));
     }
   });
 
@@ -124,8 +121,6 @@ left join users on users.id = result.id_user_1`;
         });
       }
     }
-
-    // soc.join('groupchat-123');
   });
 
   socket.on("changedPassword", async ({ idUser }) => {

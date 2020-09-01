@@ -1,19 +1,21 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import Router from "next/router";
+import axios from "axios";
 import * as HomeLayout from "@components/Layout/Home/Compound/HomeLayoutCompound";
 import ConfirmUser from "@common/PopUp/ConfirmUser/ConfirmUser";
 import Items from "@components/Settings/Items/Items";
 import Display from "@components/Settings/Display/Display";
 import Error from "@common/PopUp/Error/Error";
 import Prompt from "@common/PopUp/Prompt/Prompt";
-import i18next from "@i18n";
+import Spinner from "@components/Spinner/Spinner";
 import AppContext from "@features/context/AppContext";
+import { getOwner } from "@features/service/Functions/index";
 import "../styles/main.scss";
-const { useTranslation, i18n } = i18next;
 
 const Settings = () => {
-  const { t } = useTranslation(["settings"]);
-
-  const { isPrompt, isError } = useContext(AppContext);
+  const { isPrompt, isError, isAuth, setStatusOfAuth, setOwner } = useContext(
+    AppContext
+  );
 
   const [isAccountCollapsed, setStatusOfAccountCollapse] = useState(true);
   const [isGeneralCollapsed, setStatusOfGeneralCollapse] = useState(true);
@@ -21,6 +23,7 @@ const Settings = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isOpenConfirmPopUp, setOpenConfirmPopUp] = useState(false);
   const [confirmUser, setConfirmUser] = useState(false);
+  const [isLoading, setStatusOfLoading] = useState(true);
 
   const [chooseSetting, setChooseSetting] = useState({
     name: "",
@@ -29,47 +32,69 @@ const Settings = () => {
     value: "",
   });
 
-  const [userSettings, setUserSettings] = useState({
-    account: [
-      {
-        name: "email",
-        title: "E-mail",
-        value: "example@example.com",
-        category: "account",
-        id: 1,
-      },
-      {
-        name: "password",
-        title: "Hasło",
-        value: "",
-        category: "account",
-        id: 2,
-      },
-      {
-        name: "phone",
-        title: "Telefon",
-        value: "521-313-322",
-        category: "account",
-        id: 3,
-      },
-    ],
-    general: [
-      {
-        name: "country",
-        title: "Kraj",
-        value: "poland",
-        category: "general",
-        id: 1,
-      },
-      {
-        name: "language",
-        title: "Język",
-        value: "polish",
-        category: "general",
-        id: 2,
-      },
-    ],
-  });
+  const [userSettings, setUserSettings] = useState();
+
+  useEffect(() => {
+    isAuth &&
+      axios
+        .get("/user/me/info")
+        .then(({ data: { email, phone, language, country } }) => {
+          const userSettings = {
+            account: [
+              {
+                name: "email",
+                title: "E-mail",
+                value: email,
+                category: "account",
+                id: 1,
+              },
+              {
+                name: "password",
+                title: "Hasło",
+                value: "",
+                category: "account",
+                id: 2,
+              },
+              {
+                name: "phone",
+                title: "Telefon",
+                value: phone,
+                category: "account",
+                id: 3,
+              },
+            ],
+            general: [
+              {
+                name: "country",
+                title: "Kraj",
+                value: country,
+                category: "general",
+                id: 1,
+              },
+              {
+                name: "language",
+                title: "Język",
+                value: language,
+                category: "general",
+                id: 2,
+              },
+            ],
+          };
+
+          setUserSettings(userSettings);
+          setStatusOfLoading(false);
+        });
+  }, [isAuth]);
+
+  useEffect(() => {
+    getOwner({ setStatusOfAuth, setOwner });
+  }, []);
+
+  if (isAuth == null) return <Spinner />;
+  else if (!isAuth) {
+    Router.push("/signin");
+    return <Spinner />;
+  } else if (isLoading) return <Spinner />;
 
   return (
     <div className="settings">

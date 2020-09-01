@@ -4,7 +4,6 @@ import axios from "axios";
 import socketIOClient from "socket.io-client";
 import AppContext from "@features/context/AppContext";
 import { SERVER_URL } from "../config/config";
-import { getOwner } from "@features/service/functions/index";
 let socket;
 const MyApp = ({ Component, pageProps }) => {
   const router = useRouter();
@@ -20,10 +19,7 @@ const MyApp = ({ Component, pageProps }) => {
   });
   const [isError, setError] = useState("");
   const [isPrompt, setPrompt] = useState("");
-
-  useEffect(() => {
-    getOwner(setOwner);
-  }, []);
+  const [isAuth, setStatusOfAuth] = useState(null);
 
   useEffect(() => {
     socket = socketIOClient(SERVER_URL);
@@ -51,6 +47,7 @@ const MyApp = ({ Component, pageProps }) => {
       value={{
         socket,
         owner,
+        setOwner,
         newMessage,
         isError,
         isPrompt,
@@ -58,6 +55,8 @@ const MyApp = ({ Component, pageProps }) => {
         setError,
         newChat,
         setNewChat,
+        isAuth,
+        setStatusOfAuth,
       }}
     >
       <Component {...pageProps} />
