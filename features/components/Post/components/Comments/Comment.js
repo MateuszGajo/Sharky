@@ -54,12 +54,22 @@ const Commnet = ({
   const setlikeComment = () => {
     if (idLike) {
       "numberOfReplies" in comment
-        ? unlikeComment({ idLike, idComment: comment.id, setNewLike, setError })
-        : unlikeReply({ idLike, idReply: comment.id, setNewLike, setError });
+        ? unlikeComment({
+            idLike,
+            idComment: comment.idComment,
+            setNewLike,
+            setError,
+          })
+        : unlikeReply({
+            idLike,
+            idReply: comment.idComment,
+            setNewLike,
+            setError,
+          });
     } else {
       "numberOfReplies" in comment
-        ? likeComment({ idComment: comment.id, setNewLike, setError })
-        : likeReply({ idReply: comment.id, setNewLike, setError });
+        ? likeComment({ idComment: comment.idComment, setNewLike, setError })
+        : likeReply({ idReply: comment.idComment, setNewLike, setError });
     }
   };
 
@@ -98,7 +108,7 @@ const Commnet = ({
   useEffect(() => {
     if (
       newLike.type == "comment" &&
-      newLike.idElement == comment.id &&
+      newLike.idElement == comment.idComment &&
       numberOfReplies != undefined
     ) {
       setIdLike(newLike.idLike);
@@ -107,7 +117,7 @@ const Commnet = ({
         : setNumberOfLikes(numberOfLikes - 1);
     } else if (
       newLike.type == "reply" &&
-      newLike.idElement == comment.id &&
+      newLike.idElement == comment.idComment &&
       numberOfReplies == undefined
     ) {
       setIdLike(newLike.idLike);
