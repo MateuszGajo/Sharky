@@ -9,7 +9,13 @@ import i18next from "@i18n";
 
 const { useTranslation } = i18next;
 
-const PostList = ({ idFanpage = null, idGroup = null }) => {
+const PostList = ({
+  idFanpage = null,
+  idGroup = null,
+  news = false,
+  authorPost = false,
+  idUser = null,
+}) => {
   const { t } = useTranslation(["component"]);
   const endOfContent = t("component:lists.posts.end-of-content");
   const noContent = t("component:lists.posts.no-content");
@@ -28,6 +34,9 @@ const PostList = ({ idFanpage = null, idGroup = null }) => {
     getPosts({
       idFanpage,
       idGroup,
+      news,
+      authorPost,
+      idUser,
       posts,
       setPosts,
       from,

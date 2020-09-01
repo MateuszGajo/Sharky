@@ -15,7 +15,7 @@ import AppContext from "@features/context/AppContext";
 
 const DownBarButtons = () => {
   const { setError } = useContext(AppContext);
-  const { post, numberOfComments } = useContext(PostContext);
+  const { post, numberOfComments, isSingle } = useContext(PostContext);
   const { posts, setPosts, newLike, setNewLike } = useContext(WizzardContext);
 
   const [idLike, setIdLike] = useState(post?.idLike);
@@ -78,7 +78,7 @@ const DownBarButtons = () => {
         className="post__item__downbar__buttons__icon  hover-family-color"
         onClick={() => {
           setNumberOfShares(numberOfShares + 1);
-          sharePost({ post, posts, setPosts, setError });
+          sharePost({ post, posts, setPosts, setError, isSingle });
         }}
       >
         <AiOutlineShareAlt />

@@ -37,6 +37,28 @@ from(select a.id as "idFanpage", count(*) as "numberOfSubscribes"
 inner join fanpages on b."idFanpage" = fanpages.id
 limit 21 offset $3`;
 
+const getSortedSubscribedFanpagesQuery = `
+with idSubscribedFanpages as(
+  select id_fanpage from fanpage_users where id_user = $1
+  ),
+  
+   fanpagesSorted as(
+    select id from fanpages where lower(name) like($2) and id in(select * from idSubscribedFanpages)
+  ),
+  
+  numberOfSubscribers as (
+  select id_fanpage as "idFanpage",count(*) as "numberOfSubscribers" from fanpage_users where id_fanpage in(select * from fanpagesSorted) group by id_fanpage
+  )
+  
+  select a.*, b.id as "idSub", c.name, c.photo from numberOfSubscribers as a
+  left join fanpage_users  as b
+  on a."idFanpage" = b.id_fanpage and b.id_user =$3
+  inner join fanpages as c 
+  on a."idFanpage" = c.id
+  order by name asc
+  limit 21 offset $4
+`;
+
 const getSortedFanpagesQuery = `
 with fanpageSorted as(
   select id from fanpages where lower(name) like($1)
@@ -77,6 +99,7 @@ const deleteUserQuery = `delete from fanpage_users where id=$1`;
 module.exports = {
   getFanpagesQuery,
   getSortedFanpagesQuery,
+  getSortedSubscribedFanpagesQuery,
   addUserQuery,
   deleteUserQuery,
   getIdUserQuery,

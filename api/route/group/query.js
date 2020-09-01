@@ -38,6 +38,28 @@ with idGroups as(
   limit 21 offset $3
 `;
 
+const getSortedSubscribedGroupsQuery = `
+with idSubscribedGroups as(
+select id_group from group_users where id_user = $1
+),
+
+  groupSorted as(
+  select id from groups where lower(name) like($2) and id in(select * from idSubscribedGroups)
+),
+
+numberOfMembers as (
+select id_group as "idGroup",count(*) as "numberOfMembers" from group_users where id_group in(select * from groupSorted) group by id_group
+)
+
+select a.*, b.id as "idSub", c.name, c.photo from numberOfMembers as a
+left join group_users  as b
+on a."idGroup" = b.id_group and b.id_user =$3
+inner join groups as c 
+on a."idGroup" = c.id
+order by name asc
+limit 21 offset $4
+`;
+
 const getSortedGroupsQuery = `
 with groupSorted as(
   select id from groups where lower(name) like($1)
@@ -108,6 +130,7 @@ on a.id = b.id_group
 module.exports = {
   getGroupsQuery,
   getSortedGroupsQuery,
+  getSortedSubscribedGroupsQuery,
   addUserQuery,
   deleteUserQuery,
   inviteUserQuery,

@@ -10,6 +10,8 @@ import i18next from "@i18n";
 import PopUpError from "@common/PopUp/Error/Error";
 import AppContext from "@features/context/AppContext";
 
+import { getOwner } from "@features/service/Functions/index";
+
 const { useTranslation } = i18next;
 
 import "../../styles/main.scss";
@@ -19,7 +21,7 @@ const Group = () => {
 
   const { t } = useTranslation(["group"]);
 
-  const { isError } = useContext(AppContext);
+  const { isError, isAuth, setStatusOfAuth, setOwner } = useContext(AppContext);
 
   const groupDoesNotExist = t("group:error.does-not-exist");
 
@@ -45,6 +47,7 @@ const Group = () => {
 
   useEffect(() => {
     idGroup &&
+      isAuth &&
       axios
         .post("/group/enter", { idGroup })
         .then(({ data: { id, idMember, name, role } }) => {
@@ -58,8 +61,17 @@ const Group = () => {
           setGroupName(name);
           setStatusOfLoading(false);
         });
-  }, [idGroup]);
-  if (isLoading) return <Spinner />;
+  }, [idGroup, isAuth]);
+
+  useEffect(() => {
+    getOwner({ setStatusOfAuth, setOwner });
+  }, []);
+
+  if (isAuth == null) return <Spinner />;
+  else if (!isAuth) {
+    router.push("/signin");
+    return <Spinner />;
+  } else if (isLoading) return <Spinner />;
 
   return (
     <section className="group">

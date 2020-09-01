@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import cx from "classnames";
-import Router from "@features/route/routes";
+import { useRouter } from "next/router";
 import Collapse from "./components/Collapse/Collapse";
 import Button from "./components/Button/Button";
 import Description from "./components/Description/Description";
@@ -31,6 +31,9 @@ const Card = ({ data, setRelation, handleClick, setInvite }) => {
   const { green: greenC, blue: blueC, pink: pinkC } = collapseItems || {};
 
   const { owner } = useContext(AppContext);
+
+  const router = useRouter();
+
   const [idRef, setIdRef] = useState(data.idRef);
   const [inviteType, setInviteType] = useState(isInvited ? "accept" : "");
 
@@ -51,9 +54,7 @@ const Card = ({ data, setRelation, handleClick, setInvite }) => {
             className={cx("card__item--picture--img", {
               "card__item--picture--img--radius": radiusPhoto === true,
             })}
-            onClick={() => {
-              Router.pushRoute(refType, { id });
-            }}
+            onClick={() => router.push(`/${refType}/${id}`)}
             data-testid="card-photo"
           />
         </div>
