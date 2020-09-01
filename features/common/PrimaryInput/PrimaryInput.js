@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import cx from "classnames";
 
 const PrimaryInput = ({
@@ -13,16 +13,41 @@ const PrimaryInput = ({
 }) => {
   const [autocompleteDataFiltered, setAutocompleteDataFiltered] = useState([]);
 
+  const inputRef = useRef(null);
+
   const handleChange = (e) => {
     onChange(e.target.value);
-    if (e.target.value === "") setAutocompleteDataFiltered([]);
-    else
+
+    if (autocompleteData.length) {
       setAutocompleteDataFiltered(
         autocompleteData.filter((item) => {
-          return item.toLowerCase().startsWith(e.target.value.toLowerCase());
+          return item.value
+            .toLowerCase()
+            .startsWith(e.target.value.toLowerCase());
         })
       );
+    }
   };
+
+  const showList = () => {
+    setAutocompleteDataFiltered(autocompleteData);
+  };
+
+  const hideList = () => {
+    setAutocompleteDataFiltered([]);
+  };
+
+  useEffect(() => {
+    if (autocompleteData.length) {
+      inputRef.current.addEventListener("focus", showList);
+      inputRef.current.addEventListener("focusout", hideList);
+    }
+
+    return () => {
+      removeEventListener("focus", showList);
+      removeEventListener("focusout", hideList);
+    };
+  }, []);
   return (
     <div
       data-testid="primary-input-container"
@@ -41,6 +66,7 @@ const PrimaryInput = ({
         value={value}
         onChange={handleChange}
         data-testid="primary-input"
+        ref={inputRef}
       />
 
       <h4
@@ -51,21 +77,24 @@ const PrimaryInput = ({
       </h4>
       <div
         data-testid="input-primary-autocomplete"
-        className={cx("primary-input-container__autocomplete", {
-          "is-close": autocompleteDataFiltered.length === 0,
-        })}
+        className={cx(
+          "primary-input-container__autocomplete  primary-scroll-active",
+          {
+            "is-close": autocompleteDataFiltered.length === 0,
+          }
+        )}
       >
-        {autocompleteDataFiltered.map((item, index) => (
+        {autocompleteDataFiltered.map(({ value }, index) => (
           <div
             className="primary-input-container__autocomplete--item"
             key={index}
             onClick={() => {
-              onChange(item);
+              onChange(value);
               setAutocompleteDataFiltered([]);
             }}
           >
             <span className="primary-input-container__autocomplete--item--span">
-              {item}
+              {value}
             </span>
           </div>
         ))}

@@ -39,6 +39,7 @@
   margin-top: $mediumMargin;
 }
 .confrim-user-container__content__data__form {
+  position:relative;
   display: flex;
   flex-direction: column;
 }
@@ -54,6 +55,16 @@
   display: flex;
   justify-content: flex-end;
   margin: $smallMargin 5% 0 0;
+}
+
+.confrim-user-container__content__data__form__error{
+  position:absolute;
+  width:100%;
+  bottom:-30px;
+  text-align: center;
+  color:red;
+  font-weight: bold;
+  font-size: 1.2rem;
 }
 
 @media (max-width:1365px){

@@ -2,8 +2,11 @@ import React from "react";
 import cx from "classnames";
 
 const Collapse = ({
+  id,
   idRef,
   buttonName,
+  setButtonName,
+  setTitle,
   greenName,
   greenTitle,
   pinkName,
@@ -29,8 +32,11 @@ const Collapse = ({
         onClick={() => {
           if (buttonName !== greenName) {
             setRelation({
-              idFriendShip: idRef,
+              id: idRef,
+              idSub: id,
               name: greenName,
+              setButtonName,
+              setTitle,
             });
           }
         }}
@@ -48,8 +54,11 @@ const Collapse = ({
         onClick={() => {
           if (buttonName !== pinkName) {
             setRelation({
-              idFriendShip: idRef,
+              id: idRef,
+              idSub: id,
               name: pinkName,
+              setButtonName,
+              setTitle,
             });
           }
         }}
@@ -67,8 +76,11 @@ const Collapse = ({
         onClick={() => {
           if (buttonName !== blueName) {
             setRelation({
-              idFriendShip: idRef,
+              id: idRef,
+              idSub: id,
               name: blueName,
+              setButtonName,
+              setTitle,
             });
           }
         }}

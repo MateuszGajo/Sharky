@@ -1,11 +1,14 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
+import Router from "next/router";
 import HomeLayout from "@components/Layout/Home/HomeLayout";
 import People from "@components/Lists/People/People";
+import Spinner from "@components/Spinner/Spinner";
 import AppContext from "@features/context/AppContext";
+import { getOwner } from "@features/service/Functions/index";
 import Search from "@common/Search/Search";
 
 const Friends = () => {
-  const { owner } = useContext(AppContext);
+  const { owner, setOwner, isAuth, setStatusOfAuth } = useContext(AppContext);
 
   const [keyWords, setKeyWords] = useState(null);
   const [text, setText] = useState("");
@@ -14,6 +17,16 @@ const Friends = () => {
     e.preventDefault();
     if (keyWords != text) setKeyWords(text);
   };
+
+  useEffect(() => {
+    getOwner({ setStatusOfAuth, setOwner });
+  }, []);
+
+  if (isAuth == null) return <Spinner />;
+  else if (!isAuth) {
+    Router.push("/signin");
+    return <Spinner />;
+  }
 
   return (
     <HomeLayout>
