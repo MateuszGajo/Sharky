@@ -177,6 +177,36 @@ with idPosts as(
   limit 21 offset $3
 `;
 
+const getNewsQuery = `
+with idPosts as(
+  select id  as "idPost" from posts where is_news=true
+  ),
+  
+  numberOfShares as(
+  select a."idPost", count(b.id) as "numberOfShares" from idPosts as a  left join post_share as  b on a."idPost" = b.id_post group by a."idPost"
+  ),
+  
+  numberOfComments as(
+  select a."idPost", count(b.id) as "numberOfComments" from idPosts as a  left join post_comments as  b on a."idPost" = b.id_post group by a."idPost"
+  ),
+  
+  numberOfLikes as(
+  select a."idPost", count(b.id) as "numberOfLikes" from idPosts as a  left join post_like as  b on a."idPost" = b.id_post group by a."idPost"
+  )
+  
+  select e.*, f.id as "idLike"
+  from(select a.id as "idPost", a.id_user as "idUser", a.content, a.photo, a.date, b."numberOfShares", c."numberOfComments", d."numberOfLikes",null as "idShare", null as "idUserShare"  
+    from posts as a
+    inner join numberOfShares as b on a.id = b."idPost"
+    inner join numberOfComments as c on a.id=c."idPost"
+    inner join numberOfLikes as d on a.id =d."idPost"
+    where id in (select * from idPosts)) as e
+  left join post_like as f on
+  e."idPost" = f.id_post and f.id_user =$1
+  order by e.date desc
+  limit 21 offset $2
+`;
+
 const getCommentsQuery = `
   
 with idComments as(
@@ -212,6 +242,9 @@ const addGroupPostQuery =
 const addFanpagePostQuery =
   "insert into posts(id_user,id_fanpage, content, date, photo) values($1, $2, $3, $4, $5) RETURNING id";
 
+const addNewsQuery =
+  "insert into posts(id_user,is_news, content, date, photo) values($1, true, $2, $3, $4) RETURNING id";
+
 const addPostQuery =
   "insert into posts(id_user, content, date, photo) values($1, $2, $3, $4) RETURNING id";
 
@@ -242,9 +275,11 @@ module.exports = {
   getUserPostQuery,
   getFanpagePostsQuery,
   getGroupPostsQuery,
+  getNewsQuery,
   getCommentsQuery,
   addGroupPostQuery,
   addFanpagePostQuery,
+  addNewsQuery,
   addPostQuery,
   postLikeQuery,
   unLikeQuery,

@@ -1,13 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import Router from "next/router";
 import axios from "axios";
 import { uuid } from "uuidv4";
 import InfiniteScroll from "react-infinite-scroll-component";
 import HomeLayout from "@components/Layout/Home/HomeLayout";
 import Item from "@components/Notifications/Item/Item";
 import Spinner from "@components/Spinner/Spinner";
+import AppContext from "@features/context/AppContext";
+import { getOwner } from "@features/service/Functions/index";
 import "../styles/main.scss";
 
 const notifications = () => {
+  const { setOwner, isAuth, setStatusOfAuth } = useContext(AppContext);
+
   const [notifications, setNotifications] = useState([]);
   const [allNotification, setAllNotifications] = useState([]);
   const [deleteNotification, setDeleteNotification] = useState({ id: null });
@@ -38,21 +43,31 @@ const notifications = () => {
   }, [deleteNotification]);
 
   useEffect(() => {
-    axios
-      .get("/notification/get")
-      .then(({ data: { invitations, newRelations } }) => {
-        const items = [...invitations, ...newRelations];
-        console.log(items);
-        const notifications = items
-          .sort((a, b) => new Date(b.date) - new Date(a.date))
-          .map((item) => ({ ...item, id: uuid() }));
+    isAuth &&
+      axios
+        .get("/notification/get")
+        .then(({ data: { invitations, newRelations } }) => {
+          const items = [...invitations, ...newRelations];
 
-        console.log(notifications);
-        setAllNotifications(notifications);
-        setNotifications(notifications.slice(0, 20));
-        if (items.length < 20) setStatusOfMore(false);
-      });
+          const notifications = items
+            .sort((a, b) => new Date(b.date) - new Date(a.date))
+            .map((item) => ({ ...item, id: uuid() }));
+
+          setAllNotifications(notifications);
+          setNotifications(notifications.slice(0, 20));
+          if (items.length < 20) setStatusOfMore(false);
+        });
+  }, [isAuth]);
+
+  useEffect(() => {
+    getOwner({ setStatusOfAuth, setOwner });
   }, []);
+
+  if (isAuth == null) return <Spinner />;
+  else if (!isAuth) {
+    Router.push("/signin");
+    return <Spinner />;
+  }
   return (
     <HomeLayout>
       <InfiniteScroll

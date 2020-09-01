@@ -2,6 +2,7 @@ const next = require("next");
 const io = require("socket.io");
 const http = require("http");
 const express = require("express");
+const cookieParser = require("cookie-parser");
 const nextI18NextMiddleware = require("next-i18next/middleware").default;
 const jwt = require("jsonwebtoken");
 const commentRoute = require("./api/route/comment/commentRoute");
@@ -27,7 +28,7 @@ const server = express();
 
 const httpServer = http.createServer(server);
 const socketIO = io(httpServer);
-
+server.use(cookieParser());
 server.use(bodyParser.json());
 
 socketIO.sockets.on("connection", (socket) => {

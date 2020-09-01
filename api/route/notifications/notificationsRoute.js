@@ -1,24 +1,11 @@
 const express = require("express");
-const jwt = require("jsonwebtoken");
 const { client } = require("../../../config/pgAdaptor");
-const { jwtSecret } = require("../../../config/keys");
+const decodeToken = require("../../../utils/decodeToken");
 const { groupInvitationQuery, changeRelationRequestQuery } = require("./query");
 const router = express.Router();
 
 router.get("/get", async (req, res) => {
-  const token = jwt.sign(
-    {
-      exp: Math.floor(Date.now() / 1000) + 60 * 60,
-      data: {
-        id: 1,
-      },
-    },
-    jwtSecret
-  );
-
-  const {
-    data: { id: idOwner },
-  } = jwt.verify(token, jwtSecret);
+  const { id: idOwner } = decodeToken(req);
 
   try {
     const { rows: invitations } = await client.query(groupInvitationQuery, [
