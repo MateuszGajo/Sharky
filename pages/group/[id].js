@@ -9,6 +9,7 @@ import Spinner from "@components/Spinner/Spinner";
 import i18next from "@i18n";
 import PopUpError from "@common/PopUp/Error/Error";
 import AppContext from "@features/context/AppContext";
+import "../../styles/main.scss";
 
 import { getOwner } from "@features/service/Functions/index";
 
