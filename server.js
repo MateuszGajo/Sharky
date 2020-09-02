@@ -44,8 +44,6 @@ server.use(passport.session());
 
 const httpServer = http.createServer(server);
 const socketIO = io(httpServer);
-server.use(cookieParser());
-server.use(bodyParser.json());
 
 socketIO.sockets.on("connection", (socket) => {
   const getChatsQuery = `

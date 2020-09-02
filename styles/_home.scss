@@ -1,0 +1,15 @@
+.home-page{
+  margin:$mediumMargin 0;
+  overflow-y: hidden;
+}
+
+.home-page__post{
+  margin-top:$smallMargin;
+  display:flex;
+  justify-content: center;
+}
+
+.home-page__end-of-content{
+  padding:40px 0 20px;
+  text-align: center;
+}
