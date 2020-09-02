@@ -19,6 +19,7 @@ const peopleRoute = require("./api/route/people/peopleRoute");
 const messageRoute = require("./api/route/message/messageRoute");
 const groupRoute = require("./api/route/group/groupRoute");
 const fanpageRoute = require("./api/route/fanpage/fanpageRoute");
+const newsRoute = require("./api/route/news/newsRoute");
 const { client } = require("./config/pgAdaptor");
 const { jwtSecret } = require("./config/keys");
 const { userJoin, userLeave, getSocket, existUser } = require("./utils/users");
@@ -194,6 +195,7 @@ left join users on users.id = result.id_user_1`;
   server.use("/message", messageRoute);
   server.use("/group", groupRoute);
   server.use("/fanpage", fanpageRoute);
+  server.use("/news", newsRoute);
   server.get("*", (req, res) => {
     return handle(req, res);
   });
