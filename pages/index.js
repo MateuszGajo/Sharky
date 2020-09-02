@@ -1,8 +1,7 @@
 import React from "react";
-import Settings from "./settings";
 
 const Index = () => {
-  return <Settings />;
+  return <div></div>;
 };
 
 export default Index;
