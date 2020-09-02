@@ -171,9 +171,9 @@ with idPosts as(
     inner join numberOfComments as c on a.id=c."idPost"
     inner join numberOfLikes as d on a.id =d."idPost"
     where id in (select * from idPosts)) as e
-  order by e.date desc
   left join post_like as f on
   e."idPost" = f.id_post and f.id_user =$2
+  order by e.date desc
   limit 21 offset $3
 `;
 
