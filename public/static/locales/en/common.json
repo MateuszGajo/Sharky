@@ -35,7 +35,7 @@
         "error":{
             "bad-request":"Request failed",
             "last-fanpage-admin":"You're the only admin, give someone admin permission or delete the fanpage",
-        "last-group-admin":"You're the only admin, give someone admin permission or delete the group",
+            "last-group-admin":"You're the only admin, give someone admin permission or delete the group",
             "wrong-file-type":"Wrong file type",
             "file-too-large":"File is too large"
         },

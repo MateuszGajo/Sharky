@@ -126,6 +126,9 @@ left join(
 select id,id_group, role from group_users where id_group=$1 and id_user=$2) as b
 on a.id = b.id_group
 `;
+const acceptInvitationToGroup = `update group_users set status='1', role='user' where id=$1`;
+
+const declineInvitationToGroup = `delete from group_users where id=$1`;
 
 module.exports = {
   getGroupsQuery,
@@ -138,4 +141,6 @@ module.exports = {
   getMembersQuery,
   getInfoQuery,
   enterQuery,
+  acceptInvitationToGroup,
+  declineInvitationToGroup,
 };

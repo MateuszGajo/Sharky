@@ -11,6 +11,8 @@ const {
   getMembersQuery,
   getInfoQuery,
   enterQuery,
+  acceptInvitationToGroup,
+  declineInvitationToGroup,
 } = require("./query");
 const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
@@ -194,6 +196,30 @@ router.post("/user/invite", async (req, res) => {
 
   try {
     const a = await client.query(inviteUserQuery, [idTarget, idUser]);
+    res.status(200).json({ success: true });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
+router.post("/user/invitation/accept", async (req, res) => {
+  const { idSubscribe } = req.body;
+  console.log(idSubscribe);
+  try {
+    await client.query(acceptInvitationToGroup, [idSubscribe]);
+
+    res.status(200).json({ success: true });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
+router.post("/user/invitation/decline", async (req, res) => {
+  const { idSubscribe } = req.body;
+
+  try {
+    await client.query(declineInvitationToGroup, [idSubscribe]);
+
     res.status(200).json({ success: true });
   } catch {
     res.status(400).json("bad-request");

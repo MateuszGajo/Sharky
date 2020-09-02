@@ -13,6 +13,8 @@ const {
   readMessageQuery,
   updateRelationQuery,
   addChatQuery,
+  acceptChangeRealtionQuery,
+  declineChangeRealtionQuery,
 } = require("./query");
 const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
@@ -173,6 +175,30 @@ router.post("/update/relation", async (req, res) => {
   try {
     await client.query(updateRelationQuery, [relation, idUser, idFriendShip]);
     res.status(200);
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
+router.post("/change/relation/accept", async (req, res) => {
+  const { idRelation, newRelation } = req.body;
+
+  try {
+    await client.query(acceptChangeRealtionQuery, [newRelation, idRelation]);
+
+    res.status(200).json({ sucess: true });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
+router.post("/change/relation/decline", async (req, res) => {
+  const { idRelation } = req.body;
+
+  try {
+    await client.query(declineChangeRealtionQuery, [idRelation]);
+
+    res.status(200).json({ sucess: true });
   } catch {
     res.status(400).json("bad-request");
   }
