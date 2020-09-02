@@ -1,6 +1,10 @@
 const express = require("express");
 const { client } = require("../../../config/pgAdaptor");
-const { getMessagesQuery, addMessageQuery } = require("./query");
+const {
+  getMessagesQuery,
+  getConversationsQuery,
+  addMessageQuery,
+} = require("./query");
 const decodeToken = require("../../../utils/decodeToken");
 
 const router = express.Router();
@@ -12,12 +16,22 @@ router.post("/get", async (req, res) => {
   try {
     const messages = await client.query(getMessagesQuery, [idChat]);
 
-    res
-      .status(200)
-      .json({
-        messages: messages.rows,
-        user: { id, firstName, lastName, photo },
-      });
+    res.status(200).json({
+      messages: messages.rows,
+      user: { id, firstName, lastName, photo },
+    });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
+router.get("/conversation/get", async (req, res) => {
+  const { id: idOwner } = decodeToken(req);
+  try {
+    const { rows: conversations } = await client.query(getConversationsQuery, [
+      idOwner,
+    ]);
+    res.status(200).json({ conversations });
   } catch {
     res.status(400).json("bad-request");
   }

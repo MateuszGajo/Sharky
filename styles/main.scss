@@ -7,6 +7,7 @@
 @import "./group";
 @import "./groups";
 @import "./home";
+@import "./messages";
 @import "../features/common/PopUp/ConfirmUser/confirmUser";
 @import "../features/common/MessageBox/messageBox";
 @import "../features/common/Search/search";
@@ -23,6 +24,8 @@
 @import "../features/common/PopUp/Prompt/prompt";
 @import "../features/common/PopUp/Report/report";
 @import "../features/common/PopUp/InvitePerson/invitePerson";
+@import "../features/components/Messages/Conversations/conversations";
+@import "../features/components/Messages/Conversations/components/Item/item";
 @import "../features/components/Spinner/spinner";
 @import "../features/components/Messenger/messenger";
 @import "../features/components/Lists/Card/card";

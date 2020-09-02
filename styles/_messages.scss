@@ -1,0 +1,28 @@
+.messages{
+    display:flex;
+}
+
+.messages__container{
+    display:flex;
+    flex-grow:1;
+    flex-basis: 0;
+}
+
+.messages__container--mobile{
+display:none;
+}
+
+.messages__container__display{
+    width:60%;
+}
+
+
+@media(max-width:1023px){
+    .messages__container--desktop{
+        display:none;
+    }
+
+    .messages__container--mobile{
+        display:block;
+    }
+}
