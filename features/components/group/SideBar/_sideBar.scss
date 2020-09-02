@@ -1,0 +1,119 @@
+
+.group__container__side-bar{
+    position:relative;
+    border-left:1px solid $shadowColor;
+    min-width:250px;
+}
+
+.group__container__side-bar--fixed{
+    position:fixed;
+    min-width:250px;
+}
+
+.group__container__side-bar__title{
+    text-align: center;
+    padding:30px 0 50px;
+}
+
+.group__container__side-bar__navigation__item{
+    border-bottom:1px solid $shadowColor;
+    padding:25px 30px;
+    font-size: 1.2rem;
+    cursor:pointer;
+    color:background-color 0.2s;
+    &:hover{
+        background-color: $secondaryBackgroundColor;
+    }
+}
+
+.group__container__side-bar__navigation__item--active{
+    color:$primaryColor;
+    border-bottom:1px solid $primaryColor;
+    cursor:default;
+    &:hover{
+        background-color: transparent;
+    }
+}
+
+.group__container__side-bar__manage{
+    display:flex;
+    flex-direction: column;
+}
+
+
+
+.group__container__side-bar__manage__item{
+    display:inline-flex;
+    justify-content: center;
+    align-items:center;
+    padding:10px;
+    margin:$smallMargin auto;
+    border-radius:20px;
+    cursor:pointer;
+    transition:background-color 0.2s;
+    &:hover{
+        background-color: $secondaryBackgroundColor;
+    }
+}
+
+.group__container__side-bar__manage__item{
+    &:hover .group__container__side-bar__manage__item__icon--leave{
+        color:red;
+    }
+    &:hover .group__container__side-bar__manage__item__icon--invite{
+        color:$primaryColor;
+    }
+}
+
+
+.group__container__side-bar__item--span{
+    font-size: 1.2rem;
+}
+
+.group__container__side-bar__manage__item__icon{
+    display:flex;
+    justify-content: center;
+    margin-left:10px;
+    transition:0.2s color;
+    font-size: 1.25rem;
+}
+
+@media(max-width:1023px){
+    
+    .group__container__side-bar{
+        order:-1;
+        border-left-width: 0;
+        margin-bottom:$smallMargin;
+    }
+
+    .group__container__side-bar--fixed{
+        position: inherit;
+        display:flex;
+        flex-direction: column;
+    }
+    .group__container__side-bar__navigation{
+        display: flex;
+        justify-content: space-around;
+        width:100%;
+        order:3
+    }
+
+    .group__container__side-bar__navigation__item{
+        display:flex;
+        justify-content: center;
+        width:100%;
+    }
+
+    .group__container__side-bar__title{
+        padding:20px 0;
+    }
+
+    .group__container__side-bar__manage{
+        flex-direction: row;
+        order:2;
+    } 
+
+    .group__container__side-bar__manage__item{
+        background-color: $secondaryBackgroundColor;
+    }
+}

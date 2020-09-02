@@ -8,9 +8,105 @@ const {
   deleteUserQuery,
   inviteUserQuery,
   getIdUserQuery,
+  getMembersQuery,
+  getInfoQuery,
+  enterQuery,
 } = require("./query");
 const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
+
+router.post("/enter", async (req, res) => {
+  const { idGroup } = req.body;
+
+  const { id: idOwner } = decodeToken(req);
+
+  try {
+    const { rows: info } = await client.query(enterQuery, [idGroup, idOwner]);
+
+    if (!info[0]) {
+      return res
+        .status(200)
+        .json({ idMember: null, name: null, role: null, id: null });
+    }
+    const id = info[0].id;
+    const name = info[0].name;
+    const idMember = info[0] ? info[0].idMember : null;
+    const role = info[0] ? info[0].role : null;
+
+    res.status(200).json({ id, idMember, name, role });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
+router.post("/about", async (req, res) => {
+  const { idGroup } = req.body;
+
+  try {
+    const { rows: info } = await client.query(getInfoQuery, [idGroup]);
+    res
+      .status(200)
+      .json({ numberOfMembers: info[0].numberOfMembers, date: info[0].date });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
+router.post("/leave", async (req, res) => {
+  const { idMember, idGroup, role } = req.body;
+
+  let admins;
+
+  if (role == "admin") {
+    const getAdminsQuery =
+      "select * from group_users where id_group=$1 and role='admin'";
+
+    admins = await client.query(getAdminsQuery, [idGroup]);
+  }
+
+  if (role != "admin" || admins.rowCount > 1) {
+    const leaveQuery = "delete from group_users where id=$1";
+
+    try {
+      await client.query(leaveQuery, [idMember]);
+
+      res.status(200).json({ success: true });
+    } catch {
+      res.status(400).json("bad-request");
+    }
+  } else {
+    res.status(403).json("last-group-admin");
+  }
+});
+
+router.post("/delete", async (req, res) => {
+  const { idGroup } = req.body;
+
+  const deleteGroupQuery = ` delete from groups where id=$1; `;
+
+  const deleteUserQuery = "delete from group_users where id_group =$1;";
+
+  try {
+    await client.query(deleteGroupQuery, [idGroup]);
+    await client.query(deleteUserQuery, [idGroup]);
+
+    res.status(200).json({ success: true });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
+router.post("/member/get", async (req, res) => {
+  const { idGroup } = req.body;
+
+  try {
+    const { rows: members } = await client.query(getMembersQuery, [idGroup]);
+
+    res.status(200).json({ members });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
 
 router.post("/get", async (req, res) => {
   const { from, idUser, keyWords, onlySubscribed } = req.body;

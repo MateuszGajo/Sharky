@@ -1,0 +1,19 @@
+{
+    "members":{
+        "admin":"Admin",
+        "moderator":"Moderator",
+        "member":"Członek"
+    },
+    "side-bar":{
+        "home":"Przeglądaj",
+        "members":"Członkowie",
+        "about":"Informacje",
+        "invite":"Zaproś",
+        "leave":"Opuść",
+        "delete":"Usuń"
+    },
+    "error":{
+        "does-not-exist":"Grupa nie istnieje"
+    }
+    }
+   

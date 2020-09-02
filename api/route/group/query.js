@@ -90,8 +90,8 @@ limit 21 offset $3
 `;
 
 const addUserQuery = `
-insert into group_users(id_group, id_user, status) 
-select $1,$2,'0' where not exists(select id from group_users where id_group=$1 and id_user=$2) returning id;
+insert into group_users(id_group, id_user, status, role) 
+select $1,$2,'1',$3 where not exists(select id from group_users where id_group=$1 and id_user=$2) returning id;
 `;
 
 const getIdUserQuery = `select id from group_users where id_group=$1 and id_user=$2`;
@@ -106,6 +106,27 @@ where not exists(
 )
 `;
 
+const getMembersQuery = `
+select b.first_name as "firstName", b.last_name as "lastName", b.id as "idUser", b.photo, a.role, a.id "idSub" from group_users as a
+inner join users as b on b.id = a.id_user
+where a.id_group=$1
+`;
+
+const getInfoQuery = `
+select name, date, b."numberOfMembers" 
+from groups as a 
+inner join(
+select id_group, count(*) as "numberOfMembers" from group_users where id_group=$1 group by id_group) as b
+on a.id = b.id_group`;
+
+const enterQuery = `
+select a.id,a.name,b.id as "idMember", b.role
+from (select id,name from groups where id = $1) as a
+left join(
+select id,id_group, role from group_users where id_group=$1 and id_user=$2) as b
+on a.id = b.id_group
+`;
+
 module.exports = {
   getGroupsQuery,
   getSortedGroupsQuery,
@@ -114,4 +135,7 @@ module.exports = {
   deleteUserQuery,
   inviteUserQuery,
   getIdUserQuery,
+  getMembersQuery,
+  getInfoQuery,
+  enterQuery,
 };

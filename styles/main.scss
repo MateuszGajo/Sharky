@@ -4,6 +4,7 @@
 @import "./fanpage";
 @import "./fanpages";
 @import "./friends";
+@import "./group";
 @import "../features/common/PopUp/ConfirmUser/confirmUser";
 @import "../features/common/MessageBox/messageBox";
 @import "../features/common/Search/search";
@@ -12,6 +13,10 @@
 @import "../features/common/PrimaryButton/primaryButton";
 @import "../features/common/PrimaryInput/primaryInput";
 @import "../features/common/SecondaryInput/secondaryInput";
+@import "../features/components/group/Content/components/About/about";
+@import "../features/components/group/Content/components/Home/home";
+@import "../features/components/group/Content/content";
+@import "../features/components/group/SideBar/sideBar";
 @import "../features/common/PopUp/Error/error";
 @import "../features/common/PopUp/Prompt/prompt";
 @import "../features/common/PopUp/Report/report";

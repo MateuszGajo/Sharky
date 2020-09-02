@@ -16,7 +16,6 @@ router.post("/get", async (req, res) => {
   const { id: idOwner } = decodeToken(req);
 
   let result;
-
   if (!keyWords) {
     try {
       if (type == "group")

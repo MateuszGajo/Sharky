@@ -1,0 +1,17 @@
+.group__container__content{
+    flex-grow:1;
+}
+
+.group__container__content__text{
+    display:flex;
+    justify-content: center;
+    margin-top:$smallMargin;
+    text-align: center;
+    color:grey;
+}
+
+.group__container__content__text__icon{
+    display:flex;
+    justify-content: center;
+    margin-right:10px;
+}

@@ -11,13 +11,7 @@ import AppContext from "@features/context/AppContext";
 import i18next from "@i18n";
 const { useTranslation } = i18next;
 
-const InvitePerson = ({
-  isOpen = true,
-  setStatusOfOpen,
-  type,
-  idUser,
-  idTarget,
-}) => {
+const InvitePerson = ({ isOpen = true, setStatusOfOpen, type, idTarget }) => {
   const { t } = useTranslation();
 
   const { setError } = useContext(AppContext);
