@@ -158,19 +158,7 @@ router.post("/change/country", async (req, res) => {
   let { value } = req.body;
   value = value.toLowerCase();
 
-  const token = jwt.sign(
-    {
-      exp: Math.floor(Date.now() / 1000) + 60 * 60,
-      data: {
-        id: 1,
-      },
-    },
-    jwtSecret
-  );
-
-  const {
-    data: { id: idOwner },
-  } = jwt.verify(token, jwtSecret);
+  const { id: idOwner } = decodeToken(req);
 
   try {
     const country = await client.query(verifyCountryQuery, [value]);
@@ -187,19 +175,8 @@ router.post("/change/country", async (req, res) => {
 router.post("/change/language", async (req, res) => {
   let { value } = req.body;
   value = value.toLowerCase();
-  const token = jwt.sign(
-    {
-      exp: Math.floor(Date.now() / 1000) + 60 * 60,
-      data: {
-        id: 1,
-      },
-    },
-    jwtSecret
-  );
 
-  const {
-    data: { id: idOwner },
-  } = jwt.verify(token, jwtSecret);
+  const { id: idOwner } = decodeToken(req);
 
   try {
     const language = await client.query(verifyLanguageQuery, [value]);
@@ -217,19 +194,7 @@ router.post("/change/language", async (req, res) => {
 router.post("/change/email", async (req, res) => {
   const { value } = req.body;
 
-  const token = jwt.sign(
-    {
-      exp: Math.floor(Date.now() / 1000) + 60 * 60,
-      data: {
-        id: 1,
-      },
-    },
-    jwtSecret
-  );
-
-  const {
-    data: { id: idOwner },
-  } = jwt.verify(token, jwtSecret);
+  const { id: idOwner } = decodeToken(req);
 
   try {
     await client.query(changeEmailQuery, [value, idOwner]);
@@ -244,19 +209,7 @@ router.post("/change/phone", async (req, res) => {
   const { value } = req.body;
   const phone = value.replace(/[\s-]/gi, "");
 
-  const token = jwt.sign(
-    {
-      exp: Math.floor(Date.now() / 1000) + 60 * 60,
-      data: {
-        id: 1,
-      },
-    },
-    jwtSecret
-  );
-
-  const {
-    data: { id: idOwner },
-  } = jwt.verify(token, jwtSecret);
+  const { id: idOwner } = decodeToken(req);
 
   try {
     await client.query(changePhoneQuery, [phone, idOwner]);
@@ -269,19 +222,8 @@ router.post("/change/phone", async (req, res) => {
 
 router.post("/change/password", async (req, res) => {
   const { value } = req.body;
-  const token = jwt.sign(
-    {
-      exp: Math.floor(Date.now() / 1000) + 60 * 60,
-      data: {
-        id: 1,
-      },
-    },
-    jwtSecret
-  );
 
-  const {
-    data: { id: idOwner },
-  } = jwt.verify(token, jwtSecret);
+  const { id: idOwner } = decodeToken(req);
 
   bcrypt.hash(value, saltRounds, async (err, hash) => {
     if (hash) {
