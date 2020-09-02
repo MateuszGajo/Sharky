@@ -72,6 +72,9 @@
   filter: brightness(0.9);
 }
 
+.primary-border-left{
+  border-left:1px solid $shadowColor;
+}
 .list {
   display:grid;
   grid-template-columns: 1fr 1fr;
