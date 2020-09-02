@@ -62,6 +62,20 @@ const getPhotosQuery = `
     select id, name, date from user_photos where id_user=$1 limit 7 offset $2
 `;
 
+const verifyCountryQuery = "select id from countries where name=$1";
+
+const changeCountryQuery = "update users set country=$1 where id=$2";
+
+const verifyLanguageQuery = "select id from languages where name=$1";
+
+const changeLanguageQuery = "update users set language=$1 where id=$2";
+
+const changeEmailQuery = "update users set email=$1 where id=$2";
+
+const changePhoneQuery = "update users set phone=$1 where id=$2";
+
+const changePasswordQuery = "update users set password=$1 where id=$2";
+
 const getPasswordQuery = "select password from users where id=$1";
 
 module.exports = {
@@ -73,5 +87,12 @@ module.exports = {
   blockUserQuery,
   addPhotoQuery,
   changePhotoQuery,
+  verifyCountryQuery,
+  changeCountryQuery,
+  verifyLanguageQuery,
+  changeLanguageQuery,
+  changeEmailQuery,
+  changePhoneQuery,
+  changePasswordQuery,
   getPasswordQuery,
 };

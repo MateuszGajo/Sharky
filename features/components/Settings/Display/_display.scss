@@ -1,0 +1,57 @@
+.settings__container__display {
+    width: 50%;
+  }
+  
+  .settings__container__display--title {
+    position: relative;
+    text-align: center;
+    padding: $smallMargin 0;
+    border-bottom: 1px solid $shadowColor;
+  }
+  
+  .settings__container__display--title--icon {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    color: $primaryColor;
+    cursor: pointer;
+  }
+  
+  .settings__container__display--form {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    margin: 0 auto;
+  }
+  .settings__container__display--form--input {
+    margin-top: $smallMargin;
+  }
+  
+  .settings__container__display--form--button {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: $smallMargin;
+  }
+  
+  .settings__container__reminder {
+    width: 50%;
+  }
+  
+  .settings__container__reminder {
+    margin-top: $mediumMargin;
+    text-align: center;
+  }
+  
+  .settings__container__reminder--p {
+    margin-top: $smallMargin;
+  }
+  
+
+  @media(max-width:1023px){
+      .settings__container__display{
+          width:100%;
+      }
+  }

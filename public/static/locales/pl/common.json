@@ -37,7 +37,9 @@
             "last-fanpage-admin":"Jesteś jedynym adminem, przyznaj uprawnienia administratora innej osobie lub usuń fanpage",
             "last-group-admin":"Jesteś jedynym administratorem, przyznaj uprawnienia administratora innej osobie lub usuń grupe",
             "wrong-file-type":"Niewłaściwe rozserzenie pliku",
-            "file-too-large":"Plik jest za duży"
+            "file-too-large":"Plik jest za duży",
+            "invalid-value":"Nieprawidłowa wartość",
+            "passwords-do-not-match":"Hasła są różne"
         },
         "invite-person":{
             "empty-content":"Użyj wyszukiwarka aby znaleść znajomych",

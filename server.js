@@ -21,6 +21,8 @@ const groupRoute = require("./api/route/group/groupRoute");
 const fanpageRoute = require("./api/route/fanpage/fanpageRoute");
 const newsRoute = require("./api/route/news/newsRoute");
 const notificationRoute = require("./api/route/notifications/notificationsRoute");
+const countryRoute = require("./api/route/country/countryRoute");
+const languageRoute = require("./api/route/language/languageRoute");
 const { client } = require("./config/pgAdaptor");
 const { jwtSecret } = require("./config/keys");
 const { userJoin, userLeave, getSocket, existUser } = require("./utils/users");
@@ -138,6 +140,13 @@ left join users on users.id = result.id_user_1`;
     }
   });
 
+  socket.on("changedPassword", async ({ idUser }) => {
+    const sockets = getSocket(idUser);
+    for (let i = 0; i < sockets.length; i++) {
+      socketIO.to(sockets[i]).emit("logOutChangedPassword");
+    }
+  });
+
   socket.on("joinChat", async () => {
     const token = jwt.sign(
       {
@@ -182,7 +191,6 @@ left join users on users.id = result.id_user_1`;
 
 (async () => {
   await app.prepare();
-
   await nextI18Next.initPromise;
   server.use(nextI18NextMiddleware(nextI18Next));
 
@@ -198,6 +206,8 @@ left join users on users.id = result.id_user_1`;
   server.use("/fanpage", fanpageRoute);
   server.use("/news", newsRoute);
   server.use("/notification", notificationRoute);
+  server.use("/country", countryRoute);
+  server.use("/language", languageRoute);
   server.get("*", (req, res) => {
     return handle(req, res);
   });

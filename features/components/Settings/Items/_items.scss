@@ -1,0 +1,78 @@
+.settings__container {
+    display: flex;
+    flex-grow: 1;
+    padding-left: 1px;
+  }
+
+  .settings__container__wrapper {
+    width: 100%;
+    border-right: 1px solid $shadowColor;
+    background-color: #fff;
+  }
+  
+  .settings__container__wrapper--title {
+    position: relative;
+    text-align: center;
+    padding: $smallMargin 0;
+    border-bottom: 1px solid $shadowColor;
+    background-color: #fff;
+    z-index: 1;
+  }
+  
+.setting-title {
+    position: relative;
+    border-bottom: 1px solid $primaryBackgroundColor;
+    padding: 10px 0;
+    padding-left: 10px;
+    background-color: #fff;
+    z-index: 1;
+  }
+  
+  .setting-item {
+    position: relative;
+    background-color: #fff;
+    max-height: 300px;
+    transition: 0.5s max-height, visibility 0.1s 0s, z-index 0s 0.5s,
+      transform 0.3s;
+    visibility: visible;
+    transform: scaleY(1);
+  }
+  
+  .setting-item__container {
+    border-bottom: 1px solid $primaryBackgroundColor;
+    padding: 10px 0;
+    padding-left: 20px;
+    transition: 0.2s background-color;
+    cursor: pointer;
+    &:hover {
+      background-color: $secondaryBackgroundColor;
+    }
+  }
+  
+  .setting-collapse {
+    max-height: 0;
+    visibility: hidden;
+    transition: 0.3s max-height, visibility 0.1s 0.5s, z-index 0s 0.5s,
+      transform 0.3s;
+    transform: scaleY(0);
+  }
+  
+  .setting-title--icon {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    transform: translatey(-50%);
+    right: 10px;
+    cursor: pointer;
+  }
+
+  .setting-title--icon-active {
+    transform: rotate(180deg) translateY(8px);
+  }
+  
+@media(max-width:1023px){
+    .setting-title--icon{
+        font-size: 1.3rem;
+    }
+}

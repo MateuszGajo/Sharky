@@ -11,6 +11,13 @@ const {
   blockUserQuery,
   addPhotoQuery,
   changePhotoQuery,
+  verifyCountryQuery,
+  changeCountryQuery,
+  verifyLanguageQuery,
+  changeLanguageQuery,
+  changeEmailQuery,
+  changePhoneQuery,
+  changePasswordQuery,
   getPasswordQuery,
 } = require("./query");
 const decodeToken = require("../../../utils/decodeToken");
@@ -100,6 +107,7 @@ router.post("/change/photo", async (req, res) => {
     }
   });
 });
+const saltRounds = 10;
 
 router.post("/get", async (req, res) => {
   const { idUsers } = req.body;
@@ -146,6 +154,148 @@ router.post("/get/photo", async (req, res) => {
   res.status(200).json({ photos, isMore });
 });
 
+router.post("/change/country", async (req, res) => {
+  let { value } = req.body;
+  value = value.toLowerCase();
+
+  const token = jwt.sign(
+    {
+      exp: Math.floor(Date.now() / 1000) + 60 * 60,
+      data: {
+        id: 1,
+      },
+    },
+    jwtSecret
+  );
+
+  const {
+    data: { id: idOwner },
+  } = jwt.verify(token, jwtSecret);
+
+  try {
+    const country = await client.query(verifyCountryQuery, [value]);
+    if (!country.rows[0]) return res.status(406).json("country-does-not-exist");
+
+    await client.query(changeCountryQuery, [value, idOwner]);
+
+    res.status(200).json({ sucess: true });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
+router.post("/change/language", async (req, res) => {
+  let { value } = req.body;
+  value = value.toLowerCase();
+  const token = jwt.sign(
+    {
+      exp: Math.floor(Date.now() / 1000) + 60 * 60,
+      data: {
+        id: 1,
+      },
+    },
+    jwtSecret
+  );
+
+  const {
+    data: { id: idOwner },
+  } = jwt.verify(token, jwtSecret);
+
+  try {
+    const language = await client.query(verifyLanguageQuery, [value]);
+    if (!language.rows[0])
+      return res.status(406).json("language-does-not-exist");
+
+    await client.query(changeLanguageQuery, [value, idOwner]);
+
+    res.status(200).json({ success: true });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
+router.post("/change/email", async (req, res) => {
+  const { value } = req.body;
+
+  const token = jwt.sign(
+    {
+      exp: Math.floor(Date.now() / 1000) + 60 * 60,
+      data: {
+        id: 1,
+      },
+    },
+    jwtSecret
+  );
+
+  const {
+    data: { id: idOwner },
+  } = jwt.verify(token, jwtSecret);
+
+  try {
+    await client.query(changeEmailQuery, [value, idOwner]);
+
+    res.status(200).json({ success: true });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
+router.post("/change/phone", async (req, res) => {
+  const { value } = req.body;
+  const phone = value.replace(/[\s-]/gi, "");
+
+  const token = jwt.sign(
+    {
+      exp: Math.floor(Date.now() / 1000) + 60 * 60,
+      data: {
+        id: 1,
+      },
+    },
+    jwtSecret
+  );
+
+  const {
+    data: { id: idOwner },
+  } = jwt.verify(token, jwtSecret);
+
+  try {
+    await client.query(changePhoneQuery, [phone, idOwner]);
+
+    res.status(200).json({ success: true });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
+router.post("/change/password", async (req, res) => {
+  const { value } = req.body;
+  const token = jwt.sign(
+    {
+      exp: Math.floor(Date.now() / 1000) + 60 * 60,
+      data: {
+        id: 1,
+      },
+    },
+    jwtSecret
+  );
+
+  const {
+    data: { id: idOwner },
+  } = jwt.verify(token, jwtSecret);
+
+  bcrypt.hash(value, saltRounds, async (err, hash) => {
+    if (hash) {
+      try {
+        await client.query(changePasswordQuery, [hash, idOwner]);
+
+        res.status(200).json({ idUser: idOwner });
+      } catch {
+        res.status(400).json("bad-request");
+      }
+    }
+  });
+});
+
 router.post("/mute", async (req, res) => {
   const { idMuteUser } = req.body;
 
@@ -179,6 +329,11 @@ router.post("/block", async (req, res) => {
   }
 });
 
+router.get("/logout", async (req, res) => {
+  res.clearCookie("token");
+  res.status(200).json({ sucess: true });
+});
+
 router.get("/me", (req, res) => {
   if (!req.cookies.token) return res.status(401).json("un-authorized");
   const { id, firstName, lastName, photo } = decodeToken(req);
@@ -198,6 +353,12 @@ router.post("/check/password", async (req, res) => {
     }
     res.status(401).json("bad-password");
   });
+});
+
+router.get("/me/info", (req, res) => {
+  const { email, phone, country, language } = decodeToken(req);
+
+  res.status(200).json({ email, phone, country, language });
 });
 
 module.exports = router;

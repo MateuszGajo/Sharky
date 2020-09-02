@@ -1,0 +1,36 @@
+{
+    "title":"Settings",
+    "change":"Change",
+     "account":{
+        "title":"Account",
+        "email":"E-mail",
+        "confirm-password":"Confirm password",
+        "password":"Password",
+        "phone":"Telephone",
+        "email-changed":"Email changed",
+        "password-changed":"Password changed",
+        "phone-changed":"Telephone number changed"
+    },
+    "general":{
+        "title":"General",
+        "country":"Country",
+        "language":"Language",
+        "country-changed":"Country Changed",
+        "language-changed":"Language changed"
+    },
+    "information":{
+        "title":"Remeber",
+        "description":"Change your password regularly to avoid losed account"
+    },
+    "button":"save",
+    "countries":{
+        "poland":"Poland",
+        "usa":"USA",
+        "germany":"Germany"
+    },
+    "languages":{
+        "polish":"Polish",
+        "english":"English"
+    }
+
+}
