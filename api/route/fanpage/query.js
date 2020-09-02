@@ -87,14 +87,51 @@ order by "idSub"
 limit 21 offset $3`;
 
 const addUserQuery = `
-insert into fanpage_users(id_fanpage, id_user) 
-select $1, $2 where not exists(select id from fanpage_users where id_fanpage=$1 and id_user=$2)
+insert into fanpage_users(id_fanpage, id_user, role) 
+select $1, $2, $3 where not exists(select id from fanpage_users where id_fanpage=$1 and id_user=$2)
 returning id
 `;
+
+const getFanpageAdminsQuery =
+  "select * from fanpage_users where id_fanpage=$1 and role='admin'";
 
 const getIdUserQuery = `select id from fanpage_users where id_fanpage=$1 and id_user=$2`;
 
 const deleteUserQuery = `delete from fanpage_users where id=$1`;
+
+const fanpageInfoQuery = `
+select a.*,a."idFanpage", b.name, b.date	
+from(select id_fanpage as "idFanpage", count(*) as "numberOfSubscribers" 
+  from fanpage_users 
+  where id_fanpage=$1 
+  group by "idFanpage") as a
+inner join fanpages as b
+on a."idFanpage" = b.id
+`;
+
+const checkUserQuery = `
+select a.id as "idSub",a.role, b.id 
+from fanpage_users as a
+inner join fanpages as b on a.id_fanpage= b.id
+where a.id_user=$1 and a.id_fanpage=$2
+`;
+
+const deleteFanpageQuery = "delete from fanpages where id=$1";
+
+const deleteFanpageUsersQuery = "delete from fanpage_users where id_fanpage=$1";
+
+const deleteFanpagePostsQuery = "delete from posts where id_fanpage=$1";
+
+const getMembersQuery = `
+select a.id as "idSub", a.id_user as "idUser",a.role, b.first_name as "firstName", b.last_name as "lastName", b.photo 
+from fanpage_users as a
+inner join users as b
+on b.id = a.id_user
+where a.id_fanpage=$1
+limit 21 offset $2
+`;
+
+const updateMemberRealtionQuery = `update fanpage_users set role=$1 where id=$2`;
 
 module.exports = {
   getFanpagesQuery,
@@ -103,4 +140,12 @@ module.exports = {
   addUserQuery,
   deleteUserQuery,
   getIdUserQuery,
+  getFanpageAdminsQuery,
+  fanpageInfoQuery,
+  checkUserQuery,
+  deleteFanpageQuery,
+  deleteFanpageUsersQuery,
+  deleteFanpagePostsQuery,
+  getMembersQuery,
+  updateMemberRealtionQuery,
 };

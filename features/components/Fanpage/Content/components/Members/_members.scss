@@ -1,0 +1,19 @@
+.fanpage-members{
+    width:100%;
+    height:auto;
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows:min-content ;
+}
+
+@media(max-width:1023px) and(orientation:portrait){
+    .fanpage-members{
+        grid-template-columns: 1fr;
+    }
+}
+
+@media(max-width:767px) and(orientation:landscape){
+    .fanpage-members{
+        grid-template-columns: 1fr;
+    }
+}

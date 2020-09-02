@@ -1,6 +1,7 @@
 @import "./variables";
 @import "./reset";
 @import "./signin";
+@import "./fanpage";
 @import "../features/common/PopUp/ConfirmUser/confirmUser";
 @import "../features/common/MessageBox/messageBox";
 @import "../features/common/Search/search";
@@ -35,5 +36,9 @@
 @import "../features/components/Layout/Home/Compound/components/NavBar/navBar";
 @import "../features/components/MultiStepForm/components/Controls/controls";
 @import "../features/components/MultiStepForm/multiStepForm";
+@import "../features/components/Fanpage/Content/content";
+@import "../features/components/Fanpage/Navbar/navbar";
+@import "../features/components/Fanpage/Content/components/About/about";
+@import "../features/components/Fanpage/Content/components/Members/members";
 
 @import "./global";
