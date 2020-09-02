@@ -1,0 +1,12 @@
+.fanpage__content{
+    display:flex;
+    justify-content: center;
+}
+
+
+.fanpage__content--margin{
+    margin:$mediumMargin 0;
+}
+.fanpage__content--grow{
+    flex-grow:1
+}

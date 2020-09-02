@@ -22,14 +22,14 @@ const Fanpage = () => {
   const { t } = useTranslation(["fanpage"]);
 
   const homeName = t("fanpage:home");
-  const fanpageDoesNotExist = t("fanpage:does-not-exist");
 
   const { isError, isAuth, setStatusOfAuth, setOwner } = useContext(AppContext);
 
   const [section, setSection] = useState(homeName);
   const [idSub, setIdSub] = useState(null);
   const [role, setRole] = useState(null);
-  const [isFanpageExist, setStatusOfExistFanpage] = useState(true);
+  const [isLoading, setStatusOfLoading] = useState(true);
+  const [fanpageError, setFanpageError] = useState("");
 
   useEffect(() => {
     idFanpage &&
@@ -37,27 +37,35 @@ const Fanpage = () => {
       axios
         .post("/fanpage/enter", { idFanpage })
         .then(({ data: { idSub, role, id } }) => {
-          if (!id) setStatusOfExistFanpage(false);
+          console.log("tutaj");
           setIdSub(idSub);
           setRole(role);
+          setStatusOfLoading(false);
+        })
+        .catch(({ response: { status, data: message } }) => {
+          console.log(status);
+          if (status == 404) {
+            setFanpageError(message);
+            setStatusOfLoading(false);
+          }
         });
-  }, [idFanpage]);
+  }, [idFanpage, isAuth]);
 
   useEffect(() => {
     getOwner({ setStatusOfAuth, setOwner });
   }, []);
-
+  console.log(isAuth);
   if (isAuth == null) return <Spinner />;
   else if (!isAuth) {
     router.push("/signin");
     return <Spinner />;
-  }
+  } else if (isLoading) return <Spinner />;
 
   return (
     <HomeLayout>
       {isError && <Error message={isError} />}
       <section className="fanpage">
-        {isFanpageExist ? (
+        {!fanpageError ? (
           <>
             <Navbar
               setIdSub={setIdSub}
@@ -69,10 +77,8 @@ const Fanpage = () => {
             <Content section={section} idFanpage={idFanpage} role={role} />
           </>
         ) : (
-          <div className="fanpage__does-not-exist">
-            <span className="fanpage__does-not-exist--span">
-              {fanpageDoesNotExist}
-            </span>
+          <div className="fanpage__error">
+            {t(`fanpage:error.${fanpageError}`)}
           </div>
         )}
       </section>

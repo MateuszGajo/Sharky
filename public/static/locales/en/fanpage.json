@@ -9,5 +9,7 @@
     "admin":"Admin",
     "delete":"delete",
     "my-self":"You",
-    "does-not-exist":"Fanpage dosen't exist"
+    "error":{
+        "fanpage-does-not-exist":"Fanpage doesn't exist"
+    }
 }

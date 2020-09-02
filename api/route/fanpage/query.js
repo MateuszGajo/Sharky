@@ -110,10 +110,11 @@ on a."idFanpage" = b.id
 `;
 
 const checkUserQuery = `
-select a.id as "idSub",a.role, b.id 
-from fanpage_users as a
-inner join fanpages as b on a.id_fanpage= b.id
-where a.id_user=$1 and a.id_fanpage=$2
+select a.*,b.id as "idSub",b.role
+from(select  id 
+	from fanpages 
+	where id=$1) as a
+left join fanpage_users as b on a.id=b.id_fanpage and b.id_user=$2
 `;
 
 const deleteFanpageQuery = "delete from fanpages where id=$1";

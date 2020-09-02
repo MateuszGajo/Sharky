@@ -39,9 +39,8 @@ router.post("/enter", async (req, res) => {
   const { id: idOwner } = decodeToken(req);
 
   try {
-    const { rows } = await client.query(checkUserQuery, [idOwner, idFanpage]);
-    if (!rows[0])
-      return res.status(200).json({ id: null, idSub: null, role: null });
+    const { rows } = await client.query(checkUserQuery, [idFanpage, idOwner]);
+    if (!rows[0]) return res.status(404).json("fanpage-does-not-exist");
 
     const idSub = rows[0] ? rows[0].idSub : null;
     const role = rows[0] ? rows[0].role : null;
