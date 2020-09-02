@@ -1,0 +1,6 @@
+{
+    "error":{
+        "post-does-not-exist":"Post nie istnieje",
+        "user-does-not-have-permission":"Nie masz uprawnień do zobaczenia tego postu"
+    }
+}

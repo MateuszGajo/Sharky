@@ -20,6 +20,8 @@ const {
   deletePostQuery,
   deleteSharePostQuery,
   getIdPostQuery,
+  doesUserBelongToFanpageQuery,
+  doesUserBelongToGroupqQuery,
   deleteCommentsQuery,
   deleteRepliesQuery,
 } = require("./query");
