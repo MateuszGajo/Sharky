@@ -11,7 +11,7 @@ import PostContext from "./context/PostContext";
 import WizzardContext from "./context/WizzardContext";
 import AppContext from "@features/context/AppContext";
 import i18next from "@i18n";
-import { addComent, getComments } from "./services/functions/index";
+import { addComent, getComments } from "./services/Functions";
 const { useTranslation } = i18next;
 
 const Post = ({ post, focusElement }) => {
