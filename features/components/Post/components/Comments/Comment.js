@@ -10,7 +10,7 @@ import {
   unlikeComment,
   likeReply,
   unlikeReply,
-} from "../../services/functions/index";
+} from "../../services/Functions";
 import WizzardContext from "../../context/WizzardContext";
 import AppContext from "../../../../context/AppContext";
 

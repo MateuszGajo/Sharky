@@ -6,7 +6,7 @@ import AppContext from "@features/context/AppContext";
 
 const withWizzard = (WrappedComponent) => {
   return (props) => {
-    const { newPost, idFanpage = null, idGroup = null, news } = props;
+    const { newPost, idFanpage = "", idGroup = "", news = "" } = props;
 
     const { setError, owner } = useContext(AppContext);
     const [isMoreComment, setStatusOfMoreComments] = useState();
@@ -31,7 +31,7 @@ const withWizzard = (WrappedComponent) => {
     const [posts, setPosts] = useState([]);
     useEffect(() => {
       if (newPost?.content) {
-        const { content, file, idGroup = "", idFanpage = "" } = newPost;
+        const { content, file } = newPost;
         const date = new Date();
         const data = new FormData();
         data.append("file", file);
