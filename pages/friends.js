@@ -6,6 +6,7 @@ import Spinner from "@components/Spinner/Spinner";
 import AppContext from "@features/context/AppContext";
 import { getOwner } from "@features/service/Functions/index";
 import Search from "@common/Search/Search";
+import "../styles/main.scss";
 
 const Friends = () => {
   const { owner, setOwner, isAuth, setStatusOfAuth } = useContext(AppContext);
