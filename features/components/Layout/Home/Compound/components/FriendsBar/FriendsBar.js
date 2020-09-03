@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 import cx from "classnames";
 import Item from "./components/Item/Item";
-import { getFriends } from "../../services/functions/index";
+import { getFriends } from "../../services/Functions";
 import { WizzardContext } from "../../context/WizzardContext";
 import AppContext from "@features/context/AppContext";
 
