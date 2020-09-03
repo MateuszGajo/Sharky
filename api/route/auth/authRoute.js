@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const { client } = require("../../../config/pgAdaptor");
 const { jwtSecret } = require("../../../config/keys");
 const router = express.Router();
+const { findUserQuery, createUserQuery, getIdUserQuery } = require("./query");
 
 const saltRounds = 10;
 
@@ -24,7 +25,7 @@ router.get(
   (req, res) => {
     const token = jwt.sign(
       {
-        exp: Math.floor(Date.now() / 1000) + 60 * 60,
+        exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
         data: req.user,
       },
       jwtSecret
@@ -45,7 +46,7 @@ router.get(
   (req, res) => {
     const token = jwt.sign(
       {
-        exp: Math.floor(Date.now() / 1000) + 60 * 60,
+        exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
         data: req.user,
       },
       jwtSecret
@@ -66,7 +67,7 @@ router.get(
   (req, res) => {
     const token = jwt.sign(
       {
-        exp: Math.floor(Date.now() / 1000) + 60 * 60,
+        exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
         data: req.user,
       },
       jwtSecret
@@ -78,25 +79,38 @@ router.get(
 
 router.post("/signin", async (req, res) => {
   const { email, password } = req.body;
-  const findUserQuery = "select * from users where email=$1";
   try {
     const findUser = await client.query(findUserQuery, [email]);
-    if (findUser.rowCount == 0) return res.status(401).json("invalid-creds");
+    if (!findUser.rowCount) return res.status(401).json("invalid-creds");
 
     const user = findUser.rows[0];
     const pwCorrect = await bcrypt.compare(password, user.password);
     if (pwCorrect) {
-      const { first_name, last_name, email, phone, country, language } = user;
+      const {
+        id,
+        first_name,
+        last_name,
+        email,
+        phone,
+        country,
+        language,
+        city,
+        birthDate,
+      } = user;
       const token = jwt.sign(
         {
-          exp: 60 * 60 * 24,
+          exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
           data: {
+            id,
             firstName: first_name,
             lastName: last_name,
+            photo: "profile.png",
             email,
             phone,
             country,
             language,
+            city,
+            birthDate,
           },
         },
         jwtSecret
@@ -113,18 +127,15 @@ router.post("/signin", async (req, res) => {
 router.post("/signup", async (req, res) => {
   const { creds } = req.body;
   const { email, password, firstName, lastName, phone } = creds;
-  const findUserQuery = "select * from users where email=$1";
   try {
-    const findUser = await client.query(findUserQuery, [email]);
-    if (findUser.rowCount > 0) return res.status(403).json("user-exist");
+    const idUser = await client.query(getIdUserQuery, [email]);
+    if (idUser.rowCount) return res.status(403).json("user-exist");
 
     try {
       const pwHash = await bcrypt.hash(password, saltRounds);
 
       try {
-        const createUserQuery =
-          "INSERT INTO users(email, password, first_name, last_name, phone) values($1,$2,$3,$4,$5)";
-        const createUser = await client.query(createUserQuery, [
+        const { rows: user } = await client.query(createUserQuery, [
           email,
           pwHash,
           firstName,
@@ -134,14 +145,18 @@ router.post("/signup", async (req, res) => {
 
         const token = jwt.sign(
           {
-            exp: Math.floor(Date.now() / 1000) + 60 * 60,
+            exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
             data: {
+              id: user[0].id,
               firstName,
               lastName,
+              photo: "profile.png",
               email,
               phone,
               country: null,
               language: null,
+              city: null,
+              birthDate: null,
             },
           },
           jwtSecret
