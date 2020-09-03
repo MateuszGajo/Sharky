@@ -1,9 +1,7 @@
 import React from "react";
-import Friends from "./friends";
-
-import "../styles/main.scss";
 
 const Index = () => {
-  return <Friends />;
+  return <div></div>;
 };
+
 export default Index;
