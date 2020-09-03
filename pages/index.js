@@ -1,9 +1,7 @@
 import React from "react";
-import Messages from "./messages";
-import "../styles/main.scss";
 
 const Index = () => {
-  return <Messages />;
+  return <div></div>;
 };
 
 export default Index;
