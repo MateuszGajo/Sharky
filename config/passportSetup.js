@@ -2,9 +2,7 @@ const passport = require("passport");
 const FacebookStrategy = require("passport-facebook").Strategy;
 const TwitterStrategy = require("passport-twitter").Strategy;
 const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
-const jwt = require("jsonwebtoken");
 const { client } = require("./pgAdaptor");
-const { jwtSecret } = require("./keys");
 
 passport.use(
   new FacebookStrategy(
@@ -18,14 +16,13 @@ passport.use(
 
       const firstName = displayName.match(/^([\w\-]+)/g)[0];
       const lastName = displayName.match(/\b(\w+)\W*$/g)[0];
-      const query =
-        "select id,email,first_name,last_name,phone,country,language from users where facebook_id=$1";
+      const query = `select id, email, first_name as "firstName", last_name as "lastName", photo, phone, country, language, city, birth_date as "birthDate" from users where facebook_id=$1`;
 
       client.query(query, [id], (err, res) => {
         if (err) return done(null, false);
         if (res.rowCount == 0) {
           const createNewUser =
-            "INSERT INTO users(facebook_id, first_name, last_name) VALUES($1,$2,$3) RETURNING id";
+            "INSERT INTO users(facebook_id, first_name, last_name, photo) VALUES($1, $2, $3, 'profile.png') RETURNING id";
           client.query(createNewUser, [id, firstName, lastName], (err, res) => {
             if (err) return done(null, false);
 
@@ -37,9 +34,12 @@ passport.use(
                 email: null,
                 firstName,
                 lastName,
+                photo: "profile.png",
                 phone: null,
                 country: null,
                 language: null,
+                city: null,
+                birthDate: null,
               };
               return done(null, user);
             }
@@ -48,21 +48,27 @@ passport.use(
           const {
             id,
             email,
-            first_name,
-            last_name,
+            firstName,
+            lastName,
+            photo,
             phone,
             country,
             language,
+            city,
+            birthDate,
           } = res.rows[0];
 
           const user = {
             id,
             email,
-            firstName: first_name,
-            lastName: last_name,
+            firstName,
+            lastName,
+            photo,
             phone,
             country,
             language,
+            city,
+            birthDate,
           };
           return done(null, user);
         }
@@ -82,14 +88,14 @@ passport.use(
       const { displayName, id } = profile;
       const firstName = displayName.match(/^([\w\-]+)/g)[0];
       const lastName = displayName.match(/\b(\w+)\W*$/g)[0];
-      const query = "select * from users where google_id=$1";
+      const query = `select id, email, first_name as "firstName", last_name as "lastName", phone, country, language, photo, birth_date as "birthDate", city from users where google_id=$1`;
 
       client.query(query, [id], (err, res) => {
         if (err) return done(null, false);
 
         if (res.rowCount == 0) {
           const createNewUser =
-            "INSERT INTO users(google_id, first_name, last_name) VALUES($1,$2,$3) RETURNING id";
+            "INSERT INTO users(google_id, first_name, last_name, photo) VALUES($1, $2, $3, 'profile.png') RETURNING id";
           client.query(createNewUser, [id, firstName, lastName], (err, res) => {
             if (err) return done(null, false);
 
@@ -101,9 +107,12 @@ passport.use(
                 email: null,
                 firstName,
                 lastName,
+                photo: "profile.png",
                 phone: null,
                 country: null,
                 language: null,
+                city: null,
+                birthDate: null,
               };
               return done(null, user);
             }
@@ -112,21 +121,27 @@ passport.use(
           const {
             id,
             email,
-            first_name,
-            last_name,
+            firstName,
+            lastName,
+            photo,
             phone,
             country,
             language,
+            city,
+            birthDate,
           } = res.rows[0];
 
           const user = {
             id,
             email,
-            firstName: first_name,
-            lastName: last_name,
+            firstName,
+            lastName,
+            photo,
             phone,
             country,
             language,
+            city,
+            birthDate,
           };
           return done(null, user);
         }
@@ -146,14 +161,14 @@ passport.use(
       const { displayName, id } = profile;
       const firstName = displayName.match(/^([\w\-]+)/g)[0];
       const lastName = displayName.match(/\b(\w+)\W*$/g)[0];
-      const query = "select * from users where twitter_id=$1";
+      const query = `select id, email, first_name as "firstName", last_name as "lastName", photo, phone, country, language, city, birth_date as "birthDate" from users where twitter_id=$1`;
 
       client.query(query, [id], (err, res) => {
         if (err) return done(null, false);
 
         if (res.rowCount == 0) {
           const createNewUser =
-            "INSERT INTO users(twitter_id, first_name, last_name) VALUES($1,$2,$3) RETURNING id";
+            "INSERT INTO users(twitter_id, first_name, last_name, photo) VALUES($1, $2, $3, 'profile.png') RETURNING id";
           client.query(createNewUser, [id, firstName, lastName], (err, res) => {
             if (err) return done(null, false);
 
@@ -165,9 +180,12 @@ passport.use(
                 email: null,
                 firstName,
                 lastName,
+                photo: "profile.png",
                 phone: null,
                 country: null,
                 language: null,
+                city: null,
+                birthDate: null,
               };
               return done(null, user);
             }
@@ -176,21 +194,27 @@ passport.use(
           const {
             id,
             email,
-            first_name,
-            last_name,
+            firstName,
+            lastName,
+            photo,
             phone,
             country,
             language,
+            city,
+            birthDate,
           } = res.rows[0];
 
           const user = {
             id,
             email,
-            firstName: first_name,
-            lastName: last_name,
+            firstName,
+            lastName,
+            photo,
             phone,
             country,
             language,
+            city,
+            birthDate,
           };
           return done(null, user);
         }
