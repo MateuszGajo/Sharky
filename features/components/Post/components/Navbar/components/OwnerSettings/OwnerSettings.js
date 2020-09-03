@@ -5,7 +5,7 @@ import { IconContext } from "react-icons";
 import {
   deletePost,
   deletePostShare,
-} from "@components/Post/services/functions/index";
+} from "@components/Post/services/Functions";
 import PostContext from "@components/Post/context/PostContext";
 import WizzardContext from "@components/Post/context/WizzardContext";
 import AppContext from "@features/context/AppContext";
