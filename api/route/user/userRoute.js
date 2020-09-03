@@ -85,7 +85,7 @@ router.get("/me", (req, res) => {
 
   jwt.verify(req.cookies.token, jwtSecret, function (err, decoded) {
     if (decoded) {
-      res.json({ user: decoded.data });
+      return res.json({ user: decoded.data });
     }
     return res.status(401).json("un-authorized");
   });
