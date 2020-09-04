@@ -99,37 +99,39 @@ const Header = ({ info, setNumberOfPhotos, idUser }) => {
           />
         </div>
       </div>
-      <div className="profile__container__person__add-photo">
-        {uploadPhotoPrompt ? (
-          <div className="profile__container__person__add-photo__text">
-            {uploadPhotoPrompt}
-          </div>
-        ) : (
-          <>
-            <div className="profile__container__person__add-photo__title">
-              <span className="profile__container__person__add-photo__title--text">
-                {addPhoto}
-              </span>
+      {owner.id == idUser && (
+        <div className="profile__container__person__add-photo">
+          {uploadPhotoPrompt ? (
+            <div className="profile__container__person__add-photo__text">
+              {uploadPhotoPrompt}
             </div>
-            <div className="profile__container__person__add-photo__icon">
-              <label
-                htmlFor="file-upload"
-                className="profile__container__person__add-photo__icon__label"
-              >
-                <IoIosAddCircleOutline />
-              </label>
+          ) : (
+            <>
+              <div className="profile__container__person__add-photo__title">
+                <span className="profile__container__person__add-photo__title--text">
+                  {addPhoto}
+                </span>
+              </div>
+              <div className="profile__container__person__add-photo__icon">
+                <label
+                  htmlFor="file-upload"
+                  className="profile__container__person__add-photo__icon__label"
+                >
+                  <IoIosAddCircleOutline />
+                </label>
 
-              <input
-                type="file"
-                name="file"
-                id="file-upload"
-                className="profile__container__person__add-photo__icon__upload--file"
-                onChange={handlePhotoUpload}
-              />
-            </div>
-          </>
-        )}
-      </div>
+                <input
+                  type="file"
+                  name="file"
+                  id="file-upload"
+                  className="profile__container__person__add-photo__icon__upload--file"
+                  onChange={handlePhotoUpload}
+                />
+              </div>
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 };
