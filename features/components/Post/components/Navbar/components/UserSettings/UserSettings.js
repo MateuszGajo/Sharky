@@ -3,7 +3,7 @@ import { BsEyeSlash } from "react-icons/bs";
 import { FiVolumeX, FiFlag } from "react-icons/fi";
 import { MdBlock } from "react-icons/md";
 import { IconContext } from "react-icons";
-import { muteUser, blockUser } from "@components/Post/services/functions/index";
+import { muteUser, blockUser } from "@components/Post/services/Functions";
 import i18next from "@i18n";
 import PostContext from "@components/Post/context/PostContext";
 import WizzardContext from "@components/Post/context/WizzardContext";

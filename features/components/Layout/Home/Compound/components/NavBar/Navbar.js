@@ -12,6 +12,7 @@ import { FaRegUser } from "react-icons/fa";
 import cx from "classnames";
 import Router from "next/router";
 import { WizzardContext } from "../../context/WizzardContext";
+import AppContext from "@features/context/AppContext";
 import i18next from "@i18n";
 const { useTranslation } = i18next;
 
@@ -19,6 +20,7 @@ const NavBar = () => {
   const { t } = useTranslation(["component"]);
 
   const { isNavOpen, setStatusOfNav } = useContext(WizzardContext);
+  const { owner } = useContext(AppContext);
   const navbar = useRef(null);
   const navbarWrapper = useRef(null);
   const [isNavbarScrolling, setStatusOfNavbarScrolling] = useState(false);
@@ -38,7 +40,7 @@ const NavBar = () => {
   const navbarItems = [
     {
       id: 1,
-      route: "",
+      route: "home",
       name: homeName,
       icon: <AiOutlineHome />,
     },
@@ -80,7 +82,7 @@ const NavBar = () => {
     },
     {
       id: 8,
-      route: "profile",
+      route: `profile/${owner.id}`,
       name: profileName,
       icon: <FaRegUser />,
     },
