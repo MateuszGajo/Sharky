@@ -89,7 +89,8 @@ const Items = ({
                   key={id}
                   onClick={() => {
                     setChooseSetting({ ...setting, title: name });
-                    if (name == "country")
+                    if (!value) setInputValue("");
+                    else if (name == "country")
                       setInputValue(t(`settings:countries.${value}`));
                     else if (name === "language")
                       setInputValue(t(`settings:languages.${value}`));
