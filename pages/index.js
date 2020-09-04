@@ -1,14 +1,27 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import Head from "next/head";
 import Signin from "./signin";
+import Home from "./home";
+import Spinner from "@components/Spinner/Spinner";
 import i18next from "@i18n";
+import AppContext from "@features/context/AppContext";
+import { getOwner } from "@features/service/Functions";
 const { useTranslation } = i18next;
 
 const Index = () => {
   const { t } = useTranslation(["index"]);
 
+  const { setOwner, isAuth, setStatusOfAuth } = useContext(AppContext);
+
   const description = t("index:description");
   const keyWords = t("index:key-words");
+
+  useEffect(() => {
+    getOwner({ setStatusOfAuth, setOwner });
+  }, []);
+
+  if (isAuth == null) return <Spinner />;
+
   return (
     <>
       <Head>
@@ -19,7 +32,7 @@ const Index = () => {
         <meta property="og:title" content="Sharky" />
         <meta property="og:description" content={description} />
       </Head>
-      <Signin />
+      {isAuth ? <Home /> : <Signin />}
     </>
   );
 };
