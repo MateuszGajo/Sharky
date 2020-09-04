@@ -40,7 +40,7 @@ const NavBar = () => {
   const navbarItems = [
     {
       id: 1,
-      route: "home",
+      route: "",
       name: homeName,
       icon: <AiOutlineHome />,
     },
