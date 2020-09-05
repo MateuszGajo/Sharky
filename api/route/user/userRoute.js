@@ -80,11 +80,17 @@ router.post("/block", async (req, res) => {
   }
 });
 
-router.get("/me", (req, res) => {
-  if (!req.cookies.token) return res.status(401).json("un-authorized");
+router.get("/logout", async (req, res) => {
+  res.clearCookie("token");
+  res.status(200).json({ sucess: true });
+});
 
+router.get("/me", (req, res) => {
+  console.log("wchodizmy");
+  if (!req.cookies.token) return res.status(401).json("un-authorized");
   jwt.verify(req.cookies.token, jwtSecret, function (err, decoded) {
     if (decoded) {
+      console.log(decoded.data);
       return res.json({ user: decoded.data });
     }
     return res.status(401).json("un-authorized");

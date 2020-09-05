@@ -3,6 +3,7 @@
     "validation-errors":{
         "empty-field":"Field is empty",
         "email-validation-error":"Invalid email",
+        "email-in-use":"Email is already in use",
         "passwords-not-equal-error":"Passwords are different",
         "too-long-first-name":"First name is too long",
         "too-long-last-name":"Last name is too long",

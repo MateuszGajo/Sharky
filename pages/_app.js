@@ -6,7 +6,7 @@ import AuthReducer from "@features/context/authReducer";
 import { authInitState } from "@features/context/initState";
 let socket;
 const MyApp = ({ Component, pageProps }) => {
-  const [owner, setOwner] = useState({});
+  const [owner, setOwner] = useState({ id: null });
   const [newMessage, setNewMessage] = useState({});
   const [newChat, setNewChat] = useState({
     idUser: null,
@@ -37,8 +37,11 @@ const MyApp = ({ Component, pageProps }) => {
     socket.on("newChat", ({ newChat }) => {
       setNewChat(newChat);
     });
-    socket.emit("connectUser");
   }, [SERVER_URL]);
+
+  useEffect(() => {
+    owner.id && socket.emit("connectUser");
+  }, [owner]);
 
   return (
     <AppContext.Provider
