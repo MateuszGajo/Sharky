@@ -80,9 +80,13 @@ router.post("/block", async (req, res) => {
   }
 });
 
+router.get("/logout", async (req, res) => {
+  res.clearCookie("token");
+  res.status(200).json({ sucess: true });
+});
+
 router.get("/me", (req, res) => {
   if (!req.cookies.token) return res.status(401).json("un-authorized");
-
   jwt.verify(req.cookies.token, jwtSecret, function (err, decoded) {
     if (decoded) {
       return res.json({ user: decoded.data });
