@@ -43,13 +43,13 @@ const People = ({ idUser, keyWords = "", onlyFriends = false }) => {
   };
 
   useEffect(() => {
-    const { id } = relation;
+    const { id, idSub } = relation;
     if (id != null) {
       setPrompt(relationChangeText);
       axios
         .post("/friend/update/relation", {
           idFriendShip: id,
-          idUser,
+          idUser: idSub,
           relation: relation.name,
         })
         .catch(({ response: { data: message } }) => setError(message));

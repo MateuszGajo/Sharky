@@ -21,7 +21,7 @@ const getPostQuery = `
 
 const getPostsQuery = `
 with idUsers as(
-  SELECT 1 AS "idUser"
+  SELECT $1 AS "idUser"
   union
   select id_user_1 as "idUser"  from friends  where id_user_2=$1 and id_user_1 not in (select id_user_2 from user_mute where id_user_1=$1) and status='1'
   union 
@@ -171,9 +171,9 @@ with idPosts as(
     inner join numberOfComments as c on a.id=c."idPost"
     inner join numberOfLikes as d on a.id =d."idPost"
     where id in (select * from idPosts)) as e
-  order by e.date desc
   left join post_like as f on
   e."idPost" = f.id_post and f.id_user =$2
+  order by e.date desc
   limit 21 offset $3
 `;
 
