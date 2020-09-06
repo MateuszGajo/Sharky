@@ -8,12 +8,8 @@ import AuthReducer from "@features/context/authReducer";
 import { authInitState } from "@features/context/initState";
 let socket;
 const MyApp = ({ Component, pageProps }) => {
-<<<<<<< HEAD
   const router = useRouter();
   const [owner, setOwner] = useState({});
-=======
-  const [owner, setOwner] = useState({ id: null });
->>>>>>> features/settings
   const [newMessage, setNewMessage] = useState({});
   const [newChat, setNewChat] = useState({
     idUser: null,
