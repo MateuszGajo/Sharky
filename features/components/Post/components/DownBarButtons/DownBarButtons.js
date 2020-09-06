@@ -3,11 +3,7 @@ import { FiMessageCircle } from "react-icons/fi";
 import { AiOutlineShareAlt } from "react-icons/ai";
 import { IoIosHeartEmpty } from "react-icons/io";
 import cx from "classnames";
-import {
-  sharePost,
-  likePost,
-  unlikePost,
-} from "../../services/functions/index";
+import { sharePost, likePost, unlikePost } from "../../services/Functions";
 import Router from "@features/route/routes";
 import PostContext from "../../context/PostContext";
 import WizzardContext from "../../context/WizzardContext";

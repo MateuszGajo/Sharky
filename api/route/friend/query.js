@@ -2,14 +2,14 @@ const getFriendsQuery = `
 with userFriends as(
 select id_user_1 as "users" from friends where CASE when $4 then id_user_2=$1 else id_user_2=$1  and status='1' end
 union
-select id_user_2 as "users" from friends where CASE when $4 then  id_user_1=$1else id_user_1=$1  and status='1'  end 
+select id_user_2 as "users" from friends where CASE when $4 then  id_user_1=$1 else id_user_1=$1  and status='1'  end 
 ),
 
 userFriendsCounted as(
 select a."idUser", sum(a.count) as "numberOfFriends"	  
-  from( select id_user_1 as "idUser",count(id_user_1)  from friends where id_user_1 in(select * from userFriends) group by id_user_1
+  from( select id_user_1 as "idUser",count(id_user_1)  from friends where id_user_1 in(select * from userFriends) and status='1' group by id_user_1
       union
-      select id_user_2 as "idUser",count(id_user_2)  from friends where id_user_2 in(select * from userFriends) group by id_user_2) as a
+      select id_user_2 as "idUser",count(id_user_2)  from friends where id_user_2 in(select * from userFriends) and status='1' group by id_user_2) as a
 group by a."idUser"
 ),
 
@@ -49,9 +49,9 @@ userSorted as (
   
   userSortedCounted as(
   select a."idUser",sum(a.count) as "numberOfFriends"
-  from(select id_user_1 as "idUser", count(id_user_1)  from friends where id_user_1 in(select * from userSorted) group by "idUser"
+  from(select id_user_1 as "idUser", count(id_user_1)  from friends where id_user_1 in(select * from userSorted) and status='1' group by "idUser"
     union 
-    select id_user_2 as "idUser", count(id_user_2)  from friends where id_user_2 in(select * from userSorted) group by "idUser") as a
+    select id_user_2 as "idUser", count(id_user_2)  from friends where id_user_2 in(select * from userSorted) and status='1' group by "idUser") as a
   group by a."idUser"
   ),
   
@@ -89,9 +89,9 @@ with userSorted as (
   
   userSortedCounted as(
   select a."idUser",sum(a.count) as "numberOfFriends"
-  from(select id_user_1 as "idUser", count(id_user_1)  from friends where id_user_1 in(select * from userSorted) group by "idUser"
+  from(select id_user_1 as "idUser", count(id_user_1)  from friends where id_user_1 in(select * from userSorted) and status='1' group by "idUser"
     union 
-    select id_user_2 as "idUser", count(id_user_2)  from friends where id_user_2 in(select * from userSorted) group by "idUser") as a
+    select id_user_2 as "idUser", count(id_user_2)  from friends where id_user_2 in(select * from userSorted) and status='1' group by "idUser") as a
   group by a."idUser"
   ),
   

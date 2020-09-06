@@ -23,7 +23,8 @@
                 "groups":"Groups",
                 "fanpages":"Fanpages",
                 "profile":"Profile",
-                "settings":"Settings"
+                "settings":"Settings",
+                "log-out":"Log Out"
             }
         }
     },
