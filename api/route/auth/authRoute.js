@@ -88,8 +88,8 @@ router.post("/signin", async (req, res) => {
     if (pwCorrect) {
       const {
         id,
-        first_name,
-        last_name,
+        firstName,
+        lastName,
         email,
         phone,
         country,
@@ -102,8 +102,8 @@ router.post("/signin", async (req, res) => {
           exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
           data: {
             id,
-            firstName: first_name,
-            lastName: last_name,
+            firstName,
+            lastName,
             photo: "profile.png",
             email,
             phone,

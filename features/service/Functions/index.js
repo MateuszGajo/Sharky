@@ -29,7 +29,11 @@ export const signUp = ({
       .then(() => {
         Router.push("/");
       })
-      .catch(({ response: { data: message } }) => {
+      .catch(({ response: { data: message, status } }) => {
+        if (status == 403) {
+          dispatch({ type: "EMAIL_ERROR", msg: "email-in-use" });
+          setValidationSignUpError("fields-error");
+        }
         setError(message);
       });
   } else setValidationSignUpError("fields-error");

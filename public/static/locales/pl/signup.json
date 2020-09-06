@@ -3,6 +3,7 @@
     "validation-errors":{
         "empty-field":"Pole jest puste",
         "email-validation-error":"Nieprawidłowy email",
+        "email-in-use":"Email jest już używany",
         "passwords-not-equal-error":"Hasła są różne",
         "too-long-first-name":"Imię jest za długie",
         "too-long-last-name":"Nazwisko jest za długie",
