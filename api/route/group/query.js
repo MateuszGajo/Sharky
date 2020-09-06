@@ -90,8 +90,8 @@ limit 21 offset $3
 `;
 
 const addUserQuery = `
-insert into group_users(id_group, id_user, status) 
-select $1,$2,'0' where not exists(select id from group_users where id_group=$1 and id_user=$2) returning id;
+insert into group_users(id_group, id_user, status, role, date) 
+select $1, $2, '0', $3, $4 where not exists(select id from group_users where id_group=$1 and id_user=$2) returning id;
 `;
 
 const getIdUserQuery = `select id from group_users where id_group=$1 and id_user=$2`;
