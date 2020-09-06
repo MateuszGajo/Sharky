@@ -3,6 +3,7 @@ const io = require("socket.io");
 const http = require("http");
 const passport = require("passport");
 const session = require("express-session");
+const cookie = require("cookie");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const authRoute = require("./api/route/auth/authRoute");
@@ -63,21 +64,13 @@ inner join chats on chats.id_user_1 = result.id_user_1 or chats.id_user_2 = resu
 left join users on users.id = result.id_user_1`;
 
   socket.on("connectUser", () => {
-    const token = jwt.sign(
-      {
-        exp: Math.floor(Date.now() / 1000) + 60 * 60,
-        data: {
-          id: 1,
-        },
-      },
-      jwtSecret
-    );
-    if (token) {
-      const {
-        data: { id: idUser },
-      } = jwt.verify(token, jwtSecret);
-      userJoin(idUser, socket.id);
-    }
+    const token = cookie.parse(socket.handshake.headers.cookie).token;
+
+    const {
+      data: { id: idOwner },
+    } = jwt.verify(token, jwtSecret);
+
+    userJoin(idOwner, socket.id);
   });
 
   socket.on(
@@ -148,44 +141,26 @@ left join users on users.id = result.id_user_1`;
   });
 
   socket.on("joinChat", async () => {
-    const token = jwt.sign(
-      {
-        exp: Math.floor(Date.now() / 1000) + 60 * 60,
-        data: {
-          id: 1,
-        },
-      },
-      jwtSecret
-    );
-    if (token) {
-      const {
-        data: { id: idUser },
-      } = jwt.verify(token, jwtSecret);
+    const token = cookie.parse(socket.handshake.headers.cookie).token;
 
-      const { rows: chats } = await client.query(getChatsQuery, [idUser]);
-      for (let i = 0; i < chats.length; i++) {
-        socket.join("chat" + chats[i].idChat);
-      }
+    const {
+      data: { id: idOwner },
+    } = jwt.verify(token, jwtSecret);
+
+    const { rows: chats } = await client.query(getChatsQuery, [idOwner]);
+    for (let i = 0; i < chats.length; i++) {
+      socket.join("chat" + chats[i].idChat);
     }
   });
 
   socket.on("disconnect", async () => {
-    const token = jwt.sign(
-      {
-        exp: Math.floor(Date.now() / 1000) + 60 * 60,
-        data: {
-          id: 1,
-        },
-      },
-      jwtSecret
-    );
-    if (token) {
-      const {
-        data: { id: idUser },
-      } = jwt.verify(token, jwtSecret);
-      const { rows: chats } = await client.query(getChatsQuery, [idUser]);
-      userLeave(idUser, socket.id);
-    }
+    const token = cookie.parse(socket.handshake.headers.cookie).token;
+
+    const {
+      data: { id: idOwner },
+    } = jwt.verify(token, jwtSecret);
+
+    userLeave(idOwner, socket.id);
   });
 });
 

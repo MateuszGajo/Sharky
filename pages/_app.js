@@ -8,8 +8,12 @@ import AuthReducer from "@features/context/authReducer";
 import { authInitState } from "@features/context/initState";
 let socket;
 const MyApp = ({ Component, pageProps }) => {
+<<<<<<< HEAD
   const router = useRouter();
   const [owner, setOwner] = useState({});
+=======
+  const [owner, setOwner] = useState({ id: null });
+>>>>>>> common-layout
   const [newMessage, setNewMessage] = useState({});
   const [newChat, setNewChat] = useState({
     idUser: null,
@@ -40,6 +44,7 @@ const MyApp = ({ Component, pageProps }) => {
     socket.on("newChat", ({ newChat }) => {
       setNewChat(newChat);
     });
+<<<<<<< HEAD
 
     socket.on("logOutChangedPassword", () => {
       axios.get("/user/logout").then(() => {
@@ -47,7 +52,13 @@ const MyApp = ({ Component, pageProps }) => {
       });
     });
     socket.emit("connectUser");
+=======
+>>>>>>> common-layout
   }, [SERVER_URL]);
+
+  useEffect(() => {
+    owner.id && socket.emit("connectUser");
+  }, [owner]);
 
   return (
     <AppContext.Provider
