@@ -24,7 +24,7 @@ const Content = ({ messages, user }) => {
           index + 1 === messages.length ||
           messages[index + 1].idUser !== message.idUser;
 
-        return message.idUser === owner.id ? (
+        return message.idUser == owner.id ? (
           <div className="messenger__text--myself" key={index}>
             <span className="messenger__text--myself--primary-color messenger-text-style">
               {message.message}

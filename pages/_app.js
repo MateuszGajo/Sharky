@@ -46,8 +46,11 @@ const MyApp = ({ Component, pageProps }) => {
         router.push("/signin");
       });
     });
-    socket.emit("connectUser");
   }, [SERVER_URL]);
+
+  useEffect(() => {
+    owner.id && socket.emit("connectUser");
+  }, [owner]);
 
   return (
     <AppContext.Provider

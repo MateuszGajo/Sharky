@@ -21,7 +21,7 @@ const getPostQuery = `
 
 const getPostsQuery = `
 with idUsers as(
-  SELECT 1 AS "idUser"
+  SELECT $1 AS "idUser"
   union
   select id_user_1 as "idUser"  from friends  where id_user_2=$1 and id_user_1 not in (select id_user_2 from user_mute where id_user_1=$1) and status='1'
   union 

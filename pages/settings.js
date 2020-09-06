@@ -44,7 +44,7 @@ const Settings = () => {
               {
                 name: "email",
                 title: "E-mail",
-                value: email,
+                value: email || "",
                 category: "account",
                 id: 1,
               },
@@ -58,7 +58,7 @@ const Settings = () => {
               {
                 name: "phone",
                 title: "Telefon",
-                value: phone,
+                value: phone || "",
                 category: "account",
                 id: 3,
               },
@@ -67,14 +67,14 @@ const Settings = () => {
               {
                 name: "country",
                 title: "Kraj",
-                value: country,
+                value: country || "",
                 category: "general",
                 id: 1,
               },
               {
                 name: "language",
                 title: "Język",
-                value: language,
+                value: language || "",
                 category: "general",
                 id: 2,
               },

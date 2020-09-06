@@ -9,8 +9,10 @@ import { IoIosNotificationsOutline, IoMdArrowBack } from "react-icons/io";
 import { MdPeopleOutline } from "react-icons/md";
 import { TiGroupOutline, TiNews } from "react-icons/ti";
 import { FaRegUser } from "react-icons/fa";
+import { FiLogOut } from "react-icons/fi";
 import cx from "classnames";
 import Router from "next/router";
+import axios from "axios";
 import { WizzardContext } from "../../context/WizzardContext";
 import AppContext from "@features/context/AppContext";
 import i18next from "@i18n";
@@ -20,7 +22,7 @@ const NavBar = () => {
   const { t } = useTranslation(["component"]);
 
   const { isNavOpen, setStatusOfNav } = useContext(WizzardContext);
-  const { owner } = useContext(AppContext);
+  const { owner, socket, setOwner } = useContext(AppContext);
   const navbar = useRef(null);
   const navbarWrapper = useRef(null);
   const [isNavbarScrolling, setStatusOfNavbarScrolling] = useState(false);
@@ -34,6 +36,7 @@ const NavBar = () => {
   const fanpagesName = t("component:layout.home.navbar.fanpages");
   const profileName = t("component:layout.home.navbar.profile");
   const settingsName = t("component:layout.home.navbar.settings");
+  const logOutName = t("component:layout.home.navbar.log-out");
 
   let timeout;
 
@@ -93,6 +96,14 @@ const NavBar = () => {
       icon: <AiOutlineSetting />,
     },
   ];
+
+  const logOut = () => {
+    axios.get("/user/logout").then(({ data: { idUser } }) => {
+      setOwner({ id: null });
+      socket.emit("singleDisconnect", { idUser });
+      Router.push("/signin");
+    });
+  };
 
   const showScroll = () => {
     if (timeout) {
@@ -161,6 +172,16 @@ const NavBar = () => {
               </div>
             );
           })}
+          <div className="home__wrapper__navbar__list__item" onClick={logOut}>
+            <div className="home__wrapper__navbar__list__item__icon">
+              <FiLogOut />
+            </div>
+            <div className="home__wrapper__navbar__list__item__name">
+              <a className="home__wrapper__navbar__list__item__name--a">
+                {logOutName}
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>

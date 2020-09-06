@@ -151,10 +151,13 @@ router.post("/user/add", async (req, res) => {
 
   const { id: idOwner } = decodeToken(req);
 
+  const role = "member";
+
   try {
     const { rows: addUser } = await client.query(addUserQuery, [
       idFanpage,
       idOwner,
+      role,
     ]);
 
     let id;
