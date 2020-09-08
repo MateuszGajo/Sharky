@@ -26,6 +26,18 @@ textarea:focus {
   outline: none;
 }
 
+
+// .primary-scroll{
+//   scrollbar-color: grey, white;
+//   scrollbar-width: thin; 
+// }
+
+
+// .primary-scroll-active{
+//   overflow-y: scroll;
+//   scrollbar-color: $primaryColor white;    
+  // }
+
 .primary-scroll::-webkit-scrollbar {
   width: 0px;
 }
@@ -41,6 +53,8 @@ textarea:focus {
   background-color: $primaryColor;
   border-radius: 20px;
 }
+
+
 
 @media(max-width:1919px){
   html{

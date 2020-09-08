@@ -83,8 +83,8 @@ userSorted as (
 const getSortedUsersQuery = `
 with userSorted as (
   select id from users 
-  where (lower(first_name) like lower($1) and lower(last_name) like lower($2)) 
-  or (lower(last_name) like lower($1) and lower(first_name) like lower($2))
+  where (lower(first_name) like lower($1) and lower(last_name) like lower($2) and id!= $3) 
+  or (lower(last_name) like lower($1) and lower(first_name) like lower($2) and id!=$3)
   ),
   
   userSortedCounted as(
@@ -102,10 +102,10 @@ with userSorted as (
   )
   
   select d.*,e.first_name as "firstName", e.last_name as "lastName", e.photo
-  from(select a.*,b.relation,c."numberOfFriends" 
+  from(select a.*,b.relation,coalesce(c."numberOfFriends",0)  as "numberOfFriends"
      from userRelation as a 
      left join friend_relation as b on a."idFriendShip" =b.id_friendship 
-     inner join userSortedCounted as c on  a."idUser" = c."idUser"
+     left join userSortedCounted as c on  a."idUser" = c."idUser"
      union
      select a."idUser",null as "idFriendShip", null as status, null as date,null as "isInvited",null as "isInvitationSent", null as relation, b."numberOfFriends" 
      from userSortedCounted as a 
@@ -114,7 +114,7 @@ with userSorted as (
      union
      select id as "idUser", null as idFriendShip,null as status, null as date,null as "isInvited",null as "isInvitationSent", null as relation,  0 as numberOfFriends
      from userSorted 
-     where id not in (select "idUser" from userSortedCounted)) as d
+     where id not in (select "idUser" from userSortedCounted union select "idUser" from userRelation)) as d
   inner join users as e on d."idUser" = e.id
   order by "isInvited","isInvitationSent",date
   limit 21 offset $4`;
