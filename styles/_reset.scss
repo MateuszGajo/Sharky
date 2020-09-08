@@ -27,19 +27,21 @@ textarea:focus {
 }
 
 
-// .primary-scroll{
-//   scrollbar-color: grey, white;
-//   scrollbar-width: thin; 
-// }
+@-moz-document url-prefix() {
+  .primary-scroll{
+  overflow-y: scroll;
+  scrollbar-width: thin; 
+  scrollbar-color: white white;    
+}
 
-
-// .primary-scroll-active{
-//   overflow-y: scroll;
-//   scrollbar-color: $primaryColor white;    
-  // }
+.primary-scroll-active{
+  scrollbar-color: $primaryColor white;    
+  }
+}
 
 .primary-scroll::-webkit-scrollbar {
   width: 0px;
+  pointer-events: none !important;
 }
 
 .primary-scroll::-webkit-scrollbar-thumb {

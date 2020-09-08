@@ -1,15 +1,15 @@
 const getFriendsQuery = `
 with userFriends as(
-select id_user_1 as "users" from friends where CASE when $4 then id_user_2=$1 else id_user_2=$1  and status='1' end
+select id_user_1 as "users" from friends where CASE when $4 then id_user_2=$1 else id_user_2=$1   end
 union
-select id_user_2 as "users" from friends where CASE when $4 then  id_user_1=$1 else id_user_1=$1  and status='1'  end 
+select id_user_2 as "users" from friends where CASE when $4 then  id_user_1=$1 else id_user_1=$1   end 
 ),
 
 userFriendsCounted as(
 select a."idUser", sum(a.count) as "numberOfFriends"	  
-  from( select id_user_1 as "idUser",count(id_user_1)  from friends where id_user_1 in(select * from userFriends) and status='1' group by id_user_1
+  from( select id_user_1 as "idUser",count(id_user_1)  from friends where id_user_1 in(select * from userFriends) and status='1'  group by id_user_1
       union
-      select id_user_2 as "idUser",count(id_user_2)  from friends where id_user_2 in(select * from userFriends) and status='1' group by id_user_2) as a
+      select id_user_2 as "idUser",count(id_user_2)  from friends where id_user_2 in(select * from userFriends) and status='1'  group by id_user_2) as a
 group by a."idUser"
 ),
 
@@ -20,9 +20,9 @@ select id_user_2 as "idUser",id as "idFriendShip",status,date,null as "isInvited
 )
 
 select d.*,e.first_name as "firstName", e.last_name as "lastName", e.photo
-from(select a.*,b."numberOfFriends", c.relation 
+from(select a.*,coalesce(b."numberOfFriends",0) as "numberOfFriends", c.relation 
   from friendsStatus as a 
-  inner join userFriendsCounted as b on a."idUser" = b."idUser"
+  left join userFriendsCounted as b on a."idUser" = b."idUser"
   left join friend_relation as c on a."idFriendShip"= c.id_friendship
   union
   select a."idUser",null as  idFriendShip,null as  status,null as  date,null as "isInvited",null as "isInvitationSent",a."numberOfFriends",null as  relation from userFriendsCounted as a where a."idUser" not in (select "idUser" from friendsStatus)) as d
@@ -128,7 +128,7 @@ select result.id_user_1 as "idUser", chats.id as "idChat", chats.message_to as "
       select id_user_2
       from friends 
       where id_user_1=$1 and status='1') as result
-inner join chats on chats.id_user_1 = result.id_user_1 or chats.id_user_2 = result.id_user_1
+      inner join chats on (chats.id_user_1 = result.id_user_1 and  chats.id_user_2=1) or (chats.id_user_2 = result.id_user_1 and  chats.id_user_1=1)
 left join users on users.id = result.id_user_1`;
 
 const addUserQuery = `
