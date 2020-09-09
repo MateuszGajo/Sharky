@@ -151,7 +151,7 @@
   }
   
   .messenger__downbar {
-    height:70px;
+    min-height:70px;
     border-top: 1px solid $shadowColor;
   }
 

@@ -23,7 +23,8 @@
                 "groups":"Groups",
                 "fanpages":"Fanpages",
                 "profile":"Profile",
-                "settings":"Settings"
+                "settings":"Settings",
+                "log-out":"Log Out"
             }
         }
     },
@@ -74,7 +75,8 @@
                 "report":"Report comment",
                 "mute":"Mute user"
             },
-            "load-more-comments":"View more comments..." 
+            "load-more-comments":"View more comments...",
+            "load-comments":"View comments" 
         }
     },
     "messenger":{

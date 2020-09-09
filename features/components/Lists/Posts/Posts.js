@@ -4,7 +4,7 @@ import Post from "@components/Post/Post";
 import Spinner from "@components/Spinner/Spinner";
 import withWizzard from "@components/Post/withWizzard";
 import WizzardContext from "@components/Post/context/WizzardContext";
-import { getPosts } from "@components/Post/services/functions/index";
+import { getPosts } from "@components/Post/services/Functions";
 import i18next from "@i18n";
 
 const { useTranslation } = i18next;
@@ -66,6 +66,7 @@ const PostList = ({
 
   return (
     <div className="post-list">
+      {console.log(posts)}
       <InfiniteScroll
         dataLength={posts.length}
         next={() => fetchData(posts.length)}
