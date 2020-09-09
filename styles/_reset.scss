@@ -26,10 +26,10 @@ textarea:focus {
   outline: none;
 }
 
-<<<<<<< HEAD
 form {
   width: 100%;
-=======
+}
+
 
 @-moz-document url-prefix() {
   .primary-scroll{
@@ -41,7 +41,6 @@ form {
 .primary-scroll-active{
   scrollbar-color: $primaryColor white;    
   }
->>>>>>> common-layout
 }
 
 .primary-scroll::-webkit-scrollbar {
