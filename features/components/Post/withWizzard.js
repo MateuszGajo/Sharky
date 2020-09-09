@@ -25,7 +25,7 @@ const withWizzard = (WrappedComponent) => {
     });
     const [newContent, setNewContent] = useState({ text: "", idPost: null });
     const [muteUser, setMuteUser] = useState({ idUser: null });
-    console.log(owner);
+
     const [users, setUsers] = useState({
       [owner.id]: {
         id: owner.id,
