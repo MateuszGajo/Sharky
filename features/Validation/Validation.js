@@ -5,7 +5,7 @@ export const signUpValidation = (creds, dispatch) => {
     confirmPassword,
     firstName,
     lastName,
-    phoneNumber,
+    phone: phoneNumber,
   } = creds;
 
   let isValid = true;

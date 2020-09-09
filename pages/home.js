@@ -16,7 +16,7 @@ const Home = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setNewPost({ content, file });
+    setNewPost({ content, file, setContent, setFile });
   };
 
   useEffect(() => {
