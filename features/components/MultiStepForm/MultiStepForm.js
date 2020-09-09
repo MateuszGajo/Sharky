@@ -39,7 +39,7 @@ const Wizzard = ({ children }) => {
       confirmPassword,
       firstName,
       lastName,
-      phoneNumber,
+      phone: phoneNumber,
     };
     signUp({
       creds,
