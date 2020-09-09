@@ -174,8 +174,9 @@ router.post("/block", async (req, res) => {
 });
 
 router.get("/logout", async (req, res) => {
+  const { id: idOwner } = decodeToken(req);
   res.clearCookie("token");
-  res.status(200).json({ sucess: true });
+  res.status(200).json({ idUser: idOwner });
 });
 
 router.get("/me", (req, res) => {
