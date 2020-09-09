@@ -8,7 +8,12 @@ import AppContext from "@features/context/AppContext";
 import Spinner from "@components/Spinner/Spinner";
 const { useTranslation } = i18next;
 
-const Fanpages = ({ idUser, keyWords, onlySubscribed = false }) => {
+const Fanpages = ({
+  idUser,
+  keyWords,
+  onlySubscribed = false,
+  helpInformation = true,
+}) => {
   const { t } = useTranslation(["component"]);
   const description = t("component:lists.fanpages.description");
   const buttonSubscribe = t("component:lists.fanpages.button-subscribe");
@@ -101,7 +106,7 @@ const Fanpages = ({ idUser, keyWords, onlySubscribed = false }) => {
           return <Card data={data} key={idFanpage} handleClick={setFanpage} />;
         })}
       </div>
-      {!fanpages.length && (
+      {!fanpages.length && helpInformation && (
         <div className="empty-card">
           <div className="empty-card__icon">
             <AiOutlineSearch />
