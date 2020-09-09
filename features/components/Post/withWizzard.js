@@ -38,7 +38,7 @@ const withWizzard = (WrappedComponent) => {
     const [posts, setPosts] = useState([]);
     useEffect(() => {
       if (newPost?.content) {
-        const { content, file } = newPost;
+        const { content, file, setContent, setFile } = newPost;
         const date = new Date();
         const data = new FormData();
         data.append("file", file);
@@ -68,6 +68,8 @@ const withWizzard = (WrappedComponent) => {
               },
               ...posts,
             ]);
+            setContent("");
+            setFile("");
           })
           .catch(({ response: { data: message } }) => setError(message));
       }
