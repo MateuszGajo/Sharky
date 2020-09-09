@@ -144,14 +144,20 @@ left join users on users.id = result.id_user_1`;
     }
   });
 
+  socket.on("singleDisconnect", ({ idUser }) => {
+    userLeave(idUser, socket.id);
+  });
+
   socket.on("disconnect", async () => {
     const token = cookie.parse(socket.handshake.headers.cookie).token;
 
-    const {
-      data: { id: idOwner },
-    } = jwt.verify(token, jwtSecret);
+    if (token) {
+      const {
+        data: { id: idOwner },
+      } = jwt.verify(token, jwtSecret);
 
-    userLeave(idOwner, socket.id);
+      userLeave(idOwner, socket.id);
+    }
   });
 });
 

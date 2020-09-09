@@ -26,12 +26,26 @@ textarea:focus {
   outline: none;
 }
 
-form {
-  width: 100%;
+form{
+  width:100%;
+}
+
+
+@-moz-document url-prefix() {
+  .primary-scroll{
+  overflow-y: scroll;
+  scrollbar-width: thin; 
+  scrollbar-color: white white;    
+}
+
+.primary-scroll-active{
+  scrollbar-color: $primaryColor white;    
+  }
 }
 
 .primary-scroll::-webkit-scrollbar {
   width: 0px;
+  pointer-events: none !important;
 }
 
 .primary-scroll::-webkit-scrollbar-thumb {
@@ -45,6 +59,8 @@ form {
   background-color: $primaryColor;
   border-radius: 20px;
 }
+
+
 
 @media(max-width:1919px){
   html{

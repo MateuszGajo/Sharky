@@ -8,7 +8,12 @@ import AppContext from "@features/context/AppContext";
 import Spinner from "@components/Spinner/Spinner";
 const { useTranslation } = i18next;
 
-const Groups = ({ idUser, keyWords = "", onlySubscribed = false }) => {
+const Groups = ({
+  idUser,
+  keyWords = "",
+  onlySubscribed = false,
+  helpInformation = true,
+}) => {
   const { t } = useTranslation(["component"]);
   const description = t("component:lists.groups.description");
   const buttonJoin = t("component:lists.groups.button-join");
@@ -99,7 +104,7 @@ const Groups = ({ idUser, keyWords = "", onlySubscribed = false }) => {
           return <Card data={data} key={idGroup} handleClick={setGroup} />;
         })}
       </div>
-      {!groups.length && (
+      {!groups.length && helpInformation && (
         <div className="empty-card">
           <div className="empty-card__icon">
             <AiOutlineSearch />
