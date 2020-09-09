@@ -23,11 +23,25 @@ const ProfileDisplayItems = ({ setChooseItem, chooseItem, info, idUser }) => {
   const renderComponent = (name) => {
     switch (name) {
       case fanpagesItemName:
-        return <Fanpages idUser={idUser} onlySubscribed={true} />;
+        return (
+          <Fanpages
+            idUser={idUser}
+            onlySubscribed={true}
+            helpInformation={false}
+          />
+        );
       case friendsItemName:
-        return <People idUser={idUser} onlyFriends={true} />;
+        return (
+          <People idUser={idUser} onlyFriends={true} helpInformation={false} />
+        );
       case groupsItemName:
-        return <Groups idUser={idUser} onlySubscribed={true} />;
+        return (
+          <Groups
+            idUser={idUser}
+            onlySubscribed={true}
+            helpInformation={false}
+          />
+        );
       case photosItemName:
         return <Photos idUser={idUser} />;
       case postsItemName:
