@@ -141,7 +141,6 @@ router.post("/get", async (req, res) => {
   }
 
   let isMorePosts = true;
-  let isMoreComments = true;
 
   let { rows: posts } = postsResult;
   let { rows: comments } = commentsResult;
@@ -151,17 +150,10 @@ router.post("/get", async (req, res) => {
     posts = posts.slice(0, -1);
   }
 
-  if (comments.length != 3) {
-    isMoreComments = false;
-  } else {
-    comments = comments.slice(0, -1);
-  }
-
   return res.status(200).json({
     posts,
     comments,
     isMorePosts,
-    isMoreComments,
   });
 });
 
@@ -254,7 +246,7 @@ router.post("/share", async (req, res) => {
       idOwner,
       date,
     ]);
-    res.status(200).json({ idShare: postShare.rows[0].id, idOwner });
+    res.status(200).json({ idShare: postShare.rows[0].id, idUser: idOwner });
   } catch {
     res.status(400).json("bad-request");
   }

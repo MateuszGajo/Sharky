@@ -6,7 +6,7 @@ const withPost = (WrappedComponent) => {
     const { user: u, userShare: us, single = false, post: p } = props;
     const [user, setUser] = useState(u);
     const [userShare, setUserShare] = useState(us);
-    const [comments, setComments] = useState(p.comments);
+    const [comments, setComments] = useState(p.comments || []);
     const [post, setPost] = useState(p);
     const [isMoreComments, setStatusOfMoreComments] = useState(
       p.isMoreComments
