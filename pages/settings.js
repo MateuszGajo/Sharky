@@ -10,12 +10,10 @@ import Prompt from "@common/PopUp/Prompt/Prompt";
 import Spinner from "@components/Spinner/Spinner";
 import AppContext from "@features/context/AppContext";
 import { getOwner } from "@features/service/Functions/index";
-import "../styles/main.scss";
+import "../styles/settings.scss";
 
 const Settings = () => {
-  const { isPrompt, isError, isAuth, setStatusOfAuth, setOwner } = useContext(
-    AppContext
-  );
+  const { isPrompt, isError, setOwner } = useContext(AppContext);
 
   const [isAccountCollapsed, setStatusOfAccountCollapse] = useState(true);
   const [isGeneralCollapsed, setStatusOfGeneralCollapse] = useState(true);
@@ -24,7 +22,7 @@ const Settings = () => {
   const [isOpenConfirmPopUp, setOpenConfirmPopUp] = useState(false);
   const [confirmUser, setConfirmUser] = useState(false);
   const [isLoading, setStatusOfLoading] = useState(true);
-
+  const [isAuth, setStatusOfAuth] = useState(null);
   const [chooseSetting, setChooseSetting] = useState({
     name: "",
     title: "",
