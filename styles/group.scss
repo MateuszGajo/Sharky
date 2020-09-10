@@ -1,0 +1,9 @@
+@import "./variables";
+@import "./reset";
+@import "./main";
+@import "./_group";
+@import "../features/components/group/Content/components/About/about";
+@import "../features/components/group/Content/components/Home/home";
+@import "../features/components/group/Content/content";
+@import "../features/components/group/SideBar/sideBar";
+@import "./global";

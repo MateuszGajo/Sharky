@@ -76,7 +76,8 @@
                 "report":"Zgłoś komentarz",
                 "mute":"Wycisz użytkownika"
             },
-            "load-more-comments":"Pokaż więcej komentarzy..." 
+            "load-more-comments":"Pokaż więcej komentarzy..." ,
+            "load-comments":"Pokaże komentarze" 
         }
     },
     "messenger":{
