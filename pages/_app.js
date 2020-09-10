@@ -18,13 +18,11 @@ const MyApp = ({ Component, pageProps }) => {
   });
   const [isError, setError] = useState("");
   const [isPrompt, setPrompt] = useState("");
-  const [isAuth, setStatusOfAuth] = useState(null);
   const [authError, setAuthError] = useState("");
   const [authUserError, setAuthUserError] = useState("");
   const [validationSignUpError, setValidationSignUpError] = useState("");
 
   const [state, dispatch] = useReducer(AuthReducer, authInitState);
-
   useEffect(() => {
     socket = socketIOClient(SERVER_URL);
     socket.on(
@@ -37,11 +35,8 @@ const MyApp = ({ Component, pageProps }) => {
     socket.on("newChat", ({ newChat }) => {
       setNewChat(newChat);
     });
-  }, [SERVER_URL]);
-
-  useEffect(() => {
     owner.id && socket.emit("connectUser");
-  }, [owner]);
+  }, [SERVER_URL]);
 
   return (
     <AppContext.Provider
@@ -56,8 +51,6 @@ const MyApp = ({ Component, pageProps }) => {
         setError,
         newChat,
         setNewChat,
-        isAuth,
-        setStatusOfAuth,
         authError,
         setAuthError,
         authUserError,
