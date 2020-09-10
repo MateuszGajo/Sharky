@@ -1,18 +1,3 @@
-@import "./variables";
-@import "./reset";
-@import "./signin";
-@import "./fanpage";
-@import "./fanpages";
-@import "./friends";
-@import "./group";
-@import "./groups";
-@import "./home";
-@import "./messages";
-@import "./news";
-@import "./notifications";
-@import "./post";
-@import "./profile";
-@import "./settings";
 @import "../features/common/PopUp/ConfirmUser/confirmUser";
 @import "../features/common/MessageBox/messageBox";
 @import "../features/common/Search/search";
@@ -65,4 +50,3 @@
 @import "../features/components/Fanpage/Content/components/About/about";
 @import "../features/components/Fanpage/Content/components/Members/members";
 
-@import "./global";

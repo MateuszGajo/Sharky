@@ -21,7 +21,6 @@ const MyApp = ({ Component, pageProps }) => {
   });
   const [isError, setError] = useState("");
   const [isPrompt, setPrompt] = useState("");
-  const [isAuth, setStatusOfAuth] = useState(null);
   const [authError, setAuthError] = useState("");
   const [authUserError, setAuthUserError] = useState("");
   const [validationSignUpError, setValidationSignUpError] = useState("");
@@ -50,7 +49,7 @@ const MyApp = ({ Component, pageProps }) => {
 
   useEffect(() => {
     owner.id && socket.emit("connectUser");
-  }, [owner]);
+  }, [SERVER_URL]);
 
   return (
     <AppContext.Provider
@@ -65,8 +64,6 @@ const MyApp = ({ Component, pageProps }) => {
         setError,
         newChat,
         setNewChat,
-        isAuth,
-        setStatusOfAuth,
         authError,
         setAuthError,
         authUserError,

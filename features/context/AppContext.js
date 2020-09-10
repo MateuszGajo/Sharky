@@ -17,6 +17,4 @@ export default React.createContext({
     photo: "",
   },
   setNewChat: () => {},
-  isAuth: null,
-  setStatusOfAuth: () => {},
 });
