@@ -26,7 +26,6 @@ const MyApp = ({ Component, pageProps }) => {
   const [validationSignUpError, setValidationSignUpError] = useState("");
 
   const [state, dispatch] = useReducer(AuthReducer, authInitState);
-
   useEffect(() => {
     socket = socketIOClient(SERVER_URL);
     socket.on(

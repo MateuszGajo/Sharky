@@ -5,9 +5,10 @@ import * as MultiStepForm from "../features/components/MultiStepForm/MultiStepFo
 import Spinner from "@components/Spinner/Spinner";
 import AppContext from "@features/context/AppContext";
 import { getOwner } from "@features/service/Functions/index";
-import "../styles/main.scss";
+import "../styles/signup.scss";
 const SignUp = () => {
-  const { setStatusOfAuth, setOwner, isAuth } = useContext(AppContext);
+  const { setOwner } = useContext(AppContext);
+  const [isAuth, setStatusOfAuth] = useState(null);
 
   useEffect(() => {
     getOwner({ setStatusOfAuth, setOwner });
