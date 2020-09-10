@@ -6,13 +6,14 @@ import Spinner from "@components/Spinner/Spinner";
 import AppContext from "@features/context/AppContext";
 import { getOwner } from "@features/service/Functions/index";
 import Search from "@common/Search/Search";
-import "../styles/main.scss";
+import "../styles/friends.scss";
 
 const Friends = () => {
-  const { owner, setOwner, isAuth, setStatusOfAuth } = useContext(AppContext);
+  const { owner, setOwner } = useContext(AppContext);
 
   const [keyWords, setKeyWords] = useState(null);
   const [text, setText] = useState("");
+  const [isAuth, setStatusOfAuth] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
