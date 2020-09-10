@@ -9,20 +9,18 @@ import Spinner from "@components/Spinner/Spinner";
 import i18next from "@i18n";
 import PopUpError from "@common/PopUp/Error/Error";
 import AppContext from "@features/context/AppContext";
-import "../../styles/main.scss";
-
 import { getOwner } from "@features/service/Functions/index";
 
+import "../../styles/group.scss";
 const { useTranslation } = i18next;
 
-import "../../styles/main.scss";
 const Group = () => {
   const router = useRouter();
   const idGroup = router.query.id;
 
   const { t } = useTranslation(["group"]);
 
-  const { isError, isAuth, setStatusOfAuth, setOwner } = useContext(AppContext);
+  const { isError, setOwner } = useContext(AppContext);
 
   const groupDoesNotExist = t("group:error.does-not-exist");
 
@@ -35,6 +33,7 @@ const Group = () => {
   const [creationDate, setCreationDate] = useState(null);
   const [isLoading, setStatusOfLoading] = useState(true);
   const [isGroupExist, setStatusOfExistsGroup] = useState(true);
+  const [isAuth, setStatusOfAuth] = useState(null);
 
   const getGroupInfo = () => {
     axios
