@@ -9,7 +9,12 @@ import i18n from "@i18n";
 import { uuid } from "uuidv4";
 const { useTranslation } = i18n;
 
-const People = ({ idUser, keyWords = "", onlyFriends = false }) => {
+const People = ({
+  idUser,
+  keyWords = "",
+  onlyFriends = false,
+  helpInformation = true,
+}) => {
   const { t } = useTranslation(["component"]);
 
   const relationChangeText = t("component:lists.people.relation-change");
@@ -43,13 +48,13 @@ const People = ({ idUser, keyWords = "", onlyFriends = false }) => {
   };
 
   useEffect(() => {
-    const { id } = relation;
+    const { id, idSub } = relation;
     if (id != null) {
       setPrompt(relationChangeText);
       axios
         .post("/friend/update/relation", {
           idFriendShip: id,
-          idUser,
+          idUser: idSub,
           relation: relation.name,
         })
         .catch(({ response: { data: message } }) => setError(message));
@@ -221,7 +226,7 @@ const People = ({ idUser, keyWords = "", onlyFriends = false }) => {
           );
         })}
       </div>
-      {!friends.length && (
+      {!friends.length && helpInformation && (
         <div className="empty-card">
           <div className="empty-card__icon">
             <AiOutlineSearch />

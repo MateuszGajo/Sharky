@@ -4,7 +4,7 @@ import AppContext from "@features/context/AppContext";
 import { SERVER_URL } from "../config/config";
 let socket;
 const MyApp = ({ Component, pageProps }) => {
-  const [owner, setOwner] = useState({});
+  const [owner, setOwner] = useState({ id: null });
   const [newMessage, setNewMessage] = useState({});
   const [newChat, setNewChat] = useState({
     idUser: null,
@@ -16,7 +16,6 @@ const MyApp = ({ Component, pageProps }) => {
   });
   const [isError, setError] = useState("");
   const [isPrompt, setPrompt] = useState("");
-  const [isAuth, setStatusOfAuth] = useState(null);
 
   useEffect(() => {
     socket = socketIOClient(SERVER_URL);
@@ -30,7 +29,7 @@ const MyApp = ({ Component, pageProps }) => {
     socket.on("newChat", ({ newChat }) => {
       setNewChat(newChat);
     });
-    socket.emit("connectUser");
+    owner.id && socket.emit("connectUser");
   }, [SERVER_URL]);
 
   return (
@@ -46,8 +45,6 @@ const MyApp = ({ Component, pageProps }) => {
         setError,
         newChat,
         setNewChat,
-        isAuth,
-        setStatusOfAuth,
       }}
     >
       <Component {...pageProps} />

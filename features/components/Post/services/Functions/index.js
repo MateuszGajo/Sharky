@@ -91,33 +91,40 @@ export const getPosts = ({
 }) => {
   axios
     .post("/post/get", { from, idGroup, idFanpage, news, authorPost, idUser })
-    .then(
-      async ({ data: { posts: p, comments, isMorePosts, isMoreComments } }) => {
-        await getUsers(users, setUsers, [...p, ...comments]);
-        const commentsKey = {};
-        for (let i = 0; i < comments.length; i++) {
-          if (!commentsKey[comments[i].idPost])
-            commentsKey[comments[i].idPost] = [];
-          commentsKey[comments[i].idPost].push(comments[i]);
-        }
-        const newPosts = p.map((item) => {
+    .then(async ({ data: { posts: p, comments, isMorePosts } }) => {
+      await getUsers(users, setUsers, [...p, ...comments]);
+      const commentsKey = {};
+      for (let i = 0; i < comments.length; i++) {
+        if (!commentsKey[comments[i].idPost])
+          commentsKey[comments[i].idPost] = [];
+        commentsKey[comments[i].idPost].push(comments[i]);
+      }
+      const newPosts = p.map((item) => {
+        if (!commentsKey[item.idPost]) {
+          return {
+            ...item,
+            id: uuid(),
+            comments: [],
+            isMoreComments: false,
+          };
+        } else if (Object.keys(commentsKey[item.idPost]).length < 3)
           return {
             ...item,
             id: uuid(),
             comments: commentsKey[item.idPost],
-            isMoreComments:
-              commentsKey[item.idPost] == undefined
-                ? false
-                : commentsKey[item.idPost][0].number < 4
-                ? false
-                : true,
+            isMoreComments: false,
           };
-        });
-        setStatusOfMorePosts(isMorePosts);
-        setStatusOfMoreComments(isMoreComments);
-        setPosts([...posts, ...newPosts]);
-      }
-    );
+        else
+          return {
+            ...item,
+            id: uuid(),
+            comments: commentsKey[item.idPost].slice(0, -1),
+            isMoreComments: true,
+          };
+      });
+      setStatusOfMorePosts(isMorePosts);
+      setPosts([...posts, ...newPosts]);
+    });
 };
 
 export const addPost = ({
@@ -189,7 +196,18 @@ export const unlikePost = ({ idLike, idPost, setNewLike, setError }) => {
     });
 };
 
-export const sharePost = ({ post, posts, setPosts, setError, isSingle }) => {
+export const sharePost = ({
+  post,
+  posts,
+  comments,
+  setNewComment,
+  numberOfComments,
+  numberOfLikes,
+  numberOfShares,
+  setPosts,
+  setError,
+  isSingle,
+}) => {
   const date = new Date();
   axios
     .post("/post/share", {
@@ -197,18 +215,24 @@ export const sharePost = ({ post, posts, setPosts, setError, isSingle }) => {
       date,
     })
     .then(({ data: { idShare, idUser } }) => {
-      !isSingle &&
+      if (!isSingle) {
+        setNewComment({});
         setPosts([
           {
             ...post,
+            comments: [],
+            isMoreComments: comments.length ? true : false,
             idShare,
             id: uuid(),
             date,
             idUserShare: idUser,
-            numberOfShares: Number(post.numberOfShares) + 1,
+            numberOfShares: Number(numberOfShares) + 1,
+            numberOfComments: numberOfComments,
+            numberOfLikes,
           },
           ...posts,
         ]);
+      }
     })
     .catch((err) => {
       const {

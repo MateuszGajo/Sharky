@@ -9,6 +9,8 @@ const {
   blockUserQuery,
   getPasswordQuery,
 } = require("./query");
+const jwt = require("jsonwebtoken");
+const { jwtSecret } = require("../../../config/keys");
 const decodeToken = require("../../../utils/decodeToken");
 
 const router = express.Router();
@@ -78,11 +80,20 @@ router.post("/block", async (req, res) => {
   }
 });
 
+router.get("/logout", async (req, res) => {
+  const { id: idOwner } = decodeToken(req);
+  res.clearCookie("token");
+  res.status(200).json({ idUser: idOwner });
+});
+
 router.get("/me", (req, res) => {
   if (!req.cookies.token) return res.status(401).json("un-authorized");
-  const { id, firstName, lastName, photo } = decodeToken(req);
-
-  res.json({ user: { id, firstName, lastName, photo } });
+  jwt.verify(req.cookies.token, jwtSecret, function (err, decoded) {
+    if (decoded) {
+      return res.json({ user: decoded.data });
+    }
+    return res.status(401).json("un-authorized");
+  });
 });
 
 router.post("/check/password", async (req, res) => {
