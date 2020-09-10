@@ -6,13 +6,14 @@ import Spinner from "@components/Spinner/Spinner";
 import Posts from "@components/Lists/Posts/Posts";
 import AppContext from "@features/context/AppContext";
 import { getOwner } from "@features/service/Functions/index";
-import "../styles/main.scss";
+import "../styles/home.scss";
 
 const Home = () => {
-  const { setOwner, isAuth, setStatusOfAuth } = useContext(AppContext);
+  const { setOwner } = useContext(AppContext);
   const [content, setContent] = useState("");
   const [file, setFile] = useState("");
   const [newPost, setNewPost] = useState();
+  const [isAuth, setStatusOfAuth] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
