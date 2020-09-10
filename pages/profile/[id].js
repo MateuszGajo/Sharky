@@ -9,7 +9,7 @@ import Error from "@common/PopUp/Error/Error";
 import AppContext from "@features/context/AppContext";
 import i18next from "@i18n";
 import { getOwner } from "@features/service/Functions/index";
-import "../../styles/main.scss";
+import "../../styles/profile.scss";
 const { useTranslation } = i18next;
 
 const profile = () => {
@@ -18,12 +18,13 @@ const profile = () => {
 
   const { t } = useTranslation(["profile"]);
 
-  const { isError, setOwner, isAuth, setStatusOfAuth } = useContext(AppContext);
+  const { isError, setOwner } = useContext(AppContext);
 
   const [chooseItem, setChooseItem] = useState("");
   const [isLoading, setStatusOfLoading] = useState(true);
   const [info, setInfo] = useState({});
   const [userError, setUserError] = useState("");
+  const [isAuth, setStatusOfAuth] = useState(null);
 
   useEffect(() => {
     idUser &&
