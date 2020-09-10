@@ -17,6 +17,7 @@ const { useTranslation } = i18next;
 const Post = ({ post, focusElement }) => {
   const { t } = useTranslation(["component"]);
   const loadMoreComments = t("component:post.comments.load-more-comments");
+  const loadComments = t("component:post.comments.load-comments");
 
   const { setError, owner } = useContext(AppContext);
 
@@ -56,7 +57,7 @@ const Post = ({ post, focusElement }) => {
     if (newComment.type == "post" && newComment.idElement == post.idPost) {
       setComments([
         {
-          id: newComment.idComment,
+          idComment: newComment.idComment,
           idUser: owner.id,
           idLike: null,
           numberOfLikes: 0,
@@ -110,7 +111,7 @@ const Post = ({ post, focusElement }) => {
         {comments?.map((comment) => (
           <div
             className="post__item__comments__container"
-            key={comment.id}
+            key={comment.idComment}
             data-test="comments"
           >
             <Comment
@@ -135,7 +136,7 @@ const Post = ({ post, focusElement }) => {
               })
             }
           >
-            {loadMoreComments}
+            {comments.length ? loadMoreComments : loadComments}
           </p>
         )}
       </div>
