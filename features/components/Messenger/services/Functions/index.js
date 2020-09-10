@@ -20,10 +20,11 @@ export const addMessage = ({
   messageTo,
   socket,
   setError,
+  setMessage,
 }) => {
   axios
     .post("/message/add", { idChat, message, idUser, date })
-    .then(({ data: { idMessage } }) =>
+    .then(({ data: { idMessage } }) => {
       socket.emit("sendChatMessage", {
         idMessage,
         idChat,
@@ -31,8 +32,9 @@ export const addMessage = ({
         message,
         date,
         messageTo,
-      })
-    )
+      });
+      setMessage("");
+    })
     .catch((err) => {
       const {
         response: { data: message },

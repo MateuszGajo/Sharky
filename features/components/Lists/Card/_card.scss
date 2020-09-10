@@ -49,6 +49,14 @@
     display:flex;
     height:100%;
   }
+
+  .card__item__info__second-column__buttons--yourself{
+    display:flex;
+    align-items: center;
+    font-size: 1.2rem;
+    margin-right:$smallMargin;
+    // font-weight: bold;
+  }
   
   .image-radius{
     border-radius:5px;
