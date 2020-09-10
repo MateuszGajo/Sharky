@@ -87,8 +87,8 @@ order by "idSub"
 limit 21 offset $3`;
 
 const addUserQuery = `
-insert into fanpage_users(id_fanpage, id_user) 
-select $1, $2 where not exists(select id from fanpage_users where id_fanpage=$1 and id_user=$2)
+insert into fanpage_users(id_fanpage, id_user, role) 
+select $1, $2, $3 where not exists(select id from fanpage_users where id_fanpage=$1 and id_user=$2)
 returning id
 `;
 

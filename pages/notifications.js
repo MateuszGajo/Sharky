@@ -8,15 +8,16 @@ import Item from "@components/Notifications/Item/Item";
 import Spinner from "@components/Spinner/Spinner";
 import AppContext from "@features/context/AppContext";
 import { getOwner } from "@features/service/Functions/index";
-import "../styles/main.scss";
+import "../styles/notifications.scss";
 
 const notifications = () => {
-  const { setOwner, isAuth, setStatusOfAuth } = useContext(AppContext);
+  const { setOwner } = useContext(AppContext);
 
   const [notifications, setNotifications] = useState([]);
   const [allNotification, setAllNotifications] = useState([]);
   const [deleteNotification, setDeleteNotification] = useState({ id: null });
   const [isMore, setStatusOfMore] = useState(true);
+  const [isAuth, setStatusOfAuth] = useState(null);
 
   const fetchData = () => {
     if (notifications.length > allNotification.length + 20) {

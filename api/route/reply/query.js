@@ -1,7 +1,7 @@
 const addReplyQuery = `INSERT INTO comment_replies(id_comment, id_user, content, date) values($1,$2,$3,$4) RETURNING id;`;
 
 const replyQuery = `
-select result.id as "idComment", result.id_user as "idUser", result.content, result.date, result.numberoflikes as "numberOfLikes" ,reply_like.id as "idLike"  
+select result.id as "idReply", result.id_user as "idUser", result.content, result.date, result.numberoflikes as "numberOfLikes" ,reply_like.id as "idLike"  
 from(select comment_replies.*, count(reply_like.id_reply) as "numberoflikes"
   from comment_replies
   left join reply_like on comment_replies.id = reply_like.id_reply

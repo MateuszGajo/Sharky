@@ -10,7 +10,7 @@ import {
   unlikeComment,
   likeReply,
   unlikeReply,
-} from "../../services/functions/index";
+} from "../../services/Functions";
 import WizzardContext from "../../context/WizzardContext";
 import AppContext from "../../../../context/AppContext";
 
@@ -62,14 +62,14 @@ const Commnet = ({
           })
         : unlikeReply({
             idLike,
-            idReply: comment.idComment,
+            idReply: comment.idReply,
             setNewLike,
             setError,
           });
     } else {
       "numberOfReplies" in comment
         ? likeComment({ idComment: comment.idComment, setNewLike, setError })
-        : likeReply({ idReply: comment.idComment, setNewLike, setError });
+        : likeReply({ idReply: comment.idReply, setNewLike, setError });
     }
   };
 
@@ -117,7 +117,7 @@ const Commnet = ({
         : setNumberOfLikes(numberOfLikes - 1);
     } else if (
       newLike.type == "reply" &&
-      newLike.idElement == comment.idComment &&
+      newLike.idElement == comment.idReply &&
       numberOfReplies == undefined
     ) {
       setIdLike(newLike.idLike);
