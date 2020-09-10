@@ -75,7 +75,8 @@
                 "report":"Report comment",
                 "mute":"Mute user"
             },
-            "load-more-comments":"View more comments..." 
+            "load-more-comments":"View more comments...",
+            "load-comments":"View comments" 
         }
     },
     "messenger":{
