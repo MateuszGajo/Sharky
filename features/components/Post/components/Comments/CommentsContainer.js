@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import Comment from "./Comment";
 import SecondaryInput from "@common/SecondaryInput/SecondaryInput";
 import i18next from "@i18n";
-import { getReplies, addReply } from "../../services/functions/index";
+import { getReplies, addReply } from "../../services/Functions";
 import WizzardContext from "../../context/WizzardContext";
 import AppContext from "@features/context/AppContext";
 const { useTranslation } = i18next;
@@ -30,6 +30,7 @@ const withContainer = (WrappedComponent) => {
 
     const handleSubmit = (e) => {
       e.preventDefault();
+
       addReply({
         idComment: comment.idComment,
         content: reply,
@@ -60,7 +61,7 @@ const withContainer = (WrappedComponent) => {
         if (!isRepliesOpen) setStatusOfOpenReplies(true);
         setReplies([
           {
-            id: newComment.idReply,
+            idReply: newComment.idReply,
             idComment: newComment.idComment,
             idUser: owner.id,
             content: newComment.content,
@@ -109,7 +110,7 @@ const withContainer = (WrappedComponent) => {
             {replies.map((comment) => {
               return (
                 <WrappedComponent
-                  key={comment.idComment}
+                  key={comment.idReply}
                   comment={comment}
                   focusCollapse={focusCollapse}
                   focusIcon={focusIcon}

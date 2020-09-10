@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useContext } from "react";
 import { MdSend } from "react-icons/md";
 import AppContext from "@features/context/AppContext";
 import i18next from "@i18n";
-import { addMessage } from "../../services/functions/index";
+import { addMessage } from "../../services/Functions";
 const { useTranslation } = i18next;
 
 const Downbar = ({ idChat, setMessages, messages, converser }) => {

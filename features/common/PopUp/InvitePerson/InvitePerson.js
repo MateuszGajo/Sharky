@@ -103,9 +103,12 @@ const InvitePerson = ({
         </div>
         {people.length ? (
           <div
-            className={cx("invite-person__container__people primary-scroll", {
-              "primary-scroll-active": isScrolling,
-            })}
+            className={cx(
+              "invite-person__container__people primary-scroll primary-scroll-margin",
+              {
+                "primary-scroll-active": isScrolling,
+              }
+            )}
             id="scroll"
           >
             <InfiniteScroll
