@@ -28,6 +28,7 @@ const People = ({
   const declineInvite = t("component:lists.people.decline");
   const sentInvite = t("component:lists.people.sent");
   const emptyContent = t("component:lists.people.empty-content");
+  const noResult = t("component:lists.people.no-result");
 
   const { setError, setPrompt, owner, setNewChat, socket } = useContext(
     AppContext
@@ -72,12 +73,11 @@ const People = ({
       setButtonName,
       number,
       setNumber,
-      id,
     } = invite;
 
     if (inviteType == "accept")
       axios
-        .post("/friend/accept", { idFriendShip, idUser: id })
+        .post("/friend/accept", { idFriendShip })
         .then(({ data: { idChat, relation, success } }) => {
           if (success) {
             setInviteType("");
@@ -133,7 +133,7 @@ const People = ({
     } = friend;
     if (idRef)
       axios
-        .post("/friend/remove", { idFriendShip: friend.idRef })
+        .post("/friend/delete", { idFriendShip: friend.idRef })
         .then(() => {
           if (idUser == owner.id) {
             const newFriends = friends.filter((item) => {
@@ -232,7 +232,9 @@ const People = ({
             <AiOutlineSearch />
           </div>
           <div className="empty-card__text">
-            <span className="empty-card__text--span">{emptyContent}</span>
+            <span className="empty-card__text--span">
+              {keyWords ? noResult : emptyContent}
+            </span>
           </div>
         </div>
       )}
