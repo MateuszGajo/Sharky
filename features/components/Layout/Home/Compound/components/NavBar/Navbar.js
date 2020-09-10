@@ -22,7 +22,7 @@ const NavBar = () => {
   const { t } = useTranslation(["component"]);
 
   const { isNavOpen, setStatusOfNav } = useContext(WizzardContext);
-  const { owner } = useContext(AppContext);
+  const { owner, socket, setOwner, setStatusOfAuth } = useContext(AppContext);
   const navbar = useRef(null);
   const navbarWrapper = useRef(null);
   const [isNavbarScrolling, setStatusOfNavbarScrolling] = useState(false);
@@ -98,7 +98,10 @@ const NavBar = () => {
   ];
 
   const logOut = () => {
-    axios.get("/user/logout").then(() => {
+    axios.get("/user/logout").then(({ data: { idUser } }) => {
+      setOwner({ id: null });
+      setStatusOfAuth(null);
+      socket.emit("singleDisconnect", { idUser });
       Router.push("/signin");
     });
   };
