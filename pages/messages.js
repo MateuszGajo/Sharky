@@ -8,11 +8,11 @@ import Spinner from "@components/Spinner/Spinner";
 import AppContext from "@features/context/AppContext";
 import { getOwner } from "@features/service/Functions/index";
 import i18next from "@i18n";
-import "../styles/main.scss";
+import "../styles/messages.scss";
 const { useTranslation } = i18next;
 
 const Messages = () => {
-  const { socket, setOwner, isAuth, setStatusOfAuth } = useContext(AppContext);
+  const { socket, setOwner } = useContext(AppContext);
 
   const { t } = useTranslation(["messages"]);
 
@@ -21,6 +21,7 @@ const Messages = () => {
   const [conversations, setConversations] = useState([]);
   const [chat, setChat] = useState({ idChat: null });
   const [isLoading, setStatusOfLoading] = useState(true);
+  const [isAuth, setStatusOfAuth] = useState(null);
 
   useEffect(() => {
     if (conversations.length) socket.emit("joinChat");

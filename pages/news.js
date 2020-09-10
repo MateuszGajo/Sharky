@@ -9,18 +9,19 @@ import { MdBlock } from "react-icons/md";
 import i18next from "@i18n";
 import { getOwner } from "@features/service/Functions/index";
 import AppContext from "@features/context/AppContext";
-import "../styles/main.scss";
+import "../styles/news.scss";
 const { useTranslation } = i18next;
 
 const News = () => {
   const { t } = useTranslation(["news"]);
 
-  const { setOwner, isAuth, setStatusOfAuth } = useContext(AppContext);
+  const { setOwner } = useContext(AppContext);
 
   const [permission, setPermission] = useState();
   const [file, setFile] = useState();
   const [content, setContent] = useState("");
   const [newPost, setNewPost] = useState();
+  const [isAuth, setStatusOfAuth] = useState(null);
 
   const noPermission = t("news:no-permission");
 

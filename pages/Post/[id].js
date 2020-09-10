@@ -9,7 +9,7 @@ import WizzardContext from "@components/Post/context/WizzardContext";
 import AppContext from "@features/context/AppContext";
 import { getOwner } from "@features/service/Functions/index";
 import i18next from "@i18n";
-import "../../styles/main.scss";
+import "../../styles/post.scss";
 const { useTranslation } = i18next;
 
 const Post = () => {
@@ -18,8 +18,9 @@ const Post = () => {
   const { t } = useTranslation(["post"]);
 
   const { posts, setPosts, users, setUsers } = useContext(WizzardContext);
-  const { owner, setOwner, isAuth, setStatusOfAuth } = useContext(AppContext);
+  const { setOwner } = useContext(AppContext);
   const [postError, setPostError] = useState("");
+  const [isAuth, setStatusOfAuth] = useState(null);
 
   const [isLoading, setStutusOfLoading] = useState(true);
 
@@ -56,7 +57,7 @@ const Post = () => {
           idUsers.push(post.idUser);
           await getUsers(idUsers);
           setPosts([{ ...post, comments, isMoreComments }]);
-          setStutusOfLoading(true);
+          setStutusOfLoading(false);
         })
         .catch(({ response: { status, data: message } }) => {
           if (status == 404 || status == 403) {

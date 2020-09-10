@@ -1,0 +1,10 @@
+@import "./variables";
+@import "./reset";
+@import "./main";
+@import "./_profile";
+@import "../features/components/Profile/About/about";
+@import "../features/components/Profile/DisplayItem/displayItem";
+@import "../features/components/Profile/AboutMe/components/Header/header";
+@import "../features/components/Profile/AboutMe/components/Content/content";
+@import "../features/components/Profile/AboutMe/aboutMe";
+@import "./global";

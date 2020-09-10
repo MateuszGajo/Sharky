@@ -10,25 +10,24 @@ import Spinner from "@components/Spinner/Spinner";
 import AppContext from "@features/context/AppContext";
 import { signIn as sIn, getOwner } from "@features/service/Functions/index";
 import i18next from "@i18n";
+import "../styles/signin.scss";
 
-import "../styles/main.scss";
 const { useTranslation } = i18next;
 
 const SignIn = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isRembermeChecked, setStatusOfRemberme] = useState(false);
-
   const {
     authError,
     authUserError,
     setAuthUserError,
-    setStatusOfAuth,
     setOwner,
-    isAuth,
     setError,
   } = useContext(AppContext);
   const { t } = useTranslation(["component", "signin"]);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isRembermeChecked, setStatusOfRemberme] = useState(false);
+  const [isAuth, setStatusOfAuth] = useState(null);
 
   const inputPassword = t("common:input.password");
   const description = t("signin:description");

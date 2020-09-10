@@ -8,10 +8,9 @@ import Spinner from "@components/Spinner/Spinner";
 import i18next from "@i18n";
 import AppContext from "@features/context/AppContext";
 import Error from "@common/PopUp/Error/Error";
-
 import { getOwner } from "@features/service/Functions/index";
 
-import "../../styles/main.scss";
+import "../../styles/fanpage.scss";
 
 const { useTranslation } = i18next;
 
@@ -23,13 +22,14 @@ const Fanpage = () => {
 
   const homeName = t("fanpage:home");
 
-  const { isError, isAuth, setStatusOfAuth, setOwner } = useContext(AppContext);
+  const { isError, setOwner } = useContext(AppContext);
 
   const [section, setSection] = useState(homeName);
   const [idSub, setIdSub] = useState(null);
   const [role, setRole] = useState(null);
   const [isLoading, setStatusOfLoading] = useState(true);
   const [fanpageError, setFanpageError] = useState("");
+  const [isAuth, setStatusOfAuth] = useState(null);
 
   useEffect(() => {
     idFanpage &&

@@ -6,13 +6,14 @@ import Search from "@common/Search/Search";
 import Spinner from "@components/Spinner/Spinner";
 import AppContext from "@features/context/AppContext";
 import { getOwner } from "@features/service/Functions/index";
-import "../styles/main.scss";
+import "../styles/fanpages.scss";
 
 const Fanpages = () => {
-  const { owner, setOwner, isAuth, setStatusOfAuth } = useContext(AppContext);
+  const { owner, setOwner } = useContext(AppContext);
 
   const [text, setText] = useState("");
   const [keyWords, setKeyWords] = useState(null);
+  const [isAuth, setStatusOfAuth] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
