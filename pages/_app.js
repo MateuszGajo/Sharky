@@ -45,8 +45,6 @@ const MyApp = ({ Component, pageProps }) => {
         setError,
         newChat,
         setNewChat,
-        isAuth,
-        setStatusOfAuth,
       }}
     >
       <Component {...pageProps} />
