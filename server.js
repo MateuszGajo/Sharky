@@ -27,6 +27,7 @@ const languageRoute = require("./api/route/language/languageRoute");
 const { client } = require("./config/pgAdaptor");
 const { jwtSecret } = require("./config/keys");
 const { userJoin, userLeave, getSocket, existUser } = require("./utils/users");
+const { getChatsQuery } = require("./api/route/friend/query");
 
 const nextI18Next = require("./i18n/server");
 
@@ -51,18 +52,6 @@ const httpServer = http.createServer(server);
 const socketIO = io(httpServer);
 
 socketIO.sockets.on("connection", (socket) => {
-  const getChatsQuery = `
-  select  chats.id as "idChat"
-from(select id_user_1 
-    from friends 
-    where id_user_2=$1
-    union
-    select id_user_2
-    from friends 
-    where id_user_1=$1) as result
-inner join chats on chats.id_user_1 = result.id_user_1 or chats.id_user_2 = result.id_user_1
-left join users on users.id = result.id_user_1`;
-
   socket.on("connectUser", () => {
     const token = cookie.parse(socket.handshake.headers.cookie).token;
 
