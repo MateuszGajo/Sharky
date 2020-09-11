@@ -121,27 +121,37 @@ with userSorted as (
 
 const getChatsQuery = `
 select result.id_user_1 as "idUser", chats.id as "idChat", chats.message_to as "messageTo", users.first_name as "firstName", users.last_name as "lastName", users.photo
-  from(select id_user_1 
+  from(select id_user_1, id 
       from friends 
       where id_user_2=$1 and status='1'
       union
-      select id_user_2
+      select id_user_2, id
       from friends 
       where id_user_1=$1 and status='1') as result
-      inner join chats on (chats.id_user_1 = result.id_user_1 and  chats.id_user_2=1) or (chats.id_user_2 = result.id_user_1 and  chats.id_user_1=1)
+      inner join chats on result.id = chats.id_friendship
 left join users on users.id = result.id_user_1`;
+
+const getIdFriendshipQuery = `
+select id from friends where id_user_1=$1 and id_user_2=$2
+union
+select id from friends where id_user_2=$1 and id_user_1=$2
+ `;
 
 const addUserQuery = `
 insert into friends(id_user_1, id_user_2, status) values($1,$2,'0') returning id;
 `;
 
-const removeUserQuery = `delete from friends where id=$1;`;
+const deleteUserQuery = `delete from friends where id=$1;`;
+
+const deleteFriendRelationQuery = `delete from friend_relation where id_friendship=$1`;
+
+const deleteChatQuery = `delete from chats where id_frienship=$1`;
 
 const acceptRequest = `update friends set status='1' where id=$1 and status='0' returning id`;
 
 const setRelation = `insert into friend_relation(id_friendship, relation) values($1,$2) returning relation`;
 
-const addChatQuery = `insert into chats(id_user_1, id_user_2) values($1, $2) returning id`;
+const addChatQuery = `insert into chats(id_friendship) values($1) returning id`;
 
 const removeFriendsRequest = `delete from friends where id=$1 and not exists(select id  from friends where id=$1 and status='1')`;
 
@@ -154,8 +164,11 @@ module.exports = {
   getSortedFriendsQuery,
   getSortedUsersQuery,
   getChatsQuery,
+  getIdFriendshipQuery,
   addUserQuery,
-  removeUserQuery,
+  deleteUserQuery,
+  deleteFriendRelationQuery,
+  deleteChatQuery,
   acceptRequest,
   setRelation,
   removeFriendsRequest,

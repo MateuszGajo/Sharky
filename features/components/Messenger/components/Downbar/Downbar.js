@@ -29,6 +29,7 @@ const Downbar = ({ idChat, setMessages, messages, converser }) => {
       socket,
       messageTo: converser,
       setError,
+      setMessage,
     });
   };
 

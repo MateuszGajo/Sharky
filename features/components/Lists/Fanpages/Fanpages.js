@@ -19,6 +19,7 @@ const Fanpages = ({
   const buttonSubscribe = t("component:lists.fanpages.button-subscribe");
   const buttonUnsubscribe = t("component:lists.fanpages.button-unsubscribe");
   const emptyContent = t("component:lists.fanpages.empty-content");
+  const noResult = t("component:lists.fanpages.no-result");
 
   const { owner, setError } = useContext(AppContext);
 
@@ -112,7 +113,9 @@ const Fanpages = ({
             <AiOutlineSearch />
           </div>
           <div className="empty-card__text">
-            <span className="empty-card__text--span">{emptyContent}</span>
+            <span className="empty-card__text--span">
+              {keyWords ? noResult : emptyContent}
+            </span>
           </div>
         </div>
       )}
