@@ -10,9 +10,12 @@ import Prompt from "@common/PopUp/Prompt/Prompt";
 import Spinner from "@components/Spinner/Spinner";
 import AppContext from "@features/context/AppContext";
 import { getOwner } from "@features/service/Functions/index";
+import i18next from "@i18n";
 import "../styles/settings.scss";
+const { useTranslation } = i18next;
 
 const Settings = () => {
+  const { t } = useTranslation(["settings"]);
   const { isPrompt, isError, setOwner } = useContext(AppContext);
 
   const [isAccountCollapsed, setStatusOfAccountCollapse] = useState(true);
@@ -37,6 +40,7 @@ const Settings = () => {
       axios
         .get("/user/me/info")
         .then(({ data: { email, phone, language, country } }) => {
+          console.log(language);
           const userSettings = {
             account: [
               {

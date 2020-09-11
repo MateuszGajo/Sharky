@@ -78,6 +78,8 @@ const changePasswordQuery = "update users set password=$1 where id=$2";
 
 const getPasswordQuery = "select password from users where id=$1";
 
+const getUserInfoQuery = `select email, phone, country, language from users where id=$1`;
+
 module.exports = {
   getUserQuery,
   getUserInfoQuery,
@@ -95,4 +97,5 @@ module.exports = {
   changePhoneQuery,
   changePasswordQuery,
   getPasswordQuery,
+  getUserInfoQuery,
 };

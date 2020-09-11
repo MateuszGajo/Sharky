@@ -19,6 +19,7 @@ const {
   changePhoneQuery,
   changePasswordQuery,
   getPasswordQuery,
+  getUserInfoQuery,
 } = require("./query");
 const jwt = require("jsonwebtoken");
 const { jwtSecret } = require("../../../config/keys");
@@ -305,10 +306,16 @@ router.post("/check/password", async (req, res) => {
   });
 });
 
-router.get("/me/info", (req, res) => {
-  const { email, phone, country, language } = decodeToken(req);
+router.get("/me/info", async (req, res) => {
+  const { id } = decodeToken(req);
 
-  res.status(200).json({ email, phone, country, language });
+  try {
+    const { rows } = await client.query(getUserInfoQuery, [id]);
+
+    res.status(200).json({ ...rows[0] });
+  } catch {
+    res.status(400).json("bad-request");
+  }
 });
 
 module.exports = router;
