@@ -93,7 +93,7 @@ const Display = ({
           item.value.toLowerCase().trim() == inputValue.toLowerCase().trim()
       );
 
-      if (!value) setError("invalid-value");
+      if (!value) return setError("invalid-value");
       axios
         .post(`/user/change/${chooseSetting.name}`, { value: value.name })
         .then(() => {
@@ -101,16 +101,22 @@ const Display = ({
           if (chooseSetting.name == "language" && language != choseCountryCode)
             i18n.changeLanguage(choseCountryCode);
 
+          console.log(t("settings:countries.poland"));
           const newUserSetting = {
             account: [...userSettings.account],
             general: userSettings.general.map((setting) => {
               return setting.name === chooseSetting.name
-                ? { ...setting, value: value.value.toLowerCase() }
+                ? {
+                    ...setting,
+                    value: value.name,
+                  }
                 : setting;
             }),
           };
+
           setUserSettings(newUserSetting);
           setPrompt(t(`settings:general.${chooseSetting.name}-changed`));
+          setChooseSetting({ name: "", value: "" });
         })
         .catch(({ response }) => console.log(response));
     }
@@ -135,6 +141,7 @@ const Display = ({
           setPrompt(t(`settings:account.${chooseSetting.name}-changed`));
           setUserSettings(newUserSetting);
           setConfirmUser(false);
+          setChooseSetting({ name: "", value: "" });
         });
     }
   }, [confirmUser]);
