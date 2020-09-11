@@ -19,7 +19,7 @@ const {
   changePhoneQuery,
   changePasswordQuery,
   getPasswordQuery,
-  getUserInfoQuery,
+  getUserPersonalInfoQuery,
 } = require("./query");
 const jwt = require("jsonwebtoken");
 const { jwtSecret } = require("../../../config/keys");
@@ -310,7 +310,7 @@ router.get("/me/info", async (req, res) => {
   const { id } = decodeToken(req);
 
   try {
-    const { rows } = await client.query(getUserInfoQuery, [id]);
+    const { rows } = await client.query(getUserPersonalInfoQuery, [id]);
 
     res.status(200).json({ ...rows[0] });
   } catch {
