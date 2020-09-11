@@ -2,13 +2,11 @@ import React, { useRef, useEffect, useState, useContext } from "react";
 import cx from "classnames";
 import Item from "./components/Item/Item";
 import { getFriends } from "../../services/Functions";
-import { WizzardContext } from "../../context/WizzardContext";
 import AppContext from "@features/context/AppContext";
 
 const FriendsBar = () => {
   const friendsBar = useRef(null);
-  const { socket, newMessage, owner, newChat } = useContext(AppContext);
-  const { chat } = useContext(WizzardContext);
+  const { socket, newChat } = useContext(AppContext);
 
   const [isFriendsBarScrolling, setStatusOfFriendsBarScrolling] = useState(
     false
@@ -47,14 +45,6 @@ const FriendsBar = () => {
       setUsers([...users, newChat]);
     }
   }, [newChat]);
-
-  useEffect(() => {
-    const { idChat, messageTo } = newMessage;
-
-    if (idChat != chat.idChat && messageTo == owner.id) {
-      socket.emit("isMessageUnRead", { idChat, messageTo });
-    }
-  }, [newMessage]);
 
   return (
     <div className="home__wrapper home__wrapper--medium">
