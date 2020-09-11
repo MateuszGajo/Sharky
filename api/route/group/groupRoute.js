@@ -159,7 +159,7 @@ router.post("/user/add", async (req, res) => {
 
   const { id: idOwner } = decodeToken(req);
 
-  const role = "user";
+  const role = "member";
   const date = new Date();
 
   try {

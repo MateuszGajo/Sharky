@@ -12,9 +12,9 @@ with numberOfGroups as(
   numberOfFriends as(
   select a."idUser", sum(a.count) 
   from(
-    select id_user_1 as "idUser", count(id) from friends where id_user_1=$1 group by id_user_1
+    select id_user_1 as "idUser", count(id) from friends where id_user_1=$1 and status='1' group by id_user_1
     union
-    select id_user_2 as "idUser", count(id)  from friends where id_user_2=$1 group by id_user_2
+    select id_user_2 as "idUser", count(id)  from friends where id_user_2=$1 and status='1' group by id_user_2
   )as a
   group by a."idUser"
   ),
@@ -78,6 +78,8 @@ const changePasswordQuery = "update users set password=$1 where id=$2";
 
 const getPasswordQuery = "select password from users where id=$1";
 
+const getUserInfoQuery = `select email, phone, country, language from users where id=$1`;
+
 module.exports = {
   getUserQuery,
   getUserInfoQuery,
@@ -95,4 +97,5 @@ module.exports = {
   changePhoneQuery,
   changePasswordQuery,
   getPasswordQuery,
+  getUserInfoQuery,
 };
