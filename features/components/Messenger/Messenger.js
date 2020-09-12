@@ -13,6 +13,7 @@ const Messenger = ({
   windowMessenger = false,
   setStatusOfDisplayMobile,
   chat,
+  setChat,
 }) => {
   const { newMessage } = useContext(AppContext);
 
@@ -61,6 +62,7 @@ const Messenger = ({
         messages={messages}
         user={user}
         windowMessenger={windowMessenger}
+        setChat={setChat}
       />
       {isLoading ? <Spinner /> : <Content messages={messages} user={user} />}
       <Downbar
