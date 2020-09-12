@@ -115,7 +115,6 @@ router.post("/user/invite", async (req, res) => {
 
 router.post("/user/invitation/accept", async (req, res) => {
   const { idSubscribe } = req.body;
-  console.log(idSubscribe);
   try {
     await client.query(acceptInvitationToGroup, [idSubscribe]);
 

@@ -106,7 +106,7 @@ where not exists(
 )
 `;
 
-const acceptInvitationToGroup = `update group_users set status='1', role='user' where id=$1`;
+const acceptInvitationToGroup = `update group_users set status='1', role='member' where id=$1`;
 
 const declineInvitationToGroup = `delete from group_users where id=$1`;
 
