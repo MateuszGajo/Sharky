@@ -1,0 +1,78 @@
+.messenger__text {
+    flex-grow: 1;
+    font-size: 0.8rem;
+    overflow-x: hidden;
+  }
+  
+  
+.messenger__text--myself {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 5px;
+    margin-top: 8px;
+  }
+
+  .messenger__text--myself + .messenger__text--myself{
+    margin-top:4px;
+  }
+  
+  .messenger__text--stranger {
+    display:flex;
+    margin-left: 5px;
+    margin-top: 8px;
+  }
+
+  .messenger__text--stranger  +  .messenger__text--stranger {
+      margin-top:4px;
+    }
+
+  .messenger__text--stranger__user{
+    display:flex;
+    align-items: flex-end;
+    padding-left:$smallMargin;
+    max-width:40%;
+    
+  }
+
+  .messenger__text--stranger__user__container{
+    display:flex;
+    cursor:pointer;
+  }
+
+  .messenger__text--stranger__user__container__photo{
+    margin-right:10px;
+  }
+
+  .messenger__text--stranger__user__container__photo--img{
+    width:20px;
+    height:20px;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  .messenger__text--stranger__user__container__name{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .messenger__text--stranger__user__container__name--span{
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    word-wrap: break-word;
+    word-break: break-all;
+    overflow: hidden;
+  }
+
+.messenger__text--myself--primary-color {
+    display: inline-block;
+    background-color: $primaryColor;
+    color: white;
+  }
+  
+  .messenger__text--stranger--primary-background-color {
+    display: inline-block;
+    background-color: $primaryBackgroundColor;
+  }

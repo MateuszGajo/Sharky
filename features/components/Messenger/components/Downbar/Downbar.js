@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
+import cx from "classnames";
 import { MdSend } from "react-icons/md";
 import AppContext from "@features/context/AppContext";
 import i18next from "@i18n";
@@ -19,23 +20,29 @@ const Downbar = ({ idChat, setMessages, messages, converser }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const date = new Date();
-    setMessages([...messages, { idUser: owner.id, message, date }]);
-    addMessage({
-      idChat,
-      message,
-      date,
-      idUser: owner.id,
-      socket,
-      messageTo: converser,
-      setError,
-      setMessage,
-    });
+
+    if (message) {
+      const date = new Date();
+      setMessages([...messages, { idUser: owner.id, message, date }]);
+      addMessage({
+        idChat,
+        message,
+        date,
+        idUser: owner.id,
+        socket,
+        messageTo: converser,
+        setError,
+        setMessage,
+      });
+    }
   };
 
   const addKeySubmit = (e) => {
     if (e.keyCode == 13) {
-      messageForm.current.dispatchEvent(new Event("submit"));
+      if (message)
+        messageForm.current.dispatchEvent(
+          new Event("submit", { cancelable: true })
+        );
     }
   };
 
@@ -56,6 +63,7 @@ const Downbar = ({ idChat, setMessages, messages, converser }) => {
       >
         <div className="messenger__downbar__form__text">
           <textarea
+            value={message}
             ref={messageArea}
             type="text"
             className="messenger__downbar__form__text--textarea"
@@ -66,8 +74,11 @@ const Downbar = ({ idChat, setMessages, messages, converser }) => {
         </div>
         <div className="messenger__downbar__form__send">
           <button
-            className="messenger__downbar__form__send--buton"
+            className={cx("messenger__downbar__form__send--buton", {
+              "messenger__downbar__form__send--buton--disabled": !message,
+            })}
             data-testid="messenger-send-button"
+            disabled={!message}
           >
             <MdSend />
           </button>
