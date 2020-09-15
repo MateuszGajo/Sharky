@@ -1,0 +1,44 @@
+
+  
+  .messenger__downbar {
+    min-height:70px;
+    border-top: 1px solid $shadowColor;
+  }
+
+  .messenger__downbar__form{
+    height:100%;
+    display:flex;
+    flex-direction: column;
+      position:relative;
+  }
+
+  .messenger__downbar__form__textf{
+    flex-grow: 1;
+  }
+
+  .messenger__downbar__form__text--textarea {
+    width: 100%;
+    height:100%;
+    padding: 5px 3px;
+    border: none;
+    resize: none;
+  }
+
+  .messenger__downbar__form__send{
+    display:flex;
+    justify-content: flex-end;
+  }
+ 
+  .messenger__downbar__form__send--buton {
+    border: none;
+    background-color: transparent;
+    color: $primaryColor;
+    font-size: 1.1rem;
+    margin-right:3px;
+    cursor: pointer;
+  }
+
+
+.messenger__downbar__form__send--buton--disabled{
+    color:grey
+}

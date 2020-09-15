@@ -1,11 +1,11 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useContext } from "react";
+import Router from "next/router";
 import { BsThreeDots } from "react-icons/bs";
 import { IoMdShareAlt } from "react-icons/io";
 import UserSettings from "./components/UserSettings/UserSettings";
 import OwnerSettings from "./components/OwnerSettings/OwnerSettings";
 import PostContext from "../../context/PostContext";
 import AppContext from "@features/context/AppContext";
-import { useContext } from "react";
 import i18next from "@i18n";
 const { useTranslation } = i18next;
 
@@ -61,11 +61,16 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
       removeEventListener("click", handleClick);
     };
   }, []);
-
+  console.log(user);
   return (
     <div className="post__item__navbar">
       {userShare && (
-        <div className="post__item__navbar__user">
+        <div
+          className="post__item__navbar__user"
+          onClick={() => {
+            Router.push(`/profile/${userShare.id}`);
+          }}
+        >
           <div className="post__item__navbar__user--photo">
             <img
               src={"/static/images/" + userShare.photo}
@@ -86,7 +91,12 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
           </div>
         </div>
       )}
-      <div className="post__item__navbar__user">
+      <div
+        className="post__item__navbar__user"
+        onClick={() => {
+          Router.push(`/profile/${user.id}`);
+        }}
+      >
         <div className="post__item__navbar__user--photo">
           <img
             src={"/static/images/" + user.photo}

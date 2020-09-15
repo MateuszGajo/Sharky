@@ -23,6 +23,7 @@ const fanpageRoute = require("./api/route/fanpage/fanpageRoute");
 const { client } = require("./config/pgAdaptor");
 const { jwtSecret } = require("./config/keys");
 const { userJoin, userLeave, getSocket, existUser } = require("./utils/users");
+const { getChatsQuery } = require("./api/route/friend/query");
 
 const nextI18Next = require("./i18n/server");
 
@@ -49,25 +50,12 @@ server.use(cookieParser());
 server.use(bodyParser.json());
 
 socketIO.sockets.on("connection", (socket) => {
-  const getChatsQuery = `
-  select  chats.id as "idChat"
-from(select id_user_1 
-    from friends 
-    where id_user_2=$1
-    union
-    select id_user_2
-    from friends 
-    where id_user_1=$1) as result
-inner join chats on chats.id_user_1 = result.id_user_1 or chats.id_user_2 = result.id_user_1
-left join users on users.id = result.id_user_1`;
-
   socket.on("connectUser", () => {
     const token = cookie.parse(socket.handshake.headers.cookie).token;
 
     const {
       data: { id: idOwner },
     } = jwt.verify(token, jwtSecret);
-
     userJoin(idOwner, socket.id);
   });
 
@@ -93,15 +81,18 @@ left join users on users.id = result.id_user_1`;
     client.query(unReadMessageQuery, [messageTo, idChat]);
   });
 
-  socket.on("joinNewChat", async ({ idChat }) => {
-    const getUsersQuery = `select id_user_1 as "idUser", id_user_2 as "idOwner" from chats where id=$1`;
-    const { rows } = await client.query(getUsersQuery, [idChat]);
-    const userSockets = getSocket(rows[0].idUser);
-    const ownerSockets = getSocket(rows[0].idOwner);
+  socket.on("joinNewChat", async ({ idFriendShip, idChat }) => {
+    const getUsersQuery = `select id_user_1 as "firstUser", id_user_2 as "secondUser" from friends where id=$1`;
+    const { rows } = await client.query(getUsersQuery, [idFriendShip]);
+
+    const userSockets = getSocket(rows[0].firstUser);
+    const ownerSockets = getSocket(rows[0].secondUser);
 
     const getUserQuery = `select first_name as "firstName", last_name as "lastName",photo from users where id=$1`;
     if (userSockets) {
-      const { rows: user } = await client.query(getUserQuery, [rows[0].idUser]);
+      const { rows: user } = await client.query(getUserQuery, [
+        rows[0].secondUser,
+      ]);
       for (let i = 0; i < userSockets.length; i++) {
         const soc = socketIO.sockets.connected[userSockets[i]];
         soc.join("chat" + idChat);
@@ -116,7 +107,9 @@ left join users on users.id = result.id_user_1`;
     }
 
     if (ownerSockets) {
-      const { rows: user } = await client.query(getUserQuery, [rows[0].idUser]);
+      const { rows: user } = await client.query(getUserQuery, [
+        rows[0].firstUser,
+      ]);
       for (let i = 0; i < ownerSockets.length; i++) {
         const soc = socketIO.sockets.connected[ownerSockets[i]];
         soc.join("chat" + idChat);
