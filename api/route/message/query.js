@@ -5,11 +5,11 @@ where id_chat = $1
 
 const getConversationsQuery = `
 with userFriends as (
-select id_user_1 
+select id_user_1, id 
 from friends 
 where id_user_2=$1 and status='1'
 union
-select id_user_2
+select id_user_2, id
 from friends 
 where id_user_1=$1 and status='1'
 ),
@@ -17,7 +17,7 @@ where id_user_1=$1 and status='1'
 userChats as (
 select result.id_user_1 as "idUser", chats.id as "idChat", chats.message_to as "messageTo", users.first_name as "firstName", users.last_name as "lastName", users.photo
 from(select * from userFriends) as result
-inner join chats on chats.id_user_1 = result.id_user_1 or chats.id_user_2 = result.id_user_1
+inner join chats on chats.id_friendship = result.id
 left join users on users.id = result.id_user_1
 ),
 
