@@ -40,7 +40,6 @@ socketIO.sockets.on("connection", (socket) => {
     const {
       data: { id: idOwner },
     } = jwt.verify(token, jwtSecret);
-
     userJoin(idOwner, socket.id);
   });
 
@@ -66,15 +65,18 @@ socketIO.sockets.on("connection", (socket) => {
     client.query(unReadMessageQuery, [messageTo, idChat]);
   });
 
-  socket.on("joinNewChat", async ({ idChat }) => {
-    const getUsersQuery = `select id_user_1 as "idUser", id_user_2 as "idOwner" from chats where id=$1`;
-    const { rows } = await client.query(getUsersQuery, [idChat]);
-    const userSockets = getSocket(rows[0].idUser);
-    const ownerSockets = getSocket(rows[0].idOwner);
+  socket.on("joinNewChat", async ({ idFriendShip, idChat }) => {
+    const getUsersQuery = `select id_user_1 as "firstUser", id_user_2 as "secondUser" from friends where id=$1`;
+    const { rows } = await client.query(getUsersQuery, [idFriendShip]);
+
+    const userSockets = getSocket(rows[0].firstUser);
+    const ownerSockets = getSocket(rows[0].secondUser);
 
     const getUserQuery = `select first_name as "firstName", last_name as "lastName",photo from users where id=$1`;
     if (userSockets) {
-      const { rows: user } = await client.query(getUserQuery, [rows[0].idUser]);
+      const { rows: user } = await client.query(getUserQuery, [
+        rows[0].secondUser,
+      ]);
       for (let i = 0; i < userSockets.length; i++) {
         const soc = socketIO.sockets.connected[userSockets[i]];
         soc.join("chat" + idChat);
@@ -89,7 +91,9 @@ socketIO.sockets.on("connection", (socket) => {
     }
 
     if (ownerSockets) {
-      const { rows: user } = await client.query(getUserQuery, [rows[0].idUser]);
+      const { rows: user } = await client.query(getUserQuery, [
+        rows[0].firstUser,
+      ]);
       for (let i = 0; i < ownerSockets.length; i++) {
         const soc = socketIO.sockets.connected[ownerSockets[i]];
         soc.join("chat" + idChat);
