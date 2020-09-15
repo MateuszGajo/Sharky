@@ -75,63 +75,66 @@ const Header = ({ info, setNumberOfPhotos, idUser }) => {
           {firstName + " " + lastName}
         </span>
       </div>
-      <div
-        className={cx("profile__container__person__photo", {
-          "profile__container__person__photo--owner": owner.id == idUser,
-        })}
-      >
-        <img
-          src={`/static/images/${photo}`}
-          alt=""
-          className="profile__container__person__photo--img"
-        />
-        <div className="profile__container__person__photo__overlay">
-          <label htmlFor="profile-change">
-            <div className="profile__container__person__photo__overlay__button">
-              {changePhoto}
-            </div>
-          </label>
-          <input
-            type="file"
-            name="file"
-            id="profile-change"
-            onChange={handlePhotoChange}
+      <div className="profile__container__person__photo">
+        <div
+          className={cx({
+            "profile__container__person__photo--owner": owner.id == idUser,
+          })}
+        >
+          <img
+            src={`/static/images/${photo}`}
+            alt=""
+            className="profile__container__person__photo--img"
           />
-        </div>
-      </div>
-      {owner.id == idUser && (
-        <div className="profile__container__person__add-photo">
-          {uploadPhotoPrompt ? (
-            <div className="profile__container__person__add-photo__text">
-              {uploadPhotoPrompt}
-            </div>
-          ) : (
-            <>
-              <div className="profile__container__person__add-photo__title">
-                <span className="profile__container__person__add-photo__title--text">
-                  {addPhoto}
-                </span>
+          <div className="profile__container__person__photo__overlay">
+            <label htmlFor="profile-change">
+              <div className="profile__container__person__photo__overlay__button">
+                {changePhoto}
               </div>
-              <div className="profile__container__person__add-photo__icon">
-                <label
-                  htmlFor="file-upload"
-                  className="profile__container__person__add-photo__icon__label"
-                >
-                  <IoIosAddCircleOutline />
-                </label>
+            </label>
+            <input
+              type="file"
+              name="file"
+              id="profile-change"
+              onChange={handlePhotoChange}
+            />
+          </div>
+        </div>
 
-                <input
-                  type="file"
-                  name="file"
-                  id="file-upload"
-                  className="profile__container__person__add-photo__icon__upload--file"
-                  onChange={handlePhotoUpload}
-                />
+        {owner.id == idUser && (
+          <div className="profile__container__person__add-photo">
+            {uploadPhotoPrompt ? (
+              <div className="profile__container__person__add-photo__text">
+                {uploadPhotoPrompt}
               </div>
-            </>
-          )}
-        </div>
-      )}
+            ) : (
+              <>
+                <div className="profile__container__person__add-photo__title">
+                  <span className="profile__container__person__add-photo__title--text">
+                    {addPhoto}
+                  </span>
+                </div>
+                <div className="profile__container__person__add-photo__icon">
+                  <label
+                    htmlFor="file-upload"
+                    className="profile__container__person__add-photo__icon__label"
+                  >
+                    <IoIosAddCircleOutline />
+                  </label>
+
+                  <input
+                    type="file"
+                    name="file"
+                    id="file-upload"
+                    className="profile__container__person__add-photo__icon__upload--file"
+                    onChange={handlePhotoUpload}
+                  />
+                </div>
+              </>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
