@@ -38,7 +38,7 @@
 >>>>>>> common-layout
         },
         "invite-person":{
-            "empty-content":"Użyj wyszukiwarka aby znaleść znajomych",
+            "empty-content":"Nie masz żadnych znajomych do zaproszenia",
             "invite":"Zaproś",
             "invitation":"Zaproszenie zostało wysłane"
         }

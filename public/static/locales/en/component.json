@@ -33,13 +33,15 @@
             "description":"Subscribers",
             "button-subscribe":"Subscribe",
             "button-unsubscribe":"Unsubscribe",
-            "empty-content":"Use search to find fanpages"
+            "empty-content":"Use search to find fanpage",
+            "no-result":"We didn't find any fanpage"
         },
         "groups":{
             "description":"Number of members",
             "button-join":"Join",
             "button-leave":"Leave",
-            "empty-content":"Use search to find groups"
+            "empty-content":"Use search to find group",
+            "no-result":"We didn't find any group"
         },
         "people":{
             "description":"Number of friends",
@@ -52,8 +54,9 @@
             "accept":"Accept",
             "decline":"Decline",
             "sent":"Sent",
-            "empty-content":"Use search to find friends",
-            "my-self":"You"
+            "empty-content":"Use search to find your friends",
+            "no-result":"We didn't find any person",
+            "yourself":"You"
 
         },
         "posts":{

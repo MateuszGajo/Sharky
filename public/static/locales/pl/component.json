@@ -33,13 +33,15 @@
             "description":"Liczba subskrypcji",
             "button-subscribe":"Subskrybuj",
             "button-unsubscribe":"Odsubskrybuj",
-            "empty-content":"Użyj wyszukiwarka aby znaleść fanpage"
+            "empty-content":"Użyj wyszukiwarka aby znaleść fanpage",
+            "no-result":"Nie zanleźliśmy żadnego pasującego fanpage"
         },
         "groups":{
             "description":"Liczba członków",
             "button-join":"Dołącz",
             "button-leave":"Opuść",
-            "empty-content":"Użyj wyszukiwarka aby znaleść grupy"
+            "empty-content":"Użyj wyszukiwarka aby znaleść grupę",
+            "no-result":"Nie zanleźliśmy żadnej pasującej grupy"
         },
         "people":{
             "description":"Liczba znajomych",
@@ -52,8 +54,9 @@
             "accept":"Zaakceptuj",
             "decline":"Odrzuć",
             "sent":"Wysłano",
-            "empty-content":"Użyj wyszukiwarka aby znaleść znajomych",
-            "my-self":"Ty"
+            "empty-content":"Użyj wyszukiwarka aby znaleść znajomego",
+            "no-result":"Nie zanleźliśmy żadnej pasującej osoby",
+            "yourself":"Ty"
 
         },
         "posts":{

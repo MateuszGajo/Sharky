@@ -5,6 +5,8 @@ import Collapse from "./components/Collapse/Collapse";
 import Button from "./components/Button/Button";
 import Description from "./components/Description/Description";
 import AppContext from "@features/context/AppContext";
+import i18next from "@i18n";
+const { useTranslation } = i18next;
 
 const Card = ({ data, setRelation, handleClick, setInvite }) => {
   const {
@@ -13,7 +15,7 @@ const Card = ({ data, setRelation, handleClick, setInvite }) => {
     photo,
     name,
     description,
-    number: n,
+    number: initialNumber,
     button: btn,
     isInvited,
     isInvitationSent,
@@ -22,15 +24,18 @@ const Card = ({ data, setRelation, handleClick, setInvite }) => {
     sentInvite,
     subTitle = null,
     unsubTitle,
-    title: t,
+    title: initialTitle,
     buttonName: btnName,
-    collapse: c,
+    collapse: initialCollapse,
     collapseItems = null,
     radiusPhoto,
   } = data;
   const { green: greenC, blue: blueC, pink: pinkC } = collapseItems || {};
 
   const { owner } = useContext(AppContext);
+  const { t } = useTranslation();
+
+  const yourself = t("component:lists.people.yourself");
 
   const router = useRouter();
 
@@ -39,9 +44,9 @@ const Card = ({ data, setRelation, handleClick, setInvite }) => {
 
   const [button, setButton] = useState(btn);
   const [buttonName, setButtonName] = useState(btnName);
-  const [title, setTitle] = useState(t);
-  const [collapse, setCollapse] = useState(c);
-  const [number, setNumber] = useState(n);
+  const [title, setTitle] = useState(initialTitle);
+  const [collapse, setCollapse] = useState(initialCollapse);
+  const [number, setNumber] = useState(initialNumber);
 
   const collapseRef = useRef(null);
 
@@ -73,38 +78,44 @@ const Card = ({ data, setRelation, handleClick, setInvite }) => {
                 className="card__item__info__second-column__buttons"
                 data-testid="card-buttons"
               >
-                <Button
-                  button={button}
-                  setButton={setButton}
-                  greenName={greenC?.name}
-                  pinkName={pinkC?.name}
-                  blueName={blueC?.name}
-                  buttonName={buttonName}
-                  setButtonName={setButtonName}
-                  collapseItems={collapseItems}
-                  handleClick={handleClick}
-                  idRef={idRef}
-                  setIdRef={setIdRef}
-                  id={id}
-                  refType={refType}
-                  number={number}
-                  setNumber={setNumber}
-                  title={!title ? (idRef ? unsubTitle : subTitle) : title}
-                  setTitle={setTitle}
-                  collapse={collapse}
-                  isInvited={isInvited}
-                  isInvitationSent={isInvitationSent}
-                  setCollapse={setCollapse}
-                  subTitle={subTitle}
-                  unsubTitle={unsubTitle}
-                  inviteType={inviteType}
-                  setInviteType={setInviteType}
-                  acceptInvite={acceptInvite}
-                  declineInvite={declineInvite}
-                  sentInvite={sentInvite}
-                  setInvite={setInvite}
-                  collapseRef={collapseRef}
-                />
+                {owner.id == id ? (
+                  <span className="card__item__info__second-column__buttons--yourself">
+                    ({yourself})
+                  </span>
+                ) : (
+                  <Button
+                    button={button}
+                    setButton={setButton}
+                    greenName={greenC?.name}
+                    pinkName={pinkC?.name}
+                    blueName={blueC?.name}
+                    buttonName={buttonName}
+                    setButtonName={setButtonName}
+                    collapseItems={collapseItems}
+                    handleClick={handleClick}
+                    idRef={idRef}
+                    setIdRef={setIdRef}
+                    id={id}
+                    refType={refType}
+                    number={number}
+                    setNumber={setNumber}
+                    title={!title ? (idRef ? unsubTitle : subTitle) : title}
+                    setTitle={setTitle}
+                    collapse={collapse}
+                    isInvited={isInvited}
+                    isInvitationSent={isInvitationSent}
+                    setCollapse={setCollapse}
+                    subTitle={subTitle}
+                    unsubTitle={unsubTitle}
+                    inviteType={inviteType}
+                    setInviteType={setInviteType}
+                    acceptInvite={acceptInvite}
+                    declineInvite={declineInvite}
+                    sentInvite={sentInvite}
+                    setInvite={setInvite}
+                    collapseRef={collapseRef}
+                  />
+                )}
                 {inviteType && (
                   <Button
                     button={button}

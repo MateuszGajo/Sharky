@@ -22,7 +22,7 @@ const Members = ({
   const adminName = t("group:members.admin");
   const moderatorName = t("group:members.moderator");
   const memberName = t("group:members.member");
-  const mySelf = t("component:lists.people.my-self");
+  const yourself = t("component:lists.people.yourself");
   const removeText = t("component:lists.people.remove");
 
   useEffect(() => {
@@ -59,7 +59,7 @@ const Members = ({
           unsubTitle: removeText,
           radiusPhoto: false,
           name: `${firstName} ${lastName} ${
-            owner.id == idUser ? `(${mySelf})` : ""
+            owner.id == idUser ? `(${yourself})` : ""
           }`,
           button: "relation",
           title: t(`group:members.${role}`),
