@@ -66,7 +66,6 @@ const PostList = ({
 
   return (
     <div className="post-list">
-      {console.log(posts)}
       <InfiniteScroll
         dataLength={posts.length}
         next={() => fetchData(posts.length)}

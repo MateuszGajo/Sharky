@@ -1,0 +1,21 @@
+.home__hamburger__container{
+    display:block;
+    position:fixed;
+    top:10px;
+    left:10px;
+    z-index:2;
+}
+    
+.home__hamburger__container__icon{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width:35px;
+    height:35px;
+    border-radius:50%;
+    background-color: white;
+    box-shadow:0 0 2px 2px $shadowColor;
+    cursor:pointer;
+    font-size: 2rem;
+ }
+  

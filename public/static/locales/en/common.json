@@ -35,7 +35,7 @@
             "file-too-large":"File is too large"
         },
         "invite-person":{
-            "empty-content":"Use search to find your friends",
+            "empty-content":"You have no friends to invite",
             "invite":"Invite",
             "invitation":"invitation has been sent"
         }
