@@ -18,6 +18,7 @@ const Item = ({ user }) => {
       messageTo == owner.id
     ) {
       setStatusOfNewMessage(true);
+      socket.emit("isMessageUnRead", { idChat, messageTo });
     }
   }, [newMessage]);
 

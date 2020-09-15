@@ -30,7 +30,7 @@ const MyApp = ({ Component, pageProps }) => {
       setNewChat(newChat);
     });
     owner.id && socket.emit("connectUser");
-  }, [SERVER_URL]);
+  }, [SERVER_URL, owner]);
 
   return (
     <AppContext.Provider
