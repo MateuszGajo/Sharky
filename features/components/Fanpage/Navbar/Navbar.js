@@ -118,6 +118,9 @@ const Navbar = ({ setIdSub, setSection, idSub, role, idFanpage }) => {
         className={cx("fanpage__navbar__subscribe--mobile", {
           "fanpage__navbar__subscribe--mobile--active": idSub,
         })}
+        onClick={() => {
+          idSub ? unSubscribeFanpage() : subscribeFanpage();
+        }}
       >
         <div className="fanpage__navbar__subscribe--mobile__icon">
           <IoIosNotificationsOutline />
