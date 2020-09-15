@@ -39,7 +39,7 @@ const Downbar = ({ idChat, setMessages, messages, converser }) => {
 
   const addKeySubmit = (e) => {
     if (e.keyCode == 13) {
-      if (message)
+      if (!message)
         messageForm.current.dispatchEvent(
           new Event("submit", { cancelable: true })
         );
