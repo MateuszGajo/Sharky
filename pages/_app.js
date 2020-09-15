@@ -48,7 +48,7 @@ const MyApp = ({ Component, pageProps }) => {
 
   useEffect(() => {
     owner.id && socket.emit("connectUser");
-  }, [SERVER_URL]);
+  }, [SERVER_URL, owner]);
 
   return (
     <AppContext.Provider
