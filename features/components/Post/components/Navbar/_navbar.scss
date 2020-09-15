@@ -1,12 +1,17 @@
 .post__item__navbar{
     padding:5px;
     display:flex;
-    // justify-content: space-between;
     margin-bottom:$smallMargin
 }
 
 .post__item__navbar__user{
     display:flex;
+    cursor: pointer;
+    &:hover{
+        text-decoration: underline;
+        text-decoration-color: $primaryColor;
+    }
+   
 }
 
 .post__item__navbar__user--photo{
