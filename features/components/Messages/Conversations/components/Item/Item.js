@@ -12,6 +12,7 @@ const Item = ({
   message: intialMessage,
   setChat,
   chat,
+  setStatusOfDisplayMobile,
 }) => {
   const { newMessage, owner } = useContext(AppContext);
 
@@ -39,6 +40,7 @@ const Item = ({
           idChat,
         });
         setTextBold(false);
+        setStatusOfDisplayMobile(true);
       }}
     >
       <div className="conversations__item__photo">
