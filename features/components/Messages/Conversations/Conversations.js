@@ -1,11 +1,19 @@
 import React from "react";
 import Item from "./components/Item/Item";
 
-const conversations = ({ items, setChat, chat }) => {
+const conversations = ({ items, setChat, chat, setStatusOfDisplayMobile }) => {
   return (
     <div className="conversations">
       {items.map((conversation) => {
-        return <Item {...conversation} setChat={setChat} chat={chat} />;
+        return (
+          <Item
+            key={conversation.idChat}
+            {...conversation}
+            setChat={setChat}
+            chat={chat}
+            setStatusOfDisplayMobile={setStatusOfDisplayMobile}
+          />
+        );
       })}
     </div>
   );
