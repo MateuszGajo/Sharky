@@ -36,14 +36,12 @@ const Fanpage = () => {
       isAuth &&
       axios
         .post("/fanpage/enter", { idFanpage })
-        .then(({ data: { idSub, role, id } }) => {
-          console.log("tutaj");
+        .then(({ data: { idSub, role } }) => {
           setIdSub(idSub);
           setRole(role);
           setStatusOfLoading(false);
         })
         .catch(({ response: { status, data: message } }) => {
-          console.log(status);
           if (status == 404) {
             setFanpageError(message);
             setStatusOfLoading(false);
@@ -54,7 +52,7 @@ const Fanpage = () => {
   useEffect(() => {
     getOwner({ setStatusOfAuth, setOwner });
   }, []);
-  console.log(isAuth);
+
   if (isAuth == null) return <Spinner />;
   else if (!isAuth) {
     router.push("/signin");
