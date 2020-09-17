@@ -2,7 +2,7 @@
   display: flex;
   justify-content: space-between;
   width: 100%;
-  margin-top:$mediumMargin;
+  margin-top:$largeMargin;
 }
 .authentication__form__wrapper__icons__icon--link {
   display: flex;
@@ -35,14 +35,14 @@
 }
 
 .authentication__form__wrapper__inputs__wrapper__input--signin:nth-of-type(2){
-  margin-top:10px;
+  margin-top:$smallMargin;
 }
 .authentication__form__wrapper__inputs__wrapper__helpers {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  margin-top: $smallMargin;
+  margin-top: $mediumMargin;
 }
 .authentication__form__wrapper__inputs__wrapper__helpers--remberme {
   display: flex;
@@ -58,9 +58,17 @@
 }
 
 .authentication__form__wrapper__inputs__wrapper--button {
-  margin-top: 10px;
+  display:flex;
+  justify-content: center;
+  margin-top:$smallMargin;
 }
 
 .authentication__form__wrapper__inputs__wrapper__error{
   margin-top:$smallMargin;
+}
+
+@media (max-width:1365px){
+  .authentication__form__wrapper__icons {
+  margin-top:$mediumMargin;
+  }
 }
