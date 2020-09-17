@@ -5,12 +5,10 @@
     padding: 0 20px;
   }
   
-  .profile__container__person__photo{
-      position: relative;
-     
-  }
+
 
   .profile__container__person__photo--owner{
+    position: relative;
     &:hover .profile__container__person__photo__overlay{
         display:flex;
     }
@@ -104,9 +102,11 @@
     }
 
     .profile__container__person__name{
+      height:200px;
       display:flex;
       align-items: center;
-      margin-left:$smallMargin;
+      margin-left:$mediumMargin;
+      margin-bottom:0;
       order:1;
     }
 
@@ -128,6 +128,9 @@
   }
   
   @media (max-width:767px) and (orientation:portrait){
+    .profile__container__person__name{
+      height:150px;
+    }
     .profile__container__person__photo--img{
       width:150px;
       height:150px;
