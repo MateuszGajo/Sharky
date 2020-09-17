@@ -1,4 +1,10 @@
 
+  .messenger__navbar {
+    display: flex;
+    border-bottom: 1px solid $shadowColor;
+    padding: 8px 5px;
+  }
+
 .messenger__navbar__return{
     display:none;
 }
@@ -50,3 +56,14 @@
     cursor: pointer;
     font-size: 1.2rem;
 }
+
+@media(max-width:1023px){
+    .messenger__navbar__return{
+     display:flex;
+     align-items: center;
+     font-size: 2rem;
+     margin-right:$smallMargin;
+     color:$primaryColor;
+     cursor:pointer;
+   }
+   }
