@@ -22,6 +22,7 @@ const Messages = () => {
   const [chat, setChat] = useState({ idChat: null });
   const [isLoading, setStatusOfLoading] = useState(true);
   const [isAuth, setStatusOfAuth] = useState(null);
+  const [isDisplayMobile, setStatusOfDisplayMobile] = useState(false);
 
   useEffect(() => {
     if (conversations.length) socket.emit("joinChat");
@@ -76,18 +77,26 @@ const Messages = () => {
               chat={chat}
             />
             <div className="messages__container__display">
-              <Messenger chat={chat} />
+              <Messenger chat={chat} setChat={setChat} />
             </div>
           </div>
           <div className="messages__container messages__container--mobile">
-            <Conversations
-              items={conversations}
-              setChat={setChat}
-              chat={chat}
-            />
-            <div className="messages__container__display--mobile">
-              <Messenger chat={chat} />
-            </div>
+            {!isDisplayMobile ? (
+              <Conversations
+                items={conversations}
+                setChat={setChat}
+                chat={chat}
+                setStatusOfDisplayMobile={setStatusOfDisplayMobile}
+              />
+            ) : (
+              <div className="messages__container__display--mobile">
+                <Messenger
+                  chat={chat}
+                  setChat={setChat}
+                  setStatusOfDisplayMobile={setStatusOfDisplayMobile}
+                />
+              </div>
+            )}
           </div>
         </>
       ) : (
