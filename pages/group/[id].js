@@ -29,6 +29,7 @@ const Group = () => {
   const [idMember, setIdMember] = useState(null);
   const [role, setRole] = useState("");
   const [groupName, setGroupName] = useState("");
+  const [photo, setPhoto] = useState("");
   const [numberOfMembers, setNumberOfMembers] = useState(null);
   const [creationDate, setCreationDate] = useState(null);
   const [isLoading, setStatusOfLoading] = useState(true);
@@ -39,7 +40,6 @@ const Group = () => {
     axios
       .post("/group/about", { idGroup })
       .then(({ data: { date, numberOfMembers } }) => {
-        console.log(numberOfMembers);
         setNumberOfMembers(numberOfMembers);
         setCreationDate(date);
       });
@@ -50,12 +50,13 @@ const Group = () => {
       isAuth &&
       axios
         .post("/group/enter", { idGroup })
-        .then(({ data: { id, idMember, name, role } }) => {
+        .then(({ data: { id, idMember, name, role, photo } }) => {
           if (!id) {
             setStatusOfExistsGroup(false);
             return setStatusOfLoading(false);
           }
           getGroupInfo();
+          setPhoto(photo);
           setIdMember(idMember);
           idMember && setRole(role);
           setGroupName(name);
@@ -109,6 +110,8 @@ const Group = () => {
               setRole={setRole}
               section={section}
               role={role}
+              photo={photo}
+              setPhoto={setPhoto}
             />
           </div>
         </>

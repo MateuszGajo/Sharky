@@ -124,12 +124,14 @@ select id_group, count(*) as "numberOfMembers" from group_users where id_group=$
 on a.id = b.id_group`;
 
 const enterQuery = `
-select a.id,a.name,b.id as "idMember", b.role
-from (select id,name from groups where id = $1) as a
+select a.id, a.name, a.photo, b.id as "idMember", b.role
+from (select id, name, photo from groups where id = $1) as a
 left join(
 select id,id_group, role from group_users where id_group=$1 and id_user=$2) as b
 on a.id = b.id_group
 `;
+
+const changeGroupPhotoQuery = `update groups set photo=$1 where id=$2`;
 
 module.exports = {
   getGroupsQuery,
@@ -144,4 +146,5 @@ module.exports = {
   enterQuery,
   createGroupQuery,
   addAdminQuery,
+  changeGroupPhotoQuery,
 };
