@@ -11,6 +11,8 @@ const {
   getMembersQuery,
   getInfoQuery,
   enterQuery,
+  createGroupQuery,
+  addAdminQuery,
 } = require("./query");
 const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
@@ -150,6 +152,26 @@ router.post("/get", async (req, res) => {
   }
 
   res.status(200).json({ isMore, groups });
+});
+
+router.post("/create", async (req, res) => {
+  const { name, description } = req.body;
+
+  const { id: idOwner } = decodeToken(req);
+  const date = new Date();
+
+  try {
+    const { rows } = await client.query(createGroupQuery, [
+      name,
+      description,
+      date,
+    ]);
+    await client.query(addAdminQuery, [rows[0].id, idOwner, date]);
+
+    res.status(200).json({ id: rows[0].id });
+  } catch {
+    res.status(400).json("bad-request");
+  }
 });
 
 router.post("/user/add", async (req, res) => {
