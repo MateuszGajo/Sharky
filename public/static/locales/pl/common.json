@@ -30,12 +30,9 @@
         },
         "error":{
             "bad-request":"Żądanie nie powiodło się",
-<<<<<<< HEAD
-            "last-group-admin":"Jesteś jedynym administratorem, przyznaj uprawnienia administratora innej osobie lub usuń grupe"
-=======
+            "last-group-admin":"Jesteś jedynym administratorem, przyznaj uprawnienia administratora innej osobie lub usuń grupe",
             "wrong-file-type":"Niewłaściwe rozserzenie pliku",
             "file-too-large":"Plik jest za duży"
->>>>>>> common-layout
         },
         "invite-person":{
             "empty-content":"Nie masz żadnych znajomych do zaproszenia",

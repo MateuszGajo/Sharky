@@ -30,12 +30,9 @@
         },
         "error":{
             "bad-request":"Request failed",
-<<<<<<< HEAD
-        "last-group-admin":"You're the only admin, give someone admin permission or delete the group"
-=======
+            "last-group-admin":"You're the only admin, give someone admin permission or delete the group",
             "wrong-file-type":"Wrong file type",
             "file-too-large":"File is too large"
->>>>>>> common-layout
         },
         "invite-person":{
             "empty-content":"You have no friends to invite",
