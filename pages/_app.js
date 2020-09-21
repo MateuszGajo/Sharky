@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import socketIOClient from "socket.io-client";
 import AppContext from "@features/context/AppContext";
 import { SERVER_URL } from "../config/config";
-let socket;
+let socket = socketIOClient(SERVER_URL);
 const MyApp = ({ Component, pageProps }) => {
   const [owner, setOwner] = useState({ id: null });
   const [newMessage, setNewMessage] = useState({});
@@ -18,19 +18,29 @@ const MyApp = ({ Component, pageProps }) => {
   const [isPrompt, setPrompt] = useState("");
 
   useEffect(() => {
-    socket = socketIOClient(SERVER_URL);
-    socket.on(
-      "message",
-      ({ idMessage, idChat, idUser, message, date, messageTo }) => {
-        setNewMessage({ idMessage, idChat, idUser, message, date, messageTo });
-      }
-    );
+    if (owner.id) {
+      socket = socketIOClient(SERVER_URL);
+      socket.on(
+        "message",
+        ({ idMessage, idChat, idUser, message, date, messageTo }) => {
+          setNewMessage({
+            idMessage,
+            idChat,
+            idUser,
+            message,
+            date,
+            messageTo,
+          });
+        }
+      );
 
-    socket.on("newChat", ({ newChat }) => {
-      setNewChat(newChat);
-    });
-    owner.id && socket.emit("connectUser");
-  }, [SERVER_URL]);
+      socket.on("newChat", ({ newChat }) => {
+        setNewChat(newChat);
+      });
+
+      socket.emit("connectUser");
+    }
+  }, [owner]);
 
   return (
     <AppContext.Provider

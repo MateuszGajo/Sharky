@@ -1,8 +1,7 @@
 import React from "react";
-import Groups from "./groups";
 
 const Index = () => {
-  return <Groups />;
+  return <div> </div>;
 };
 
 export default Index;

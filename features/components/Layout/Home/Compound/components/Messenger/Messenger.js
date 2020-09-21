@@ -3,7 +3,7 @@ import Mess from "@components/Messenger/Messenger";
 import { WizzardContext } from "../../context/WizzardContext";
 
 const Messenger = () => {
-  const { isMessengerClose, setStatusOfMessenger, chat } = useContext(
+  const { isMessengerClose, setStatusOfMessenger, chat, setChat } = useContext(
     WizzardContext
   );
 
@@ -12,6 +12,7 @@ const Messenger = () => {
       {!isMessengerClose && (
         <Mess
           chat={chat}
+          setChat={setChat}
           windowMessenger={true}
           isMessengerClose={isMessengerClose}
           setStatusOfMessenger={setStatusOfMessenger}

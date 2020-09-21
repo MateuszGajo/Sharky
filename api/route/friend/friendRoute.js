@@ -5,8 +5,11 @@ const {
   getSortedFriendsQuery,
   getSortedUsersQuery,
   getChatsQuery,
+  getIdFriendshipQuery,
   addUserQuery,
-  removeUserQuery,
+  deleteUserQuery,
+  deleteFriendRelationQuery,
+  deleteChatQuery,
   acceptRequest,
   setRelation,
   removeFriendsRequest,
@@ -33,6 +36,13 @@ router.post("/add", async (req, res) => {
   const { id: idOwner } = decodeToken(req);
 
   try {
+    const { rows } = await client.query(getIdFriendshipQuery, [
+      idOwner,
+      idUser,
+    ]);
+    if (rows[0]) {
+      return res.status(200).json({ idFriendShip: rows[0].id });
+    }
     const { rows: addUser } = await client.query(addUserQuery, [
       idOwner,
       idUser,
@@ -44,11 +54,14 @@ router.post("/add", async (req, res) => {
   }
 });
 
-router.post("/remove", async (req, res) => {
+router.post("/delete", async (req, res) => {
   const { idFriendShip } = req.body;
 
   try {
-    await client.query(removeUserQuery, [idFriendShip]);
+    await client.query(deleteUserQuery, [idFriendShip]);
+    await client.query(deleteFriendRelationQuery, [idFriendShip]);
+    await client.query(deleteChatQuery, [idFriendShip]);
+
     res.status(200).json({ success: true });
   } catch {
     res.status(400).json("bad-request");
@@ -56,22 +69,16 @@ router.post("/remove", async (req, res) => {
 });
 
 router.post("/accept", async (req, res) => {
-  const { idFriendShip, idUser } = req.body;
-
-  const { id: idOwner } = decodeToken(req);
+  const { idFriendShip } = req.body;
 
   const relation = "friend";
-  let idChat;
   try {
     const { rows } = await client.query(acceptRequest, [idFriendShip]);
     let idChat;
 
     if (rows[0]) {
       await client.query(setRelation, [idFriendShip, relation]);
-      const { rows: chat } = await client.query(addChatQuery, [
-        idUser,
-        idOwner,
-      ]);
+      const { rows: chat } = await client.query(addChatQuery, [idFriendShip]);
       idChat = chat[0].id;
     }
 
@@ -147,18 +154,6 @@ router.post("/get/people", async (req, res) => {
   }
 
   res.status(200).json({ friends, isMore });
-});
-
-router.post("/chat/join", (req, res) => {
-  const { users } = req.body;
-  const { io } = req;
-  const session = req.session;
-
-  for (let i = 0; i < users.length; i++) {
-    io.sockets.connected[session.socketio].join(users[i].idChat);
-  }
-
-  res.status(200);
 });
 
 router.post("/message/read", (req, res) => {
