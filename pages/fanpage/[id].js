@@ -8,6 +8,7 @@ import Spinner from "@components/Spinner/Spinner";
 import i18next from "@i18n";
 import AppContext from "@features/context/AppContext";
 import Error from "@common/PopUp/Error/Error";
+import Prompt from "@common/PopUp/Prompt/Prompt";
 import { getOwner } from "@features/service/Functions/index";
 
 import "../../styles/fanpage.scss";
@@ -22,7 +23,7 @@ const Fanpage = () => {
 
   const homeName = t("fanpage:home");
 
-  const { isError, setOwner } = useContext(AppContext);
+  const { isError, isPrompt, setOwner } = useContext(AppContext);
 
   const [section, setSection] = useState(homeName);
   const [idSub, setIdSub] = useState(null);
@@ -62,6 +63,7 @@ const Fanpage = () => {
   return (
     <HomeLayout>
       {isError && <Error message={isError} />}
+      {isPrompt && <Prompt message={isPrompt} />}
       <section className="fanpage">
         {!fanpageError ? (
           <>

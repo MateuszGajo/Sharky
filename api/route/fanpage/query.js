@@ -86,6 +86,10 @@ on a."idFanpage" = c.id
 order by "idSub"
 limit 21 offset $3`;
 
+const createFanpageQuery = `insert into fanpages(name, description, photo, date) values($1, $2, 'fanpage.png', $3) returning id`;
+
+const addAdminQuery = `insert into fanpage_users(id_fanpage, id_user, role) values($1, $2, 'admin')`;
+
 const addUserQuery = `
 insert into fanpage_users(id_fanpage, id_user, role) 
 select $1, $2, $3 where not exists(select id from fanpage_users where id_fanpage=$1 and id_user=$2)
@@ -134,6 +138,8 @@ limit 21 offset $2
 
 const updateMemberRealtionQuery = `update fanpage_users set role=$1 where id=$2`;
 
+const changeFanpagePhotoQuery = `update fanpages set photo=$1 where id=$2`;
+
 module.exports = {
   getFanpagesQuery,
   getSortedFanpagesQuery,
@@ -149,4 +155,7 @@ module.exports = {
   deleteFanpagePostsQuery,
   getMembersQuery,
   updateMemberRealtionQuery,
+  createFanpageQuery,
+  addAdminQuery,
+  changeFanpagePhotoQuery,
 };

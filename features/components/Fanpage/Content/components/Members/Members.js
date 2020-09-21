@@ -62,53 +62,56 @@ const Members = ({ idFanpage, role: permission }) => {
     fetchData(0);
   }, []);
   return (
-    <div className="fanpage-members">
+    <div className="fanpage__content__members">
       <InfiniteScroll
         dataLength={members.length}
         next={() => fetchData(members.length)}
         hasMore={isMore}
         loader={<Spinner />}
       >
-        {members.map((member) => {
-          const { idUser, idSub, role, firstName, lastName, photo } = member;
-          const data = {
-            refType: "profile",
-            id: idSub,
-            idRef: idUser,
-            photo,
-            radiusPhoto: false,
-            name: `${firstName} ${lastName} ${
-              owner.id == idUser ? `(${mySelf})` : ""
-            }`,
-            unsubTitle: removeText,
-            button: "relation",
-            buttonName: role,
-            title: t(`fanpage:${role}`),
-            collapse:
-              permission == "admin" && owner.id != idUser ? true : false,
-            collapseItems: {
-              pink: {
-                name: "admin",
-                title: adminName,
+        <div className="fanpage__content__members__container">
+          {members.map((member) => {
+            const { idUser, idSub, role, firstName, lastName, photo } = member;
+            const data = {
+              refType: "profile",
+              id: idSub,
+              idRef: idUser,
+              photo,
+              radiusPhoto: false,
+              name: `${firstName} ${lastName} ${
+                owner.id == idUser ? `(${mySelf})` : ""
+              }`,
+              unsubTitle: removeText,
+              button: "relation",
+              buttonName: role,
+              title: t(`fanpage:${role}`),
+              collapse:
+                permission == "admin" && owner.id != idUser ? true : false,
+              collapseItems: {
+                pink: {
+                  name: "admin",
+                  title: adminName,
+                },
+                blue: {
+                  name: "moderator",
+                  title: moderatorName,
+                },
+                green: {
+                  name: "user",
+                  title: userName,
+                },
               },
-              blue: {
-                name: "moderator",
-                title: moderatorName,
-              },
-              green: {
-                name: "user",
-                title: userName,
-              },
-            },
-          };
-          return (
-            <Card
-              data={data}
-              handleClick={setRemoveMember}
-              setRelation={setRealation}
-            />
-          );
-        })}
+            };
+            return (
+              <Card
+                data={data}
+                handleClick={setRemoveMember}
+                setRelation={setRealation}
+                key={idUser}
+              />
+            );
+          })}
+        </div>
       </InfiniteScroll>
     </div>
   );

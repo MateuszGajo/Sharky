@@ -9,6 +9,8 @@
     "admin":"Admin",
     "delete":"usuń",
     "my-self":"Ty",
+    "change-photo":"Zmień zdjęcie",
+    "changed-photo":"Zdjęcie zostało zmienione",
     "error":{
         "fanpage-does-not-exist":"Fanpage nie istnieje"
     }
