@@ -7,6 +7,7 @@ const Navbar = ({
   setStatusOfMessenger,
   user,
   windowMessenger,
+  setChat,
 }) => {
   return (
     <div className="messenger__navbar">
@@ -35,7 +36,10 @@ const Navbar = ({
         <div className="messenger__navbar__icons">
           <div
             className="messenger__navbar__icons--icon"
-            onClick={() => setStatusOfMessenger(true)}
+            onClick={() => {
+              setChat({ idChat: null, user: null });
+              setStatusOfMessenger(true);
+            }}
             data-testid="messenger-close"
           >
             <AiOutlineClose />

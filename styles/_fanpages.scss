@@ -1,3 +1,11 @@
+.fanpages{
+    display:flex;
+}
+
+.fanpages__content{
+    flex-grow: 1;
+}
+
 .fanpages__search{
     margin:5px 0 10px;
 }
@@ -5,4 +13,55 @@
 .fanpages__search__form{
     display:flex;
     justify-content: center;
+}
+
+.fanpages__side-bar{
+    height:100vh;
+    width:300px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    border-left:1px solid $primaryBackgroundColor;
+}
+
+.fanpages__side-bar__create__button{
+    display: flex;
+    justify-content: center;
+    font-size: 2.5rem;
+    color:$primaryColor;
+    cursor:pointer;
+}
+
+.fanpages__side-bar__create__text--span{
+    font-size: 1.6rem;
+}
+
+@media (max-width:1919px){
+    .fanpages__side-bar{
+        width:240px;
+    }
+}
+
+@media (max-width:1365px){
+    .fanpages__side-bar{
+        width:220px;
+    }
+}
+
+@media (max-width:1023px){
+    .fanpages__side-bar{
+        position:fixed;
+        bottom:15px;
+        right:15px;
+        height:auto;
+        width:auto;
+    }
+
+    .fanpages__side-bar__create__text--span{
+        display:none;
+    }
+
+    .fanpages__side-bar__create__button{
+        font-size: 4rem;
+    }
 }

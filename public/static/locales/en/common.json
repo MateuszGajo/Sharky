@@ -34,9 +34,16 @@
             "file-too-large":"File is too large"
         },
         "invite-person":{
-            "empty-content":"Use search to find your friends",
+            "empty-content":"You have no friends to invite",
             "invite":"Invite",
             "invitation":"invitation has been sent"
+        },
+        "creator":{
+            "create-group":"Create Group",
+            "create-fanpage":"Create Fanpage",
+            "name":"name",
+            "description":"Description (max 30 characters)",
+            "button-title":"Create"
         }
     }  
 }

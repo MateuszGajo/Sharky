@@ -19,6 +19,7 @@ const Groups = ({
   const buttonJoin = t("component:lists.groups.button-join");
   const buttonLeave = t("component:lists.groups.button-leave");
   const emptyContent = t("component:lists.groups.empty-content");
+  const noResult = t("component:lists.groups.no-result");
 
   const { owner, setError } = useContext(AppContext);
 
@@ -110,7 +111,9 @@ const Groups = ({
             <AiOutlineSearch />
           </div>
           <div className="empty-card__text">
-            <span className="empty-card__text--span">{emptyContent}</span>
+            <span className="empty-card__text--span">
+              {keyWords ? noResult : emptyContent}
+            </span>
           </div>
         </div>
       )}

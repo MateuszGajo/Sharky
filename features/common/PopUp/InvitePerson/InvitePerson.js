@@ -32,7 +32,6 @@ const InvitePerson = ({
   const emptyContent = t("common:pop-up.invite-person.empty-content");
   const description = t("component:lists.people.description");
   const inviteText = t("common:pop-up.invite-person.invite");
-  const invitationSent = t("common:pop-up.invite-person.invitation");
   const sentInvite = t("component:lists.people.sent");
 
   let navTimeout = null;
@@ -150,9 +149,6 @@ const InvitePerson = ({
           </div>
         ) : (
           <div className="invite-person__empty-content">
-            <div className="invite-person__empty-content__icon">
-              <AiOutlineSearch />
-            </div>
             <span className="invite-person__empty-content__text">
               {emptyContent}
             </span>
