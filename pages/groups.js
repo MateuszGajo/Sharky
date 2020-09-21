@@ -41,7 +41,9 @@ const Groups = () => {
   }
   return (
     <>
-      {isOpenCreator && <Creator setClose={setStatusOfOpenCreator} />}
+      {isOpenCreator && (
+        <Creator setStatusOfOpen={setStatusOfOpenCreator} type="group" />
+      )}
       <section className="groups">
         <NavBar />
         <div className="groups__container">
