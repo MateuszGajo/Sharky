@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import Router from "next/router";
-import NavBar from "../features/components/Layout/Home/Compound/components/NavBar/Navbar";
+import NavBar from "../features/components/Layout/Home/Compound/components/NavBar/NavBar";
 import Messenger from "../features/components/Messenger/Messenger";
 import Conversations from "../features/components/Messages/Conversations/Conversations";
 import Spinner from "@components/Spinner/Spinner";

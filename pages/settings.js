@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import Router from "next/router";
 import axios from "axios";
-import * as HomeLayout from "@components/Layout/Home/Compound/HomeLayoutCompound";
+import NavBar from "@components/Layout/Home/Compound/components/NavBar/NavBar";
 import ConfirmUser from "@common/PopUp/ConfirmUser/ConfirmUser";
 import Items from "@components/Settings/Items/Items";
 import Display from "@components/Settings/Display/Display";
@@ -106,7 +106,7 @@ const Settings = () => {
         <ConfirmUser setOpen={setOpenConfirmPopUp} setVerify={setConfirmUser} />
       )}
 
-      <HomeLayout.NavBar />
+      <NavBar />
       <div className="settings--desktop">
         <Items
           isAccountCollapsed={isAccountCollapsed}
