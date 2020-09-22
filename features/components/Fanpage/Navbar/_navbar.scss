@@ -29,12 +29,13 @@
     border-bottom:1px solid $primaryBackgroundColor;
     border-left:1px solid $primaryBackgroundColor;
     cursor:pointer;
-    &:hover .fanpage__navbar__delete{
+    &:hover .fanpage__navbar__admin-panel{
         display:flex;
+        flex-direction: column;
     }
 }
 
-.fanpage__navbar__delete{
+.fanpage__navbar__admin-panel{
     position:absolute;
     top:100%;
     left:0;
@@ -42,6 +43,11 @@
     left:-1px;
     width:calc(100% + 1px);
     display:none;
+
+}
+
+.fanpage__navbar__admin-panel__item{
+    display: flex;
     justify-content: center;
     align-items: center;
     border:1px solid $primaryBackgroundColor;
@@ -49,13 +55,26 @@
     background-color: #fff;
     color:$primaryTextColor;
     transition:background-color 0.2s;
-
     &:hover{
         background-color: $secondaryBackgroundColor;
     }
 }
 
-.fanpage__navbar__delete__icon{
+.fanpage__navbar__admin-panel__item--no-padding{
+    padding:0;
+}
+
+
+
+.fanpage__navbar__admin-panel__item--label{
+    display:flex;
+    justify-content: center;
+    width:100%;
+    padding:$smallMargin 0;
+    cursor:pointer;
+}
+
+.fanpage__navbar__admin-panel__item__icon{
     display:flex;
     justify-content: center;
     align-items: center;

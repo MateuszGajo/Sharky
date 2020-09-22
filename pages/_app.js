@@ -6,7 +6,8 @@ import AppContext from "@features/context/AppContext";
 import { SERVER_URL } from "../config/config";
 import AuthReducer from "@features/context/authReducer";
 import { authInitState } from "@features/context/initState";
-let socket;
+let socket = socketIOClient(SERVER_URL);
+
 const MyApp = ({ Component, pageProps }) => {
   const router = useRouter();
   const [owner, setOwner] = useState({});
@@ -27,28 +28,29 @@ const MyApp = ({ Component, pageProps }) => {
 
   const [state, dispatch] = useReducer(AuthReducer, authInitState);
   useEffect(() => {
-    socket = socketIOClient(SERVER_URL);
-    socket.on(
-      "message",
-      ({ idMessage, idChat, idUser, message, date, messageTo }) => {
-        setNewMessage({ idMessage, idChat, idUser, message, date, messageTo });
-      }
-    );
+    if (owner.id) {
+      socket = socketIOClient(SERVER_URL);
+      socket.on(
+        "message",
+        ({ idMessage, idChat, idUser, message, date, messageTo }) => {
+          setNewMessage({
+            idMessage,
+            idChat,
+            idUser,
+            message,
+            date,
+            messageTo,
+          });
+        }
+      );
 
-    socket.on("newChat", ({ newChat }) => {
-      setNewChat(newChat);
-    });
-
-    socket.on("logOutChangedPassword", () => {
-      axios.get("/user/logout").then(() => {
-        router.push("/signin");
+      socket.on("newChat", ({ newChat }) => {
+        setNewChat(newChat);
       });
-    });
-  }, [SERVER_URL]);
 
-  useEffect(() => {
-    owner.id && socket.emit("connectUser");
-  }, [SERVER_URL, owner]);
+      socket.emit("connectUser");
+    }
+  }, [owner]);
 
   return (
     <AppContext.Provider

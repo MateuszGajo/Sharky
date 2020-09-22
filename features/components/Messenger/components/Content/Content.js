@@ -1,7 +1,6 @@
 import React, { useRef, useContext, useEffect } from "react";
 import Router from "@features/route/routes";
 import AppContext from "@features/context/AppContext";
-// import { ConsoleView } from "react-device-detect";
 
 const Content = ({ messages, user }) => {
   const { owner } = useContext(AppContext);

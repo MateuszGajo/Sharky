@@ -1,4 +1,5 @@
 const express = require("express");
+const multer = require("multer");
 const { client } = require("../../../config/pgAdaptor");
 const {
   getGroupsQuery,
@@ -13,6 +14,11 @@ const {
   enterQuery,
   acceptInvitationToGroup,
   declineInvitationToGroup,
+  createGroupQuery,
+  addAdminQuery,
+  createGroupQuery,
+  addAdminQuery,
+  changeGroupPhotoQuery,
 } = require("./query");
 const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
@@ -32,10 +38,11 @@ router.post("/enter", async (req, res) => {
     }
     const id = info[0].id;
     const name = info[0].name;
+    const photo = info[0].photo;
     const idMember = info[0] ? info[0].idMember : null;
     const role = info[0] ? info[0].role : null;
 
-    res.status(200).json({ id, idMember, name, role });
+    res.status(200).json({ id, idMember, name, role, photo });
   } catch {
     res.status(400).json("bad-request");
   }
@@ -154,6 +161,26 @@ router.post("/get", async (req, res) => {
   res.status(200).json({ isMore, groups });
 });
 
+router.post("/create", async (req, res) => {
+  const { name, description } = req.body;
+
+  const { id: idOwner } = decodeToken(req);
+  const date = new Date();
+
+  try {
+    const { rows } = await client.query(createGroupQuery, [
+      name,
+      description,
+      date,
+    ]);
+    await client.query(addAdminQuery, [rows[0].id, idOwner, date]);
+
+    res.status(200).json({ id: rows[0].id });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
 router.post("/user/add", async (req, res) => {
   const { idGroup } = req.body;
 
@@ -228,6 +255,45 @@ router.post("/user/invitation/decline", async (req, res) => {
   } catch {
     res.status(400).json("bad-request");
   }
+});
+
+router.post("/change/photo", async (req, res) => {
+  const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, "./public/static/images");
+    },
+    filename: (req, file, cb) => {
+      cb(null, Date.now() + file.originalname);
+    },
+  });
+
+  const upload = multer({ storage }).single("file");
+
+  await upload(req, res, async (err) => {
+    if (err) return res.status(400).json("bad-request");
+
+    let fileName = null;
+    if (req.file) {
+      const {
+        file: { mimetype, filename, size },
+      } = req;
+      fileName = filename;
+      if (mimetype !== "image/jpeg" && mimetype !== "image/png") {
+        return res.status(415).json("wrong-file-type");
+      }
+      if (size > 200000) {
+        return res.status(413).json("file-too-large");
+      }
+    }
+    const { idGroup } = req.body;
+
+    try {
+      await client.query(changeGroupPhotoQuery, [fileName, idGroup]);
+      res.status(200).json({ fileName });
+    } catch {
+      res.status(400).json("bad-request");
+    }
+  });
 });
 
 module.exports = router;

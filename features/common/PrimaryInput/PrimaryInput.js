@@ -10,6 +10,7 @@ const PrimaryInput = ({
   autocompleteData = [],
   withOutMargin = false,
   size = "large",
+  require = false,
 }) => {
   const [autocompleteDataFiltered, setAutocompleteDataFiltered] = useState([]);
   const [isFocus, setStatusOfFocus] = useState(false);
@@ -82,6 +83,7 @@ const PrimaryInput = ({
         data-testid="primary-input"
         ref={inputRef}
         onClick={(e) => e.stopPropagation()}
+        required={require}
       />
 
       <h4

@@ -10,7 +10,8 @@
         "about":"Informacje",
         "invite":"Zaproś",
         "leave":"Opuść",
-        "delete":"Usuń"
+        "delete":"Usuń",
+        "change-photo":"Zmień zdjęcie"
     },
     "error":{
         "does-not-exist":"Grupa nie istnieje"
