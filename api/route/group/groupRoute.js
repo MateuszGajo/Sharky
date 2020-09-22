@@ -16,8 +16,6 @@ const {
   declineInvitationToGroup,
   createGroupQuery,
   addAdminQuery,
-  createGroupQuery,
-  addAdminQuery,
   changeGroupPhotoQuery,
 } = require("./query");
 const decodeToken = require("../../../utils/decodeToken");
