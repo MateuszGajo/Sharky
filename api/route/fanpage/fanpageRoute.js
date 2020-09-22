@@ -1,4 +1,5 @@
 const express = require("express");
+const multer = require("multer");
 const { client } = require("../../../config/pgAdaptor");
 const {
   getFanpagesQuery,
@@ -17,6 +18,7 @@ const {
   updateMemberRealtionQuery,
   createFanpageQuery,
   addAdminQuery,
+  changeFanpagePhotoQuery,
 } = require("./query");
 const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
@@ -213,6 +215,45 @@ router.post("/user/delete", async (req, res) => {
       res.status(400).json("bad-request");
     }
   } else res.status(403).json("last-fanpage-admin");
+});
+
+router.post("/change/photo", async (req, res) => {
+  const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, "./public/static/images");
+    },
+    filename: (req, file, cb) => {
+      cb(null, Date.now() + file.originalname);
+    },
+  });
+
+  const upload = multer({ storage }).single("file");
+
+  await upload(req, res, async (err) => {
+    if (err) return res.status(400).json("bad-request");
+
+    let fileName = null;
+    if (req.file) {
+      const {
+        file: { mimetype, filename, size },
+      } = req;
+      fileName = filename;
+      if (mimetype !== "image/jpeg" && mimetype !== "image/png") {
+        return res.status(415).json("wrong-file-type");
+      }
+      if (size > 200000) {
+        return res.status(413).json("file-too-large");
+      }
+    }
+    const { idFanpage } = req.body;
+
+    try {
+      await client.query(changeFanpagePhotoQuery, [fileName, idFanpage]);
+      res.status(200).json({ success: true });
+    } catch {
+      res.status(400).json("bad-request");
+    }
+  });
 });
 
 module.exports = router;

@@ -1,10 +1,19 @@
-.fanpage-members{
+.fanpage__content__members{
+    width:100%;
+    & > div:first-child{
+        width:100%;
+    }
+}
+
+.fanpage__content__members__container{
     width:100%;
     height:auto;
     display:grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows:min-content ;
 }
+
+
 
 @media(max-width:1023px) and(orientation:portrait){
     .fanpage-members{

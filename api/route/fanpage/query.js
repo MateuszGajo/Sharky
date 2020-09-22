@@ -138,6 +138,8 @@ limit 21 offset $2
 
 const updateMemberRealtionQuery = `update fanpage_users set role=$1 where id=$2`;
 
+const changeFanpagePhotoQuery = `update fanpages set photo=$1 where id=$2`;
+
 module.exports = {
   getFanpagesQuery,
   getSortedFanpagesQuery,
@@ -155,4 +157,5 @@ module.exports = {
   updateMemberRealtionQuery,
   createFanpageQuery,
   addAdminQuery,
+  changeFanpagePhotoQuery,
 };
