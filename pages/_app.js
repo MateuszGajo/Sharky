@@ -6,8 +6,6 @@ import AppContext from "@features/context/AppContext";
 import { SERVER_URL } from "../config/config";
 import AuthReducer from "@features/context/authReducer";
 import { authInitState } from "@features/context/initState";
-import AuthReducer from "@features/context/authReducer";
-import { authInitState } from "@features/context/initState";
 
 const MyApp = ({ Component, pageProps }) => {
   const router = useRouter();
