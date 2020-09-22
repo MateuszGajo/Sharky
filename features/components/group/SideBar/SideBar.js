@@ -18,6 +18,8 @@ const SideBar = ({
   section,
   role,
   idGroup,
+  photo,
+  setPhoto,
 }) => {
   const { t } = useTranslation(["group", "component"]);
   const router = useRouter();
@@ -31,6 +33,7 @@ const SideBar = ({
   const leaveText = t("group:side-bar.leave");
   const joinText = t("component:lists.groups.button-join");
   const deleteGroupText = t("group:side-bar.delete");
+  const changePhotoText = t("group:side-bar.change-photo");
 
   const joinGroup = () => {
     axios
@@ -59,11 +62,56 @@ const SideBar = ({
       })
       .catch(({ response: { data: message } }) => setError(message));
   };
+
+  const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+
+    if (file.type != "image/png" && file.type != "image/jpeg") {
+      return setError("wrong-file-type");
+    }
+    if (file.size > 200000) {
+      return setError("file-too-large");
+    }
+
+    const data = new FormData();
+    data.append("file", e.target.files[0]);
+    data.set("idGroup", idGroup);
+
+    axios
+      .post("/group/change/photo", data)
+      .then(({ data: { fileName } }) => {
+        setPhoto(fileName);
+      })
+      .catch(({ response: { data: message } }) => setError(message));
+  };
   return (
     <div className="group__container__side-bar">
       <div className="group__container__side-bar--fixed">
-        <div className="group__container__side-bar__title">
-          <h3 className="group__container__side-bar__title--h3">{groupName}</h3>
+        <div className="group__container__side-bar__group-info">
+          <div className="group__container__side-bar__group-info__photo">
+            <div className="group__container__side-bar__group-info__photo--overlay">
+              <label htmlFor="group-photo-change">
+                <div className="group__container__side-bar__group-info__photo--overlay__button">
+                  {changePhotoText}
+                </div>
+              </label>
+              <input
+                type="file"
+                name="file"
+                id="group-photo-change"
+                onChange={handlePhotoChange}
+              />
+            </div>
+            <img
+              src={`/static/images/${photo}`}
+              className="group__container__side-bar__group-info__photo--img"
+            />
+          </div>
+          <div className="group__container__side-bar__group-info__title">
+            <h2 className="group__container__side-bar__group-info__title--h2">
+              {groupName}
+            </h2>
+          </div>
         </div>
         {idMember ? (
           <>

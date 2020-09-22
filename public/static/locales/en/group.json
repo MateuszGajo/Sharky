@@ -10,7 +10,8 @@
         "about":"About",
         "invite":"Invite",
         "leave":"Leave",
-        "delete":"Delete"
+        "delete":"Delete",
+        "change-photo":"Change photo"
     },
     "error":{
         "does-not-exist":"Group doesn't exist"
