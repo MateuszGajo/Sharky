@@ -86,7 +86,7 @@ const People = ({
             setButtonName(relation);
             setCollapse(idUser == owner.id && relation ? true : false);
             setNumber(Number(number) + 1);
-            socket.emit("joinNewChat", { idChat });
+            socket.emit("joinNewChat", { idFriendShip, idChat });
           } else {
             setInviteType("");
             setButton("relation");

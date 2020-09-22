@@ -8,7 +8,9 @@
           "@pages":"./pages",
           "@features":"./features",
           "@components":"./features/components",
-          "@common":"./features/common"
+          "@common":"./features/common",
+          "@root":".",
+          "@styles":"./styles"
         }
       }
     ]

@@ -4,7 +4,7 @@ import axios from "axios";
 import socketIOClient from "socket.io-client";
 import AppContext from "@features/context/AppContext";
 import { SERVER_URL } from "../config/config";
-let socket;
+
 const MyApp = ({ Component, pageProps }) => {
   const [owner, setOwner] = useState({ id: null });
   const [newMessage, setNewMessage] = useState({});
@@ -18,21 +18,37 @@ const MyApp = ({ Component, pageProps }) => {
   });
   const [isError, setError] = useState("");
   const [isPrompt, setPrompt] = useState("");
+  const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    socket = socketIOClient(SERVER_URL);
-    socket.on(
-      "message",
-      ({ idMessage, idChat, idUser, message, date, messageTo }) => {
-        setNewMessage({ idMessage, idChat, idUser, message, date, messageTo });
-      }
-    );
+    if (owner.id) {
+      setSocket(socketIOClient(SERVER_URL));
+    }
+  }, [owner]);
 
-    socket.on("newChat", ({ newChat }) => {
-      setNewChat(newChat);
-    });
-    owner.id && socket.emit("connectUser");
-  }, [SERVER_URL]);
+  useEffect(() => {
+    if (socket) {
+      socket.on(
+        "message",
+        ({ idMessage, idChat, idUser, message, date, messageTo }) => {
+          setNewMessage({
+            idMessage,
+            idChat,
+            idUser,
+            message,
+            date,
+            messageTo,
+          });
+        }
+      );
+
+      socket.on("newChat", ({ newChat }) => {
+        setNewChat(newChat);
+      });
+
+      socket.emit("connectUser");
+    }
+  }, [socket]);
 
   return (
     <AppContext.Provider

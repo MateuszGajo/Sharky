@@ -11,7 +11,6 @@ const Wizzard = ({ children }) => {
   const [chat, setChat] = useState({ user: {}, idChat: null });
   const [searchContent, setSearchContent] = useState("");
   const [postContent, setPostContent] = useState("");
-  const [isNavOpen, setStatusOfNav] = useState(false);
 
   return (
     <WizzardContext.Provider
@@ -22,8 +21,6 @@ const Wizzard = ({ children }) => {
         setSearchContent,
         postContent,
         setPostContent,
-        isNavOpen,
-        setStatusOfNav,
         chat,
         setChat,
       }}

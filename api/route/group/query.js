@@ -89,6 +89,10 @@ order by "idSub"
 limit 21 offset $3
 `;
 
+const createGroupQuery = `insert into groups(name, description, photo, date) values($1, $2, 'group.png', $3) returning id`;
+
+const addAdminQuery = `insert into group_users(id_group, id_user, role, status, date) values($1, $2, 'admin', '1', $3)`;
+
 const addUserQuery = `
 insert into group_users(id_group, id_user, status, role, date) 
 select $1, $2, '0', $3, $4 where not exists(select id from group_users where id_group=$1 and id_user=$2) returning id;
@@ -114,4 +118,6 @@ module.exports = {
   deleteUserQuery,
   inviteUserQuery,
   getIdUserQuery,
+  createGroupQuery,
+  addAdminQuery,
 };
