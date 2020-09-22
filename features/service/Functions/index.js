@@ -27,7 +27,7 @@ export const signUp = ({
         creds,
       })
       .then(() => {
-        Router.push("/");
+        Router.push("/home");
       })
       .catch(({ response: { data: message, status } }) => {
         if (status == 403) {
@@ -52,7 +52,7 @@ export const signIn = ({
       password,
     })
     .then(() => {
-      Router.push("/");
+      Router.push("/home");
     })
     .catch(({ response: { status, data: message } }) => {
       if (status == 400) setError(message);

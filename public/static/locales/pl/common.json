@@ -41,6 +41,13 @@
             "empty-content":"Nie masz żadnych znajomych do zaproszenia",
             "invite":"Zaproś",
             "invitation":"Zaproszenie zostało wysłane"
+        },
+        "creator":{
+            "create-group":"Stwórz grupę",
+            "create-fanpage":"Stwórz fanpage",
+            "name":"Nazwa",
+            "description":"Opis (max 30 znaków)",
+            "button-title":"Stwórz"
         }
     }
 }
