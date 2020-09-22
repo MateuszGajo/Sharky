@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
-import Navbar from "@components/Layout/Home/Compound/components/NavBar/Navbar";
+import Navbar from "@components/Layout/Home/Compound/components/NavBar/NavBar";
 import SideBar from "@components/group/SideBar/SideBar";
 import Content from "@components/group/Content/Content";
 import InvitePerson from "@common/PopUp/InvitePerson/InvitePerson";
