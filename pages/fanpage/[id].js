@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import HomeLayout from "@components/Layout/Home/HomeLayout";
-import Navbar from "@components/Fanpage/Navbar/Navbar";
+import Navbar from "@components/Fanpage/NavBar/NavBar";
 import Content from "@components/Fanpage/Content/Content";
 import Spinner from "@components/Spinner/Spinner";
 import i18next from "@i18n";
