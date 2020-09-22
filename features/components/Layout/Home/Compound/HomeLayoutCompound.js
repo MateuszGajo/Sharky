@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { WizzardContext } from "./context/WizzardContext";
-import NavBar from "./components/NavBar/Navbar";
+import NavBar from "./components/NavBar/NavBar";
 import Main from "./components/Main/Main";
 import FriendsBar from "./components/FriendsBar/FriendsBar";
 import Messager from "./components/Messenger/Messenger";
