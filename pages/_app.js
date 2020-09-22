@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import socketIOClient from "socket.io-client";
 import AppContext from "@features/context/AppContext";
 import { SERVER_URL } from "../config/config";
-let socket = socketIOClient(SERVER_URL);
+
 const MyApp = ({ Component, pageProps }) => {
   const [owner, setOwner] = useState({ id: null });
   const [newMessage, setNewMessage] = useState({});
@@ -16,10 +16,16 @@ const MyApp = ({ Component, pageProps }) => {
   });
   const [isError, setError] = useState("");
   const [isPrompt, setPrompt] = useState("");
+  const [socket, setSocket] = useState(null);
 
   useEffect(() => {
     if (owner.id) {
-      socket = socketIOClient(SERVER_URL);
+      setSocket(socketIOClient(SERVER_URL));
+    }
+  }, [owner]);
+
+  useEffect(() => {
+    if (socket) {
       socket.on(
         "message",
         ({ idMessage, idChat, idUser, message, date, messageTo }) => {
@@ -40,7 +46,7 @@ const MyApp = ({ Component, pageProps }) => {
 
       socket.emit("connectUser");
     }
-  }, [owner]);
+  }, [socket]);
 
   return (
     <AppContext.Provider
