@@ -21,7 +21,6 @@ const Wizzard = ({ children }) => {
         setSearchContent,
         postContent,
         setPostContent,
-        setStatusOfNav,
         chat,
         setChat,
       }}
