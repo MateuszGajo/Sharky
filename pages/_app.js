@@ -2,12 +2,8 @@ import React, { useEffect, useState, useReducer } from "react";
 import socketIOClient from "socket.io-client";
 import AppContext from "@features/context/AppContext";
 import { SERVER_URL } from "../config/config";
-<<<<<<< HEAD
 import AuthReducer from "@features/context/authReducer";
 import { authInitState } from "@features/context/initState";
-let socket = socketIOClient(SERVER_URL);
-=======
->>>>>>> common-layout
 
 const MyApp = ({ Component, pageProps }) => {
   const [owner, setOwner] = useState({ id: null });
