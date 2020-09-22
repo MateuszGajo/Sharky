@@ -6,7 +6,6 @@ import AppContext from "@features/context/AppContext";
 import { SERVER_URL } from "../config/config";
 import AuthReducer from "@features/context/authReducer";
 import { authInitState } from "@features/context/initState";
-let socket = socketIOClient(SERVER_URL);
 
 const MyApp = ({ Component, pageProps }) => {
   const router = useRouter();
@@ -25,11 +24,17 @@ const MyApp = ({ Component, pageProps }) => {
   const [authError, setAuthError] = useState("");
   const [authUserError, setAuthUserError] = useState("");
   const [validationSignUpError, setValidationSignUpError] = useState("");
+  const [socket, setSocket] = useState(null);
 
   const [state, dispatch] = useReducer(AuthReducer, authInitState);
   useEffect(() => {
     if (owner.id) {
-      socket = socketIOClient(SERVER_URL);
+      setSocket(socketIOClient(SERVER_URL));
+    }
+  }, [owner]);
+
+  useEffect(() => {
+    if (socket) {
       socket.on(
         "message",
         ({ idMessage, idChat, idUser, message, date, messageTo }) => {
@@ -50,7 +55,7 @@ const MyApp = ({ Component, pageProps }) => {
 
       socket.emit("connectUser");
     }
-  }, [owner]);
+  }, [socket]);
 
   return (
     <AppContext.Provider
