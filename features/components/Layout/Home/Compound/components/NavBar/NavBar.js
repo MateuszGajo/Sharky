@@ -22,11 +22,11 @@ const { useTranslation } = i18next;
 const NavBar = () => {
   const { t } = useTranslation(["component"]);
 
-  const { isNavOpen, setStatusOfNav } = useContext(WizzardContext);
   const { owner, socket, setOwner } = useContext(AppContext);
   const navbar = useRef(null);
   const navbarWrapper = useRef(null);
   const [isNavbarScrolling, setStatusOfNavbarScrolling] = useState(false);
+  const [isNavOpen, setStatusOfNav] = useState(false);
 
   const homeName = t("component:layout.home.navbar.home");
   const worldName = t("component:layout.home.navbar.world");
@@ -135,7 +135,7 @@ const NavBar = () => {
   return (
     <>
       <section className="home__hamburger">
-        <Hamburger />
+        <Hamburger setStatusOfNav={setStatusOfNav} />
       </section>
       <div className="home__wrapper home__wrapper--large" ref={navbarWrapper}>
         <div

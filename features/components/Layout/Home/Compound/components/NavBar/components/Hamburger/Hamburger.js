@@ -1,11 +1,8 @@
 import React, { useRef, useContext, useEffect } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { WizzardContext } from "../../../../context/WizzardContext";
 
-const Hamburger = () => {
+const Hamburger = ({ setStatusOfNav }) => {
   const hamburgerMenu = useRef(null);
-
-  const { setStatusOfNav } = useContext(WizzardContext);
 
   const setStatusOfNavbar = () => {
     setStatusOfNav(true);

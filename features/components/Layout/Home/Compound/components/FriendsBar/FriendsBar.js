@@ -4,6 +4,7 @@ import Item from "./components/Item/Item";
 import { getFriends } from "../../services/Functions";
 import AppContext from "@features/context/AppContext";
 
+let socket;
 const FriendsBar = () => {
   const friendsBar = useRef(null);
   const { socket, newChat } = useContext(AppContext);

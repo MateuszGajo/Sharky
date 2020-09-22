@@ -156,18 +156,6 @@ router.post("/get/people", async (req, res) => {
   res.status(200).json({ friends, isMore });
 });
 
-router.post("/chat/join", (req, res) => {
-  const { users } = req.body;
-  const { io } = req;
-  const session = req.session;
-
-  for (let i = 0; i < users.length; i++) {
-    io.sockets.connected[session.socketio].join(users[i].idChat);
-  }
-
-  res.status(200);
-});
-
 router.post("/message/read", (req, res) => {
   const { idChat } = req.body;
 
