@@ -37,6 +37,7 @@ with numberOfGroups as(
   left join numberOfPosts as e on a.id = e."idUser"
   left join numberOfPhotos as f on a.id= f."idUser"
 `;
+const getLanguageQuery = "select language from users where id=$1";
 
 const muteUserQuery = `
 insert into user_mute(id_user_1, id_user_2, date) 
@@ -98,4 +99,5 @@ module.exports = {
   changePasswordQuery,
   getPasswordQuery,
   getUserPersonalInfoQuery,
+  getLanguageQuery,
 };

@@ -20,6 +20,7 @@ const {
   changePasswordQuery,
   getPasswordQuery,
   getUserPersonalInfoQuery,
+  getLanguageQuery,
 } = require("./query");
 const jwt = require("jsonwebtoken");
 const { jwtSecret } = require("../../../config/keys");
@@ -218,6 +219,17 @@ router.post("/change/phone", async (req, res) => {
     await client.query(changePhoneQuery, [phone, idOwner]);
 
     res.status(200).json({ success: true });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
+router.post("/get/language", async (req, res) => {
+  const { idUser } = req.body;
+
+  try {
+    const { rows } = await client.query(getLanguageQuery, [idUser]);
+    res.status(200).json({ language: rows[0].language });
   } catch {
     res.status(400).json("bad-request");
   }

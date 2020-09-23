@@ -6,6 +6,7 @@ import AppContext from "@features/context/AppContext";
 import { SERVER_URL } from "../config/config";
 import AuthReducer from "@features/context/authReducer";
 import { authInitState } from "@features/context/initState";
+import { checkLanguage } from "@features/service/Functions";
 
 const MyApp = ({ Component, pageProps }) => {
   const router = useRouter();
@@ -30,6 +31,7 @@ const MyApp = ({ Component, pageProps }) => {
   useEffect(() => {
     if (owner.id) {
       setSocket(socketIOClient(SERVER_URL));
+      checkLanguage({ idUser: owner.id });
     }
   }, [owner]);
 
