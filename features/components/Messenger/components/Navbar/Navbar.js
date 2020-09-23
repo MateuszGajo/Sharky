@@ -1,4 +1,5 @@
 import React from "react";
+import Router from "next/router";
 import { AiOutlineClose } from "react-icons/ai";
 import { IoMdArrowBack } from "react-icons/io";
 
@@ -9,6 +10,7 @@ const Navbar = ({
   windowMessenger,
   setChat,
 }) => {
+  console.log(user);
   return (
     <div className="messenger__navbar">
       <div
@@ -17,7 +19,10 @@ const Navbar = ({
       >
         <IoMdArrowBack />
       </div>
-      <div className="messenger__navbar__person">
+      <div
+        className="messenger__navbar__person"
+        onClick={() => Router.push(`/profile/${user.id}`)}
+      >
         <div className="messenger__navbar__person__photo">
           <img
             src={"/static/images/" + user.photo}
