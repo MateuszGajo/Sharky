@@ -11,6 +11,11 @@
      
 .messenger__navbar__person {
     display: flex;
+    cursor:pointer;
+
+    &:hover .messenger__navbar__person--name--text{
+        text-decoration: underline;
+    }
 }
 
 .messenger__navbar__person__icon{

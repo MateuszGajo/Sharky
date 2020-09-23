@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { WizzardContext } from "./context/WizzardContext";
-import NavBar from "./components/NavBar/Navbar";
+import NavBar from "./components/NavBar/NavBar";
 import Main from "./components/Main/Main";
 import FriendsBar from "./components/FriendsBar/FriendsBar";
 import Messager from "./components/Messenger/Messenger";
@@ -11,7 +11,6 @@ const Wizzard = ({ children }) => {
   const [chat, setChat] = useState({ user: {}, idChat: null });
   const [searchContent, setSearchContent] = useState("");
   const [postContent, setPostContent] = useState("");
-  const [isNavOpen, setStatusOfNav] = useState(false);
 
   return (
     <WizzardContext.Provider
@@ -22,8 +21,6 @@ const Wizzard = ({ children }) => {
         setSearchContent,
         postContent,
         setPostContent,
-        isNavOpen,
-        setStatusOfNav,
         chat,
         setChat,
       }}

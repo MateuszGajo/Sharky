@@ -1,5 +1,7 @@
 const getUserQuery = `select id, first_name as "firstName", last_name as "lastName", photo from users where id = ANY($1);`;
 
+const getLanguageQuery = "select language from users where id=$1";
+
 const muteUserQuery = `
 insert into user_mute(id_user_1, id_user_2, date) 
 select $1, $2, $3 where not exists (select id from user_mute where id_user_1 =$1 and id_user_2=$2)`;
@@ -30,4 +32,5 @@ module.exports = {
   getPhotosQuery,
   blockUserQuery,
   getPasswordQuery,
+  getLanguageQuery,
 };

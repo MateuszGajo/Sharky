@@ -8,6 +8,7 @@ const {
   removeFriendQuery,
   blockUserQuery,
   getPasswordQuery,
+  getLanguageQuery,
 } = require("./query");
 const jwt = require("jsonwebtoken");
 const { jwtSecret } = require("../../../config/keys");
@@ -45,6 +46,17 @@ router.post("/get/photo", async (req, res) => {
   }
 
   res.status(200).json({ photos, isMore });
+});
+
+router.post("/get/language", async (req, res) => {
+  const { idUser } = req.body;
+
+  try {
+    const { rows } = await client.query(getLanguageQuery, [idUser]);
+    res.status(200).json({ language: rows[0].language });
+  } catch {
+    res.status(400).json("bad-request");
+  }
 });
 
 router.post("/mute", async (req, res) => {
