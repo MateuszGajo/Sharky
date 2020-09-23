@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import socketIOClient from "socket.io-client";
 import AppContext from "@features/context/AppContext";
 import { SERVER_URL } from "../config/config";
+import { checkLanguage } from "@features/service/Functions";
 
 const MyApp = ({ Component, pageProps }) => {
   const [owner, setOwner] = useState({ id: null });
@@ -21,6 +22,7 @@ const MyApp = ({ Component, pageProps }) => {
   useEffect(() => {
     if (owner.id) {
       setSocket(socketIOClient(SERVER_URL));
+      checkLanguage({ idUser: owner.id });
     }
   }, [owner]);
 
