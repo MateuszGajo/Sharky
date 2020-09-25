@@ -10,7 +10,7 @@ const Navbar = ({
   windowMessenger,
   setChat,
 }) => {
-  console.log(user);
+  const { id, firstName, lastName, photo } = user;
   return (
     <div className="messenger__navbar">
       <div
@@ -21,28 +21,28 @@ const Navbar = ({
       </div>
       <div
         className="messenger__navbar__person"
-        onClick={() => Router.push(`/profile/${user.id}`)}
+        onClick={() => Router.push(`/profile/${id}`)}
       >
         <div className="messenger__navbar__person__photo">
           <img
-            src={"/static/images/" + user.photo}
+            src={"/static/images/" + photo}
             alt=""
-            className="messenger__navbar__person__photo--img"
+            className="messenger__navbar__person__photo__img"
           />
         </div>
 
-        <div className="messenger__navbar__person--name">
-          <span className="messenger__navbar__person--name--text">
-            {user.firstName + " " + user.lastName}
+        <div className="messenger__navbar__person__name">
+          <span className="messenger__navbar__person__name__text">
+            {firstName + " " + lastName}
           </span>
         </div>
       </div>
       {windowMessenger ? (
         <div className="messenger__navbar__icons">
           <div
-            className="messenger__navbar__icons--icon"
+            className="messenger__navbar__icons__icon"
             onClick={() => {
-              setChat({ idChat: null, user: null });
+              setChat({ chatId: null, user: null });
               setStatusOfMessenger(true);
             }}
             data-testid="messenger-close"

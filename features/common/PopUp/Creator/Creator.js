@@ -41,7 +41,7 @@ const Creator = ({ type, setStatusOfOpen }) => {
           <RiCloseLine />
         </div>
         <div className="creator__container__title">
-          <h1 className="creator__container__title--h1">
+          <h1 className="creator__container__title__h1">
             {type == "group" ? createGroup : type == "fanpage" && createFanpage}
           </h1>
         </div>

@@ -13,7 +13,7 @@
     display: flex;
     cursor:pointer;
 
-    &:hover .messenger__navbar__person--name--text{
+    &:hover .messenger__navbar__person__name__text{
         text-decoration: underline;
     }
 }
@@ -31,7 +31,7 @@
     border-radius:50%;
 }
 
-.messenger__navbar__person__photo--img {
+.messenger__navbar__person__photo__img {
     display: block;
     width:35px;
     height:35px;
@@ -39,18 +39,18 @@
     object-fit: cover;
 }
 
-.messenger__navbar__person--name {
+.messenger__navbar__person__name {
     display:flex;
     align-items: center;
     margin-left: 10px;
 }
 
-.messenger__navbar__person--name--text {
+.messenger__navbar__person__name__text {
     font-size: 1rem;
     font-weight: bold;
 }
 
-.messenger__navbar__icons--icon {
+.messenger__navbar__icons__icon {
     position:absolute;
     top:5px;
     right:5px;
