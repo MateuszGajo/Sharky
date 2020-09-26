@@ -1,5 +1,5 @@
 const getFanpagesQuery = `
-with idFanpages as(
+with fanpageIds as(
   select b.fanpage_id
     from(select a.fanpage_id
     from fanpage_users as a
@@ -31,19 +31,19 @@ from(select a.id as "fanpageId", count(*) as "numberOfSubscribes"
        from fanpages
        left join fanpage_users on
        fanpages.id = fanpage_users.fanpage_id
-       where fanpages.id in(select * from idFanpages)
+       where fanpages.id in(select * from fanpageIds)
       ) as a
     group by a.id) as b
 inner join fanpages on b."fanpageId" = fanpages.id
 limit 21 offset $3`;
 
 const getSortedSubscribedFanpagesQuery = `
-with idSubscribedFanpages as(
+with fanpageSubscribedIds as(
   select fanpage_id from fanpage_users where user_id = $1
   ),
   
    fanpagesSorted as(
-    select id from fanpages where lower(name) like($2) and id in(select * from idSubscribedFanpages)
+    select id from fanpages where lower(name) like($2) and id in(select * from fanpageSubscribedIds)
   ),
   
   numberOfSubscribers as (
@@ -64,21 +64,21 @@ with fanpageSorted as(
   select id from fanpages where lower(name) like($1)
 ),
 
-subscribedFanpages as (
+fanpagesSubscribed as (
 select fanpage_id as "fanpageId",count(*) as "numberOfSubscribes" from fanpage_users where fanpage_id in(select * from fanpageSorted) group by fanpage_id
 ),
 
-unSubscribedFanpages as(
-select id, 0 as  "numberOfSubscribes" from fanpageSorted where id not in (select "fanpageId" from subscribedFanpages )
+fanpagesUnsubscribed as(
+select id, 0 as  "numberOfSubscribes" from fanpageSorted where id not in (select "fanpageId" from fanpagesSubscribed )
 ),
 
-countedFanpages as(
-select * from subscribedFanpages
+fanpagesCounted as(
+select * from fanpagesSubscribed
 union
-select * from unSubscribedFanpages
+select * from fanpagesUnsubscribed
 )
 
-select a.*, b.id as "subId", c.name, c.photo from countedFanpages as a
+select a.*, b.id as "subId", c.name, c.photo from fanpagesCounted as a
 left join fanpage_users  as b
 on a."fanpageId" = b.fanpage_id and b.user_id =$2
 inner join fanpages as c 

@@ -59,7 +59,7 @@ with userIds as(
   select id as "postId" from post_shares where user_id in(select * from userIds)
   ),
   
-  postsShare as (
+  postsShared as (
   select a.post_id as "postId", c."numberOfShares", d."numberOfComments", e."numberOfLikes",b.user_id as "userId",b.content,b.photo,a.date , a.id::text as "shareId", a.user_id::text as "idUserShare" 
   from post_shares as a
   inner join posts as b on a.post_id = b.id
@@ -78,7 +78,7 @@ with userIds as(
   )
   
   select a.*, b.id as "likeId"
-  from(select * from postsShare
+  from(select * from postsShared
     union all
     select * from posts) as a
   left join post_likes as b on
