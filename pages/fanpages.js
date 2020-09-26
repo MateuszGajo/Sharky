@@ -54,7 +54,7 @@ const Fanpages = () => {
               <Search text={text} onChange={setText} />
             </form>
           </div>
-          <ListOfFanpages idUser={owner.id} keyWords={keyWords} />
+          <ListOfFanpages userId={owner.id} keyWords={keyWords} />
         </div>
         <div className="fanpages__side-bar">
           <div
