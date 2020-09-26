@@ -13,11 +13,11 @@ it("Does secondary input displays correct", () => {
     <SecondaryInput size="large" value={inputValue} onChange={onChange} />
   );
 
-  const inputPhoto = getByTestId("secondary-input-photo-img");
+  const inputPhoto = getByTestId("secondary-input-photo");
   const inputField = getByTestId("secondary-input-field");
 
-  expect(inputPhoto).toHaveClass("secondary-input__photo--img--large");
-  expect(inputField).toHaveClass("secondary-input__text--input--large");
+  expect(inputPhoto).toHaveClass("secondary-input__photo__photo--large");
+  expect(inputField).toHaveClass("secondary-input__text__input--large");
   expect(inputField).toHaveValue(inputValue);
 
   const newInputValue = "text2";

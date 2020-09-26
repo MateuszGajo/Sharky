@@ -28,7 +28,7 @@ const Error = ({ message }) => {
           <MdErrorOutline />
         </div>
         <div className="error__container__text">
-          <span className="error__container__text--span">{ErrorText}</span>
+          <span className="error__container__text__span">{ErrorText}</span>
         </div>
       </div>
     </section>

@@ -7,19 +7,19 @@ const Checkbox = ({ value, onChange }) => {
   const label = t("common:checkbox.label");
   return (
     <div className="checkbox">
-      <div className="checkbox--icon">
+      <div className="checkbox__icon">
         <input
-          className="checkbox--icon--input"
+          className="checkbox__icon__input"
           type="checkbox"
           value="None"
-          id="remeberme"
+          id="remeberMe"
           name="check"
           data-testid="input-checkbox"
           onClick={() => onChange(!value)}
         />
-        <label className="checkbox--icon--label" htmlFor="remeberme"></label>
+        <label className="checkbox__icon__label" htmlFor="remeberMe"></label>
       </div>
-      <span className="checkbox--text">{label}</span>
+      <span className="checkbox__text">{label}</span>
     </div>
   );
 };

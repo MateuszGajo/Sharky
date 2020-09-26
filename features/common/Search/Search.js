@@ -15,14 +15,14 @@ const Search = ({ value, onChange, size = "large" }) => {
     >
       <input
         type="text"
-        className="search--input"
+        className="search__input"
         data-testid="search-input"
         value={value}
         onChange={(e) => onChange(e.target.value)}
       />
       <button
         type="submit"
-        className="search--icon"
+        className="search__icon"
         data-testid="search-button"
       >
         <AiOutlineSearch />

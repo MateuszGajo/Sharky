@@ -1,212 +1,26 @@
 .messenger {
-    display: flex;
-    flex-direction: column;
-    height:100vh;
-    width:100%;
-    background-color: white;
-    border:1px solid $shadowColor;
-  }
-  
-  .messenger__navbar {
-    display: flex;
-    border-bottom: 1px solid $shadowColor;
-    padding: 8px 5px;
-  }
-
- .messenger__navbar__return{
- display:none;
- }
-  
-  .messenger__navbar__person {
-    display: flex;
-  }
-
-  .messenger__navbar__person__icon{
-    display:flex;
-    align-items: center;
-  }
-
-  .messenger__navbar__person__icon--group{
-    width:35px;
-    height:35px;
-    background-color: $primaryBackgroundColor;
-    color:grey;
-    border-radius:50%;
-  }
-  
-  .messenger__navbar__person__photo--img {
-    display: block;
-    width:35px;
-    height:35px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-  
-  .messenger__navbar__person--name {
-    display:flex;
-    align-items: center;
-    margin-left: 10px;
-  }
-  
-  .messenger__navbar__person--name--text {
-    font-size: 1rem;
-    font-weight: bold;
-  }
-  
-  .messenger__navbar__icons--icon {
-    position:absolute;
-    top:5px;
-    right:5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: $primaryColor;
-    cursor: pointer;
-    font-size: 1.2rem;
-  }
-  
-  .messenger__text {
-    flex-grow: 1;
-    font-size: 0.8rem;
-    overflow-x: hidden;
-  }
-  
-  .messenger__text--myself {
-    display: flex;
-    justify-content: flex-end;
-    margin-right: 5px;
-    margin-top: 8px;
-  }
-
-  .messenger__text--myself + .messenger__text--myself{
-    margin-top:4px;
-  }
-  
-  .messenger__text--stranger {
-    display:flex;
-    margin-left: 5px;
-    margin-top: 8px;
-  }
-
-  .messenger__text--stranger  +  .messenger__text--stranger {
-      margin-top:4px;
-    }
-
-  .messenger__text--stranger__user{
-    display:flex;
-    align-items: flex-end;
-    padding-left:$smallMargin;
-    max-width:40%;
-    
-  }
-
-  .messenger__text--stranger__user__container{
-    display:flex;
-    cursor:pointer;
-  }
-
-  .messenger__text--stranger__user__container__photo{
-    margin-right:10px;
-  }
-
-  .messenger__text--stranger__user__container__photo--img{
-    width:20px;
-    height:20px;
-    object-fit: cover;
-    border-radius: 50%;
-  }
-
-  .messenger__text--stranger__user__container__name{
-    display:flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .messenger__text--stranger__user__container__name--span{
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    word-wrap: break-word;
-    word-break: break-all;
-    overflow: hidden;
-  }
-  
-  .messenger-text-style {
-    max-width: 60%;
-    padding: 6px 10px;
-    border-radius: 30px;
-  }
-  
-  .messenger__text--myself--primary-color {
-    display: inline-block;
-    background-color: $primaryColor;
-    color: white;
-  }
-  
-  .messenger__text--stranger--primary-background-color {
-    display: inline-block;
-    background-color: $primaryBackgroundColor;
-  }
-  
-  .messenger__downbar {
-    min-height:70px;
-    border-top: 1px solid $shadowColor;
-  }
-
-  .messenger__downbar__form{
-    height:100%;
-    display:flex;
-    flex-direction: column;
-      position:relative;
-  }
-
-  .messenger__downbar__form__textf{
-    flex-grow: 1;
-  }
-
-  .messenger__downbar__form__text--textarea {
-    width: 100%;
-    height:100%;
-    padding: 5px 3px;
-    border: none;
-    resize: none;
-  }
-
-  .messenger__downbar__form__send{
-    display:flex;
-    justify-content: flex-end;
-  }
- 
-  .messenger__downbar__form__send--buton {
-    border: none;
-    background-color: transparent;
-    color: $primaryColor;
-    font-size: 1.1rem;
-    margin-right:3px;
-    cursor: pointer;
-  }
-
-
-  .window-messanger{
-    border-radius:10px 10px 0 0;
-    position:fixed;
-    bottom:0;
-    height:400px;
-    width:300px;
-    left:50%;
-    transform: translateX(-50%);
-   
-  }
-  
-  
-@media(max-width:1023px){
- .messenger__navbar__return{
-  display:flex;
-  align-items: center;
-  font-size: 2rem;
-  margin-right:$smallMargin;
-  color:$primaryColor;
-  cursor:pointer;
+  display: flex;
+  flex-direction: column;
+  height:100vh;
+  width:100%;
+  background-color: white;
+  border:1px solid $shadowColor;
 }
+
+.messenger-text-style {
+  max-width: 60%;
+  padding: 6px 10px;
+  border-radius: 30px;
 }
+
+.window-messanger{
+  border-radius:10px 10px 0 0;
+  position:fixed;
+  bottom:0;
+  height:400px;
+  width:300px;
+  left:50%;
+  transform: translateX(-50%);
+}
+
+

@@ -38,7 +38,7 @@ const Friends = () => {
             <Search value={text} onChange={setText} />
           </form>
         </div>
-        <People idUser={owner.id} keyWords={keyWords} />
+        <People userId={owner.id} keyWords={keyWords} />
       </section>
     </HomeLayout>
   );

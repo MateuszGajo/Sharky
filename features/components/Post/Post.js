@@ -44,7 +44,7 @@ const Post = ({ post, focusElement }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     addComent({
-      idPost: post.idPost,
+      postId: post.postId,
       content: commentText,
       date: new Date(),
       clearText: setCommentText,
@@ -54,12 +54,12 @@ const Post = ({ post, focusElement }) => {
   };
 
   useEffect(() => {
-    if (newComment.type == "post" && newComment.idElement == post.idPost) {
+    if (newComment.type == "post" && newComment.idElement == post.postId) {
       setComments([
         {
-          idComment: newComment.idComment,
-          idUser: owner.id,
-          idLike: null,
+          commnetId: newComment.commnetId,
+          userId: owner.id,
+          likeId: null,
           numberOfLikes: 0,
           numberOfReplies: 0,
           content: newComment.content,
@@ -72,9 +72,9 @@ const Post = ({ post, focusElement }) => {
   }, [newComment]);
 
   useEffect(() => {
-    if (muteUser.idUser != null) {
+    if (muteUser.userId != null) {
       const newComments = comments?.filter(
-        (comment) => comment.idUser != muteUser.idUser
+        (comment) => comment.userId != muteUser.userId
       );
       setComments(newComments);
     }
@@ -89,7 +89,7 @@ const Post = ({ post, focusElement }) => {
       {isReport && (
         <Report
           type="post"
-          id={post.idPost}
+          id={post.postId}
           setStatusOfReport={setStatusOfReport}
         />
       )}
@@ -111,7 +111,7 @@ const Post = ({ post, focusElement }) => {
         {comments?.map((comment) => (
           <div
             className="post__item__comments__container"
-            key={comment.idComment}
+            key={comment.commnetId}
             data-test="comments"
           >
             <Comment
@@ -126,7 +126,7 @@ const Post = ({ post, focusElement }) => {
             className="post__item__comments__more-content"
             onClick={() =>
               getComments({
-                idPost: post.idPost,
+                postId: post.postId,
                 from: comments.length,
                 users,
                 setUsers,

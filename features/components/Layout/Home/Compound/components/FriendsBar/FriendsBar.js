@@ -2,17 +2,13 @@ import React, { useRef, useEffect, useState, useContext } from "react";
 import cx from "classnames";
 import Item from "./components/Item/Item";
 import { getFriends } from "../../services/Functions";
-import { WizzardContext } from "../../context/WizzardContext";
 import AppContext from "@features/context/AppContext";
 
 const FriendsBar = () => {
   const friendsBar = useRef(null);
-  const { socket, newMessage, owner, newChat } = useContext(AppContext);
-  const { chat } = useContext(WizzardContext);
+  const { socket, newChat } = useContext(AppContext);
 
-  const [isFriendsBarScrolling, setStatusOfFriendsBarScrolling] = useState(
-    false
-  );
+  const [isScrolling, setStatusOfScrolling] = useState(false);
   const [users, setUsers] = useState([]);
 
   let timeout;
@@ -21,10 +17,10 @@ const FriendsBar = () => {
     if (timeout) {
       clearTimeout(timeout);
     }
-    setStatusOfFriendsBarScrolling(true);
+    setStatusOfScrolling(true);
 
     timeout = setTimeout(() => {
-      setStatusOfFriendsBarScrolling(false);
+      setStatusOfScrolling(false);
     }, 1000);
   };
 
@@ -43,30 +39,22 @@ const FriendsBar = () => {
   }, [users]);
 
   useEffect(() => {
-    if (newChat.idChat) {
+    if (newChat.chatId) {
       setUsers([...users, newChat]);
     }
   }, [newChat]);
-
-  useEffect(() => {
-    const { idChat, messageTo } = newMessage;
-
-    if (idChat != chat.idChat && messageTo == owner.id) {
-      socket.emit("isMessageUnRead", { idChat, messageTo });
-    }
-  }, [newMessage]);
 
   return (
     <div className="home__wrapper home__wrapper--medium">
       <div
         ref={friendsBar}
         className={cx("home__wrapper__friends primary-scroll", {
-          "primary-scroll-active": isFriendsBarScrolling,
+          "primary-scroll--active": isScrolling,
         })}
       >
         <div className="home_friends__list">
           {users.map((user) => {
-            return <Item key={user.idChat} user={user} />;
+            return <Item key={user.chatId} user={user} />;
           })}
         </div>
       </div>
