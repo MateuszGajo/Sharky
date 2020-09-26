@@ -65,7 +65,7 @@ const Fanpages = () => {
               <IoIosAddCircleOutline />
             </div>
             <div className="fanpages__side-bar__create__text">
-              <span className="fanpages__side-bar__create__text--span">
+              <span className="fanpages__side-bar__create__text__span">
                 {createFanpage}
               </span>
             </div>
