@@ -1,4 +1,4 @@
-.card__item__info__second-column__buttons--main-button{
+.card__item__info__second-column__buttons__main-button{
     display:flex;
     justify-content: center;
     align-items: center;
@@ -32,7 +32,7 @@
     }
   }
   
-  .card__item__info__second-column__buttons--main-button--span{
+  .card__item__info__second-column__buttons__main-button__span{
     display:flex;
     align-items: center;
     justify-content: center;
@@ -42,20 +42,20 @@
   }
 
   
-  .card__item__info__second-column__buttons--main-button{
-    &:hover + .card__item__info__second-column__buttons--change-status {
+  .card__item__info__second-column__buttons__main-button{
+    &:hover + .card__item__info__second-column__buttons__change-status {
       visibility: visible;
     }
   }
 
-  .card__item__info__second-column__buttons--main-button__icon{
+  .card__item__info__second-column__buttons__main-button__icon{
     display:flex;
     margin-right:5px;
   }
 
   @media(max-width:1365px){
    
-    .card__item__info__second-column__buttons--main-button{
+    .card__item__info__second-column__buttons__main-button{
       font-size: 0.7rem;
       width:50px;
       height:20px;
@@ -75,7 +75,7 @@
 
 @media (max-width : 767px) and (orientation:landscape){
    
-    .card__item__info__second-column__buttons--main-button{
+    .card__item__info__second-column__buttons__main-button{
       font-size: 0.75rem;
       width:80px;
       height:35px;
@@ -87,7 +87,7 @@
   @media  (max-width : 639px)  and (orientation:landscape){
 
   
-    .card__item__info__second-column__buttons--main-button{
+    .card__item__info__second-column__buttons__main-button{
       font-size: 0.7rem;
       width:70px;
       height:30px;

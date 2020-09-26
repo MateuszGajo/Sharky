@@ -7,7 +7,7 @@ import About from "./components/About/About";
 
 const { useTranslation } = i18next;
 
-const Content = ({ section, idFanpage, role }) => {
+const Content = ({ section, fanpageId, role }) => {
   const { t } = useTranslation(["fanpage"]);
 
   const homeName = t("fanpage:home");
@@ -17,13 +17,13 @@ const Content = ({ section, idFanpage, role }) => {
   const renderComponent = (name) => {
     switch (name) {
       case homeName:
-        return <Home idFanpage={idFanpage} />;
+        return <Home fanpageId={fanpageId} />;
       case membersName:
-        return <Members idFanpage={idFanpage} role={role} />;
+        return <Members fanpageId={fanpageId} role={role} />;
       case aboutName:
-        return <About idFanpage={idFanpage} />;
+        return <About fanpageId={fanpageId} />;
       default:
-        return <Home idFanpage={idFanpage} />;
+        return <Home fanpageId={fanpageId} />;
     }
   };
   return (

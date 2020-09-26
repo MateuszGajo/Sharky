@@ -8,7 +8,7 @@ const {
   addUserQuery,
   deleteUserQuery,
   inviteUserQuery,
-  getIdUserQuery,
+  getuserIDQuery,
   createGroupQuery,
   addAdminQuery,
 } = require("./query");
@@ -16,14 +16,14 @@ const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
 
 router.post("/get", async (req, res) => {
-  const { from, idUser, keyWords, onlySubscribed } = req.body;
-  const { id: idOwner } = decodeToken(req);
+  const { from, userId, keyWords, onlySubscribed } = req.body;
+  const { id: onwerId } = decodeToken(req);
 
   let getGroups;
 
   if (!keyWords) {
     try {
-      getGroups = await client.query(getGroupsQuery, [idUser, idOwner, from]);
+      getGroups = await client.query(getGroupsQuery, [userId, onwerId, from]);
     } catch {
       return res.status(400).json("bad-request");
     }
@@ -31,15 +31,15 @@ router.post("/get", async (req, res) => {
     try {
       if (onlySubscribed)
         getGroups = await client.query(getSortedSubscribedGroupsQuery, [
-          idUser,
+          userId,
           `%${keyWords}%`,
-          idOwner,
+          onwerId,
           from,
         ]);
       else
         getGroups = await client.query(getSortedGroupsQuery, [
           `%${keyWords}%`,
-          idOwner,
+          onwerId,
           from,
         ]);
     } catch {
@@ -62,7 +62,7 @@ router.post("/get", async (req, res) => {
 router.post("/create", async (req, res) => {
   const { name, description } = req.body;
 
-  const { id: idOwner } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req);
   const date = new Date();
 
   try {
@@ -71,7 +71,7 @@ router.post("/create", async (req, res) => {
       description,
       date,
     ]);
-    await client.query(addAdminQuery, [rows[0].id, idOwner, date]);
+    await client.query(addAdminQuery, [rows[0].id, onwerId, date]);
 
     res.status(200).json({ id: rows[0].id });
   } catch {
@@ -80,24 +80,24 @@ router.post("/create", async (req, res) => {
 });
 
 router.post("/user/add", async (req, res) => {
-  const { idGroup } = req.body;
+  const { groupId } = req.body;
 
-  const { id: idOwner } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req);
 
   const role = "member";
   const date = new Date();
 
   try {
     const { rows: addUser } = await client.query(addUserQuery, [
-      idGroup,
-      idOwner,
+      groupId,
+      onwerId,
       role,
       date,
     ]);
 
     let id;
     if (!addUser[0]) {
-      const { rows } = await client.query(getIdUserQuery, [idGroup, idOwner]);
+      const { rows } = await client.query(getuserIDQuery, [groupId, onwerId]);
       id = rows[0].id;
     } else {
       id = addUser[0].id;
@@ -110,10 +110,10 @@ router.post("/user/add", async (req, res) => {
 });
 
 router.post("/user/delete", async (req, res) => {
-  const { idSub } = req.body;
+  const { subId } = req.body;
 
   try {
-    await client.query(deleteUserQuery, [idSub]);
+    await client.query(deleteUserQuery, [subId]);
 
     res.status(200).json({ success: true });
   } catch {
@@ -122,10 +122,10 @@ router.post("/user/delete", async (req, res) => {
 });
 
 router.post("/user/invite", async (req, res) => {
-  const { idUser, idTarget } = req.body;
+  const { userId, targetId } = req.body;
 
   try {
-    const a = await client.query(inviteUserQuery, [idTarget, idUser]);
+    const a = await client.query(inviteUserQuery, [targetId, userId]);
     res.status(200).json({ success: true });
   } catch {
     res.status(400).json("bad-request");

@@ -9,8 +9,8 @@ export default React.createContext({
   setPrompt: () => {},
   setError: () => {},
   newChat: {
-    idUser: null,
-    idChat: null,
+    userID: null,
+    chatID: null,
     messageTo: null,
     firstName: "",
     lastName: "",

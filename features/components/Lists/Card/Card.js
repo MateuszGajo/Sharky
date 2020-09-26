@@ -21,7 +21,7 @@ const Card = ({ data, setRelation, handleClick, setInvite }) => {
     isInvitationSent,
     acceptInvite,
     declineInvite,
-    sentInvite,
+    inviteSent,
     subTitle = null,
     unsubTitle,
     title: initialTitle,
@@ -53,11 +53,11 @@ const Card = ({ data, setRelation, handleClick, setInvite }) => {
   return (
     <div className="card">
       <div className="card__item">
-        <div className="card__item--picture">
+        <div className="card__item__photo">
           <img
             src={"/static/images/" + photo}
-            className={cx("card__item--picture--img", {
-              "card__item--picture--img--radius": radiusPhoto === true,
+            className={cx("card__item__photo__img", {
+              "card__item__photo__img--radius": radiusPhoto === true,
             })}
             onClick={() => router.push(`/${refType}/${id}`)}
             data-testid="card-photo"
@@ -111,7 +111,7 @@ const Card = ({ data, setRelation, handleClick, setInvite }) => {
                     setInviteType={setInviteType}
                     acceptInvite={acceptInvite}
                     declineInvite={declineInvite}
-                    sentInvite={sentInvite}
+                    inviteSent={inviteSent}
                     setInvite={setInvite}
                     collapseRef={collapseRef}
                   />
