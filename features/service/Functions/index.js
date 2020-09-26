@@ -1,5 +1,8 @@
 import axios from "axios";
 import { signUpValidation } from "@features/Validation/Validation";
+import countryCode from "@root/utils/countryCode";
+import i18next from "@i18n";
+const { i18n } = i18next;
 
 export const getOwner = ({ setStatusOfAuth, setOwner }) => {
   axios
@@ -57,5 +60,16 @@ export const signIn = ({
     .catch(({ response: { status, data: message } }) => {
       if (status == 400) setError(message);
       else if (status == 401) setAuthUserError(message);
+    });
+};
+
+export const checkLanguage = ({ userId }) => {
+  axios
+    .post("/user/get/language", { userId })
+    .then(({ data: { language } }) => {
+      const code = countryCode(language);
+      if (i18n.language != code) {
+        i18n.changeLanguage(code);
+      }
     });
 };

@@ -21,12 +21,12 @@
   border-radius: 10px;
 }
 
-.confrim-user-container__content--title--h3 {
+.confrim-user-container__content__title__h3 {
   text-align: center;
   font-size: 2rem;
 }
 
-.confrim-user-container__content--icon {
+.confrim-user-container__content__icon {
   position: absolute;
   top: 5px;
   right: 5px;
@@ -51,7 +51,7 @@
   width:100%;
 }
 
-.confrim-user-container__content__data__form--button {
+.confrim-user-container__content__data__form__button {
   display: flex;
   justify-content: flex-end;
   margin: $smallMargin 5% 0 0;
@@ -90,7 +90,7 @@
 }
 
 @media (max-width:767px) and (orientation:portrait){
-  .confrim-user-container__content--title--h3 {
+  .confrim-user-container__content__title__h3 {
     font-size: 1.7rem;
   }
   .confrim-user-container__content{

@@ -14,12 +14,12 @@
    
 }
 
-.post__item__navbar__user--photo{
+.post__item__navbar__user__photo{
     height:35px;
     width:35px;
 }
 
-.post__item__navbar__user--photo--img{
+.post__item__navbar__user__photo__img{
     display:block;
     width:100%;
     height:100%;
@@ -27,19 +27,19 @@
     border-radius:50%;
 }
 
-.post__item__navbar__user--name{
+.post__item__navbar__user__name{
     display:flex;
     justify-content: center;
     align-items: center;
     margin-left:10px;
 }
 
-.post__item__navbar__user--name--span{
+.post__item__navbar__user__name__span{
     font-weight: bold;
     color:$primaryColor;
 }
 
-.post__item__navbar__user--share{
+.post__item__navbar__user__share{
     display:flex;
     align-items: center;
     margin: 0 10px;
@@ -64,7 +64,7 @@
     cursor:pointer;
 }
 
-.post__item__navbar__column-end__setting--icon{
+.post__item__navbar__column-end__setting__icon{
     display:flex;
     align-items: center;
     font-size: 1.2rem;
@@ -88,25 +88,25 @@
     }
 }
 
-.post__item__navbar__column-end__setting__collapse__item--icon{
+.post__item__navbar__column-end__setting__collapse__item__icon{
     display:flex;
     align-items: center;
     margin-right:$smallMargin;
     font-size: 1.5rem;
 }
 
-.post__item__navbar__column-end__setting__collapse__item--icon--customize{
+.post__item__navbar__column-end__setting__collapse__item__icon__customize{
     width:20px;
     height:20px;
     color:rgba(0,0,0,0.7);
  }
 
-.post__item__navbar__column-end__setting__collapse__item--name{
+.post__item__navbar__column-end__setting__collapse__item__name{
     display:flex;
     align-items: center;
 }
 
-.post__item__navbar__column-end__setting__collapse__item--name--span{
+.post__item__navbar__column-end__setting__collapse__item__name__span{
     display: inline-block;
     white-space: nowrap;
 }
@@ -117,11 +117,11 @@
         height:80px;
     }
     
-    .post__item__navbar__column-end__setting__collapse__item--icon--customize{
+    .post__item__navbar__column-end__setting__collapse__item__icon__customize{
     width:27px;
     height:27px;
     }
-    .post__item__navbar__column-end__setting__collapse__item--name--span{
+    .post__item__navbar__column-end__setting__collapse__item__name__span{
         font-size: 1.6rem;
     }
     
@@ -134,11 +134,11 @@
         height:70px;
     }
     
-    .post__item__navbar__column-end__setting__collapse__item--icon--customize{
+    .post__item__navbar__column-end__setting__collapse__item__icon__customize{
         width:24px;
         height:24px;
     }
-    .post__item__navbar__column-end__setting__collapse__item--name--span{
+    .post__item__navbar__column-end__setting__collapse__item__name__span{
         font-size: 1.4rem;
     }
 }

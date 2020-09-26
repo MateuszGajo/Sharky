@@ -16,7 +16,7 @@ const Prompt = ({ message }) => {
   return (
     <section className="prompt">
       <div className="prompt__container">
-        <span className="prompt__cotaniner--message">{message}</span>
+        <span className="prompt__cotaniner__message">{message}</span>
       </div>
     </section>
   );

@@ -19,8 +19,8 @@ const Controls = () => {
         <button
           type="button"
           className={cx(
-            "authentication__form__wrapper__controls__pagination--button",
-            { "disabled--button": page === 1 }
+            "authentication__form__wrapper__controls__pagination__button",
+            { "button--disabled": page === 1 }
           )}
           onClick={() => {
             setPage(page - 1);
@@ -33,8 +33,8 @@ const Controls = () => {
         <button
           type="button"
           className={cx(
-            "authentication__form__wrapper__controls__pagination--button",
-            { "disabled--button": page === numberOfPages }
+            "authentication__form__wrapper__controls__pagination__button",
+            { "button--disabled": page === numberOfPages }
           )}
           onClick={() => {
             setPage(page + 1);
@@ -47,7 +47,7 @@ const Controls = () => {
       </div>
       {authError && <p className="input-error">{authError}</p>}
       <div
-        className={cx("authentication__form__wrapper__controls--submit-buton", {
+        className={cx("authentication__form__wrapper__controls__submit-buton", {
           "authentication__form__wrapper__controls--hide-button":
             page !== numberOfPages,
         })}

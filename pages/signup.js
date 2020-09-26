@@ -6,6 +6,7 @@ import Spinner from "@components/Spinner/Spinner";
 import AppContext from "@features/context/AppContext";
 import { getOwner } from "@features/service/Functions/index";
 import "../styles/signup.scss";
+
 const SignUp = () => {
   const { setOwner } = useContext(AppContext);
   const [isAuth, setStatusOfAuth] = useState(null);
