@@ -35,7 +35,7 @@
     
 }
 
-.post__item__comments__container__item__content__item__top-bar__user-name--span{
+.post__item__comments__container__item__content__item__top-bar__user-name__span{
     color:$primaryColor;
     font-weight: bold;
 }
@@ -65,25 +65,25 @@
     }
 }
 
-.post__item__comments__container__item__content__item__top-bar__icon__collapse__item--icon{
+.post__item__comments__container__item__content__item__top-bar__icon__collapse__item__icon{
     display:flex;
     align-items: center;
     margin-right:$smallMargin;
     font-size: 1.2rem;
 }
 
-.post__item__comments__container__item__content__item__top-bar__icon__collapse__item--icon--customize{
+.post__item__comments__container__item__content__item__top-bar__icon__collapse__item__icon__customize{
     width:20px;
     height:20px;
     color:rgba(0,0,0,0.7);
 }
 
-.post__item__comments__container__item__content__item__top-bar__icon__collapse__item--name{
+.post__item__comments__container__item__content__item__top-bar__icon__collapse__item__name{
     display:flex;
     align-items: center;
 }
 
-.post__item__comments__container__item__content__item__top-bar__icon__collapse__item--name--span{
+.post__item__comments__container__item__content__item__top-bar__icon__collapse__item__name__span{
     display:inline-block;
     overflow: hidden;
     white-space: nowrap;
@@ -95,7 +95,7 @@
 }
 
 
-.post__item__comments__container__item__content__item__down-bar--icon{
+.post__item__comments__container__item__content__item__down-bar__icon{
     display:flex;
     align-items: center;
     margin-top:5px;
@@ -105,11 +105,11 @@
 }
 
 
-.post__item__comments__container__item__content__item__down-bar--icon:nth-child(2){
+.post__item__comments__container__item__content__item__down-bar__icon:nth-child(2){
     margin-left:$smallMargin
 }
 
-.post__item__comments__container__item__content__item__down-bar--icon--number{
+.post__item__comments__container__item__content__item__down-bar__icon__number{
     margin-left:5px;
 }
 
@@ -125,12 +125,12 @@
         height:60px;
     }
     
-    .post__item__comments__container__item__content__item__top-bar__icon__collapse__item--icon--customize{
+    .post__item__comments__container__item__content__item__top-bar__icon__collapse__item__icon__customize{
         width:25px;
         height:25px;
     }
 
-    .post__item__comments__container__item__content__item__top-bar__icon__collapse__item--name--span{
+    .post__item__comments__container__item__content__item__top-bar__icon__collapse__item__name__span{
         font-size: 1.2rem;
     }
 }

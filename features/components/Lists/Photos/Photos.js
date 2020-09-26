@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-const PhotoList = ({ idUser }) => {
+const PhotoList = ({ userId }) => {
   const [photos, setPhotos] = useState([]);
   const [isMore, setStatusOfMore] = useState(false);
 
   const fetchData = (from) => {
     axios
-      .post("/user/get/photo", { idUser, from })
+      .post("/user/get/photo", { userId, from })
       .then(({ data: { photos, isMore } }) => {
         setPhotos((prev) => [...prev, ...photos]);
         setStatusOfMore(isMore);
@@ -31,7 +31,7 @@ const PhotoList = ({ idUser }) => {
             <img
               src={"/static/images/" + photo.name}
               alt="Zdjęcia użytkowika"
-              className="photo-list__item--img"
+              className="photo-list__item__photo"
             />
           </div>
         ))}
