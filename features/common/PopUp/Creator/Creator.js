@@ -8,7 +8,7 @@ import i18next from "@i18n";
 
 const { useTranslation } = i18next;
 
-const Creator = ({ type, setClose }) => {
+const Creator = ({ type, setStatusOfOpen }) => {
   const { t } = useTranslation();
 
   const createGroup = t("common:pop-up.creator.create-group");
@@ -36,12 +36,12 @@ const Creator = ({ type, setClose }) => {
       <div className="creator__container">
         <div
           className="creator__container__close-button"
-          onClick={() => setClose(true)}
+          onClick={() => setStatusOfOpen(false)}
         >
           <RiCloseLine />
         </div>
         <div className="creator__container__title">
-          <h1 className="creator__container__title--h1">
+          <h1 className="creator__container__title__h1">
             {type == "group" ? createGroup : type == "fanpage" && createFanpage}
           </h1>
         </div>

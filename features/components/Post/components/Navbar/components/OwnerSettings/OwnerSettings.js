@@ -20,8 +20,8 @@ const OwnerSettings = () => {
   const { posts, setPosts } = useContext(WizzardContext);
 
   const isShare = post.idUserShare !== null;
-  const selfShare = post.idUserShare == post.idUser;
-  const { idShare, idPost } = post;
+  const selfShare = post.idUserShare == post.userId;
+  const { shareId, postId } = post;
 
   const editPostText = t("component:post.settings.edit");
   const deletePostText = t("component:post.settings.delete");
@@ -33,18 +33,18 @@ const OwnerSettings = () => {
           className="post__item__navbar__column-end__setting__collapse__item"
           onClick={() => setStatusOfEdit(true)}
         >
-          <div className="post__item__navbar__column-end__setting__collapse__item--icon">
+          <div className="post__item__navbar__column-end__setting__collapse__item__icon">
             <IconContext.Provider
               value={{
                 className:
-                  "post__item__navbar__column-end__setting__collapse__item--icon--customize",
+                  "post__item__navbar__column-end__setting__collapse__item__icon__customize",
               }}
             >
               <FiEdit />
             </IconContext.Provider>
           </div>
-          <div className="post__item__navbar__column-end__setting__collapse__item--name">
-            <span className="post__item__navbar__column-end__setting__collapse__item--name--span">
+          <div className="post__item__navbar__column-end__setting__collapse__item__name">
+            <span className="post__item__navbar__column-end__setting__collapse__item__name__span">
               {editPostText}
             </span>
           </div>
@@ -55,24 +55,24 @@ const OwnerSettings = () => {
         className="post__item__navbar__column-end__setting__collapse__item"
         onClick={() => {
           if (isShare) {
-            deletePostShare({ idShare, posts, setPosts, isSingle, setError });
+            deletePostShare({ shareId, posts, setPosts, isSingle, setError });
           } else {
-            deletePost({ idPost, posts, setPosts, isSingle, setError });
+            deletePost({ postId, posts, setPosts, isSingle, setError });
           }
         }}
       >
-        <div className="post__item__navbar__column-end__setting__collapse__item--icon">
+        <div className="post__item__navbar__column-end__setting__collapse__item__icon">
           <IconContext.Provider
             value={{
               className:
-                "post__item__navbar__column-end__setting__collapse__item--icon--customize",
+                "post__item__navbar__column-end__setting__collapse__item__icon__customize",
             }}
           >
             <AiOutlineDelete />
           </IconContext.Provider>
         </div>
-        <div className="post__item__navbar__column-end__setting__collapse__item--name">
-          <span className="post__item__navbar__column-end__setting__collapse__item--name--span">
+        <div className="post__item__navbar__column-end__setting__collapse__item__name">
+          <span className="post__item__navbar__column-end__setting__collapse__item__name__span">
             {isShare ? deletePostShareText : deletePostText}
           </span>
         </div>

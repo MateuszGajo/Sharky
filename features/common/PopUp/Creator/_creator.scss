@@ -6,6 +6,7 @@
     display:flex;
     justify-content: center;
     align-items: center;
+    z-index:5;
 }
 
 .creator__container{
@@ -87,7 +88,7 @@
         margin-bottom:calc(2 * #{$largeMargin});
     }
 
-    .creator__container__title--h1{
+    .creator__container__title__h1{
         font-size: 30px;
     }
 

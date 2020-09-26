@@ -9,14 +9,14 @@
     margin-top:$smallMargin;
 }
 
-.photo-list__item:nth-child(3n) .photo-list__item--img{
+.photo-list__item:nth-child(3n) .photo-list__item__photo{
     width:950px;
     height:500px;
     object-fit: cover;
 }
 
 
-.photo-list__item--img{
+.photo-list__item__photo{
     display:block;
     height:450px;
     width:450px;
@@ -28,13 +28,13 @@
         width:800px;
     }
     
-    .photo-list__item:nth-child(3n) .photo-list__item--img{
+    .photo-list__item:nth-child(3n) .photo-list__item__photo{
         width:750px;
         height:430px;
     }
     
     
-    .photo-list__item--img{
+    .photo-list__item__photo{
         height:350px;
         width:350px;
     }
@@ -45,13 +45,13 @@
         width:700px;
     }
     
-    .photo-list__item:nth-child(3n) .photo-list__item--img{
+    .photo-list__item:nth-child(3n) .photo-list__item__photo{
         width:650px;
         height:400px;
     }
     
     
-    .photo-list__item--img{
+    .photo-list__item__photo{
         height:300px;
         width:300px;
     }
@@ -62,12 +62,12 @@
         width:600px;
     }
     
-    .photo-list__item:nth-child(3n) .photo-list__item--img{
+    .photo-list__item:nth-child(3n) .photo-list__item__photo{
         width:550px;
         height:300px;
     }
 
-    .photo-list__item--img{
+    .photo-list__item__photo{
         height:250px;
         width:250px;
     }
@@ -85,12 +85,12 @@
         margin-bottom:$smallMargin;
     }
 
-    .photo-list__item:nth-child(3n) .photo-list__item--img{
+    .photo-list__item:nth-child(3n) .photo-list__item__photo{
         height:auto;
         width:100%;
     }
 
-    .photo-list__item--img{
+    .photo-list__item__photo{
         height:auto;
         width:100%;
     }
@@ -107,12 +107,12 @@
         margin-bottom:$smallMargin;
     }
 
-    .photo-list__item:nth-child(3n) .photo-list__item--img{
+    .photo-list__item:nth-child(3n) .photo-list__item__photo{
         height:100vh;
         width:100vw;
     }
     
-    .photo-list__item--img{
+    .photo-list__item__photo{
         height:100vh;
         width:100vw;
     }

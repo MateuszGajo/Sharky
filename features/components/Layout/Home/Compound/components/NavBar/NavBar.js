@@ -13,7 +13,6 @@ import { FiLogOut } from "react-icons/fi";
 import cx from "classnames";
 import Router from "next/router";
 import axios from "axios";
-import { WizzardContext } from "../../context/WizzardContext";
 import AppContext from "@features/context/AppContext";
 import i18next from "@i18n";
 import Hamburger from "./components/Hamburger/Hamburger";
@@ -22,11 +21,11 @@ const { useTranslation } = i18next;
 const NavBar = () => {
   const { t } = useTranslation(["component"]);
 
-  const { isNavOpen, setStatusOfNav } = useContext(WizzardContext);
   const { owner, socket, setOwner } = useContext(AppContext);
   const navbar = useRef(null);
   const navbarWrapper = useRef(null);
   const [isNavbarScrolling, setStatusOfNavbarScrolling] = useState(false);
+  const [isNavOpen, setStatusOfNav] = useState(false);
 
   const homeName = t("component:layout.home.navbar.home");
   const worldName = t("component:layout.home.navbar.world");
@@ -99,9 +98,9 @@ const NavBar = () => {
   ];
 
   const logOut = () => {
-    axios.get("/user/logout").then(({ data: { idUser } }) => {
+    axios.get("/user/logout").then(({ data: { userId } }) => {
       setOwner({ id: null });
-      socket.emit("singleDisconnect", { idUser });
+      socket.emit("singleDisconnect", { userId });
       Router.push("/signin");
     });
   };
@@ -135,12 +134,12 @@ const NavBar = () => {
   return (
     <>
       <section className="home__hamburger">
-        <Hamburger />
+        <Hamburger setStatusOfNav={setStatusOfNav} />
       </section>
       <div className="home__wrapper home__wrapper--large" ref={navbarWrapper}>
         <div
           className={cx("home__wrapper__navbar primary-scroll", {
-            "primary-scroll-active": isNavbarScrolling,
+            "primary-scroll--activee": isNavbarScrolling,
           })}
           ref={navbar}
         >
@@ -151,8 +150,8 @@ const NavBar = () => {
             >
               <IoMdArrowBack />
             </div>
-            <h1 className="home__wrapper__navbar__title--h1">
-              <span className="home__wrapper__navbar__title--h1--primaryColor">
+            <h1 className="home__wrapper__navbar__title__h1">
+              <span className="home__wrapper__navbar__title__h1--primaryColor">
                 Sha
               </span>
               rky
@@ -170,7 +169,7 @@ const NavBar = () => {
                     {item.icon}
                   </div>
                   <div className="home__wrapper__navbar__list__item__name">
-                    <a className="home__wrapper__navbar__list__item__name--a">
+                    <a className="home__wrapper__navbar__list__item__name__a">
                       {item.name}
                     </a>
                   </div>
@@ -182,7 +181,7 @@ const NavBar = () => {
                 <FiLogOut />
               </div>
               <div className="home__wrapper__navbar__list__item__name">
-                <a className="home__wrapper__navbar__list__item__name--a">
+                <a className="home__wrapper__navbar__list__item__name__a">
                   {logOutName}
                 </a>
               </div>

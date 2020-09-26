@@ -5,7 +5,7 @@ const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
 
 router.post("/get", async (req, res) => {
-  const { idTarget, from, type } = req.body;
+  const { targetId, from, type } = req.body;
   let { keyWords } = req.body;
   if (keyWords) {
     keyWords = keyWords.split(/\s+/);
@@ -13,15 +13,15 @@ router.post("/get", async (req, res) => {
       return res.status(200).json({ friends: [], isMore: false });
   }
 
-  const { id: idOwner } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req);
 
   let result;
   if (!keyWords) {
     try {
       if (type == "group")
         result = await client.query(group_getFriendsQuery, [
-          idOwner,
-          idTarget,
+          onwerId,
+          targetId,
           from,
         ]);
     } catch {
@@ -33,7 +33,7 @@ router.post("/get", async (req, res) => {
         result = await client.query(group_getPeopleQuery, [
           keyWords[0] + "%",
           (keyWords[1] ? keyWords[1] : "") + "%",
-          idTarget,
+          targetId,
           from,
         ]);
     } catch {

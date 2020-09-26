@@ -56,14 +56,14 @@ const MessageBox = ({ value, onChange, btnSize = "medium", file, setFile }) => {
               <img
                 src="/static/images/profile.png"
                 alt=""
-                className={cx("message-box__downbar__upload--img", {
-                  "message-box__downbar__upload--img--small":
+                className={cx("message-box__downbar__upload__photo", {
+                  "message-box__downbar__upload__photo--small":
                     btnSize === "small",
-                  "message-box__downbar__upload--img--medium":
+                  "message-box__downbar__upload__photo--medium":
                     btnSize === "medium",
-                  "message-box__downbar__upload--img--large":
+                  "message-box__downbar__upload__photo--large":
                     btnSize === "large",
-                  "message-box__downbar__upload--img--x-large":
+                  "message-box__downbar__upload__photo--x-large":
                     btnSize === "x-large",
                 })}
                 ref={imageRef}
@@ -99,11 +99,11 @@ const MessageBox = ({ value, onChange, btnSize = "medium", file, setFile }) => {
             type="file"
             name="file"
             id="file-upload"
-            className="message-box__downbar__upload--file"
+            className="message-box__downbar__upload__file"
             onChange={previewImage}
           />
         </div>
-        <div className="message-box__downbar__sent-button">
+        <div className="message-box__downbar__send-button">
           <PrimaryButton value={buttonText} size={btnSize} />
         </div>
       </div>

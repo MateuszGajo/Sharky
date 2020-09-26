@@ -1,61 +1,61 @@
 const getGroupsQuery = `
-with idGroups as(
-  select b.id_group
-    from(select a.id_group
+with groupIds as(
+  select b.group_id
+    from(select a.group_id
     from group_users as a
-    where id_user=$1) as b
+    where user_id=$1) as b
   left join(
-    select a.id_group
+    select a.group_id
     from group_users as a
-    where id_user=$2) as c
-  on c.id_group = b.id_group
-  where c.id_group is null
+    where user_id=$2) as c
+  on c.group_id = b.group_id
+  where c.group_id is null
   )
   
-  select a."idSub",a."idGroup",a."numberOfMembers", b.name, b.description, b.photo
-  from(select id as "idSub",id_group as "idGroup", count(*) over (partition by id_group)  as "numberOfMembers",id_user
+  select a."subId",a."groupId",a."numberOfMembers", b.name, b.description, b.photo
+  from(select id as "subId",group_id as "groupId", count(*) over (partition by group_id)  as "numberOfMembers",user_id
        from group_users 
-       where id_group in(
-            select a.id_group
+       where group_id in(
+            select a.group_id
             from group_users as a
-            where id_user=$1
+            where user_id=$1
           )
         ) as a
      left join groups as b
-  on a."idGroup" = b.id
-  where a.id_user =$2
+  on a."groupId" = b.id
+  where a.user_id =$2
   union
-  select null as "idSub", b.*, groups.name, groups.description, groups.photo
-  from(select a.id as "idGroup", count(*) as "numberOfMembers"
+  select null as "subId", b.*, groups.name, groups.description, groups.photo
+  from(select a.id as "groupId", count(*) as "numberOfMembers"
     from(select groups.id 
        from groups
        left join group_users on
-       groups.id = group_users.id_group
-       where groups.id in(select * from idGroups)
+       groups.id = group_users.group_id
+       where groups.id in(select * from groupIds)
       ) as a
     group by a.id) as b
-  inner join groups on b."idGroup" = groups.id
+  inner join groups on b."groupId" = groups.id
   limit 21 offset $3
 `;
 
 const getSortedSubscribedGroupsQuery = `
-with idSubscribedGroups as(
-select id_group from group_users where id_user = $1
+with groupSubscribedIds as(
+select group_id from group_users where user_id = $1
 ),
 
   groupSorted as(
-  select id from groups where lower(name) like($2) and id in(select * from idSubscribedGroups)
+  select id from groups where lower(name) like($2) and id in(select * from groupSubscribedIds)
 ),
 
 numberOfMembers as (
-select id_group as "idGroup",count(*) as "numberOfMembers" from group_users where id_group in(select * from groupSorted) group by id_group
+select group_id as "groupId",count(*) as "numberOfMembers" from group_users where group_id in(select * from groupSorted) group by group_id
 )
 
-select a.*, b.id as "idSub", c.name, c.photo from numberOfMembers as a
+select a.*, b.id as "subId", c.name, c.photo from numberOfMembers as a
 left join group_users  as b
-on a."idGroup" = b.id_group and b.id_user =$3
+on a."groupId" = b.group_id and b.user_id =$3
 inner join groups as c 
-on a."idGroup" = c.id
+on a."groupId" = c.id
 order by name asc
 limit 21 offset $4
 `;
@@ -65,70 +65,70 @@ with groupSorted as(
   select id from groups where lower(name) like($1)
 ),
 
-subscribedGroups as (
-select id_group as "idGroup",count(*) as "numberOfMembers" from group_users where id_group in(select * from groupSorted) group by id_group
+groupsSubscribed as (
+select group_id as "groupId",count(*) as "numberOfMembers" from group_users where group_id in(select * from groupSorted) group by group_id
 ),
 
-unSubscribedGroups as(
-select id, 0 as  "numberOfMembers" from groupSorted where id not in (select "idGroup" from  subscribedGroups )
+groupsUnsubscribed as(
+select id, 0 as  "numberOfMembers" from groupSorted where id not in (select "groupId" from  groupsSubscribed )
 ),
 
-countedGroups as(
-select * from subscribedGroups
+groupsCounted as(
+select * from groupsSubscribed
 union
-select * from unSubscribedGroups
+select * from groupsUnsubscribed
 )
 
 
-select a.*, b.id as "idSub", c.name, c.photo from countedGroups as a
+select a.*, b.id as "subId", c.name, c.photo from groupsCounted as a
 left join group_users  as b
-on a."idGroup" = b.id_group and b.id_user =$2
+on a."groupId" = b.group_id and b.user_id =$2
 inner join groups as c 
-on a."idGroup" = c.id
-order by "idSub"
+on a."groupId" = c.id
+order by "subId"
 limit 21 offset $3
 `;
 
 const createGroupQuery = `insert into groups(name, description, photo, date) values($1, $2, 'group.png', $3) returning id`;
 
-const addAdminQuery = `insert into group_users(id_group, id_user, role, status, date) values($1, $2, 'admin', '1', $3)`;
+const addAdminQuery = `insert into group_users(group_id, user_id, role, status, date) values($1, $2, 'admin', '1', $3)`;
 
 const addUserQuery = `
-insert into group_users(id_group, id_user, status, role, date) 
-select $1, $2, '0', $3, $4 where not exists(select id from group_users where id_group=$1 and id_user=$2) returning id;
+insert into group_users(group_id, user_id, status, role, date) 
+select $1, $2, '0', $3, $4 where not exists(select id from group_users where group_id=$1 and user_id=$2) returning id;
 `;
 
-const getIdUserQuery = `select id from group_users where id_group=$1 and id_user=$2`;
+const getIdUserQuery = `select id from group_users where group_id=$1 and user_id=$2`;
 
 const deleteUserQuery = `delete from group_users where id=$1`;
 
 const inviteUserQuery = `
-insert into group_users(id_group, id_user, status) 
+insert into group_users(group_id, user_id, status) 
 select $1, $2, '0'
 where not exists(
-  select * from group_users where id_group=$1 and id_user=$2
+  select * from group_users where group_id=$1 and user_id=$2
 )
 `;
 
 const getMembersQuery = `
-select b.first_name as "firstName", b.last_name as "lastName", b.id as "idUser", b.photo, a.role, a.id "idSub" from group_users as a
-inner join users as b on b.id = a.id_user
-where a.id_group=$1
+select b.first_name as "firstName", b.last_name as "lastName", b.id as "userId", b.photo, a.role, a.id "subId" from group_users as a
+inner join users as b on b.id = a.user_id
+where a.group_id=$1
 `;
 
 const getInfoQuery = `
 select name, date, b."numberOfMembers" 
 from groups as a 
 inner join(
-select id_group, count(*) as "numberOfMembers" from group_users where id_group=$1 group by id_group) as b
-on a.id = b.id_group`;
+select group_id, count(*) as "numberOfMembers" from group_users where group_id=$1 group by group_id) as b
+on a.id = b.group_id`;
 
 const enterQuery = `
-select a.id, a.name, a.photo, b.id as "idMember", b.role
+select a.id, a.name, a.photo, b.id as "memberId", b.role
 from (select id, name, photo from groups where id = $1) as a
 left join(
-select id,id_group, role from group_users where id_group=$1 and id_user=$2) as b
-on a.id = b.id_group
+select id,group_id, role from group_users where group_id=$1 and user_id=$2) as b
+on a.id = b.group_id
 `;
 
 const changeGroupPhotoQuery = `update groups set photo=$1 where id=$2`;

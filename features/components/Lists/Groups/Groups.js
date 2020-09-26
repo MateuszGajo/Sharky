@@ -9,7 +9,7 @@ import Spinner from "@components/Spinner/Spinner";
 const { useTranslation } = i18next;
 
 const Groups = ({
-  idUser,
+  userId,
   keyWords = "",
   onlySubscribed = false,
   helpInformation = true,
@@ -23,13 +23,13 @@ const Groups = ({
 
   const { owner, setError } = useContext(AppContext);
 
-  const [group, setGroup] = useState({ id: null, name: "", idSub: null });
+  const [group, setGroup] = useState({ id: null, name: "", subId: null });
   const [groups, setGroups] = useState([]);
   const [isMore, setStatusOfMore] = useState();
 
   const fetchData = (from) => {
     axios
-      .post("/group/get", { from, idUser, keyWords, onlySubscribed })
+      .post("/group/get", { from, userId, keyWords, onlySubscribed })
       .then(({ data: { groups: g, isMore } }) => {
         setGroups([...groups, ...g]);
         setStatusOfMore(isMore);
@@ -44,7 +44,7 @@ const Groups = ({
   useEffect(() => {
     if (keyWords != null)
       axios
-        .post("/group/get", { from: 0, idUser, keyWords, onlySubscribed })
+        .post("/group/get", { from: 0, userId, keyWords, onlySubscribed })
         .then(({ data: { groups, isMore } }) => {
           setGroups(groups);
           setStatusOfMore(isMore);
@@ -56,10 +56,10 @@ const Groups = ({
     const { number, setNumber, idRef, setIdRef, id } = group;
     if (idRef)
       axios
-        .post("/group/user/delete", { idSub: group.idRef })
+        .post("/group/user/delete", { subId: group.idRef })
         .then(() => {
-          if (idUser == owner.id) {
-            const newGroups = groups.filter((group) => group.idGroup != id);
+          if (userId == owner.id) {
+            const newGroups = groups.filter((group) => group.groupId != id);
             setGroups(newGroups);
           } else {
             setNumber(Number(number) - 1);
@@ -69,7 +69,7 @@ const Groups = ({
         .catch(({ response: { data: message } }) => setError(message));
     else if (id)
       axios
-        .post("/group/user/add", { idGroup: group.id })
+        .post("/group/user/add", { groupId: group.id })
         .then(({ data: { id } }) => {
           setIdRef(id);
           setNumber(Number(number) + 1);
@@ -87,11 +87,11 @@ const Groups = ({
     >
       <div className="list">
         {groups.map((group) => {
-          const { idGroup, idSub, name, photo, numberOfMembers } = group;
+          const { groupId, subId, name, photo, numberOfMembers } = group;
           const data = {
             refType: "group",
-            id: idGroup,
-            idRef: group.idSub || null,
+            id: groupId,
+            idRef: group.subId || null,
             photo,
             radiusPhoto: true,
             name,
@@ -102,7 +102,7 @@ const Groups = ({
             unsubTitle: buttonLeave,
             collapse: false,
           };
-          return <Card data={data} key={idGroup} handleClick={setGroup} />;
+          return <Card data={data} key={groupId} handleClick={setGroup} />;
         })}
       </div>
       {!groups.length && helpInformation && (
@@ -111,7 +111,7 @@ const Groups = ({
             <AiOutlineSearch />
           </div>
           <div className="empty-card__text">
-            <span className="empty-card__text--span">
+            <span className="empty-card__text__span">
               {keyWords ? noResult : emptyContent}
             </span>
           </div>

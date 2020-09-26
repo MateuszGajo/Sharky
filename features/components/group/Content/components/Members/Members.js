@@ -7,7 +7,7 @@ import AppContext from "@features/context/AppContext";
 const { useTranslation } = i18next;
 
 const Members = ({
-  idGroup,
+  groupId,
   role: permission,
   setNumberOfMembers,
   numberOfMembers,
@@ -29,10 +29,10 @@ const Members = ({
     const { id, idRef } = removeMember;
     if (id) {
       axios
-        .post("/group/user/delete", { idSub: id })
+        .post("/group/user/delete", { subId: id })
         .then(() => {
           const newArrayOfMembers = members.filter(
-            (member) => member.idUser != idRef
+            (member) => member.userId != idRef
           );
           setMembers(newArrayOfMembers);
           setNumberOfMembers(Number(numberOfMembers) - 1);
@@ -43,28 +43,28 @@ const Members = ({
 
   useEffect(() => {
     axios
-      .post("/group/member/get", { idGroup })
+      .post("/group/member/get", { groupId })
       .then(({ data: { members } }) => setMembers(members));
   }, []);
 
   return (
     <div className="list">
       {members.map((member) => {
-        const { idSub, idUser, firstName, lastName, photo, role } = member;
+        const { subId, userId, firstName, lastName, photo, role } = member;
         const data = {
           refType: "profile",
-          id: idSub,
-          idRef: idUser,
+          id: subId,
+          idRef: userId,
           photo,
           unsubTitle: removeText,
           radiusPhoto: false,
           name: `${firstName} ${lastName} ${
-            owner.id == idUser ? `(${yourself})` : ""
+            owner.id == userId ? `(${yourself})` : ""
           }`,
           button: "relation",
           title: t(`group:members.${role}`),
           buttonName: role,
-          collapse: permission == "admin" && owner.id != idUser ? true : false,
+          collapse: permission == "admin" && owner.id != userId ? true : false,
           collapseItems: {
             pink: {
               name: "admin",
@@ -80,7 +80,7 @@ const Members = ({
             },
           },
         };
-        return <Card data={data} key={idUser} handleClick={setRemoveMember} />;
+        return <Card data={data} key={userId} handleClick={setRemoveMember} />;
       })}
     </div>
   );

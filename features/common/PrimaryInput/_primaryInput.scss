@@ -1,33 +1,33 @@
-.primary-input-container {
+.primary-input {
   position: relative;
   display: flex;
   height: 50px;
 }
 
-.primary-input-container--x-large {
+.primary-input--x-large {
   width: 100%;
 }
 
-.primary-input-container--large {
+.primary-input--large {
   width: 90%;
 }
 
-.primary-input-container--medium {
+.primary-input--medium {
   width: 80%;
 }
 
-.primary-input-container--small {
+.primary-input--small {
   width: 70%;
 }
 
-.primary-input-container--title {
+.primary-input__title {
   color: #c1c1c1;
   font-weight: bold;
   font-size: 1.1rem;
   transition: color 0.2s;
 }
 
-.primary-input-container--input {
+.primary-input-container__input {
   position: absolute;
   bottom: 0;
   border: none;
@@ -39,7 +39,7 @@
   &:focus {
     border-bottom-color: $primaryColor;
   }
-  &:focus + .primary-input-container--title {
+  &:focus + .primary-input__title {
     color: $primaryColor;
   }
 }
@@ -52,7 +52,7 @@
   overflow-x: hidden;
   border: 1px solid $shadowColor;
 }
-.primary-input-container__autocomplete--item {
+.primary-input-container__autocomplete__item {
   padding: 10px 0 10px 10px;
   background-color: #fff;
   z-index: 1;
@@ -63,24 +63,24 @@
   }
 }
 
-.primary-input-container__autocomplete--item--span:not(:last-child) {
+.primary-input-container__autocomplete__item__span:not(:last-child) {
   border-bottom: 1px solid $shadowColor;
 }
 
 @media(max-width:767px) {
-  .primary-input-container{
+  .primary-input{
     height:35px;
   }
-  .primary-input-container--title {
+  .primary-input__title {
     font-size: 1rem;
   }
 }
 
 @media(max-width:767px) and (orientation:landscape) {
-  .primary-input-container--title {
+  .primary-input__title {
     font-size: 0.8rem;
   }
-  .primary-input-container{
+  .primary-input{
     height:40px;
   }
 }

@@ -25,7 +25,7 @@ const Button = ({
   unsubTitle,
   acceptInvite,
   declineInvite,
-  sentInvite,
+  inviteSent,
   inviteType,
   setInvite,
   setInviteType,
@@ -96,7 +96,7 @@ const Button = ({
 
   return (
     <div
-      className={cx("card__item__info__second-column__buttons--main-button ", {
+      className={cx("card__item__info__second-column__buttons__main-button ", {
         "card__item__info__second-column__buttons--relation":
           button === "relation",
         "card__item__info__second-column__buttons--join": button === "join",
@@ -123,7 +123,7 @@ const Button = ({
               setButtonName,
               number,
               setNumber,
-              idFriendShip: idRef,
+              friendshipId: idRef,
             });
           } else {
             handleClick({
@@ -140,12 +140,12 @@ const Button = ({
       }}
     >
       {isInvitationSent && (
-        <span className="card__item__info__second-column__buttons--main-button__icon">
+        <span className="card__item__info__second-column__buttons__main-button__icon">
           <BsEnvelope />
         </span>
       )}
       <span
-        className="card__item__info__second-column__buttons--main-button--span"
+        className="card__item__info__second-column__buttons__main-button__span"
         data-testid="card-button-text"
       >
         {inviteType == "accept"
@@ -155,7 +155,7 @@ const Button = ({
                 ? declineInvite
                 : [
                     isInvitationSent
-                      ? sentInvite
+                      ? inviteSent
                       : [!idRef ? subTitle : [isOpen ? unsubTitle : title]],
                   ],
             ]}
