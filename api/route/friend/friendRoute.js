@@ -118,7 +118,7 @@ router.post("/get/people", async (req, res) => {
         userId,
         onwerId,
         from,
-        userId == onwerId ? true : false,
+        onlyFriends,
       ]);
     } catch {
       return res.status(400).json("bad-request");
