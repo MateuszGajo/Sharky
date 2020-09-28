@@ -57,7 +57,7 @@ const Groups = () => {
               </form>
             </div>
 
-            <ListOfGroups idUser={owner.id} keyWords={keyWords} />
+            <ListOfGroups userId={owner.id} keyWords={keyWords} />
           </div>
           <div className="groups__side-bar">
             <div className="groups__side-bar__create">
@@ -70,7 +70,7 @@ const Groups = () => {
                 <IoIosAddCircleOutline />
               </div>
               <div className="groups__side-bar__create__text">
-                <span className="groups__side-bar__create__text--span">
+                <span className="groups__side-bar__create__text__span">
                   {createGroupText}
                 </span>
               </div>
