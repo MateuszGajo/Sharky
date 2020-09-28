@@ -7,7 +7,7 @@ const conversations = ({ items, setChat, chat, setStatusOfDisplayMobile }) => {
       {items.map((conversation) => {
         return (
           <Item
-            key={conversation.idChat}
+            key={conversation.chatId}
             {...conversation}
             setChat={setChat}
             chat={chat}
