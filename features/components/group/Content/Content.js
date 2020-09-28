@@ -6,24 +6,24 @@ import Home from "./components/Home/Home";
 
 const Content = ({
   section,
-  idGroup,
+  groupId,
   role,
-  idMember,
+  memberId,
   setNumberOfMembers,
   numberOfMembers,
   groupName,
-  creationDate,
+  startingDate,
 }) => {
   const renderComponent = (name) => {
     switch (name) {
       case "home":
-        return <Home idGroup={idGroup} />;
+        return <Home groupId={groupId} />;
       case "members":
         return (
           <Members
-            idGroup={idGroup}
+            groupId={groupId}
             role={role}
-            idMember={idMember}
+            memberId={memberId}
             setNumberOfMembers={setNumberOfMembers}
             numberOfMembers={numberOfMembers}
           />
@@ -33,16 +33,16 @@ const Content = ({
           <About
             name={groupName}
             numberOfMembers={numberOfMembers}
-            creationDate={creationDate}
+            startingDate={startingDate}
           />
         );
       default:
-        return <Home idGroup={idGroup} />;
+        return <Home groupId={groupId} />;
     }
   };
   return (
     <div className="group__container__content">
-      {idMember ? (
+      {memberId ? (
         renderComponent(section)
       ) : (
         <p className="group__container__content__text">

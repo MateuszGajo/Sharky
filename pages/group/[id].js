@@ -16,7 +16,7 @@ const { useTranslation } = i18next;
 
 const Group = () => {
   const router = useRouter();
-  const idGroup = router.query.id;
+  const groupId = router.query.id;
 
   const { t } = useTranslation(["group"]);
 
@@ -26,43 +26,43 @@ const Group = () => {
 
   const [section, setSection] = useState("home");
   const [isPopupOpen, setStatusOfPopUp] = useState(false);
-  const [idMember, setIdMember] = useState(null);
+  const [memberId, setIdMember] = useState(null);
   const [role, setRole] = useState("");
   const [groupName, setGroupName] = useState("");
   const [photo, setPhoto] = useState("");
   const [numberOfMembers, setNumberOfMembers] = useState(null);
-  const [creationDate, setCreationDate] = useState(null);
+  const [startingDate, setStartingDate] = useState(null);
   const [isLoading, setStatusOfLoading] = useState(true);
   const [isGroupExist, setStatusOfExistsGroup] = useState(true);
   const [isAuth, setStatusOfAuth] = useState(null);
 
   const getGroupInfo = () => {
     axios
-      .post("/group/about", { idGroup })
+      .post("/group/about", { groupId })
       .then(({ data: { date, numberOfMembers } }) => {
         setNumberOfMembers(numberOfMembers);
-        setCreationDate(date);
+        setStartingDate(date);
       });
   };
 
   useEffect(() => {
-    idGroup &&
+    groupId &&
       isAuth &&
       axios
-        .post("/group/enter", { idGroup })
-        .then(({ data: { id, idMember, name, role, photo } }) => {
+        .post("/group/enter", { groupId })
+        .then(({ data: { id, memberId, name, role, photo } }) => {
           if (!id) {
             setStatusOfExistsGroup(false);
             return setStatusOfLoading(false);
           }
           getGroupInfo();
           setPhoto(photo);
-          setIdMember(idMember);
-          idMember && setRole(role);
+          setIdMember(memberId);
+          memberId && setRole(role);
           setGroupName(name);
           setStatusOfLoading(false);
         });
-  }, [idGroup, isAuth]);
+  }, [groupId, isAuth]);
 
   useEffect(() => {
     getOwner({ setStatusOfAuth, setOwner });
@@ -84,7 +84,7 @@ const Group = () => {
             <InvitePerson
               isOpen={isPopupOpen}
               setStatusOfOpen={setStatusOfPopUp}
-              idTarget={idGroup}
+              targetId={groupId}
               type="group"
             />
           )}
@@ -92,20 +92,20 @@ const Group = () => {
           <div className="group__container">
             <Content
               section={section}
-              idGroup={idGroup}
+              groupId={groupId}
               role={role}
-              idMember={idMember}
+              memberId={memberId}
               setNumberOfMembers={setNumberOfMembers}
               numberOfMembers={numberOfMembers}
               groupName={groupName}
-              creationDate={creationDate}
+              startingDate={startingDate}
             />
             <SideBar
               setSection={setSection}
               setStatusOfPopUp={setStatusOfPopUp}
               groupName={groupName}
-              idMember={idMember}
-              idGroup={idGroup}
+              memberId={memberId}
+              groupId={groupId}
               setIdMember={setIdMember}
               setRole={setRole}
               section={section}

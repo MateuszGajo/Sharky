@@ -19,12 +19,12 @@
     width:75%;
     margin:0 auto;
 
-    &:hover .group__container__side-bar__group-info__photo--overlay{
+    &:hover .group__container__side-bar__group-info__photo__overlay{
         display:flex;
     }
 }
 
-.group__container__side-bar__group-info__photo--overlay{
+.group__container__side-bar__group-info__photo__overlay{
     position:absolute;
     width:100%;
     height:100%;
@@ -45,7 +45,7 @@
     cursor:pointer;
 }
 
-.group__container__side-bar__group-info__photo--img{
+.group__container__side-bar__group-info__photo__img{
     display:block;
     width:100%;
     border-radius: 20px;
@@ -109,7 +109,7 @@
 }
 
 
-.group__container__side-bar__item--span{
+.group__container__side-bar__item__span{
     font-size: 1.2rem;
 }
 

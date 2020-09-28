@@ -12,12 +12,12 @@ const SideBar = ({
   setSection,
   setStatusOfPopUp,
   groupName,
-  idMember,
+  memberId,
   setIdMember,
   setRole,
   section,
   role,
-  idGroup,
+  groupId,
   photo,
   setPhoto,
 }) => {
@@ -37,7 +37,7 @@ const SideBar = ({
 
   const joinGroup = () => {
     axios
-      .post("/group/user/add", { idGroup })
+      .post("/group/user/add", { groupId })
       .then(({ data: { id } }) => {
         setIdMember(id);
         setRole("member");
@@ -47,7 +47,7 @@ const SideBar = ({
 
   const leaveGroup = () => {
     axios
-      .post("/group/leave", { idMember, idGroup, role })
+      .post("/group/leave", { memberId, groupId, role })
       .then(() => {
         setIdMember(null);
       })
@@ -56,7 +56,7 @@ const SideBar = ({
 
   const deleteGroup = () => {
     axios
-      .post("/group/delete", { idGroup })
+      .post("/group/delete", { groupId })
       .then(() => {
         router.push("/");
       })
@@ -75,7 +75,7 @@ const SideBar = ({
 
     const data = new FormData();
     data.append("file", e.target.files[0]);
-    data.set("idGroup", idGroup);
+    data.set("groupId", groupId);
 
     axios
       .post("/group/change/photo", data)
@@ -89,7 +89,7 @@ const SideBar = ({
       <div className="group__container__side-bar--fixed">
         <div className="group__container__side-bar__group-info">
           <div className="group__container__side-bar__group-info__photo">
-            <div className="group__container__side-bar__group-info__photo--overlay">
+            <div className="group__container__side-bar__group-info__photo__overlay">
               <label htmlFor="group-photo-change">
                 <div className="group__container__side-bar__group-info__photo--overlay__button">
                   {changePhotoText}
@@ -104,16 +104,16 @@ const SideBar = ({
             </div>
             <img
               src={`/static/images/${photo}`}
-              className="group__container__side-bar__group-info__photo--img"
+              className="group__container__side-bar__group-info__photo__img"
             />
           </div>
           <div className="group__container__side-bar__group-info__title">
-            <h2 className="group__container__side-bar__group-info__title--h2">
+            <h2 className="group__container__side-bar__group-info__title__h2">
               {groupName}
             </h2>
           </div>
         </div>
-        {idMember ? (
+        {memberId ? (
           <>
             <div className="group__container__side-bar__navigation">
               <div
@@ -123,7 +123,7 @@ const SideBar = ({
                 })}
                 onClick={() => setSection("home")}
               >
-                <span className="group__container__side-bar__navigation__item--span">
+                <span className="group__container__side-bar__navigation__item__span">
                   {homeName}
                 </span>
               </div>
@@ -134,7 +134,7 @@ const SideBar = ({
                 })}
                 onClick={() => setSection("members")}
               >
-                <span className="group__container__side-bar__navigation__item--span">
+                <span className="group__container__side-bar__navigation__item__span">
                   {membersName}
                 </span>
               </div>
@@ -145,7 +145,7 @@ const SideBar = ({
                 })}
                 onClick={() => setSection("about")}
               >
-                <span className="group__container__side-bar__navigation__item--span">
+                <span className="group__container__side-bar__navigation__item__span">
                   {aboutName}
                 </span>
               </div>
@@ -155,7 +155,7 @@ const SideBar = ({
                 className="group__container__side-bar__manage__item"
                 onClick={() => leaveGroup()}
               >
-                <span className="group__container__side-bar__item--span">
+                <span className="group__container__side-bar__item__span">
                   {leaveText}
                 </span>
                 <div className="group__container__side-bar__manage__item__icon group__container__side-bar__manage__item__icon--leave">
@@ -166,7 +166,7 @@ const SideBar = ({
                 className="group__container__side-bar__manage__item"
                 onClick={() => setStatusOfPopUp(true)}
               >
-                <span className="group__container__side-bar__item--span">
+                <span className="group__container__side-bar__item__span">
                   {inviteText}
                 </span>
                 <div className="group__container__side-bar__manage__item__icon group__container__side-bar__manage__item__icon--invite">
@@ -178,7 +178,7 @@ const SideBar = ({
                   className="group__container__side-bar__manage__item"
                   onClick={deleteGroup}
                 >
-                  <span className="group__container__side-bar__item--span">
+                  <span className="group__container__side-bar__item__span">
                     {deleteGroupText}
                   </span>
                   <div className="group__container__side-bar__manage__item__icon ">
@@ -194,7 +194,7 @@ const SideBar = ({
               className="group__container__side-bar__manage__item"
               onClick={() => joinGroup()}
             >
-              <span className="group__container__side-bar__item--span">
+              <span className="group__container__side-bar__item__span">
                 {joinText}
               </span>
               <div className="group__container__side-bar__manage__item__icon group__container__side-bar__manage__item__icon--invite">

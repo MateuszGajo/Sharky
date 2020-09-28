@@ -1,12 +1,16 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
 import i18next from "@i18n";
 const { useTranslation } = i18next;
 
-const About = ({ creationDate, numberOfMembers, name }) => {
+const About = ({ startingDate, numberOfMembers, name }) => {
   const {
     i18n: { language },
-  } = useTranslation();
+    t,
+  } = useTranslation(["group"]);
+
+  const nameText = t("group:about.name");
+  const numberOfMembersText = t("group:about.number-of-members");
+  const startingDateText = t("group:about.starting-date");
 
   const dtf = new Intl.DateTimeFormat(language, {
     year: "numeric",
@@ -15,39 +19,39 @@ const About = ({ creationDate, numberOfMembers, name }) => {
   });
 
   const [{ value: da }, , { value: mo }, , { value: ye }] = dtf.formatToParts(
-    new Date(creationDate)
+    new Date(startingDate)
   );
 
   return (
     <div className="group-info">
       <div className="group-info__item">
         <div className="group-info__item__property">
-          <span className="group-info__item__property--span">Nazwa</span>
+          <span className="group-info__item__property__span">{nameText}</span>
         </div>
         <div className="group-info__item__name">
-          <span className="group-info__item__name--span">{name}</span>
+          <span className="group-info__item__name__span">{name}</span>
         </div>
       </div>
       <div className="group-info__item">
         <div className="group-info__item__property">
-          <span className="group-info__item__property--span">
-            Data Utworzenia
+          <span className="group-info__item__property__span">
+            {startingDateText}
           </span>
         </div>
         <div className="group-info__item__name">
-          <span className="group-info__item__name--span">
+          <span className="group-info__item__name__span">
             {da + " " + mo + " " + ye}
           </span>
         </div>
       </div>
       <div className="group-info__item">
         <div className="group-info__item__property">
-          <span className="group-info__item__property--span">
-            Liczba członków
+          <span className="group-info__item__property__span">
+            {numberOfMembersText}
           </span>
         </div>
         <div className="group-info__item__name">
-          <span className="group-info__item__name--span">
+          <span className="group-info__item__name__span">
             {numberOfMembers}
           </span>
         </div>
