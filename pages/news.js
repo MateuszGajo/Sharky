@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import Router from "next/router";
+import { MdBlock } from "react-icons/md";
 import HomeLayout from "@components/Layout/Home/HomeLayout";
 import MessageBox from "@common/MessageBox/MessageBox";
 import Posts from "@components/Lists/Posts/Posts";
 import Spinner from "@components/Spinner/Spinner";
-import { MdBlock } from "react-icons/md";
 import i18next from "@i18n";
 import { getOwner } from "@features/service/Functions/index";
 import AppContext from "@features/context/AppContext";
@@ -61,10 +61,10 @@ const News = () => {
           </form>
         ) : (
           <div className="news__info">
-            <div className="news__info--icon">
+            <div className="news__info__icon">
               <MdBlock />
             </div>
-            <span className="news__info--span">{noPermission}</span>
+            <span className="news__info__span">{noPermission}</span>
           </div>
         )}
         <Posts news={true} newPost={newPost} />
