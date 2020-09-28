@@ -1,8 +1,8 @@
 const getFriendsQuery = `
 with friendIds as(
-select user_id_1 as "userId" from friends where CASE when $4 then user_id_2=$1 else user_id_2=$1   end
+select user_id_1 as "userId" from friends where CASE when $4 then user_id_2=$1 and status='1' else user_id_2=$1 end
 union
-select user_id_2 as "userId" from friends where CASE when $4 then  user_id_1=$1 else user_id_1=$1   end 
+select user_id_2 as "userId" from friends where CASE when $4 then user_id_1=$1 and status='1' else user_id_1=$1 end 
 ),
 
 friendsCounted as(
