@@ -10,14 +10,14 @@ import { uuid } from "uuidv4";
 const { useTranslation } = i18n;
 
 const People = ({
-  idUser,
+  userId,
   keyWords = "",
   onlyFriends = false,
   helpInformation = true,
 }) => {
   const { t } = useTranslation(["component"]);
 
-  const relationChangeText = t("component:lists.people.relation-change");
+  const changeRelationText = t("component:lists.people.relation-change");
   const description = t("component:lists.people.description");
   const friendName = t("component:lists.people.friend");
   const familyName = t("component:lists.people.family");
@@ -26,12 +26,12 @@ const People = ({
   const removeText = t("component:lists.people.remove");
   const acceptInvite = t("component:lists.people.accept");
   const declineInvite = t("component:lists.people.decline");
-  const sentInvite = t("component:lists.people.sent");
+  const inviteSent = t("component:lists.people.sent");
   const emptyContent = t("component:lists.people.empty-content");
+  const noResult = t("component:lists.people.no-result");
 
-  const { setError, setPrompt, owner, setNewChat, socket } = useContext(
-    AppContext
-  );
+  const { setError, setPrompt, owner, socket } = useContext(AppContext);
+
   const [relation, setRelation] = useState({ id: null, name: "" });
   const [friends, setFriends] = useState([]);
   const [friend, setFriend] = useState({ id: null, name: "", idRef: null });
@@ -40,7 +40,7 @@ const People = ({
 
   const fetchData = (from) => {
     axios
-      .post("/friend/get/people", { idUser, from, keyWords, onlyFriends })
+      .post("/friend/get/people", { userId, from, keyWords, onlyFriends })
       .then(({ data: { friends: f, isMore } }) => {
         setFriends([...friends, ...f]);
         setStatusOfMore(isMore);
@@ -48,13 +48,13 @@ const People = ({
   };
 
   useEffect(() => {
-    const { id, idSub } = relation;
+    const { id, subId } = relation;
     if (id != null) {
-      setPrompt(relationChangeText);
+      setPrompt(changeRelationText);
       axios
         .post("/friend/update/relation", {
-          idFriendShip: id,
-          idUser: idSub,
+          friendshipId: id,
+          userId: subId,
           relation: relation.name,
         })
         .catch(({ response: { data: message } }) => setError(message));
@@ -67,32 +67,31 @@ const People = ({
       setInviteType,
       setButton,
       setTitle,
-      idFriendShip,
+      friendshipId,
       setCollapse,
       setButtonName,
       number,
       setNumber,
-      id,
     } = invite;
 
     if (inviteType == "accept")
       axios
-        .post("/friend/accept", { idFriendShip, idUser: id })
-        .then(({ data: { idChat, relation, success } }) => {
+        .post("/friend/accept", { friendshipId })
+        .then(({ data: { chatId, relation, success } }) => {
           if (success) {
             setInviteType("");
             setButton("relation");
             setTitle(t(`component:lists.people.${relation}`));
             setButtonName(relation);
-            setCollapse(idUser == owner.id && relation ? true : false);
+            setCollapse(userId == owner.id && relation ? true : false);
             setNumber(Number(number) + 1);
-            socket.emit("joinNewChat", { idChat });
+            socket.emit("joinNewChat", { friendshipId, chatId });
           } else {
             setInviteType("");
             setButton("relation");
             setTitle(t(`component:lists.people.${relation}`));
             setButtonName(relation);
-            setCollapse(idUser == owner.id && relation ? true : false);
+            setCollapse(userId == owner.id && relation ? true : false);
             setNumber(Number(number) + 1);
             setFriends(newFriends);
           }
@@ -101,10 +100,10 @@ const People = ({
 
     if (inviteType == "decline") {
       axios
-        .post("/friend/decline", { idFriendShip })
+        .post("/friend/decline", { friendshipId })
         .then(() => {
           const newFriends = friends.filter((friend) => {
-            return friend.idFriendShip != idFriendShip;
+            return friend.friendshipId != friendshipId;
           });
           setFriends(newFriends);
         })
@@ -115,7 +114,7 @@ const People = ({
   useEffect(() => {
     if (keyWords != null)
       axios
-        .post("/friend/get/people", { idUser, from: 0, keyWords, onlyFriends })
+        .post("/friend/get/people", { userId, from: 0, keyWords, onlyFriends })
         .then(({ data: { friends, isMore } }) => {
           setFriends(friends);
           setStatusOfMore(isMore);
@@ -133,11 +132,11 @@ const People = ({
     } = friend;
     if (idRef)
       axios
-        .post("/friend/remove", { idFriendShip: friend.idRef })
+        .post("/friend/delete", { friendshipId: friend.idRef })
         .then(() => {
-          if (idUser == owner.id) {
+          if (userId == owner.id) {
             const newFriends = friends.filter((item) => {
-              return item.idFriendShip != friend.idRef;
+              return item.friendshipId != friend.idRef;
             });
             setFriends(newFriends);
           } else {
@@ -148,8 +147,8 @@ const People = ({
         .catch(({ response: { data: message } }) => setError(message));
     else if (id)
       axios
-        .post("/friend/add", { idUser: id })
-        .then(({ data: { idFriendShip: id } }) => {
+        .post("/friend/add", { userId: id })
+        .then(({ data: { friendshipId: id } }) => {
           setStatusOfInvitation(true);
         })
         .catch(({ response: { data: message } }) => setError(message));
@@ -169,9 +168,9 @@ const People = ({
       <div className="list">
         {friends.map((friend) => {
           const {
-            idFriendShip,
+            friendshipId,
             relation,
-            idUser: id,
+            userId: id,
             firstName,
             lastName,
             photo,
@@ -183,7 +182,7 @@ const People = ({
           const data = {
             refType: "profile",
             id,
-            idRef: idFriendShip,
+            idRef: friendshipId,
             subTitle: addText,
             unsubTitle: removeText,
             photo,
@@ -195,11 +194,11 @@ const People = ({
             number: numberOfFriends,
             acceptInvite,
             declineInvite,
-            sentInvite,
+            inviteSent,
             button: relation ? "relation" : "join",
             title: t(`component:lists.people.${relation}`),
             buttonName: relation,
-            collapse: relation && idUser == owner.id ? true : false,
+            collapse: relation && userId == owner.id ? true : false,
             collapseItems: {
               pink: {
                 name: "pal",
@@ -232,7 +231,9 @@ const People = ({
             <AiOutlineSearch />
           </div>
           <div className="empty-card__text">
-            <span className="empty-card__text--span">{emptyContent}</span>
+            <span className="empty-card__text__span">
+              {keyWords ? noResult : emptyContent}
+            </span>
           </div>
         </div>
       )}

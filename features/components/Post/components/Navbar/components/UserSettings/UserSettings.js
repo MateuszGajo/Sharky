@@ -21,7 +21,7 @@ const UserSettings = () => {
     post,
   } = useContext(PostContext);
   const { posts, setPosts, setMuteUser } = useContext(WizzardContext);
-  const idOwnerPost = post.idUserShare || post.idUser;
+  const postOwnerID = post.idUserShare || post.userId;
 
   const hiddenPostText = t("component:post.settings.hidden");
   const reportPostText = t("component:post.settings.report");
@@ -34,18 +34,18 @@ const UserSettings = () => {
           className="post__item__navbar__column-end__setting__collapse__item"
           onClick={() => setStatusOfHiddenPost(true)}
         >
-          <div className="post__item__navbar__column-end__setting__collapse__item--icon">
+          <div className="post__item__navbar__column-end__setting__collapse__item__icon">
             <IconContext.Provider
               value={{
                 className:
-                  "post__item__navbar__column-end__setting__collapse__item--icon--customize",
+                  "post__item__navbar__column-end__setting__collapse__item__icon__customize",
               }}
             >
               <BsEyeSlash />
             </IconContext.Provider>
           </div>
-          <div className="post__item__navbar__column-end__setting__collapse__item--name">
-            <span className="post__item__navbar__column-end__setting__collapse__item--name--span">
+          <div className="post__item__navbar__column-end__setting__collapse__item__name">
+            <span className="post__item__navbar__column-end__setting__collapse__item__name__span">
               {hiddenPostText}
             </span>
           </div>
@@ -56,25 +56,25 @@ const UserSettings = () => {
         className="post__item__navbar__column-end__setting__collapse__item"
         onClick={() =>
           muteUser({
-            idMuteUser: idOwnerPost,
+            idMuteUser: postOwnerID,
             setMuteUser,
             isSingle,
             setError,
           })
         }
       >
-        <div className="post__item__navbar__column-end__setting__collapse__item--icon">
+        <div className="post__item__navbar__column-end__setting__collapse__item__icon">
           <IconContext.Provider
             value={{
               className:
-                "post__item__navbar__column-end__setting__collapse__item--icon--customize",
+                "post__item__navbar__column-end__setting__collapse__item__icon__customize",
             }}
           >
             <FiVolumeX />
           </IconContext.Provider>
         </div>
-        <div className="post__item__navbar__column-end__setting__collapse__item--name">
-          <span className="post__item__navbar__column-end__setting__collapse__item--name--span">
+        <div className="post__item__navbar__column-end__setting__collapse__item__name">
+          <span className="post__item__navbar__column-end__setting__collapse__item__name__span">
             {muteUserText}
           </span>
         </div>
@@ -83,18 +83,18 @@ const UserSettings = () => {
         className="post__item__navbar__column-end__setting__collapse__item"
         onClick={() => setStatusOfReport(true)}
       >
-        <div className="post__item__navbar__column-end__setting__collapse__item--icon">
+        <div className="post__item__navbar__column-end__setting__collapse__item__icon">
           <IconContext.Provider
             value={{
               className:
-                "post__item__navbar__column-end__setting__collapse__item--icon--customize",
+                "post__item__navbar__column-end__setting__collapse__item__icon__customize",
             }}
           >
             <FiFlag />
           </IconContext.Provider>
         </div>
-        <div className="post__item__navbar__column-end__setting__collapse__item--name">
-          <span className="post__item__navbar__column-end__setting__collapse__item--name--span">
+        <div className="post__item__navbar__column-end__setting__collapse__item__name">
+          <span className="post__item__navbar__column-end__setting__collapse__item__name__span">
             {reportPostText}
           </span>
         </div>
@@ -103,7 +103,7 @@ const UserSettings = () => {
         className="post__item__navbar__column-end__setting__collapse__item"
         onClick={() =>
           blockUser({
-            idBlockUser: idOwnerPost,
+            userId: postOwnerID,
             posts,
             setPosts,
             isSingle,
@@ -111,18 +111,18 @@ const UserSettings = () => {
           })
         }
       >
-        <div className="post__item__navbar__column-end__setting__collapse__item--icon">
+        <div className="post__item__navbar__column-end__setting__collapse__item__icon">
           <IconContext.Provider
             value={{
               className:
-                "post__item__navbar__column-end__setting__collapse__item--icon--customize",
+                "post__item__navbar__column-end__setting__collapse__item__icon__customize",
             }}
           >
             <MdBlock />
           </IconContext.Provider>
         </div>
-        <div className="post__item__navbar__column-end__setting__collapse__item--name">
-          <span className="post__item__navbar__column-end__setting__collapse__item--name--span">
+        <div className="post__item__navbar__column-end__setting__collapse__item__name">
+          <span className="post__item__navbar__column-end__setting__collapse__item__name__span">
             {blockUserText}
           </span>
         </div>

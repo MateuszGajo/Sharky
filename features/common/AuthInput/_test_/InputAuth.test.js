@@ -23,12 +23,12 @@ it("does auth input property works correct", () => {
   );
 
   const authInput = getByTestId("auth-input");
-  const authInputContainer = getByTestId("auth-input-container");
+  const authInputContainer = getByTestId("auth-input");
   const authInputLabel = getByTestId("auth-input-placeholder");
 
   expect(authInputLabel).toHaveTextContent(inputTitle);
   expect(authInput).toHaveValue(inputValue);
-  expect(authInputContainer).toHaveClass("auth-input-container--large");
+  expect(authInputContainer).toHaveClass("auth-input--large");
 
   const newInputValue = "e-mail2";
   fireEvent.change(authInput, {

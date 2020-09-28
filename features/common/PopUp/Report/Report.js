@@ -1,84 +1,83 @@
-import React, { useRef, useEffect } from "react";
+import React, { useState } from "react";
 import PrimaryButton from "@common/PrimaryButton/PrimaryButton";
 import i18next from "@i18n";
 const { useTranslation } = i18next;
 
 const Report = ({ type = "post", setStatusOfReport }) => {
   const { t } = useTranslation();
+
   const title = t(`common:pop-up.report.title-${type}`);
   const subtitle = t("common:pop-up.report.subtitle");
-  const selectOffensiveContent = t(
-    "common:pop-up.report.select.offensive-content"
-  );
-  const selectSpam = t("common:pop-up.report.select.spam");
+  const offensiveContent = t("common:pop-up.report.select.offensive-content");
+  const spam = t("common:pop-up.report.select.spam");
   const buttonText = t("common:pop-up.report.button");
 
-  const selectItems = [selectOffensiveContent, selectSpam];
+  const [reportsList, setReportsLists] = useState([]);
 
-  const reportItems = {
-    0: {
-      name: selectOffensiveContent,
+  const items = [
+    {
+      name: "offensive content",
+      value: offensiveContent,
     },
-    1: {
-      name: selectSpam,
+    {
+      name: "spam",
+      value: spam,
     },
+  ];
+
+  const handleClick = (e, reason) => {
+    e.preventDefault();
+    const { classList } = e.currentTarget;
+
+    if (classList.contains("primary-background")) {
+      classList.remove("primary-background");
+      const newReportsList = reportsList.filter((item) => item != reason);
+
+      setReportsLists(newReportsList);
+    } else {
+      classList.add("primary-background");
+      setReportsLists([...reportsList, reason]);
+    }
   };
 
-  const selectItemsRef = useRef(
-    Array.from({ length: selectItems.length }, () => React.createRef())
-  );
-
-  useEffect(() => {
-    selectItemsRef.current.forEach(({ current: item }) => {
-      item.addEventListener("click", () => {
-        item.classList.toggle("primary-background");
-      });
-    });
-  }, []);
-
-  const reportSend = () => {
-    const reportList = [];
-    selectItemsRef.current.forEach(({ current: item }) => {
-      if (item.classList.contains("primary-background")) {
-        reportList.push(reportItems[item.dataset.id].name);
-      }
-    });
-  };
   return (
     <section className="report-user">
       <div className="report-user__container">
         <div className="report-user__container__title">
-          <h2 className="report-user__container__title--h2">{title}</h2>
+          <h2 className="report-user__container__title__h2">{title}</h2>
         </div>
         <div className="report-user__container__content">
           <div className="report-user__container__content__subtitle">
-            <h3 className="report-user__container__content__subtitle--h3">
+            <h3 className="report-user__container__content__subtitle__h3">
               {subtitle}:
             </h3>
           </div>
           <div className="report-user__container__content__select">
-            {Object.entries(reportItems).map(([i, item]) => (
-              <div
-                className="report-user__container__content__select__item"
-                key={i}
-              >
+            {items.map((item, i) => {
+              const { value, name } = item;
+
+              return (
                 <div
-                  className="report-user__container__content__select__item__circle"
-                  ref={selectItemsRef.current[i]}
-                  data-id={i}
+                  className="report-user__container__content__select__item"
+                  key={i}
                 >
-                  <span className="report-user__container__content__select__item__circle--span">
-                    {item.name}
-                  </span>
+                  <div
+                    className="report-user__container__content__select__item__circle"
+                    data-id={i}
+                    onClick={(e) => handleClick(e, name)}
+                  >
+                    <span className="report-user__container__content__select__item__circle__span">
+                      {value}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
         <div
           className="report-user__container__button"
           onClick={() => {
-            reportSend();
             setStatusOfReport(false);
           }}
         >

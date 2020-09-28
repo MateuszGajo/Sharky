@@ -11,13 +11,7 @@ import AppContext from "@features/context/AppContext";
 import i18next from "@i18n";
 const { useTranslation } = i18next;
 
-const InvitePerson = ({
-  isOpen = true,
-  setStatusOfOpen,
-  type,
-  idUser,
-  idTarget,
-}) => {
+const InvitePerson = ({ isOpen = true, setStatusOfOpen, type, targetId }) => {
   const { t } = useTranslation();
 
   const { setError } = useContext(AppContext);
@@ -32,8 +26,7 @@ const InvitePerson = ({
   const emptyContent = t("common:pop-up.invite-person.empty-content");
   const description = t("component:lists.people.description");
   const inviteText = t("common:pop-up.invite-person.invite");
-  const invitationSent = t("common:pop-up.invite-person.invitation");
-  const sentInvite = t("component:lists.people.sent");
+  const inviteSent = t("component:lists.people.sent");
 
   let navTimeout = null;
 
@@ -50,7 +43,7 @@ const InvitePerson = ({
 
   const fetchData = (from, keyWords = "", prevState = people) => {
     axios
-      .post("/people/get", { idTarget, keyWords, from, type })
+      .post("/people/get", { targetId, keyWords, from, type })
       .then(({ data: { friends, isMore } }) => {
         setPeople([...prevState, ...friends]);
         setStatusOfMore(isMore);
@@ -67,7 +60,7 @@ const InvitePerson = ({
     const { idRef, setStatusOfInvitation } = invite;
     if (idRef) {
       axios
-        .post(`/${type}/user/invite`, { idUser: idRef, idTarget })
+        .post(`/${type}/user/invite`, { userId: idRef, targetId })
         .then(() => setStatusOfInvitation(true))
         .catch(({ response: { message } }) => setError(message));
     }
@@ -104,9 +97,9 @@ const InvitePerson = ({
         {people.length ? (
           <div
             className={cx(
-              "invite-person__container__people primary-scroll primary-scroll-margin",
+              "invite-person__container__people primary-scroll primary-scroll--margin",
               {
-                "primary-scroll-active": isScrolling,
+                "primary-scroll--active": isScrolling,
               }
             )}
             id="scroll"
@@ -120,7 +113,7 @@ const InvitePerson = ({
             >
               {people.map((person) => {
                 const {
-                  idUser,
+                  userId,
                   firstName,
                   lastName,
                   photo,
@@ -130,10 +123,10 @@ const InvitePerson = ({
 
                 const data = {
                   refType: "profile",
-                  idRef: idUser,
+                  idRef: userId,
                   photo: photo,
                   isInvitationSent,
-                  sentInvite,
+                  inviteSent,
                   name: `${firstName} ${lastName}`,
                   title: inviteText,
                   description,
@@ -150,9 +143,6 @@ const InvitePerson = ({
           </div>
         ) : (
           <div className="invite-person__empty-content">
-            <div className="invite-person__empty-content__icon">
-              <AiOutlineSearch />
-            </div>
             <span className="invite-person__empty-content__text">
               {emptyContent}
             </span>

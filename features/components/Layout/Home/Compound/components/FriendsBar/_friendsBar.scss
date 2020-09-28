@@ -56,7 +56,7 @@
   margin-right: 10px;
 }
 
-.home_friends__list__item__user__photo--img {
+.home_friends__list__item__user__photo__photo {
   display: block;
   height:30px;
   width:30px;
@@ -68,18 +68,18 @@
   bottom:100%;
   left:100%;
   transform: translate(-50%,50%);
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color:$primaryColor;
 }
 
-.home_friends__list__item__user--name {
+.home_friends__list__item__user__name {
   display: flex;
   align-items: center;
   overflow: hidden;
   font-size: 0.9rem;
 }
 
-.home_friends__list__item__user--name--span {
+.home_friends__list__item__user__name__span {
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 1;
