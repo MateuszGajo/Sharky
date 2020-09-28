@@ -13,13 +13,13 @@
   }
   .profile__container__info__container__item {
     cursor: pointer;
-    &:hover .profile__container__info__container__item--circle {
+    &:hover .profile__container__info__container__item__circle {
       color: $primaryHoverColor;
       border-color: $primaryHoverColor;
       transform: scale(1.05);
     }
   }
-  .profile__container__info__container__item--circle {
+  .profile__container__info__container__item__circle {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -33,13 +33,13 @@
     transition: color 0.2s, border-color 0.2s, transform 0.2s;
   }
   
-  .profile__container__info__container__item--circle--span--icon {
+  .profile__container__info__container__item__circle__span__icon {
     display: flex;
     align-items: center;
     font-size: 1.5rem;
   }
   
-  .profile__container__info__container__item--name {
+  .profile__container__info__container__item__name {
     text-align: center;
     margin-top: 5px;
     font-weight: bold;

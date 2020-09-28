@@ -11,6 +11,13 @@
     "change-photo":"Zmień zdjęcie",
     "error":{
         "user-does-not-exist":"Użytkownik nie istnieje"
+    },
+    "about":{
+        "first-name":"Imię",
+        "last-name":"Nazwisko",
+        "city":"Miasto",
+        "country":"Kraj",
+        "birthdate":"Data urodzenia"
     }
     
 }

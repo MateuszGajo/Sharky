@@ -10,55 +10,55 @@ import About from "../About/About";
 import i18next from "@i18n";
 const { useTranslation } = i18next;
 
-const ProfileDisplayItems = ({ setChooseItem, chooseItem, info, idUser }) => {
+const ProfileDisplayItems = ({ setChooseItem, chooseItem, info, userId }) => {
   const { t } = useTranslation(["profile"]);
 
-  const aboutItemName = t("profile:about-me");
-  const friendsItemName = t("profile:friends");
-  const groupsItemName = t("profile:groups");
-  const photosItemName = t("profile:photos");
-  const postsItemName = t("profile:posts");
-  const fanpagesItemName = t("profile:fanpages");
+  const aboutText = t("profile:about-me");
+  const friendsText = t("profile:friends");
+  const groupsText = t("profile:groups");
+  const photosText = t("profile:photos");
+  const postsText = t("profile:posts");
+  const fanpagesText = t("profile:fanpages");
 
   const renderComponent = (name) => {
     switch (name) {
-      case fanpagesItemName:
+      case fanpagesText:
         return (
           <Fanpages
-            idUser={idUser}
+            userId={userId}
             onlySubscribed={true}
             helpInformation={false}
           />
         );
-      case friendsItemName:
+      case friendsText:
         return (
-          <People idUser={idUser} onlyFriends={true} helpInformation={false} />
+          <People userId={userId} onlyFriends={true} helpInformation={false} />
         );
-      case groupsItemName:
+      case groupsText:
         return (
           <Groups
-            idUser={idUser}
+            userId={userId}
             onlySubscribed={true}
             helpInformation={false}
           />
         );
-      case photosItemName:
-        return <Photos idUser={idUser} />;
-      case postsItemName:
-        return <Posts idUser={idUser} authorPost={true} />;
-      case aboutItemName:
+      case photosText:
+        return <Photos userId={userId} />;
+      case postsText:
+        return <Posts userId={userId} authorPost={true} />;
+      case aboutText:
         return <About info={info} />;
     }
   };
   return (
     <div
       className={cx("profile__display", {
-        "primary-border-left": chooseItem === aboutItemName,
+        "primary-border-left": chooseItem === aboutText,
       })}
     >
       <div className="profile__display__navbar">
         <div
-          className="profile__display__navbar--icon"
+          className="profile__display__navbar__icon"
           onClick={() => setChooseItem("")}
         >
           <IoMdArrowBack />
@@ -67,9 +67,9 @@ const ProfileDisplayItems = ({ setChooseItem, chooseItem, info, idUser }) => {
       </div>
       <div
         className={cx("profile__display__content", {
-          "profile__display__content--photos": chooseItem === photosItemName,
-          "profile__display__content--posts": chooseItem === postsItemName,
-          "profile__display__content--about": chooseItem == aboutItemName,
+          "profile__display__content--photos": chooseItem === photosText,
+          "profile__display__content--posts": chooseItem === postsText,
+          "profile__display__content--about": chooseItem == aboutText,
         })}
       >
         {renderComponent(chooseItem)}
