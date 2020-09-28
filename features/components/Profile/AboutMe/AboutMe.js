@@ -17,7 +17,7 @@ const ProfileInfo = ({ setChooseItem, info, userId }) => {
 
   const { t } = useTranslation(["profile"]);
 
-  const aboutItemName = t("profile:about-me");
+  const aboutText = t("profile:about-me");
 
   return (
     <div className="profile__container">
@@ -28,7 +28,7 @@ const ProfileInfo = ({ setChooseItem, info, userId }) => {
       />
       {isDisplayAbout ? (
         <DisplayItem
-          chooseItem={aboutItemName}
+          chooseItem={aboutText}
           setChooseItem={setStatusOfDisplayAbout}
           info={info}
           userId={userId}
@@ -38,7 +38,7 @@ const ProfileInfo = ({ setChooseItem, info, userId }) => {
           info={info}
           numberOfPhotos={numberOfPhotos}
           setChooseItem={setChooseItem}
-          aboutItemName={aboutItemName}
+          aboutText={aboutText}
           setStatusOfDisplayAbout={setStatusOfDisplayAbout}
         />
       )}
