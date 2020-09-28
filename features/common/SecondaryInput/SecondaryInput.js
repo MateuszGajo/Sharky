@@ -2,7 +2,7 @@ import React from "react";
 import cx from "classnames";
 
 const SecondaryInput = ({
-  user = { photo: "profile.png" },
+  photo = "profile.png",
   size = "large",
   value,
   onChange,
@@ -11,14 +11,14 @@ const SecondaryInput = ({
     <div className="secondary-input">
       <div className="secondary-input__photo">
         <img
-          src={"/static/images/" + user.photo}
+          src={"/static/images/" + photo}
           alt="myself"
-          className={cx("secondary-input__photo--img", {
-            "secondary-input__photo--img--small": size === "small",
-            "secondary-input__photo--img--medium": size === "medium",
-            "secondary-input__photo--img--large": size === "large",
+          className={cx("secondary-input__photo__photo", {
+            "secondary-input__photo__photo--small": size === "small",
+            "secondary-input__photo__photo--medium": size === "medium",
+            "secondary-input__photo__photo--large": size === "large",
           })}
-          data-testid="secondary-input-photo-img"
+          data-testid="secondary-input-photo"
         />
       </div>
       <div className="secondary-input__text">
@@ -26,10 +26,10 @@ const SecondaryInput = ({
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className={cx("secondary-input__text--input", {
-            "secondary-input__text--input--small": size === "small",
-            "secondary-input__text--input--medium": size === "medium",
-            "secondary-input__text--input--large": size === "large",
+          className={cx("secondary-input__text__input", {
+            "secondary-input__text__input--small": size === "small",
+            "secondary-input__text__input--medium": size === "medium",
+            "secondary-input__text__input--large": size === "large",
           })}
           data-testid="secondary-input-field"
         />

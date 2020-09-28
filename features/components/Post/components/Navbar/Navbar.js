@@ -71,22 +71,22 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
             Router.push(`/profile/${userShare.id}`);
           }}
         >
-          <div className="post__item__navbar__user--photo">
+          <div className="post__item__navbar__user__photo">
             <img
               src={"/static/images/" + userShare.photo}
               alt="Zdjęcie użytkownika"
-              className="post__item__navbar__user--photo--img"
+              className="post__item__navbar__user__photo__img"
             />
           </div>
-          <div className="post__item__navbar__user--name">
+          <div className="post__item__navbar__user__name">
             <span
-              className="post__item__navbar__user--name--span"
+              className="post__item__navbar__user__name__span"
               data-testid="post-username"
             >
               {userShare.firstName + " " + userShare.lastName}
             </span>
           </div>
-          <div className="post__item__navbar__user--share">
+          <div className="post__item__navbar__user__share">
             <IoMdShareAlt />
           </div>
         </div>
@@ -97,16 +97,16 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
           Router.push(`/profile/${user.id}`);
         }}
       >
-        <div className="post__item__navbar__user--photo">
+        <div className="post__item__navbar__user__photo">
           <img
             src={"/static/images/" + user.photo}
             alt="Zdjęcie użytkownika"
-            className="post__item__navbar__user--photo--img"
+            className="post__item__navbar__user__photo__img"
           />
         </div>
-        <div className="post__item__navbar__user--name">
+        <div className="post__item__navbar__user__name">
           <span
-            className="post__item__navbar__user--name--span"
+            className="post__item__navbar__user__name__span"
             data-testid="post-username"
           >
             {user.firstName + " " + user.lastName}
@@ -116,7 +116,7 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
       <div className="post__item__navbar__column-end">
         <div className="post__item__navbar__column-end__data">
           <span
-            className="post__item__navbar__column-end__data--span"
+            className="post__item__navbar__column-end__data__span"
             data-testid="post-date"
           >
             {da} {mo} {ye}
@@ -128,14 +128,14 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
           ref={settingRef}
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="post__item__navbar__column-end__setting--icon">
+          <div className="post__item__navbar__column-end__setting__icon">
             <BsThreeDots />
           </div>
           <div
             className="post__item__navbar__column-end__setting__collapse is-close"
             data-testid="post-setting"
           >
-            {post?.idUserShare == owner.id || post.idUser == owner.id ? (
+            {post?.idUserShare == owner.id || post.userId == owner.id ? (
               <OwnerSettings />
             ) : (
               <UserSettings />

@@ -21,7 +21,7 @@ const PrimaryButton = ({
       })}
     >
       {link ? (
-        <a className="primary-button--link" href={link}>
+        <a className="primary-button__link" href={link}>
           {value}
         </a>
       ) : (

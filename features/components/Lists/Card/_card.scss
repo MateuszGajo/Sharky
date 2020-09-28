@@ -18,18 +18,18 @@
     border: 1px solid $secondaryBackgroundColor;
   }
   
-  .card__item--picture {
+  .card__item__photo {
     cursor: pointer;
   }
   
-  .card__item--picture--img {
+  .card__item__photo__img {
     display: block;
     height: 100%;
     width:100px;
     object-fit: cover;
   }
 
-  .card__item--picture--img--radius{
+  .card__item__photo__img--radius{
     border-radius:5px;
   }
   
@@ -77,7 +77,7 @@
       height:70px;
       width:300px;
     }
-    .card__item--picture--img {
+    .card__item__photo__img {
       width:70px;
     }
 
@@ -118,7 +118,7 @@
     height:120px;
     width:550px;
   }
-  .card__item--picture--img {
+  .card__item__photo__img {
     width:120px;
   }
 
@@ -129,7 +129,7 @@
     height:100px;
     width:450px;
   }
-  .card__item--picture--img {
+  .card__item__photo__img {
     width:90px;
   }
 
