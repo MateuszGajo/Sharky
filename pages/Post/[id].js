@@ -14,7 +14,7 @@ const { useTranslation } = i18next;
 
 const Post = () => {
   const router = useRouter();
-  const idPost = router.query.id;
+  const postId = router.query.id;
   const { t } = useTranslation(["post"]);
 
   const { posts, setPosts, users, setUsers } = useContext(WizzardContext);
@@ -24,9 +24,10 @@ const Post = () => {
 
   const [isLoading, setStutusOfLoading] = useState(true);
 
-  const getUsers = async (idUsers) => {
+  const getUsers = async (userIds) => {
+    console.log(userIds);
     await axios
-      .post("/user/get", { idUsers })
+      .post("/user/get", { userIds })
       .then(({ data: { users: u } }) => {
         let usersKey = {};
 
@@ -45,17 +46,17 @@ const Post = () => {
   };
 
   useEffect(() => {
-    idPost &&
+    postId &&
       isAuth &&
       axios
-        .post("/post/get/single", { idPost })
+        .post("/post/get/single", { postId })
         .then(async ({ data: { post, comments, isMoreComments } }) => {
-          const idUsers = [];
+          const userIds = [];
           for (let i = 0; i < comments.length; i++) {
-            idUsers.push(comments[i].idUser);
+            userIds.push(comments[i].userId);
           }
-          idUsers.push(post.idUser);
-          await getUsers(idUsers);
+          userIds.push(post.userId);
+          await getUsers(userIds);
           setPosts([{ ...post, comments, isMoreComments }]);
           setStutusOfLoading(false);
         })
@@ -65,7 +66,7 @@ const Post = () => {
             setStutusOfLoading(false);
           }
         });
-  }, [idPost, isAuth]);
+  }, [postId, isAuth]);
   const focusElement = useRef(null);
 
   useEffect(() => {
@@ -86,8 +87,9 @@ const Post = () => {
         )}
         {posts.map((post) => (
           <SinglePost
+            key={post.id}
             post={post}
-            user={users[post.idUser]}
+            user={users[post.userId]}
             userShare={null}
             focusElement={focusElement}
             single={true}
