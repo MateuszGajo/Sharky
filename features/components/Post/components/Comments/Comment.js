@@ -12,7 +12,7 @@ import {
   unlikeReply,
 } from "../../services/Functions";
 import WizzardContext from "../../context/WizzardContext";
-import AppContext from "../../../../context/AppContext";
+import AppContext from "@features/context/AppContext";
 
 const { useTranslation } = i18next;
 
@@ -28,13 +28,15 @@ const Commnet = ({
 }) => {
   const { t } = useTranslation(["component"]);
 
+  const { id, firstName, lastName, photo } = user;
+
   const { setError } = useContext(AppContext);
   const { newLike, setNewLike } = useContext(WizzardContext);
 
   const settingRef = useRef(null);
   const reportComment = t("component:post.comments.settings.report");
   const muteUser = t("component:post.comments.settings.mute");
-  const [idLike, setIdLike] = useState(comment?.idLike);
+  const [likeId, setIdLike] = useState(comment?.likeId);
   const [numberOfLikes, setNumberOfLikes] = useState(
     Number(comment.numberOfLikes)
   );
@@ -52,24 +54,24 @@ const Commnet = ({
   };
 
   const setlikeComment = () => {
-    if (idLike) {
+    if (likeId) {
       "numberOfReplies" in comment
         ? unlikeComment({
-            idLike,
-            idComment: comment.idComment,
+            likeId,
+            commnetId: comment.commnetId,
             setNewLike,
             setError,
           })
         : unlikeReply({
-            idLike,
-            idReply: comment.idReply,
+            likeId,
+            replyId: comment.replyId,
             setNewLike,
             setError,
           });
     } else {
       "numberOfReplies" in comment
-        ? likeComment({ idComment: comment.idComment, setNewLike, setError })
-        : likeReply({ idReply: comment.idReply, setNewLike, setError });
+        ? likeComment({ commnetId: comment.commnetId, setNewLike, setError })
+        : likeReply({ replyId: comment.replyId, setNewLike, setError });
     }
   };
 
@@ -108,20 +110,20 @@ const Commnet = ({
   useEffect(() => {
     if (
       newLike.type == "comment" &&
-      newLike.idElement == comment.idComment &&
+      newLike.idElement == comment.commnetId &&
       numberOfReplies != undefined
     ) {
-      setIdLike(newLike.idLike);
-      newLike.idLike
+      setIdLike(newLike.likeId);
+      newLike.likeId
         ? setNumberOfLikes(numberOfLikes + 1)
         : setNumberOfLikes(numberOfLikes - 1);
     } else if (
       newLike.type == "reply" &&
-      newLike.idElement == comment.idReply &&
+      newLike.idElement == comment.replyId &&
       numberOfReplies == undefined
     ) {
-      setIdLike(newLike.idLike);
-      newLike.idLike
+      setIdLike(newLike.likeId);
+      newLike.likeId
         ? setNumberOfLikes(numberOfLikes + 1)
         : setNumberOfLikes(numberOfLikes - 1);
     }
@@ -140,7 +142,7 @@ const Commnet = ({
         <div className="post__item__comments__container__item__content__item">
           <div className="post__item__comments__container__item__content__item__top-bar">
             <div className="post__item__comments__container__item__content__item__top-bar__user-name">
-              <span className="post__item__comments__container__item__content__item__top-bar__user-name--span">
+              <span className="post__item__comments__container__item__content__item__top-bar__user-name__span">
                 {user.firstName + " " + user.lastName}
               </span>
             </div>
@@ -155,35 +157,35 @@ const Commnet = ({
                   className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item"
                   onClick={() => muteUser({ idMuteUser: user.id, posts })}
                 >
-                  <div className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item--icon">
+                  <div className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item__icon">
                     <IconContext.Provider
                       value={{
                         className:
-                          "post__item__comments__container__item__content__item__top-bar__icon__collapse__item--icon--customize",
+                          "post__item__comments__container__item__content__item__top-bar__icon__collapse__item__icon__customize",
                       }}
                     >
                       <FiVolumeX />
                     </IconContext.Provider>
                   </div>
-                  <div className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item--name">
-                    <span className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item--name--span">
+                  <div className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item__name">
+                    <span className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item__name__span">
                       {muteUser}
                     </span>
                   </div>
                 </div>
                 <div className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item">
-                  <div className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item--icon">
+                  <div className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item__icon">
                     <IconContext.Provider
                       value={{
                         className:
-                          "post__item__comments__container__item__content__item__top-bar__icon__collapse__item--icon--customize",
+                          "post__item__comments__container__item__content__item__top-bar__icon__collapse__item__icon__customize",
                       }}
                     >
                       <FiFlag />
                     </IconContext.Provider>
                   </div>
-                  <div className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item--name">
-                    <span className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item--name--span">
+                  <div className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item__name">
+                    <span className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item__name__span">
                       {reportComment}
                     </span>
                   </div>
@@ -197,9 +199,9 @@ const Commnet = ({
           <div className="post__item__comments__container__item__content__item__down-bar">
             <div
               className={cx(
-                "post__item__comments__container__item__content__item__down-bar--icon hover-pal-color",
+                "post__item__comments__container__item__content__item__down-bar__icon hover-pal-color",
                 {
-                  "pal-color": idLike,
+                  "pal-color": likeId,
                 }
               )}
               onClick={() => {
@@ -207,13 +209,13 @@ const Commnet = ({
               }}
             >
               <IoIosHeartEmpty />
-              <span className="post__item__comments__container__item__content__item__down-bar--icon--number">
+              <span className="post__item__comments__container__item__content__item__down-bar__icon__number">
                 {numberOfLikes}
               </span>
             </div>
             {numberOfReplies != undefined && (
               <div
-                className="post__item__comments__container__item__content__item__down-bar--icon hover-primary-color"
+                className="post__item__comments__container__item__content__item__down-bar__icon hover-primary-color"
                 onClick={() => {
                   if (!isRepliesOpen) {
                     getReplies();
@@ -222,7 +224,7 @@ const Commnet = ({
                 }}
               >
                 <FiMessageCircle />
-                <span className="post__item__comments__container__item__content__item__down-bar--icon--number">
+                <span className="post__item__comments__container__item__content__item__down-bar__icon__number">
                   {numberOfReplies}
                 </span>
               </div>

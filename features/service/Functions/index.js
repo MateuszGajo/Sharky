@@ -15,9 +15,9 @@ export const getOwner = ({ setStatusOfAuth, setOwner }) => {
     });
 };
 
-export const checkLanguage = ({ idUser }) => {
+export const checkLanguage = ({ userId }) => {
   axios
-    .post("/user/get/language", { idUser })
+    .post("/user/get/language", { userId })
     .then(({ data: { language } }) => {
       const code = countryCode(language);
       if (i18n.language != code) {

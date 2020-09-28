@@ -1,10 +1,10 @@
 const getMessagesQuery = `
-select c.id, c.id_chat as "idChat", c.id_user as "idUser", c.message, c.date  from chat_messages as c
-where id_chat = $1
+select c.id, c.chat_id as "chatId", c.user_id as "userId", c.message, c.date  from chat_messages as c
+where chat_id = $1
 `;
 
 const addMessageQuery = `
-insert into chat_messages(id_chat, id_user, message, date)
+insert into chat_messages(chat_id, user_id, message, date)
 values($1, $2, $3, $4)
 returning id
   `;

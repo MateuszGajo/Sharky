@@ -8,7 +8,7 @@ import i18next from "@i18n";
 
 const { useTranslation } = i18next;
 
-const ConfirmUser = ({ isOpen = true, setOpen, setVerify }) => {
+const ConfirmUser = ({ setOpen, setVerify }) => {
   const { t } = useTranslation();
 
   const title = t("common:pop-up.confirm-user.title");
@@ -38,14 +38,14 @@ const ConfirmUser = ({ isOpen = true, setOpen, setVerify }) => {
     >
       <div className="confrim-user-container__content">
         <div
-          className="confrim-user-container__content--icon"
+          className="confrim-user-container__content__icon"
           onClick={() => setOpen(false)}
         >
           <IoMdClose />
         </div>
 
-        <div className="confrim-user-container__content--title">
-          <h3 className="confrim-user-container__content--title--h3">
+        <div className="confrim-user-container__content__title">
+          <h3 className="confrim-user-container__content__title__h3">
             {title}
           </h3>
         </div>
@@ -62,7 +62,7 @@ const ConfirmUser = ({ isOpen = true, setOpen, setVerify }) => {
                 title={inputPasswordText}
               />
             </div>
-            <div className="confrim-user-container__content__data__form--button">
+            <div className="confrim-user-container__content__data__form__button">
               <PrimaryButton value={buttonText} />
             </div>
             {error && (
