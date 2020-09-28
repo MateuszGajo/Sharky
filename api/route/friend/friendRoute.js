@@ -176,10 +176,10 @@ router.post("/update/relation", async (req, res) => {
 });
 
 router.post("/change/relation/accept", async (req, res) => {
-  const { idRelation, newRelation } = req.body;
+  const { relationId, newRelation } = req.body;
 
   try {
-    await client.query(acceptChangeRealtionQuery, [newRelation, idRelation]);
+    await client.query(acceptChangeRealtionQuery, [newRelation, relationId]);
 
     res.status(200).json({ sucess: true });
   } catch {
@@ -188,10 +188,10 @@ router.post("/change/relation/accept", async (req, res) => {
 });
 
 router.post("/change/relation/decline", async (req, res) => {
-  const { idRelation } = req.body;
+  const { relationId } = req.body;
 
   try {
-    await client.query(declineChangeRealtionQuery, [idRelation]);
+    await client.query(declineChangeRealtionQuery, [relationId]);
 
     res.status(200).json({ sucess: true });
   } catch {

@@ -36,7 +36,7 @@ const People = ({
   const [friends, setFriends] = useState([]);
   const [friend, setFriend] = useState({ id: null, name: "", idRef: null });
   const [isMore, setStatusOfMore] = useState(false);
-  const [invite, setInvite] = useState({ inviteType: "", idRelation: null });
+  const [invite, setInvite] = useState({ inviteType: "", relationId: null });
 
   const fetchData = (from) => {
     axios
