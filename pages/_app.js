@@ -1,6 +1,4 @@
-import React, { useEffect, useState, useReducer } from "react";
-import { useRouter } from "next/router";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
 import socketIOClient from "socket.io-client";
 import AppContext from "@features/context/AppContext";
 import { SERVER_URL } from "../config/config";
@@ -9,7 +7,6 @@ import { authInitState } from "@features/context/initState";
 import { checkLanguage } from "@features/service/Functions";
 
 const MyApp = ({ Component, pageProps }) => {
-  const router = useRouter();
   const [owner, setOwner] = useState({});
   const [newMessage, setNewMessage] = useState({});
   const [newChat, setNewChat] = useState({

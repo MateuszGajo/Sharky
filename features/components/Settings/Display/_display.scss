@@ -2,14 +2,14 @@
     width: 50%;
   }
   
-  .settings__container__display--title {
+  .settings__container__display__title {
     position: relative;
     text-align: center;
     padding: $smallMargin 0;
     border-bottom: 1px solid $shadowColor;
   }
   
-  .settings__container__display--title--icon {
+  .settings__container__display__title__icon {
     display: flex;
     align-items: center;
     position: absolute;
@@ -20,17 +20,17 @@
     cursor: pointer;
   }
   
-  .settings__container__display--form {
+  .settings__container__display__form {
     display: flex;
     flex-direction: column;
     width: 90%;
     margin: 0 auto;
   }
-  .settings__container__display--form--input {
+  .settings__container__display__form__input {
     margin-top: $smallMargin;
   }
   
-  .settings__container__display--form--button {
+  .settings__container__display__form__button {
     display: flex;
     justify-content: flex-end;
     margin-top: $smallMargin;
@@ -45,7 +45,7 @@
     text-align: center;
   }
   
-  .settings__container__reminder--p {
+  .settings__container__reminder__p {
     margin-top: $smallMargin;
   }
   

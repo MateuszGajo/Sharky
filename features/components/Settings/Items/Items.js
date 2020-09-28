@@ -8,7 +8,7 @@ const Items = ({
   isAccountCollapsed,
   setStatusOfAccountCollapse,
   userSettings,
-  setChooseSetting,
+  setSettings,
   setInputValue,
   isGeneralCollapsed,
   setStatusOfGeneralCollapse,
@@ -16,20 +16,19 @@ const Items = ({
   const { t } = useTranslation(["settings"]);
 
   const title = t("settings:title");
-  const accountTitle = t("settings:account.title");
-
-  const generalTitle = t("settings:general.title");
+  const accountText = t("settings:account.title");
+  const generalText = t("settings:general.title");
 
   return (
     <div className="settings__container">
       <div className="settings__container__wrapper">
-        <h1 className="settings__container__wrapper--title">{title}</h1>
+        <h1 className="settings__container__wrapper__title">{title}</h1>
         <div className="settings__container__wrapper__account">
           <div className="setting-title">
-            <h3 className="setting-title--h3">{accountTitle}</h3>
+            <h3 className="setting-title__h3">{accountText}</h3>
             <div
-              className={cx("setting-title--icon", {
-                "setting-title--icon-active": !isAccountCollapsed,
+              className={cx("setting-title__icon", {
+                "setting-title__icon-active": !isAccountCollapsed,
               })}
               onClick={() => setStatusOfAccountCollapse(!isAccountCollapsed)}
             >
@@ -51,7 +50,7 @@ const Items = ({
                   className="settings__container__wrapper__account__item__item setting-item__container"
                   key={id}
                   onClick={() => {
-                    setChooseSetting({ ...setting, title: name });
+                    setSettings({ ...setting, title: name });
                     setInputValue(value);
                   }}
                 >
@@ -63,10 +62,10 @@ const Items = ({
         </div>
         <div className="settings__container__wrapper__general">
           <div className="setting-title">
-            <h3 className="setting-title--h3">{generalTitle}</h3>
+            <h3 className="setting-title__h3">{generalText}</h3>
             <div
-              className={cx("setting-title--icon", {
-                "setting-title--icon-active": !isGeneralCollapsed,
+              className={cx("setting-title__icon", {
+                "setting-title__icon-active": !isGeneralCollapsed,
               })}
               onClick={() => setStatusOfGeneralCollapse(!isGeneralCollapsed)}
             >
@@ -88,7 +87,7 @@ const Items = ({
                   className="settings__container__wrapper__general__item__item setting-item__container"
                   key={id}
                   onClick={() => {
-                    setChooseSetting({ ...setting, title: name });
+                    setSettings({ ...setting, title: name });
                     if (!value) setInputValue("");
                     else if (name == "country")
                       setInputValue(t(`settings:countries.${value}`));
