@@ -159,9 +159,9 @@ const readMessageQuery = `update chats set message_to=null where id=$1;`;
 
 const updateRelationQuery = `update friend_relations set new_relation=$1, user_id=$2 where friendship_id=$3;`;
 
-const acceptChangeRealtionQuery = `update friend_relation set user_id=null, new_relation=null ,relation=$1 where id=$2`;
+const acceptChangeRealtionQuery = `update friend_relations set user_id=null, new_relation=null ,relation=$1 where id=$2`;
 
-const declineChangeRealtionQuery = `update friend_relation set user_id=null, new_relation=null where id=$1`;
+const declineChangeRealtionQuery = `update friend_relations set user_id=null, new_relation=null where id=$1`;
 
 module.exports = {
   getFriendsQuery,
