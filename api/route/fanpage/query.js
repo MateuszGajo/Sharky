@@ -97,42 +97,42 @@ returning id
 `;
 
 const getFanpageAdminsQuery =
-  "select * from fanpage_users where id_fanpage=$1 and role='admin'";
+  "select * from fanpage_users where fanpage_id=$1 and role='admin'";
 
 const getIdUserQuery = `select id from fanpage_users where fanpage_id=$1 and user_id=$2`;
 
 const deleteUserQuery = `delete from fanpage_users where id=$1`;
 
 const fanpageInfoQuery = `
-select a.*,a."idFanpage", b.name, b.date	
-from(select id_fanpage as "idFanpage", count(*) as "numberOfSubscribers" 
+select a.*,a."fanpageId", b.name, b.date	
+from(select fanpage_id as "fanpageId", count(*) as "numberOfSubscribers" 
   from fanpage_users 
-  where id_fanpage=$1 
-  group by "idFanpage") as a
+  where fanpage_id=$1 
+  group by "fanpageId") as a
 inner join fanpages as b
-on a."idFanpage" = b.id
+on a."fanpageId" = b.id
 `;
 
 const checkUserQuery = `
-select a.*,b.id as "idSub",b.role
+select a.*,b.id as "subId",b.role
 from(select  id 
 	from fanpages 
 	where id=$1) as a
-left join fanpage_users as b on a.id=b.id_fanpage and b.id_user=$2
+left join fanpage_users as b on a.id=b.fanpage_id and b.user_id=$2
 `;
 
 const deleteFanpageQuery = "delete from fanpages where id=$1";
 
-const deleteFanpageUsersQuery = "delete from fanpage_users where id_fanpage=$1";
+const deleteFanpageUsersQuery = "delete from fanpage_users where fanpage_id=$1";
 
-const deleteFanpagePostsQuery = "delete from posts where id_fanpage=$1";
+const deleteFanpagePostsQuery = "delete from posts where fanpage_id=$1";
 
 const getMembersQuery = `
-select a.id as "idSub", a.id_user as "idUser",a.role, b.first_name as "firstName", b.last_name as "lastName", b.photo 
+select a.id as "subId", a.user_id as "userId",a.role, b.first_name as "firstName", b.last_name as "lastName", b.photo 
 from fanpage_users as a
 inner join users as b
-on b.id = a.id_user
-where a.id_fanpage=$1
+on b.id = a.user_id
+where a.fanpage_id=$1
 limit 21 offset $2
 `;
 

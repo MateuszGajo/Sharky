@@ -25,11 +25,11 @@ const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
 
 router.post("/about", async (req, res) => {
-  const { idFanpage } = req.body;
+  const { fanpageId } = req.body;
 
   try {
     const { rows: fanpageInfo } = await client.query(fanpageInfoQuery, [
-      idFanpage,
+      fanpageId,
     ]);
 
     res.status(200).json({ fanpageInfo: fanpageInfo[0] });
@@ -39,30 +39,30 @@ router.post("/about", async (req, res) => {
 });
 
 router.post("/enter", async (req, res) => {
-  const { idFanpage } = req.body;
+  const { fanpageId } = req.body;
 
-  const { id: idOwner } = decodeToken(req);
+  const { id: ownerId } = decodeToken(req);
 
   try {
-    const { rows } = await client.query(checkUserQuery, [idFanpage, idOwner]);
+    const { rows } = await client.query(checkUserQuery, [fanpageId, ownerId]);
     if (!rows[0]) return res.status(404).json("fanpage-does-not-exist");
 
-    const idSub = rows[0] ? rows[0].idSub : null;
+    const subId = rows[0] ? rows[0].subId : null;
     const role = rows[0] ? rows[0].role : null;
     const id = rows[0].id;
-    res.status(200).json({ idSub, role, id });
+    res.status(200).json({ subId, role, id });
   } catch {
     res.status(400).json("bad-request");
   }
 });
 
 router.post("/delete", async (req, res) => {
-  const { idFanpage } = req.body;
+  const { fanpageId } = req.body;
 
   try {
-    await client.query(deleteFanpageQuery, [idFanpage]);
-    await client.query(deleteFanpageUsersQuery, [idFanpage]);
-    await client.query(deleteFanpagePostsQuery, [idFanpage]);
+    await client.query(deleteFanpageQuery, [fanpageId]);
+    await client.query(deleteFanpageUsersQuery, [fanpageId]);
+    await client.query(deleteFanpagePostsQuery, [fanpageId]);
 
     res.status(200).json({ success: true });
   } catch {
@@ -71,11 +71,11 @@ router.post("/delete", async (req, res) => {
 });
 
 router.post("/member/get", async (req, res) => {
-  const { idFanpage, from } = req.body;
+  const { fanpageId, from } = req.body;
 
   let result;
   try {
-    result = await client.query(getMembersQuery, [idFanpage, from]);
+    result = await client.query(getMembersQuery, [fanpageId, from]);
   } catch {
     res.status(400).json("bad-request");
   }
@@ -92,10 +92,10 @@ router.post("/member/get", async (req, res) => {
 });
 
 router.post("/member/relation/change", async (req, res) => {
-  const { idSub, relation } = req.body;
+  const { subId, relation } = req.body;
 
   try {
-    await client.query(updateMemberRealtionQuery, [relation, idSub]);
+    await client.query(updateMemberRealtionQuery, [relation, subId]);
 
     res.status(200).json({ success: true });
   } catch {
@@ -200,17 +200,16 @@ router.post("/user/add", async (req, res) => {
 });
 
 router.post("/user/delete", async (req, res) => {
-  const { idSub, idFanpage, role } = req.body;
-  const { subId } = req.body;
+  const { subId, fanpageId, role } = req.body;
 
   let admins;
   if (role == "admin") {
-    admins = await client.query(getFanpageAdminsQuery, [idFanpage]);
+    admins = await client.query(getFanpageAdminsQuery, [fanpageId]);
   }
 
   if (role != "admin" || admins.rowCount > 1) {
     try {
-      await client.query(deleteUserQuery, [idSub]);
+      await client.query(deleteUserQuery, [subId]);
 
       res.status(200).json({ success: true });
     } catch {
@@ -247,10 +246,10 @@ router.post("/change/photo", async (req, res) => {
         return res.status(413).json("file-too-large");
       }
     }
-    const { idFanpage } = req.body;
+    const { fanpageId } = req.body;
 
     try {
-      await client.query(changeFanpagePhotoQuery, [fileName, idFanpage]);
+      await client.query(changeFanpagePhotoQuery, [fileName, fanpageId]);
       res.status(200).json({ success: true });
     } catch {
       res.status(400).json("bad-request");

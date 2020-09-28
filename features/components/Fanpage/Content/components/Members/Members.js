@@ -7,7 +7,7 @@ import AppContext from "@features/context/AppContext";
 import i18next from "@i18n";
 const { useTranslation } = i18next;
 
-const Members = ({ idFanpage, role: permission }) => {
+const Members = ({ fanpageId, role: permission }) => {
   const { t } = useTranslation(["fanpage"]);
   const adminName = t("fanpage:admin");
   const moderatorName = t("fanpage:moderator");
@@ -24,7 +24,7 @@ const Members = ({ idFanpage, role: permission }) => {
 
   const fetchData = (from) => {
     axios
-      .post("/fanpage/member/get", { idFanpage, from })
+      .post("/fanpage/member/get", { fanpageId, from })
       .then(({ data: { members: m, isMore } }) => {
         setMembers([...members, ...m]);
         setStatusOfMore(isMore);
@@ -35,10 +35,10 @@ const Members = ({ idFanpage, role: permission }) => {
     const { id, idRef } = removeMember;
     if (id) {
       axios
-        .post("/fanpage/user/delete", { idSub: id })
+        .post("/fanpage/user/delete", { subId: id })
         .then(() => {
           const newArrayOfMembers = members.filter(
-            (member) => member.idUser != idRef
+            (member) => member.userId != idRef
           );
           setMembers(newArrayOfMembers);
         })
@@ -47,10 +47,10 @@ const Members = ({ idFanpage, role: permission }) => {
   }, [removeMember]);
 
   useEffect(() => {
-    const { idSub, name, setButtonName, setTitle } = relation;
-    if (idSub)
+    const { subId, name, setButtonName, setTitle } = relation;
+    if (subId)
       axios
-        .post("/fanpage/member/relation/change", { idSub, relation: name })
+        .post("/fanpage/member/relation/change", { subId, relation: name })
         .then(() => {
           setButtonName(name);
           setTitle(t(`fanpage:${name}`));
@@ -71,22 +71,22 @@ const Members = ({ idFanpage, role: permission }) => {
       >
         <div className="fanpage__content__members__container">
           {members.map((member) => {
-            const { idUser, idSub, role, firstName, lastName, photo } = member;
+            const { userId, subId, role, firstName, lastName, photo } = member;
             const data = {
               refType: "profile",
-              id: idSub,
-              idRef: idUser,
+              id: subId,
+              idRef: userId,
               photo,
               radiusPhoto: false,
               name: `${firstName} ${lastName} ${
-                owner.id == idUser ? `(${mySelf})` : ""
+                owner.id == userId ? `(${mySelf})` : ""
               }`,
               unsubTitle: removeText,
               button: "relation",
               buttonName: role,
               title: t(`fanpage:${role}`),
               collapse:
-                permission == "admin" && owner.id != idUser ? true : false,
+                permission == "admin" && owner.id != userId ? true : false,
               collapseItems: {
                 pink: {
                   name: "admin",
@@ -107,7 +107,7 @@ const Members = ({ idFanpage, role: permission }) => {
                 data={data}
                 handleClick={setRemoveMember}
                 setRelation={setRealation}
-                key={idUser}
+                key={userId}
               />
             );
           })}

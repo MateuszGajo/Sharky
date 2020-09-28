@@ -13,5 +13,8 @@
     "changed-photo":"Photo have changed",
     "error":{
         "fanpage-does-not-exist":"Fanpage doesn't exist"
-    }
+    },
+    "name":"Name",
+    "number-of-subscribers":"Number of subscribers",
+    "starting-date":"Starting date"
 }
