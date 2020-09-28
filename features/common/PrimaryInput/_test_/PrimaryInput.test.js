@@ -28,13 +28,13 @@ it("Does primary input works correct", () => {
   const primaryInput = getByTestId("primary-input");
   const primaryInputTitle = getByTestId("primary-input-title");
   const autocomplete = getByTestId("input-primary-autocomplete");
-  const primaryInputContainer = getByTestId("primary-input-container");
+  const primaryInputContainer = getByTestId("primary-input");
 
   expect(primaryInputTitle).toHaveTextContent(inputTitle);
   expect(primaryInput).toHaveValue(inputValue);
   expect(autocomplete).toHaveClass("is-close");
   expect(primaryInputContainer).toHaveClass(
-    "reset-margin primary-input-container--large"
+    "reset-margin primary-input--large"
   );
 
   const newInputValue = "A";

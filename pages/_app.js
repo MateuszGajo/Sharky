@@ -13,8 +13,8 @@ const MyApp = ({ Component, pageProps }) => {
   const [owner, setOwner] = useState({});
   const [newMessage, setNewMessage] = useState({});
   const [newChat, setNewChat] = useState({
-    idUser: null,
-    idChat: null,
+    userId: null,
+    chatId: null,
     messageTo: null,
     firstName: "",
     lastName: "",
@@ -31,7 +31,7 @@ const MyApp = ({ Component, pageProps }) => {
   useEffect(() => {
     if (owner.id) {
       setSocket(socketIOClient(SERVER_URL));
-      checkLanguage({ idUser: owner.id });
+      checkLanguage({ userId: owner.id });
     }
   }, [owner]);
 
@@ -39,11 +39,11 @@ const MyApp = ({ Component, pageProps }) => {
     if (socket) {
       socket.on(
         "message",
-        ({ idMessage, idChat, idUser, message, date, messageTo }) => {
+        ({ messageId, chatId, userId, message, date, messageTo }) => {
           setNewMessage({
-            idMessage,
-            idChat,
-            idUser,
+            messageId,
+            chatId,
+            userId,
             message,
             date,
             messageTo,

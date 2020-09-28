@@ -47,7 +47,7 @@
   position:relative;
 }
 
-.message-box__downbar__upload--img{
+.message-box__downbar__upload__photo{
   display: block;
   object-fit: cover;
   &:hover + .message-box__downbar____upload__photo__overlay{
@@ -55,16 +55,16 @@
   }
 }
 
-.message-box__downbar__upload--img--small{
+.message-box__downbar__upload__photo--small{
   height:37px;
 }
-.message-box__downbar__upload--img--medium{
+.message-box__downbar__upload__photo--medium{
   height:45px;
 }
-.message-box__downbar__upload--img--large{
+.message-box__downbar__upload__photo--large{
   height:50px
 }
-.message-box__downbar__upload--img--x-large{
+.message-box__downbar__upload__photo--x-large{
   height:55px;
 }
 
@@ -115,7 +115,7 @@
 }
 
 
-.message-box__downbar__upload--file{
+.message-box__downbar__upload__file{
   display:block;
   width:20px;
   height:20px;
@@ -123,7 +123,7 @@
   background-color: $primaryColor;
 }
 
-.message-box__downbar__sent-button{
+.message-box__downbar__send-button{
   display:flex;
   align-items: flex-end;
 }
@@ -134,16 +134,16 @@
   .message-box {
     width: 650px;
   }
-  .message-box__downbar__upload--img--small{
+  .message-box__downbar__upload__photo--small{
     height:35px;
   }
-  .message-box__downbar__upload--img--medium{
+  .message-box__downbar__upload__photo--medium{
     height:43px;
   }
-  .message-box__downbar__upload--img--large{
+  .message-box__downbar__upload__photo--large{
     height:48px
   }
-  .message-box__downbar__upload--img--x-large{
+  .message-box__downbar__upload__photo--x-large{
     height:53px;
   }
   
@@ -155,16 +155,16 @@
     width: 550px;
   }
 
-  .message-box__downbar__upload--img--small{
+  .message-box__downbar__upload__photo--small{
     height:33px;
   }
-  .message-box__downbar__upload--img--medium{
+  .message-box__downbar__upload__photo--medium{
     height:41px;
   }
-  .message-box__downbar__upload--img--large{
+  .message-box__downbar__upload__photo--large{
     height:46px
   }
-  .message-box__downbar__upload--img--x-large{
+  .message-box__downbar__upload__photo--x-large{
     height:51px;
   }
   
@@ -175,16 +175,16 @@
   .message-box {
     width: 100%;
   }
-  .message-box__downbar__upload--img--small{
+  .message-box__downbar__upload__photo--small{
     height:31px;
   }
-  .message-box__downbar__upload--img--medium{
+  .message-box__downbar__upload__photo--medium{
     height:41px;
   }
-  .message-box__downbar__upload--img--large{
+  .message-box__downbar__upload__photo--large{
     height:44px
   }
-  .message-box__downbar__upload--img--x-large{
+  .message-box__downbar__upload__photo--x-large{
     height:49px;
   }
 }

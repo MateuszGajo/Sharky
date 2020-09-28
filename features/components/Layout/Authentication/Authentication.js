@@ -26,7 +26,7 @@ const authentication__container = ({ children, type }) => {
             <span className="authentication__container__form__brand--primaryColor">
               Sha
             </span>
-            <span className="authentication__container__form__brand--span">
+            <span className="authentication__container__form__brand__span">
               rky
             </span>
           </h1>
@@ -34,7 +34,7 @@ const authentication__container = ({ children, type }) => {
             <div className="authentication__container__form__wrapper__content">
               <div className="authentication__container__form__wrapper__content__title">
                 <span
-                  className="authentication__container__form__wrapper__content__title--span"
+                  className="authentication__container__form__wrapper__content__title__span"
                   data-testid="title-auth"
                 >
                   {type === "signin"
@@ -48,18 +48,18 @@ const authentication__container = ({ children, type }) => {
         </div>
         <div className="authentication__container__text">
           <div className="authentication__container__text__wrapper">
-            <h1 className="authentication__container__text__wrapper--title">
+            <h1 className="authentication__container__text__wrapper__title">
               {welcomeText}
             </h1>
             <p
-              className="authentication__container__text__wrapper--description"
+              className="authentication__container__text__wrapper__description"
               data-testid="welcome-text"
             >
               {type === "signin"
                 ? signInDescription
                 : type === "signup" && signUpDescription}
             </p>
-            <div className="authentication__container__text__wrapper--button">
+            <div className="authentication__container__text__wrapper__button">
               <PrimaryButton
                 border={true}
                 value={

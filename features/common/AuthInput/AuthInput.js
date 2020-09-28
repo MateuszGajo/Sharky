@@ -11,16 +11,16 @@ const InputAuth = ({
   const input = useRef(null);
   return (
     <div
-      data-testid="auth-input-container"
-      className={cx("auth-input-container", {
-        "auth-input-container--x-large": size === "x-large",
-        "auth-input-container--large": size === "large",
-        "auth-input-container--medium": size === "medium",
-        "auth-input-container--small": size === "small",
+      data-testid="auth-input"
+      className={cx("auth-input", {
+        "auth-input--x-large": size === "x-large",
+        "auth-input--large": size === "large",
+        "auth-input--medium": size === "medium",
+        "auth-input--small": size === "small",
       })}
     >
       <input
-        className="auth-input-container--input"
+        className="auth-input__input"
         type={type}
         data-testid="auth-input"
         value={value}
@@ -30,8 +30,7 @@ const InputAuth = ({
       />
       <h2
         data-testid="auth-input-placeholder"
-        className="auth-input-container--placeholder"
-        onClick={() => input.current.focus()}
+        className="auth-input__placeholder"
       >
         {title}
       </h2>
