@@ -31,6 +31,7 @@ const InputAuth = ({
       <h2
         data-testid="auth-input-placeholder"
         className="auth-input__placeholder"
+        onClick={() => input.current.focus()}
       >
         {title}
       </h2>

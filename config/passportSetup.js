@@ -16,7 +16,7 @@ passport.use(
 
       const firstName = displayName.match(/^([\w\-]+)/g)[0];
       const lastName = displayName.match(/\b(\w+)\W*$/g)[0];
-      const query = `select id, email, first_name as "firstName", last_name as "lastName", photo, phone, country, language, city, birth_date as "birthDate" from users where facebook_id=$1`;
+      const query = `select id, email, first_name as "firstName", last_name as "lastName", photo, phone, country, language, city, birthdate as "birthDate" from users where facebook_id=$1`;
 
       client.query(query, [id], (err, res) => {
         if (err) return done(null, false);
@@ -88,7 +88,7 @@ passport.use(
       const { displayName, id } = profile;
       const firstName = displayName.match(/^([\w\-]+)/g)[0];
       const lastName = displayName.match(/\b(\w+)\W*$/g)[0];
-      const query = `select id, email, first_name as "firstName", last_name as "lastName", phone, country, language, photo, birth_date as "birthDate", city from users where google_id=$1`;
+      const query = `select id, email, first_name as "firstName", last_name as "lastName", phone, country, language, photo, birthdate as "birthDate", city from users where google_id=$1`;
 
       client.query(query, [id], (err, res) => {
         if (err) return done(null, false);
@@ -161,7 +161,7 @@ passport.use(
       const { displayName, id } = profile;
       const firstName = displayName.match(/^([\w\-]+)/g)[0];
       const lastName = displayName.match(/\b(\w+)\W*$/g)[0];
-      const query = `select id, email, first_name as "firstName", last_name as "lastName", photo, phone, country, language, city, birth_date as "birthDate" from users where twitter_id=$1`;
+      const query = `select id, email, first_name as "firstName", last_name as "lastName", photo, phone, country, language, city, birthdate as "birthDate" from users where twitter_id=$1`;
 
       client.query(query, [id], (err, res) => {
         if (err) return done(null, false);

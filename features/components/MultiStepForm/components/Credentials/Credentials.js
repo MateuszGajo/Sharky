@@ -26,7 +26,7 @@ const Credentials = () => {
     <div className="authentication__form__wrapper__inputs__wrapper">
       <div className="authentication__form__wrapper__inputs__wrapper__input">
         {emailError && (
-          <p className="authentication__form__wrapper__inputs__wrapper__input--error">
+          <p className="authentication__form__wrapper__inputs__wrapper__input__error">
             {t(`signup:validation-errors.${emailError}`)}
           </p>
         )}
@@ -39,7 +39,7 @@ const Credentials = () => {
       </div>
       <div className="authentication__form__wrapper__inputs__wrapper__input">
         {passwordError && (
-          <p className="authentication__form__wrapper__inputs__wrapper__input--error">
+          <p className="authentication__form__wrapper__inputs__wrapper__input__error">
             {t(`signup:validation-errors.${passwordError}`)}
           </p>
         )}
@@ -53,7 +53,7 @@ const Credentials = () => {
       </div>
       <div className="authentication__form__wrapper__inputs__wrapper__input">
         {confirmPasswordError && (
-          <p className="authentication__form__wrapper__inputs__wrapper__input--error">
+          <p className="authentication__form__wrapper__inputs__wrapper__input__error">
             {t(`signup:validation-errors.${confirmPasswordError}`)}
           </p>
         )}
