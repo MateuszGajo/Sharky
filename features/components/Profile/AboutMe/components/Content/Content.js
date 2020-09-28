@@ -31,13 +31,13 @@ const Content = ({
           className="profile__container__info__container__item"
           onClick={() => setChooseItem(friendsItemName)}
         >
-          <div className="profile__container__info__container__item--circle">
-            <span className="profile__container__info__container__item--circle--span">
+          <div className="profile__container__info__container__item__circle">
+            <span className="profile__container__info__container__item__circle__span">
               {numberOfFriends}
             </span>
           </div>
-          <div className="profile__container__info__container__item--name">
-            <span className="profile__container__info__container__item--name--span">
+          <div className="profile__container__info__container__item__name">
+            <span className="profile__container__info__container__item__name__span">
               {friendsItemName}
             </span>
           </div>
@@ -46,13 +46,13 @@ const Content = ({
           className="profile__container__info__container__item"
           onClick={() => setChooseItem(groupsItemName)}
         >
-          <div className="profile__container__info__container__item--circle">
-            <span className="profile__container__info__container__item--circle--span">
+          <div className="profile__container__info__container__item__circle">
+            <span className="profile__container__info__container__item__circle__span">
               {numberOfGroups}
             </span>
           </div>
-          <div className="profile__container__info__container__item--name">
-            <span className="profile__container__info__container__item--name--span">
+          <div className="profile__container__info__container__item__name">
+            <span className="profile__container__info__container__item__name__span">
               {groupsItemName}
             </span>
           </div>
@@ -61,13 +61,13 @@ const Content = ({
           className="profile__container__info__container__item"
           onClick={() => setChooseItem(fanpagesItemName)}
         >
-          <div className="profile__container__info__container__item--circle">
-            <span className="profile__container__info__container__item--circle--span">
+          <div className="profile__container__info__container__item__circle">
+            <span className="profile__container__info__container__item__circle__span">
               {numberOfFanpages}
             </span>
           </div>
-          <div className="profile__container__info__container__item--name">
-            <span className="profile__container__info__container__item--name--span">
+          <div className="profile__container__info__container__item__name">
+            <span className="profile__container__info__container__item__name__span">
               {fanpagesItemName}
             </span>
           </div>
@@ -78,13 +78,13 @@ const Content = ({
           className="profile__container__info__container__item"
           onClick={() => setChooseItem(photosItemName)}
         >
-          <div className="profile__container__info__container__item--circle">
-            <span className="profile__container__info__container__item--circle--span">
+          <div className="profile__container__info__container__item__circle">
+            <span className="profile__container__info__container__item__circle__span">
               {numberOfPhotos}
             </span>
           </div>
-          <div className="profile__container__info__container__item--name">
-            <span className="profile__container__info__container__item--name--span">
+          <div className="profile__container__info__container__item__name">
+            <span className="profile__container__info__container__item__name__span">
               {photosItemName}
             </span>
           </div>
@@ -93,13 +93,13 @@ const Content = ({
           className="profile__container__info__container__item"
           onClick={() => setChooseItem(postsItemName)}
         >
-          <div className="profile__container__info__container__item--circle">
-            <span className="profile__container__info__container__item--circle--span">
+          <div className="profile__container__info__container__item__circle">
+            <span className="profile__container__info__container__item__circle__span">
               {numberOfPosts}
             </span>
           </div>
-          <div className="profile__container__info__container__item--name">
-            <span className="profile__container__info__container__item--name--span">
+          <div className="profile__container__info__container__item__name">
+            <span className="profile__container__info__container__item__name__span">
               {postsItemName}
             </span>
           </div>
@@ -108,15 +108,15 @@ const Content = ({
           className="profile__container__info__container__item"
           onClick={() => setStatusOfDisplayAbout(true)}
         >
-          <div className="profile__container__info__container__item--circle">
-            <span className="profile__container__info__container__item--circle--span">
-              <span className="profile__container__info__container__item--circle--span--icon">
+          <div className="profile__container__info__container__item__circle">
+            <span className="profile__container__info__container__item__circle__span">
+              <span className="profile__container__info__container__item__circle__span__icon">
                 <TiInfoLargeOutline />
               </span>
             </span>
           </div>
-          <div className="profile__container__info__container__item--name">
-            <span className="profile__container__info__container__item--name--span">
+          <div className="profile__container__info__container__item__name">
+            <span className="profile__container__info__container__item__name__span">
               {aboutItemName}
             </span>
           </div>

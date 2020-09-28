@@ -18,13 +18,13 @@ const Collapse = ({
 }) => {
   return (
     <div
-      className="card__item__info__second-column__buttons--change-status"
+      className="card__item__info__second-column__buttons__change-status"
       data-testid="card-update-button"
       ref={collapseRef}
     >
       <div
         className={cx(
-          "card__item__info__second-column__buttons--change-status--circle primary-background",
+          "card__item__info__second-column__buttons__change-status__circle  primary-background",
           {
             "brightness-reduce hover-brightness": greenName !== buttonName,
           }
@@ -33,7 +33,7 @@ const Collapse = ({
           if (buttonName !== greenName) {
             setRelation({
               id: idRef,
-              idSub: id,
+              subId: id,
               name: greenName,
               setButtonName,
               setTitle,
@@ -46,7 +46,7 @@ const Collapse = ({
       </div>
       <div
         className={cx(
-          "card__item__info__second-column__buttons--change-status--circle pal-background ",
+          "card__item__info__second-column__buttons__change-status__circle  pal-background ",
           {
             "brightness-reduce hover-brightness": pinkName !== buttonName,
           }
@@ -55,7 +55,7 @@ const Collapse = ({
           if (buttonName !== pinkName) {
             setRelation({
               id: idRef,
-              idSub: id,
+              subId: id,
               name: pinkName,
               setButtonName,
               setTitle,
@@ -68,7 +68,7 @@ const Collapse = ({
       </div>
       <div
         className={cx(
-          "card__item__info__second-column__buttons--change-status--circle family-background ",
+          "card__item__info__second-column__buttons__change-status__circle  family-background ",
           {
             "brightness-reduce hover-brightness": blueName !== buttonName,
           }
@@ -77,7 +77,7 @@ const Collapse = ({
           if (buttonName !== blueName) {
             setRelation({
               id: idRef,
-              idSub: id,
+              subId: id,
               name: blueName,
               setButtonName,
               setTitle,

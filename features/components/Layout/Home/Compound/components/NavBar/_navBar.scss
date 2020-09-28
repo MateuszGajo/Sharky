@@ -29,12 +29,12 @@
 .home__wrapper__navbar__title__icon{
   display:none;
 }
-.home__wrapper__navbar__title--h1 {
+.home__wrapper__navbar__title__h1 {
   text-align: center;
   font-size: 2.5rem;
 }
 
-.home__wrapper__navbar__title--h1--primaryColor {
+.home__wrapper__navbar__title__h1--primaryColor {
   color: $primaryColor;
 }
 
@@ -59,7 +59,7 @@
     color: $primaryColor;
     background-color: $secondaryBackgroundColor;
   }
-  &:hover .home__wrapper__navbar__list__item__name--a {
+  &:hover .home__wrapper__navbar__list__item__name__a {
     color: $primaryColor;
   }
 }
@@ -71,7 +71,7 @@
   align-items: center;
 }
 
-.home__wrapper__navbar__list__item__name--a {
+.home__wrapper__navbar__list__item__name__a {
   transition: 0.2s color;
 }
 

@@ -11,5 +11,12 @@
     "change-photo":"Change photo",
     "error":{
         "user-does-not-exist":"User dosen't exist"
+    },
+    "about":{
+        "first-name":"First name",
+        "last-name":"Last name",
+        "city":"City",
+        "country":"Country",
+        "birthdate":"Birthdate"
     }
 }

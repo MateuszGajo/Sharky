@@ -9,12 +9,12 @@ import Error from "@common/PopUp/Error/Error";
 import AppContext from "@features/context/AppContext";
 import i18next from "@i18n";
 import { getOwner } from "@features/service/Functions/index";
-import "../../styles/profile.scss";
+import "@styles/profile.scss";
 const { useTranslation } = i18next;
 
 const profile = () => {
   const router = useRouter();
-  const idUser = router.query.id;
+  const userId = router.query.id;
 
   const { t } = useTranslation(["profile"]);
 
@@ -27,10 +27,10 @@ const profile = () => {
   const [isAuth, setStatusOfAuth] = useState(null);
 
   useEffect(() => {
-    idUser &&
+    userId &&
       isAuth &&
       axios
-        .post("/user/info", { idUser })
+        .post("/user/info", { userId })
         .then(({ data: { info } }) => {
           setInfo(info);
           setStatusOfLoading(false);
@@ -41,7 +41,7 @@ const profile = () => {
             setStatusOfLoading(false);
           }
         });
-  }, [idUser, isAuth]);
+  }, [userId, isAuth]);
 
   useEffect(() => {
     getOwner({ setStatusOfAuth, setOwner });
@@ -64,13 +64,13 @@ const profile = () => {
               setChooseItem={setChooseItem}
               chooseItem={chooseItem}
               info={info}
-              idUser={idUser}
+              userId={userId}
             />
           ) : (
             <AboutMe
               setChooseItem={setChooseItem}
               info={info}
-              idUser={idUser}
+              userId={userId}
             />
           )}
         </>

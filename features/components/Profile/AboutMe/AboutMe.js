@@ -6,7 +6,7 @@ import i18next from "@i18n";
 
 const { useTranslation } = i18next;
 
-const ProfileInfo = ({ setChooseItem, info, idUser }) => {
+const ProfileInfo = ({ setChooseItem, info, userId }) => {
   const { numberOfPhotos: initialNumberOfPhotos } = info;
 
   const [isDisplayAbout, setStatusOfDisplayAbout] = useState(false);
@@ -24,14 +24,14 @@ const ProfileInfo = ({ setChooseItem, info, idUser }) => {
       <Header
         info={info}
         setNumberOfPhotos={setNumberOfPhotos}
-        idUser={idUser}
+        userId={userId}
       />
       {isDisplayAbout ? (
         <DisplayItem
           chooseItem={aboutItemName}
           setChooseItem={setStatusOfDisplayAbout}
           info={info}
-          idUser={idUser}
+          userId={userId}
         />
       ) : (
         <Content

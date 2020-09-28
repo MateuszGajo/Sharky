@@ -4,7 +4,7 @@ import { AiOutlineShareAlt } from "react-icons/ai";
 import { IoIosHeartEmpty } from "react-icons/io";
 import cx from "classnames";
 import { sharePost, likePost, unlikePost } from "../../services/Functions";
-import Router from "@features/route/routes";
+import Router from "next/router";
 import PostContext from "../../context/PostContext";
 import WizzardContext from "../../context/WizzardContext";
 import AppContext from "@features/context/AppContext";
@@ -18,7 +18,7 @@ const DownBarButtons = () => {
     WizzardContext
   );
 
-  const [idLike, setIdLike] = useState(post?.idLike);
+  const [likeId, setIdLike] = useState(post?.likeId);
   const [numberOfLikes, setNumberOfLikes] = useState(
     Number(post.numberOfLikes)
   );
@@ -29,11 +29,11 @@ const DownBarButtons = () => {
   useEffect(() => {
     if (
       newLike.type.toLowerCase() == "post" &&
-      newLike.idElement == post.idPost
+      newLike.idElement == post.postId
     ) {
-      setIdLike(newLike.idLike);
+      setIdLike(newLike.likeId);
 
-      newLike.idLike
+      newLike.likeId
         ? setNumberOfLikes(numberOfLikes + 1)
         : setNumberOfLikes(numberOfLikes - 1);
     }
@@ -44,13 +44,13 @@ const DownBarButtons = () => {
       <div
         className="post__item__downbar__buttons__icon  hover-primary-color"
         onClick={() => {
-          Router.pushRoute("post", { id: post.idPost });
+          Router.pushRoute("post", { id: post.postId });
         }}
       >
         <FiMessageCircle />
         <p
           data-testid="downbar-number-of-comments"
-          className="post__item__downbar__buttons__icon--number"
+          className="post__item__downbar__buttons__icon__number"
         >
           {numberOfComments}
         </p>
@@ -58,18 +58,18 @@ const DownBarButtons = () => {
       <div
         data-testid="downbar-heart-icon"
         className={cx("post__item__downbar__buttons__icon  hover-pal-color", {
-          "pal-color": idLike,
+          "pal-color": likeId,
         })}
         onClick={() => {
-          idLike
-            ? unlikePost({ idPost: post.idPost, setNewLike, idLike, setError })
-            : likePost({ idPost: post.idPost, setNewLike, setError });
+          likeId
+            ? unlikePost({ postId: post.postId, setNewLike, likeId, setError })
+            : likePost({ postId: post.postId, setNewLike, setError });
         }}
       >
         <IoIosHeartEmpty />
         <p
           data-testid="downbar-number-of-likes"
-          className="post__item__downbar__buttons__icon--number"
+          className="post__item__downbar__buttons__icon__number"
         >
           {numberOfLikes}
         </p>
@@ -95,7 +95,7 @@ const DownBarButtons = () => {
         <AiOutlineShareAlt />
         <p
           data-testid="downbar-number-of-shares"
-          className="post__item__downbar__buttons__icon--number"
+          className="post__item__downbar__buttons__icon__number"
         >
           {numberOfShares}
         </p>

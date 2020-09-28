@@ -10,7 +10,7 @@ import About from "../About/About";
 import i18next from "@i18n";
 const { useTranslation } = i18next;
 
-const ProfileDisplayItems = ({ setChooseItem, chooseItem, info, idUser }) => {
+const ProfileDisplayItems = ({ setChooseItem, chooseItem, info, userId }) => {
   const { t } = useTranslation(["profile"]);
 
   const aboutItemName = t("profile:about-me");
@@ -25,27 +25,27 @@ const ProfileDisplayItems = ({ setChooseItem, chooseItem, info, idUser }) => {
       case fanpagesItemName:
         return (
           <Fanpages
-            idUser={idUser}
+            userId={userId}
             onlySubscribed={true}
             helpInformation={false}
           />
         );
       case friendsItemName:
         return (
-          <People idUser={idUser} onlyFriends={true} helpInformation={false} />
+          <People userId={userId} onlyFriends={true} helpInformation={false} />
         );
       case groupsItemName:
         return (
           <Groups
-            idUser={idUser}
+            userId={userId}
             onlySubscribed={true}
             helpInformation={false}
           />
         );
       case photosItemName:
-        return <Photos idUser={idUser} />;
+        return <Photos userId={userId} />;
       case postsItemName:
-        return <Posts idUser={idUser} authorPost={true} />;
+        return <Posts userId={userId} authorPost={true} />;
       case aboutItemName:
         return <About info={info} />;
     }
@@ -58,7 +58,7 @@ const ProfileDisplayItems = ({ setChooseItem, chooseItem, info, idUser }) => {
     >
       <div className="profile__display__navbar">
         <div
-          className="profile__display__navbar--icon"
+          className="profile__display__navbar__icon"
           onClick={() => setChooseItem("")}
         >
           <IoMdArrowBack />
