@@ -5,7 +5,7 @@
     margin-left: 5px;
   }
   
-  .card__item__info__first-column--name--span {
+  .card__item__info__first-column__name__span {
     cursor: pointer;
     color: $primaryColor;
     font-weight: bold;
@@ -19,6 +19,6 @@
     margin-top:6px;
   }
   
-  .card__item__info__first-column__number--span {
+  .card__item__info__first-column__number__span {
     color: $greyTextAuthColor;
   }

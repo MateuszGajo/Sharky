@@ -32,7 +32,7 @@
   color: $primaryColor;
 }
 
-.authentication__container__form__wrapper__content__title--span {
+.authentication__container__form__wrapper__content__title__span {
   position: relative;
   text-align: center;
   font-size: 2.5rem;
@@ -81,7 +81,7 @@
   justify-content: center;
 }
 
-.authentication__container__text__wrapper--title {
+.authentication__container__text__wrapper__title {
   position: relative;
   text-align: center;
   font-size: 4rem;
@@ -97,13 +97,13 @@
   }
 }
 
-.authentication__container__text__wrapper--description {
+.authentication__container__text__wrapper__description {
   margin-top: $largeMargin;
   font-size: 1.2rem;
   text-align: center;
 }
 
-.authentication__container__text__wrapper--button {
+.authentication__container__text__wrapper__button {
   display: flex;
   justify-content: center;
   margin-top: $mediumMargin;
@@ -166,7 +166,7 @@
 }
 
 @media(max-width:1023px) and (orientation:portrait){
-  .authentication__container__text__wrapper--description{
+  .authentication__container__text__wrapper__description{
     font-size: 1.5rem;
   }
 }

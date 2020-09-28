@@ -1,36 +1,36 @@
 const group_getFriendsQuery = `
-with userFriends as(
-select id_user_1 as "idUser" from friends where id_user_2=$1  and status='1' 
+with friendIds as(
+select user_id_1 as "userId" from friends where user_id_2=$1  and status='1' 
 union
-select id_user_2 as "idUser" from friends where  id_user_1=$1  and status='1'  
+select user_id_2 as "userId" from friends where  user_id_1=$1  and status='1'  
 ),
         
-userFriendsCounted as(
-select a."idUser", sum(a.count) as "numberOfFriends"	  
-from( select id_user_1 as "idUser",count(id_user_1)  from friends where id_user_1 in(select * from userFriends) group by id_user_1
+friendsCounted as(
+select a."userId", sum(a.count) as "numberOfFriends"	  
+from( select user_id_1 as "userId",count(user_id_1)  from friends where user_id_1 in(select * from friendIds) group by user_id_1
 union
-select id_user_2 as "idUser",count(id_user_2)  from friends where id_user_2 in(select * from userFriends) group by id_user_2) as a
-group by a."idUser"
+select user_id_2 as "userId",count(user_id_2)  from friends where user_id_2 in(select * from friendIds) group by user_id_2) as a
+group by a."userId"
 ),
         
-invitedFriends as (
-select id_user as "idUser",id::text as "idSub",status::text, CASE WHEN status='0'  THEN true::text  else null end as "isInvitationSent" from group_users where id_user in (select * from userFriends) and id_group=$2	
+friendsInvited as (
+select user_id as "userId",id::text as "subId",status::text, CASE WHEN status='0'  THEN true::text  else null end as "isInvitationSent" from group_users where user_id in (select * from friendIds) and group_id=$2	
 ),
 		
-notInvitedFriends as(
-select *, null as "idSub", null as status, null as "isInvitationSent" from userFriends where "idUser" not in (select "idUser" from invitedFriends)
+friendsNotInvited as(
+select *, null as "subId", null as status, null as "isInvitationSent" from friendIds where "userId" not in (select "userId" from friendsInvited)
 ),
 		
 friendsStatus as (
-select * from invitedFriends where status !='1'
+select * from friendsInvited where status !='1'
 union
-select * from notInvitedFriends
+select * from friendsNotInvited
 )
 		
 select a.*, b."numberOfFriends", c.first_name as "firstName", c.last_name as "lastName", c.photo
 from friendsStatus as a
-inner join userFriendsCounted as b on a."idUser" = b."idUser"
-inner join users as c on a."idUser" = c.id
+inner join friendsCounted as b on a."userId" = b."userId"
+inner join users as c on a."userId" = c.id
 order by c.first_name asc
 limit 21 offset $3`;
 
@@ -42,32 +42,32 @@ or (lower(last_name) like lower($1) and lower(first_name) like lower($2))
 ),
         
 usersSortedCounted as(
-select a."idUser",sum(a.count) as "numberOfFriends"
-from(select id_user_1 as "idUser", count(id_user_1)  from friends where id_user_1 in(select * from usersSorted) group by "idUser"
+select a."userId",sum(a.count) as "numberOfFriends"
+from(select user_id_1 as "userId", count(user_id_1)  from friends where user_id_1 in(select * from usersSorted) group by "userId"
 union 
-select id_user_2 as "idUser", count(id_user_2)  from friends where id_user_2 in(select * from usersSorted) group by "idUser") as a
-group by a."idUser"
+select user_id_2 as "userId", count(user_id_2)  from friends where user_id_2 in(select * from usersSorted) group by "userId") as a
+group by a."userId"
 ),
         
-invitedUsers as (
-select  id_user as  "idUser",id::text as "idSub",status::text, CASE WHEN status='0'  THEN true::text  else null end as "isInvitationSent" from group_users where id_user in (select *from usersSorted) and id_group=$3
+usersInvited as (
+select  user_id as  "userId",id::text as "subId",status::text, CASE WHEN status='0'  THEN true::text  else null end as "isInvitationSent" from group_users where user_id in (select *from usersSorted) and group_id=$3
 ),
     
-notInvitedUsers as(
-select id as "idUser", null as "idSub", null as status, null as "isInvitationSent" from usersSorted where id not in (select "idUser" from invitedUsers)
+usersNotInvited as(
+select id as "userId", null as "subId", null as status, null as "isInvitationSent" from usersSorted where id not in (select "userId" from usersInvited)
 ),
     
 usersStatus as (
-select * from invitedUsers where status !='1'
+select * from usersInvited where status !='1'
 union
-select * from notInvitedUsers
+select * from usersNotInvited
 )
     
     
 select a.*, b."numberOfFriends", c.first_name as "firstName", c.last_name  as "lastName", c.photo 
 from usersStatus as a 
-inner join usersSortedCounted as b on a."idUser" = b."idUser"
-inner join users as c on a."idUser" = c.id
+inner join usersSortedCounted as b on a."userId" = b."userId"
+inner join users as c on a."userId" = c.id
 order by c.first_name desc
 limit 21 offset $4`;
 

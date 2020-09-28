@@ -20,33 +20,34 @@ const Messenger = ({
   const [isLoading, setStatusOfLoading] = useState(true);
   const [messages, setMessages] = useState([]);
   const [user, setUser] = useState({ id: null });
+
   useEffect(() => {
-    if (newMessage.idChat == chat.idChat) {
+    if (newMessage.chatId == chat.chatId) {
       setMessages([
         ...messages,
         {
-          id: chat.idChat,
-          idChat: newMessage.idChat,
+          id: chat.chatId,
+          chatId: newMessage.chatId,
           message: newMessage.message,
           date: newMessage.date,
-          idUser: newMessage.idUser,
+          userId: newMessage.userId,
         },
       ]);
     }
   }, [newMessage]);
 
   useEffect(() => {
-    const { idChat } = chat;
+    const { chatId } = chat;
     if (user.id !== chat.user.id) {
       getMesseges({
-        idChat: idChat,
+        chatId: chatId,
         messages: [],
         setMessages,
         setStatusOfLoading,
       });
       setUser(chat.user);
     }
-  }, [chat.idChat]);
+  }, [chat.chatId]);
 
   return (
     <div
@@ -66,7 +67,7 @@ const Messenger = ({
       />
       {isLoading ? <Spinner /> : <Content messages={messages} user={user} />}
       <Downbar
-        idChat={chat.idChat}
+        chatId={chat.chatId}
         messages={messages}
         setMessages={setMessages}
         converser={user.id}
