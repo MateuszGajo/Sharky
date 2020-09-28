@@ -8,6 +8,7 @@ const {
   removeFriendQuery,
   blockUserQuery,
   getPasswordQuery,
+  getLanguageQuery,
 } = require("./query");
 const jwt = require("jsonwebtoken");
 const { jwtSecret } = require("../../../config/keys");
@@ -16,10 +17,10 @@ const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
 
 router.post("/get", async (req, res) => {
-  const { idUsers } = req.body;
+  const { userIds } = req.body;
 
   try {
-    const { rows: users } = await client.query(getUserQuery, [idUsers]);
+    const { rows: users } = await client.query(getUserQuery, [userIds]);
 
     return res.status(200).json({ users });
   } catch {
@@ -28,10 +29,10 @@ router.post("/get", async (req, res) => {
 });
 
 router.post("/get/photo", async (req, res) => {
-  const { idUser, from } = req.body;
+  const { userId, from } = req.body;
   let result;
   try {
-    result = await client.query(getPhotosQuery, [idUser, from]);
+    result = await client.query(getPhotosQuery, [userId, from]);
   } catch {
     res.status(400).json("bad-request");
   }
@@ -47,15 +48,26 @@ router.post("/get/photo", async (req, res) => {
   res.status(200).json({ photos, isMore });
 });
 
+router.post("/get/language", async (req, res) => {
+  const { userId } = req.body;
+
+  try {
+    const { rows } = await client.query(getLanguageQuery, [userId]);
+    res.status(200).json({ language: rows[0].language });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
 router.post("/mute", async (req, res) => {
   const { idMuteUser } = req.body;
 
-  const { id: idOwner } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req);
 
   const date = new Date();
 
   try {
-    await client.query(muteUserQuery, [idOwner, idMuteUser, date]);
+    await client.query(muteUserQuery, [onwerId, idMuteUser, date]);
 
     res.status(200).json({ success: true });
   } catch {
@@ -64,15 +76,15 @@ router.post("/mute", async (req, res) => {
 });
 
 router.post("/block", async (req, res) => {
-  const { idBlockUser } = req.body;
+  const { userId } = req.body;
   const date = new Date();
 
-  const { id: idOwner } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req);
 
   try {
-    await client.query(removeFriendQuery, [idOwner, idBlockUser]);
-    await client.query(muteUserQuery, [idOwner, idBlockUser, date]);
-    await client.query(blockUserQuery, [idOwner, idBlockUser, date]);
+    await client.query(removeFriendQuery, [onwerId, userId]);
+    await client.query(muteUserQuery, [onwerId, userId, date]);
+    await client.query(blockUserQuery, [onwerId, userId, date]);
 
     res.status(200).json({ success: true });
   } catch {
@@ -81,9 +93,9 @@ router.post("/block", async (req, res) => {
 });
 
 router.get("/logout", async (req, res) => {
-  const { id: idOwner } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req);
   res.clearCookie("token");
-  res.status(200).json({ idUser: idOwner });
+  res.status(200).json({ userId: onwerId });
 });
 
 router.get("/me", (req, res) => {
@@ -99,9 +111,9 @@ router.get("/me", (req, res) => {
 router.post("/check/password", async (req, res) => {
   const { password } = req.body;
 
-  const { id: idOwner } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req);
 
-  const { rows } = await client.query(getPasswordQuery, [idOwner]);
+  const { rows } = await client.query(getPasswordQuery, [onwerId]);
   bcrypt.compare(password, rows[0].password, function (err, result) {
     if (result) {
       return res.status(200).json({ success: true });

@@ -1,44 +1,26 @@
 .messenger {
-    display: flex;
-    flex-direction: column;
-    height:100vh;
-    width:100%;
-    background-color: white;
-    border:1px solid $shadowColor;
-  }
-  
-  .messenger__navbar {
-    display: flex;
-    border-bottom: 1px solid $shadowColor;
-    padding: 8px 5px;
-  }
-
-  .messenger-text-style {
-    max-width: 60%;
-    padding: 6px 10px;
-    border-radius: 30px;
-  }
-  
-
-  .window-messanger{
-    border-radius:10px 10px 0 0;
-    position:fixed;
-    bottom:0;
-    height:400px;
-    width:300px;
-    left:50%;
-    transform: translateX(-50%);
-   
-  }
-  
-  
-@media(max-width:1023px){
- .messenger__navbar__return{
-  display:flex;
-  align-items: center;
-  font-size: 2rem;
-  margin-right:$smallMargin;
-  color:$primaryColor;
-  cursor:pointer;
+  display: flex;
+  flex-direction: column;
+  height:100vh;
+  width:100%;
+  background-color: white;
+  border:1px solid $shadowColor;
 }
+
+.messenger-text-style {
+  max-width: 60%;
+  padding: 6px 10px;
+  border-radius: 30px;
 }
+
+.window-messanger{
+  border-radius:10px 10px 0 0;
+  position:fixed;
+  bottom:0;
+  height:400px;
+  width:300px;
+  left:50%;
+  transform: translateX(-50%);
+}
+
+

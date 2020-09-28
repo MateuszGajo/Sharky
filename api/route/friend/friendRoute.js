@@ -5,7 +5,7 @@ const {
   getSortedFriendsQuery,
   getSortedUsersQuery,
   getChatsQuery,
-  getIdFriendshipQuery,
+  getfriendshipIDQuery,
   addUserQuery,
   deleteUserQuery,
   deleteFriendRelationQuery,
@@ -23,10 +23,10 @@ const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
 
 router.get("/get", async (req, res) => {
-  const { id: idOwner } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req);
 
   try {
-    const friends = await client.query(getChatsQuery, [idOwner]);
+    const friends = await client.query(getChatsQuery, [onwerId]);
     res.status(200).json({ friends: friends.rows });
   } catch {
     res.status(400).json("bad-request");
@@ -34,35 +34,35 @@ router.get("/get", async (req, res) => {
 });
 
 router.post("/add", async (req, res) => {
-  const { idUser } = req.body;
-  const { id: idOwner } = decodeToken(req);
+  const { userId } = req.body;
+  const { id: onwerId } = decodeToken(req);
 
   try {
-    const { rows } = await client.query(getIdFriendshipQuery, [
-      idOwner,
-      idUser,
+    const { rows } = await client.query(getfriendshipIDQuery, [
+      onwerId,
+      userId,
     ]);
     if (rows[0]) {
-      return res.status(200).json({ idFriendShip: rows[0].id });
+      return res.status(200).json({ friendshipId: rows[0].id });
     }
     const { rows: addUser } = await client.query(addUserQuery, [
-      idOwner,
-      idUser,
+      onwerId,
+      userId,
     ]);
 
-    res.status(200).json({ idFriendShip: addUser[0].id });
+    res.status(200).json({ friendshipId: addUser[0].id });
   } catch {
     res.status(400).json("bad-request");
   }
 });
 
 router.post("/delete", async (req, res) => {
-  const { idFriendShip } = req.body;
+  const { friendshipId } = req.body;
 
   try {
-    await client.query(deleteUserQuery, [idFriendShip]);
-    await client.query(deleteFriendRelationQuery, [idFriendShip]);
-    await client.query(deleteChatQuery, [idFriendShip]);
+    await client.query(deleteUserQuery, [friendshipId]);
+    await client.query(deleteFriendRelationQuery, [friendshipId]);
+    await client.query(deleteChatQuery, [friendshipId]);
 
     res.status(200).json({ success: true });
   } catch {
@@ -71,30 +71,30 @@ router.post("/delete", async (req, res) => {
 });
 
 router.post("/accept", async (req, res) => {
-  const { idFriendShip } = req.body;
+  const { friendshipId } = req.body;
 
   const relation = "friend";
   try {
-    const { rows } = await client.query(acceptRequest, [idFriendShip]);
-    let idChat;
+    const { rows } = await client.query(acceptRequest, [friendshipId]);
+    let chatId;
 
     if (rows[0]) {
-      await client.query(setRelation, [idFriendShip, relation]);
-      const { rows: chat } = await client.query(addChatQuery, [idFriendShip]);
-      idChat = chat[0].id;
+      await client.query(setRelation, [friendshipId, relation]);
+      const { rows: chat } = await client.query(addChatQuery, [friendshipId]);
+      chatId = chat[0].id;
     }
 
-    res.status(200).json({ idChat, relation, success: rows[0] ? true : false });
+    res.status(200).json({ chatId, relation, success: rows[0] ? true : false });
   } catch {
     res.status(400).json("bad-request");
   }
 });
 
 router.post("/decline", async (req, res) => {
-  const { idFriendShip } = req.body;
+  const { friendshipId } = req.body;
 
   try {
-    client.query(removeFriendsRequest, [idFriendShip]);
+    client.query(removeFriendsRequest, [friendshipId]);
     res.status(200).json({ success: true });
   } catch {
     res.status(400).json("bad-request");
@@ -102,7 +102,7 @@ router.post("/decline", async (req, res) => {
 });
 
 router.post("/get/people", async (req, res) => {
-  const { idUser, from, onlyFriends } = req.body;
+  const { userId, from, onlyFriends } = req.body;
   let { keyWords } = req.body;
   if (keyWords) {
     keyWords = keyWords.split(/\s+/);
@@ -110,17 +110,17 @@ router.post("/get/people", async (req, res) => {
       return res.status(200).json({ friends: [], isMore: false });
   }
 
-  const { id: idOwner } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req);
 
   let result;
 
   if (!keyWords) {
     try {
       result = await client.query(getFriendsQuery, [
-        idUser,
-        idOwner,
+        userId,
+        onwerId,
         from,
-        idUser == idOwner ? true : false,
+        userId == onwerId ? true : false,
       ]);
     } catch {
       return res.status(400).json("bad-request");
@@ -131,14 +131,14 @@ router.post("/get/people", async (req, res) => {
         result = await client.query(getSortedFriendsQuery, [
           keyWords[0] + "%",
           (keyWords[1] ? keyWords[1] : "") + "%",
-          idOwner,
+          onwerId,
           from,
         ]);
       else
         result = await client.query(getSortedUsersQuery, [
           keyWords[0] + "%",
           (keyWords[1] ? keyWords[1] : "") + "%",
-          idOwner,
+          onwerId,
           from,
         ]);
     } catch {
@@ -158,29 +158,17 @@ router.post("/get/people", async (req, res) => {
   res.status(200).json({ friends, isMore });
 });
 
-router.post("/chat/join", (req, res) => {
-  const { users } = req.body;
-  const { io } = req;
-  const session = req.session;
-
-  for (let i = 0; i < users.length; i++) {
-    io.sockets.connected[session.socketio].join(users[i].idChat);
-  }
-
-  res.status(200);
-});
-
 router.post("/message/read", (req, res) => {
-  const { idChat } = req.body;
+  const { chatId } = req.body;
 
-  client.query(readMessageQuery, [idChat]);
+  client.query(readMessageQuery, [chatId]);
 });
 
 router.post("/update/relation", async (req, res) => {
-  const { idFriendShip, idUser, relation } = req.body;
+  const { friendshipId, userId, relation } = req.body;
 
   try {
-    await client.query(updateRelationQuery, [relation, idUser, idFriendShip]);
+    await client.query(updateRelationQuery, [relation, userId, friendshipId]);
     res.status(200);
   } catch {
     res.status(400).json("bad-request");
@@ -188,10 +176,10 @@ router.post("/update/relation", async (req, res) => {
 });
 
 router.post("/change/relation/accept", async (req, res) => {
-  const { idRelation, newRelation } = req.body;
+  const { relationId, newRelation } = req.body;
 
   try {
-    await client.query(acceptChangeRealtionQuery, [newRelation, idRelation]);
+    await client.query(acceptChangeRealtionQuery, [newRelation, relationId]);
 
     res.status(200).json({ sucess: true });
   } catch {
@@ -200,10 +188,10 @@ router.post("/change/relation/accept", async (req, res) => {
 });
 
 router.post("/change/relation/decline", async (req, res) => {
-  const { idRelation } = req.body;
+  const { relationId } = req.body;
 
   try {
-    await client.query(declineChangeRealtionQuery, [idRelation]);
+    await client.query(declineChangeRealtionQuery, [relationId]);
 
     res.status(200).json({ sucess: true });
   } catch {

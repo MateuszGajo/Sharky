@@ -1,10 +1,21 @@
 
+  .messenger__navbar {
+    display: flex;
+    border-bottom: 1px solid $shadowColor;
+    padding: 8px 5px;
+  }
+
 .messenger__navbar__return{
     display:none;
 }
      
 .messenger__navbar__person {
     display: flex;
+    cursor:pointer;
+
+    &:hover .messenger__navbar__person__name__text{
+        text-decoration: underline;
+    }
 }
 
 .messenger__navbar__person__icon{
@@ -20,7 +31,7 @@
     border-radius:50%;
 }
 
-.messenger__navbar__person__photo--img {
+.messenger__navbar__person__photo__img {
     display: block;
     width:35px;
     height:35px;
@@ -28,18 +39,18 @@
     object-fit: cover;
 }
 
-.messenger__navbar__person--name {
+.messenger__navbar__person__name {
     display:flex;
     align-items: center;
     margin-left: 10px;
 }
 
-.messenger__navbar__person--name--text {
+.messenger__navbar__person__name__text {
     font-size: 1rem;
     font-weight: bold;
 }
 
-.messenger__navbar__icons--icon {
+.messenger__navbar__icons__icon {
     position:absolute;
     top:5px;
     right:5px;
@@ -50,3 +61,14 @@
     cursor: pointer;
     font-size: 1.2rem;
 }
+
+@media(max-width:1023px){
+    .messenger__navbar__return{
+     display:flex;
+     align-items: center;
+     font-size: 2rem;
+     margin-right:$smallMargin;
+     color:$primaryColor;
+     cursor:pointer;
+   }
+   }

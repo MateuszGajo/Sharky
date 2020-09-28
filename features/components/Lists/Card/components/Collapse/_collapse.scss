@@ -1,5 +1,5 @@
  
-  .card__item__info__second-column__buttons--change-status{
+  .card__item__info__second-column__buttons__change-status{
     display:flex;
     flex-direction: column;
     justify-content: space-around;
@@ -12,13 +12,13 @@
     }
   }
   
-  .card__item__info__second-column__buttons--change-status--status {
+  .card__item__info__second-column__buttons__change-status--status {
     display:flex;
     align-items: center;
     position: relative;
   }
    
-  .card__item__info__second-column__buttons--change-status--circle {
+  .card__item__info__second-column__buttons__change-status__circle  {
     display:flex;
     justify-content: center;
     align-items: center;
@@ -34,7 +34,7 @@
   
 
   @media(max-width:1365px){
-    .card__item__info__second-column__buttons--change-status--circle {
+    .card__item__info__second-column__buttons__change-status__circle  {
       font-size: 0.7rem;
       border-radius: 15px;
       width:50px;
@@ -46,7 +46,7 @@
 
 @media (max-width : 767px) and (orientation:landscape){
    
-    .card__item__info__second-column__buttons--change-status--circle {
+    .card__item__info__second-column__buttons__change-status__circle  {
       font-size: 0.75rem;
       border-radius: 20px;
       width:80px;
@@ -58,7 +58,7 @@
 
   @media  (max-width : 639px)  and (orientation:landscape){
 
-    .card__item__info__second-column__buttons--change-status--circle {
+    .card__item__info__second-column__buttons__change-status__circle  {
       font-size: 0.7rem;
       border-radius: 20px;
       width:70px;

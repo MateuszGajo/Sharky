@@ -1,12 +1,11 @@
 
   
   .messenger__downbar {
-    min-height:70px;
     border-top: 1px solid $shadowColor;
   }
 
   .messenger__downbar__form{
-    height:100%;
+    min-height:70px;
     display:flex;
     flex-direction: column;
       position:relative;
@@ -16,7 +15,7 @@
     flex-grow: 1;
   }
 
-  .messenger__downbar__form__text--textarea {
+  .messenger__downbar__form__text__textarea {
     width: 100%;
     height:100%;
     padding: 5px 3px;
@@ -29,7 +28,7 @@
     justify-content: flex-end;
   }
  
-  .messenger__downbar__form__send--buton {
+  .messenger__downbar__form__send__buton {
     border: none;
     background-color: transparent;
     color: $primaryColor;
@@ -39,6 +38,6 @@
   }
 
 
-.messenger__downbar__form__send--buton--disabled{
+.messenger__downbar__form__send__buton--disabled{
     color:grey
 }

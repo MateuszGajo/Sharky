@@ -12,7 +12,7 @@ it("does card displays correct", () => {
   const data = {
     refType: "profile",
     refId: 123,
-    idRelation: null,
+    relationId: null,
     photo: "profile.png",
     radiusPhoto: true,
     name: "Janek Kowalski",
@@ -45,11 +45,11 @@ it("does card displays correct", () => {
   const cardButtonText = getByTestId("card-button-text");
   const cardUpdateButton = queryByTestId("card-update-button");
 
-  expect(cardPhoto).toHaveClass("card__item--picture--img--radius");
+  expect(cardPhoto).toHaveClass("card__item__photo__img--radius");
   expect(cardName).toHaveTextContent(data.name);
   expect(cardDescription).toHaveTextContent(data.description);
   expect(cardButton).toHaveClass(
-    "card__item__info__second-column__buttons--main-button pal-background"
+    "card__item__info__second-column__buttons__main-button pal-background"
   );
   expect(cardButtonText).toHaveTextContent(data.title);
   expect(cardUpdateButton).toBeNull();
@@ -59,7 +59,7 @@ it("do relation buttons work correct", () => {
   const data = {
     refType: "profile",
     refId: 123,
-    idRelation: null,
+    relationId: null,
     photo: "profile.png",
     radiusPhoto: true,
     name: "Janek Kowalski",

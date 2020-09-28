@@ -21,7 +21,7 @@
   width: 70%;
 }
 
-.search--input {
+.search__input {
   width: 100%;
   border-radius: 30px;
   border: 1px solid $shadowColor;
@@ -31,12 +31,12 @@
   &:focus {
     border-color: $primaryColor;
   }
-  &:focus + .search--icon {
+  &:focus + .search__icon {
     color: $primaryColor;
   }
 }
 
-.search--icon {
+.search__icon {
   display: flex;
   position: absolute;
   top: 50%;

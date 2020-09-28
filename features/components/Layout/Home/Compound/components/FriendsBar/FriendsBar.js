@@ -8,9 +8,7 @@ const FriendsBar = () => {
   const friendsBar = useRef(null);
   const { socket, newChat } = useContext(AppContext);
 
-  const [isFriendsBarScrolling, setStatusOfFriendsBarScrolling] = useState(
-    false
-  );
+  const [isScrolling, setStatusOfScrolling] = useState(false);
   const [users, setUsers] = useState([]);
 
   let timeout;
@@ -19,10 +17,10 @@ const FriendsBar = () => {
     if (timeout) {
       clearTimeout(timeout);
     }
-    setStatusOfFriendsBarScrolling(true);
+    setStatusOfScrolling(true);
 
     timeout = setTimeout(() => {
-      setStatusOfFriendsBarScrolling(false);
+      setStatusOfScrolling(false);
     }, 1000);
   };
 
@@ -41,8 +39,7 @@ const FriendsBar = () => {
   }, [users]);
 
   useEffect(() => {
-    if (newChat.idChat) {
-      console.log(newChat);
+    if (newChat.chatId) {
       setUsers([...users, newChat]);
     }
   }, [newChat]);
@@ -52,12 +49,12 @@ const FriendsBar = () => {
       <div
         ref={friendsBar}
         className={cx("home__wrapper__friends primary-scroll", {
-          "primary-scroll-active": isFriendsBarScrolling,
+          "primary-scroll--active": isScrolling,
         })}
       >
         <div className="home_friends__list">
           {users.map((user) => {
-            return <Item key={user.idChat} user={user} />;
+            return <Item key={user.chatId} user={user} />;
           })}
         </div>
       </div>
