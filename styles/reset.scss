@@ -37,7 +37,7 @@ form{
   scrollbar-color: white white;    
 }
 
-.primary-scroll-active{
+.primary-scroll--active{
   scrollbar-color: $primaryColor white;    
   }
 }
@@ -51,10 +51,10 @@ form{
   background-color: none;
   border-radius: 20px;
 }
-.primary-scroll-active::-webkit-scrollbar {
+.primary-scroll--active::-webkit-scrollbar {
   width: 5px;
 }
-.primary-scroll-active::-webkit-scrollbar-thumb {
+.primary-scroll--active::-webkit-scrollbar-thumb {
   background-color: $primaryColor;
   border-radius: 20px;
 }

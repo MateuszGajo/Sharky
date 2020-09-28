@@ -30,7 +30,7 @@ const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
 
 router.post("/add", async (req, res) => {
-  const { id: idOwner } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req);
 
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -61,41 +61,41 @@ router.post("/add", async (req, res) => {
       }
     }
 
-    const { content, date, idGroup, idFanpage, news } = req.body;
+    const { content, date, groupId, fanpageId, news } = req.body;
     let newPost;
     try {
-      if (idGroup)
+      if (groupId)
         newPost = await client.query(addGroupPostQuery, [
-          idOwner,
-          idGroup,
+          onwerId,
+          groupId,
           content,
           date,
           fileName,
         ]);
-      else if (idFanpage)
+      else if (fanpageId)
         newPost = await client.query(addFanpagePostQuery, [
-          idOwner,
-          idFanpage,
+          onwerId,
+          fanpageId,
           content,
           date,
           fileName,
         ]);
       else if (news)
         newPost = await client.query(addNewsQuery, [
-          idOwner,
+          onwerId,
           content,
           date,
           fileName,
         ]);
       else
         newPost = await client.query(addPostQuery, [
-          idOwner,
+          onwerId,
           content,
           date,
           fileName,
         ]);
       return res.status(200).json({
-        idPost: newPost.rows[0].id,
+        postId: newPost.rows[0].id,
         fileName,
       });
     } catch {
@@ -105,39 +105,39 @@ router.post("/add", async (req, res) => {
 });
 
 router.post("/get", async (req, res) => {
-  const { from, idFanpage, idGroup, news, idUser, authorPost } = req.body;
-  const { id: idOwner } = decodeToken(req);
+  const { from, fanpageId, groupId, news, userId, authorPost } = req.body;
+  const { id: onwerId } = decodeToken(req);
 
   let postsResult, commentsResult;
 
   try {
-    if (idFanpage)
+    if (fanpageId)
       postsResult = await client.query(getFanpagePostsQuery, [
-        idFanpage,
-        idOwner,
+        fanpageId,
+        onwerId,
         from,
       ]);
-    else if (idGroup)
+    else if (groupId)
       postsResult = await client.query(getGroupPostsQuery, [
-        idGroup,
-        idOwner,
+        groupId,
+        onwerId,
         from,
       ]);
     else if (authorPost)
       postsResult = await client.query(getUserPostQuery, [
-        idUser,
-        idOwner,
+        userId,
+        onwerId,
         from,
       ]);
     else if (news)
-      postsResult = await client.query(getNewsQuery, [idOwner, from]);
-    else postsResult = await client.query(getPostsQuery, [idOwner, from]);
+      postsResult = await client.query(getNewsQuery, [onwerId, from]);
+    else postsResult = await client.query(getPostsQuery, [onwerId, from]);
 
-    const idPosts = [];
+    const postIds = [];
     for (let i = 0; i < postsResult.rows.length; i++) {
-      idPosts.push(postsResult.rows[i].idPost);
+      postIds.push(postsResult.rows[i].postId);
     }
-    commentsResult = await client.query(getCommentsQuery, [idPosts, idOwner]);
+    commentsResult = await client.query(getCommentsQuery, [postIds, onwerId]);
   } catch {
     res.status(400).json("bad-request");
   }
@@ -160,33 +160,33 @@ router.post("/get", async (req, res) => {
 });
 
 router.post("/get/single", async (req, res) => {
-  const { idPost } = req.body;
+  const { postId } = req.body;
 
-  const { id: idOwner } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req);
 
   try {
-    const { rows: post } = await client.query(getPostQuery, [idPost, idOwner]);
+    const { rows: post } = await client.query(getPostQuery, [postId, onwerId]);
     if (!post[0]) return res.status(404).json("post-does-not-exist");
 
-    if (post[0].idFanpage) {
+    if (post[0].fanpageId) {
       const { rows } = await client.query(doesUserBelongToFanpageQuery, [
-        idUser,
+        userId,
       ]);
       if (!rows[0])
         return res.status(403).json("user-does-not-have-permission");
     }
 
-    if (post[0].idGroup) {
+    if (post[0].groupId) {
       const { rows } = await client.query(doesUserBelongToGroupqQuery, [
-        idUser,
+        userId,
       ]);
       if (!rows[0])
         return res.status(403).json("user-does-not-have-permission");
     }
 
     let { rows: comments } = await client.query(getCommentsQuery, [
-      [post[0].idPost],
-      idOwner,
+      [post[0].postId],
+      onwerId,
     ]);
 
     let isMoreComments = true;
@@ -204,34 +204,34 @@ router.post("/get/single", async (req, res) => {
 });
 
 router.post("/like", async (req, res) => {
-  const { idPost } = req.body;
+  const { postId } = req.body;
 
-  const { id: idOwner } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req);
 
   try {
     const { rows: newLike } = await client.query(postLikeQuery, [
-      idOwner,
-      idPost,
+      onwerId,
+      postId,
     ]);
 
-    let idLike;
+    let likeId;
 
     if (!newLike[0]) {
-      const { rows } = await client.query(getIdPostQuery, [idOwner, idPost]);
-      idLike = rows[0].id;
-    } else idLike = newLike[0].id;
+      const { rows } = await client.query(getIdPostQuery, [onwerId, postId]);
+      likeId = rows[0].id;
+    } else likeId = newLike[0].id;
 
-    res.status(200).json({ idLike });
+    res.status(200).json({ likeId });
   } catch {
     res.status(400).json("bad-request");
   }
 });
 
 router.post("/unlike", async (req, res) => {
-  const { idLike } = req.body;
+  const { likeId } = req.body;
 
   try {
-    await client.query(unLikeQuery, [idLike]);
+    await client.query(unLikeQuery, [likeId]);
     res.status(200).json({ success: true });
   } catch {
     res.status(400).json("bad-request");
@@ -239,26 +239,26 @@ router.post("/unlike", async (req, res) => {
 });
 
 router.post("/share", async (req, res) => {
-  const { idPost, date } = req.body;
-  const { id: idOwner } = decodeToken(req);
+  const { postId, date } = req.body;
+  const { id: onwerId } = decodeToken(req);
 
   try {
     const postShare = await client.query(postShareQuery, [
-      idPost,
-      idOwner,
+      postId,
+      onwerId,
       date,
     ]);
-    res.status(200).json({ idShare: postShare.rows[0].id, idUser: idOwner });
+    res.status(200).json({ shareId: postShare.rows[0].id, userId: onwerId });
   } catch {
     res.status(400).json("bad-request");
   }
 });
 
 router.post("/edit", async (req, res) => {
-  const { idPost, content } = req.body;
+  const { postId, content } = req.body;
 
   try {
-    await client.query(editPostQuery, [content, idPost]);
+    await client.query(editPostQuery, [content, postId]);
 
     res.status(200).json({ success: true });
   } catch {
@@ -267,12 +267,12 @@ router.post("/edit", async (req, res) => {
 });
 
 router.post("/delete", async (req, res) => {
-  const { idPost } = req.body;
+  const { postId } = req.body;
 
   try {
-    await client.query(deletePostQuery, [idPost]);
-    await client.query(deleteRepliesQuery, [idPost]);
-    await client.query(deleteCommentsQuery, [idPost]);
+    await client.query(deletePostQuery, [postId]);
+    await client.query(deleteRepliesQuery, [postId]);
+    await client.query(deleteCommentsQuery, [postId]);
 
     res.status(200).json({ success: true });
   } catch {
@@ -281,10 +281,10 @@ router.post("/delete", async (req, res) => {
 });
 
 router.post("/share/delete", async (req, res) => {
-  const { idShare } = req.body;
+  const { shareId } = req.body;
 
   try {
-    await client.query(deleteSharePostQuery, [idShare]);
+    await client.query(deleteSharePostQuery, [shareId]);
 
     res.status(200).json({ success: true });
   } catch {

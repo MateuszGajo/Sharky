@@ -13,18 +13,18 @@ const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
 
 router.post("/add", async (req, res) => {
-  const { idPost, content, date } = req.body;
-  const { id: idOwner } = decodeToken(req);
+  const { postId, content, date } = req.body;
+  const { id: onwerId } = decodeToken(req);
 
   try {
     const comment = await client.query(addCommentQuery, [
-      idPost,
-      idOwner,
+      postId,
+      onwerId,
       content,
       date,
     ]);
     return res.status(200).json({
-      idComment: comment.rows[0].id,
+      commnetId: comment.rows[0].id,
     });
   } catch {
     return res.status(400).json("bad-request");
@@ -32,13 +32,13 @@ router.post("/add", async (req, res) => {
 });
 
 router.post("/get", async (req, res) => {
-  const { from, idPost } = req.body;
+  const { from, postId } = req.body;
 
-  const { id: idOwner } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req);
 
   let result;
   try {
-    result = await client.query(commentsQuery, [idPost, idOwner, from]);
+    result = await client.query(commentsQuery, [postId, onwerId, from]);
   } catch {
     return res.status(400).json("bad-request");
   }
@@ -57,33 +57,33 @@ router.post("/get", async (req, res) => {
 });
 
 router.post("/like", async (req, res) => {
-  const { idComment } = req.body;
+  const { commnetId } = req.body;
 
-  const { id: idOwner } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req);
 
   try {
     const { rows: newLike } = await client.query(likeCommentQuery, [
-      idComment,
-      idOwner,
+      commnetId,
+      onwerId,
     ]);
 
-    let idLike;
+    let likeId;
     if (!newLike[0]) {
-      const { rows } = await client.query(getIdLikeQuery, [idComment, idOwner]);
+      const { rows } = await client.query(getIdLikeQuery, [commnetId, onwerId]);
 
-      idLike = rows[0].id;
-    } else idLike = newLike[0].id;
-    return res.status(200).json({ idLike });
+      likeId = rows[0].id;
+    } else likeId = newLike[0].id;
+    return res.status(200).json({ likeId });
   } catch {
     return res.status(400).json("bad-request");
   }
 });
 
 router.post("/unlike", async (req, res) => {
-  const { idLike } = req.body;
+  const { likeId } = req.body;
 
   try {
-    await client.query(unlikeCommentQuery, [idLike]);
+    await client.query(unlikeCommentQuery, [likeId]);
 
     return res.status(200).json({ success: true });
   } catch {

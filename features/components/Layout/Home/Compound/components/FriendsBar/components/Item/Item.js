@@ -2,52 +2,54 @@ import React, { useEffect, useState, useContext } from "react";
 import { BsEnvelope } from "react-icons/bs";
 import axios from "axios";
 import { WizzardContext } from "../../../../context/WizzardContext";
-import AppContext from "../../../../../../../../context/AppContext";
+import AppContext from "@features/context/AppContext";
 
 const Item = ({ user }) => {
+  const { firstName, lastName, userId, photo, chatId } = user;
+
   const { newMessage, owner, socket } = useContext(AppContext);
   const { setStatusOfMessenger, setChat, chat } = useContext(WizzardContext);
+
   const [isNewMessage, setStatusOfNewMessage] = useState(
     owner.id === user?.messageTo
   );
+
   useEffect(() => {
-    const { idChat, messageTo } = newMessage;
+    const { chatId, messageTo } = newMessage;
     if (
-      idChat == user.idChat &&
-      chat.idChat != user.idChat &&
+      chatId == user.chatId &&
+      chat.chatId != user.chatId &&
       messageTo == owner.id
     ) {
       setStatusOfNewMessage(true);
+      socket.emit("isMessageUnRead", { chatId, messageTo });
     }
   }, [newMessage]);
 
   return (
     <div
       className="home_friends__list__item"
-      key={user.id}
-      //   data-testid={`friend${index}`}
       onClick={() => {
         setChat({
           user: {
-            id: user.idUser,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            photo: user.photo,
+            id: userId,
+            firstName,
+            lastName,
+            photo,
           },
-          idChat: user.idChat,
+          chatId,
         });
         setStatusOfMessenger(false);
         setStatusOfNewMessage(false);
-        if (user.messageTo)
-          axios.post("/friend/message/read", { idChat: user.idChat });
+        if (user.messageTo) axios.post("/friend/message/read", { chatId });
       }}
     >
       <div className="home_friends__list__item__user">
         <div className="home_friends__list__item__user__photo">
           <img
-            src={"/static/images/" + user.photo}
+            src={"/static/images/" + photo}
             alt=""
-            className="home_friends__list__item__user__photo--img"
+            className="home_friends__list__item__user__photo__photo"
           />
           {isNewMessage && (
             <div className="home_friends__list__item__user__photo__message">
@@ -55,17 +57,12 @@ const Item = ({ user }) => {
             </div>
           )}
         </div>
-        <div className="home_friends__list__item__user--name">
-          <span className="home_friends__list__item__user--name--span">
-            {user.firstName} {user.lastName}
+        <div className="home_friends__list__item__user__name">
+          <span className="home_friends__list__item__user__name__span">
+            {firstName} {lastName}
           </span>
         </div>
       </div>
-      {/* {friend.online ? (
-                  <div className="home_friends__list__item--online">
-                    <div className="home_friends__list__item--online--circle"></div>
-                  </div>
-                ) : null} */}
     </div>
   );
 };

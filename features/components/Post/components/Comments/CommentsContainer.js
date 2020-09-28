@@ -17,7 +17,6 @@ const withContainer = (WrappedComponent) => {
     );
 
     const loadMoreComments = t("component:post.comments.load-more-comments");
-    const [user, setUser] = useState(users[comment.idUser]);
     const [isRepliesOpen, setStatusOfOpenReplies] = useState(false);
     const [reply, setReply] = useState("");
     const [replies, setReplies] = useState([]);
@@ -28,11 +27,13 @@ const withContainer = (WrappedComponent) => {
       Number(comment.numberOfReplies)
     );
 
+    const user = users[comment.userId];
+
     const handleSubmit = (e) => {
       e.preventDefault();
 
       addReply({
-        idComment: comment.idComment,
+        commnetId: comment.commnetId,
         content: reply,
         date: new Date(),
         clearText: setReply,
@@ -43,7 +44,7 @@ const withContainer = (WrappedComponent) => {
 
     const gReplies = () => {
       getReplies({
-        idComment: comment.idComment,
+        commnetId: comment.commnetId,
         from: replies.length,
         replies,
         setReplies,
@@ -56,14 +57,14 @@ const withContainer = (WrappedComponent) => {
     useEffect(() => {
       if (
         newComment.type == "comment" &&
-        newComment.idElement == comment.idComment
+        newComment.idElement == comment.commnetId
       ) {
         if (!isRepliesOpen) setStatusOfOpenReplies(true);
         setReplies([
           {
-            idReply: newComment.idReply,
-            idComment: newComment.idComment,
-            idUser: owner.id,
+            replyId: newComment.replyId,
+            commnetId: newComment.commnetId,
+            userId: owner.id,
             content: newComment.content,
             date: newComment.date,
             numberOfLikes: 0,
@@ -75,9 +76,9 @@ const withContainer = (WrappedComponent) => {
     }, [newComment]);
 
     useEffect(() => {
-      if (muteUser.idUser != null) {
+      if (muteUser.userId != null) {
         const newReplies = replies?.filter(
-          (reply) => reply.idUser != muteUser.idUser
+          (reply) => reply.userId != muteUser.userId
         );
         setReplies(newReplies);
       }
@@ -110,7 +111,7 @@ const withContainer = (WrappedComponent) => {
             {replies.map((comment) => {
               return (
                 <WrappedComponent
-                  key={comment.idReply}
+                  key={comment.replyId}
                   comment={comment}
                   focusCollapse={focusCollapse}
                   focusIcon={focusIcon}

@@ -10,8 +10,10 @@ const PrimaryInput = ({
   autocompleteData = [],
   withOutMargin = false,
   size = "large",
+  require = false,
 }) => {
   const [autocompleteDataFiltered, setAutocompleteDataFiltered] = useState([]);
+  const [isFocus, setStatusOfFocus] = useState(false);
 
   const inputRef = useRef(null);
 
@@ -30,71 +32,84 @@ const PrimaryInput = ({
   };
 
   const showList = () => {
-    setAutocompleteDataFiltered(autocompleteData);
+    setStatusOfFocus(true);
+    window.addEventListener("click", hideList);
   };
 
-  const hideList = () => {
-    setAutocompleteDataFiltered([]);
+  const hideList = (e) => {
+    if (e.target.className != "primary-input-container__autocomplete__item") {
+      setStatusOfFocus(false);
+    }
+    removeEventListener("click", hideList);
   };
+
+  useEffect(() => {
+    if (isFocus) {
+      setAutocompleteDataFiltered(
+        autocompleteData.filter((item) => {
+          return item.value.toLowerCase().startsWith(value.toLowerCase());
+        })
+      );
+    }
+  }, [isFocus]);
 
   useEffect(() => {
     if (autocompleteData.length) {
       inputRef.current.addEventListener("focus", showList);
-      inputRef.current.addEventListener("focusout", hideList);
     }
 
     return () => {
       removeEventListener("focus", showList);
-      removeEventListener("focusout", hideList);
+      removeEventListener("click", hideList);
     };
-  }, []);
+  }, [autocompleteData]);
   return (
     <div
-      data-testid="primary-input-container"
-      className={cx("primary-input-container", {
+      data-testid="primary-input"
+      className={cx("primary-input", {
         "reset-margin": withOutMargin === true,
-        "primary-input-container--x-large": size === "x-large",
-        "primary-input-container--large": size === "large",
-        "primary-input-container--medium": size === "medium",
-        "primary-input-container--small": size === "small",
+        "primary-input--x-large": size === "x-large",
+        "primary-input--large": size === "large",
+        "primary-input--medium": size === "medium",
+        "primary-input--small": size === "small",
       })}
     >
       <input
         type={type}
         name={name}
-        className="primary-input-container--input"
+        className="primary-input-container__input"
         value={value}
         onChange={handleChange}
         data-testid="primary-input"
         ref={inputRef}
+        onClick={(e) => e.stopPropagation()}
+        required={require}
       />
 
-      <h4
-        className="primary-input-container--title"
-        data-testid="primary-input-title"
-      >
+      <h4 className="primary-input__title" data-testid="primary-input-title">
         {title}
       </h4>
       <div
         data-testid="input-primary-autocomplete"
         className={cx(
-          "primary-input-container__autocomplete  primary-scroll-active",
+          "primary-input-container__autocomplete  primary-scroll--active",
           {
-            "is-close": autocompleteDataFiltered.length === 0,
+            "is-close": !isFocus,
           }
         )}
       >
-        {autocompleteDataFiltered.map(({ value }, index) => (
+        {autocompleteDataFiltered.map((item, index) => (
           <div
-            className="primary-input-container__autocomplete--item"
+            className="primary-input-container__autocomplete__item"
             key={index}
             onClick={() => {
-              onChange(value);
+              onChange(item.value);
               setAutocompleteDataFiltered([]);
+              setStatusOfFocus(false);
             }}
           >
-            <span className="primary-input-container__autocomplete--item--span">
-              {value}
+            <span className="primary-input-container__autocomplete__item__span">
+              {item.value}
             </span>
           </div>
         ))}
