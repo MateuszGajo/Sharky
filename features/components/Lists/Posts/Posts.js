@@ -10,11 +10,11 @@ import i18next from "@i18n";
 const { useTranslation } = i18next;
 
 const PostList = ({
-  idFanpage = null,
-  idGroup = null,
+  fanpageId = null,
+  groupId = null,
   news = false,
   authorPost = false,
-  idUser = null,
+  userId = null,
 }) => {
   const { t } = useTranslation(["component"]);
   const endOfContent = t("component:lists.posts.end-of-content");
@@ -32,11 +32,11 @@ const PostList = ({
 
   const fetchData = (from) => {
     getPosts({
-      idFanpage,
-      idGroup,
+      fanpageId,
+      groupId,
       news,
       authorPost,
-      idUser,
+      userId,
       posts,
       setPosts,
       from,
@@ -52,11 +52,11 @@ const PostList = ({
   }, []);
 
   useEffect(() => {
-    if (muteUser.idUser !== null) {
+    if (muteUser.userId !== null) {
       const newPosts = posts?.filter((post) => {
-        const idUser = post.idUserShare || post.idUser;
+        const userId = post.usershareID || post.userId;
 
-        return muteUser.idUser != idUser;
+        return muteUser.userId != userId;
       });
       setPosts(newPosts);
     }
@@ -66,7 +66,6 @@ const PostList = ({
 
   return (
     <div className="post-list">
-      {console.log(posts)}
       <InfiniteScroll
         dataLength={posts.length}
         next={() => fetchData(posts.length)}
@@ -83,8 +82,8 @@ const PostList = ({
             <div className="post-list__post" key={post.id}>
               <Post
                 post={post}
-                user={users[post.idUser]}
-                userShare={users[post.idUserShare]}
+                user={users[post.userId]}
+                userShare={users[post.usershareID]}
                 focusElement={focusElement}
                 single={false}
               />

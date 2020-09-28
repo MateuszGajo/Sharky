@@ -9,7 +9,7 @@ import Spinner from "@components/Spinner/Spinner";
 const { useTranslation } = i18next;
 
 const Fanpages = ({
-  idUser,
+  userId,
   keyWords,
   onlySubscribed = false,
   helpInformation = true,
@@ -19,16 +19,17 @@ const Fanpages = ({
   const buttonSubscribe = t("component:lists.fanpages.button-subscribe");
   const buttonUnsubscribe = t("component:lists.fanpages.button-unsubscribe");
   const emptyContent = t("component:lists.fanpages.empty-content");
+  const noResult = t("component:lists.fanpages.no-result");
 
   const { owner, setError } = useContext(AppContext);
 
-  const [fanpage, setFanpage] = useState({ id: null, name: "", idSub: null });
+  const [fanpage, setFanpage] = useState({ id: null, name: "", subId: null });
   const [fanpages, setFanpages] = useState([]);
   const [isMore, setStatusOfMore] = useState();
 
   const fetchData = (from) => {
     axios
-      .post("/fanpage/get", { from, idUser, keyWords, onlySubscribed })
+      .post("/fanpage/get", { from, userId, keyWords, onlySubscribed })
       .then(({ data: { fanpages: f, isMore } }) => {
         setFanpages([...fanpages, ...f]);
         setStatusOfMore(isMore);
@@ -44,11 +45,11 @@ const Fanpages = ({
     const { setNumber, number, idRef, setIdRef, id } = fanpage;
     if (idRef)
       axios
-        .post("/fanpage/user/delete", { idSub: fanpage.idRef })
+        .post("/fanpage/user/delete", { subId: fanpage.idRef })
         .then(() => {
-          if (idUser == owner.id) {
+          if (userId == owner.id) {
             const newFanpages = fanpages.filter(
-              (fanpage) => fanpage.idFanpage != id
+              (fanpage) => fanpage.fanpageId != id
             );
             setFanpages(newFanpages);
           } else {
@@ -59,7 +60,7 @@ const Fanpages = ({
         .catch(({ response: { data: message } }) => setError(message));
     else if (id)
       axios
-        .post("/fanpage/user/add", { idFanpage: fanpage.id })
+        .post("/fanpage/user/add", { fanpageId: fanpage.id })
         .then(({ data: { id } }) => {
           setNumber(Number(number) + 1);
           setIdRef(id);
@@ -70,7 +71,7 @@ const Fanpages = ({
   useEffect(() => {
     if (keyWords != null)
       axios
-        .post("/fanpage/get", { from: 0, idUser, keyWords, onlySubscribed })
+        .post("/fanpage/get", { from: 0, userId, keyWords, onlySubscribed })
         .then(({ data: { fanpages, isMore } }) => {
           setFanpages(fanpages);
           setStatusOfMore(isMore);
@@ -88,11 +89,11 @@ const Fanpages = ({
     >
       <div className="list">
         {fanpages.map((fanpage) => {
-          const { idFanpage, name, photo, numberOfSubscribes } = fanpage;
+          const { fanpageId, name, photo, numberOfSubscribes } = fanpage;
           const data = {
             refType: "fanpage",
-            id: idFanpage,
-            idRef: fanpage.idSub || null,
+            id: fanpageId,
+            idRef: fanpage.subId || null,
             photo,
             radiusPhoto: true,
             name,
@@ -103,7 +104,7 @@ const Fanpages = ({
             unsubTitle: buttonUnsubscribe,
             collapse: false,
           };
-          return <Card data={data} key={idFanpage} handleClick={setFanpage} />;
+          return <Card data={data} key={fanpageId} handleClick={setFanpage} />;
         })}
       </div>
       {!fanpages.length && helpInformation && (
@@ -112,7 +113,9 @@ const Fanpages = ({
             <AiOutlineSearch />
           </div>
           <div className="empty-card__text">
-            <span className="empty-card__text--span">{emptyContent}</span>
+            <span className="empty-card__text__span">
+              {keyWords ? noResult : emptyContent}
+            </span>
           </div>
         </div>
       )}

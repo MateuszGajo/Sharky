@@ -19,6 +19,7 @@ const { client } = require("./config/pgAdaptor");
 const { jwtSecret } = require("./config/keys");
 const bodyParser = require("body-parser");
 const { userJoin, userLeave, getSocket, existUser } = require("./utils/users");
+const { getChatsQuery } = require("./api/route/friend/query");
 
 const nextI18Next = require("./i18n/server");
 
@@ -35,38 +36,25 @@ server.use(cookieParser());
 server.use(bodyParser.json());
 
 socketIO.sockets.on("connection", (socket) => {
-  const getChatsQuery = `
-  select  chats.id as "idChat"
-from(select id_user_1 
-    from friends 
-    where id_user_2=$1
-    union
-    select id_user_2
-    from friends 
-    where id_user_1=$1) as result
-inner join chats on chats.id_user_1 = result.id_user_1 or chats.id_user_2 = result.id_user_1
-left join users on users.id = result.id_user_1`;
-
   socket.on("connectUser", () => {
     const token = cookie.parse(socket.handshake.headers.cookie).token;
 
     const {
-      data: { id: idOwner },
+      data: { id: onwerId },
     } = jwt.verify(token, jwtSecret);
-
-    userJoin(idOwner, socket.id);
+    userJoin(onwerId, socket.id);
   });
 
   socket.on(
     "sendChatMessage",
-    ({ idMessage, idChat, idUser, message, date, messageTo }) => {
+    ({ messageId, chatId, userId, message, date, messageTo }) => {
       const unReadMessageQuery = `update chats set message_to=$1 where id=$2;`;
       if (!existUser(messageTo))
-        client.query(unReadMessageQuery, [messageTo, idChat]);
-      socket.broadcast.to("chat" + idChat).emit("message", {
-        idMessage,
-        idChat,
-        idUser,
+        client.query(unReadMessageQuery, [messageTo, chatId]);
+      socket.broadcast.to("chat" + chatId).emit("message", {
+        messageId,
+        chatId,
+        userId,
         message,
         date,
         messageTo,
@@ -74,27 +62,30 @@ left join users on users.id = result.id_user_1`;
     }
   );
 
-  socket.on("isMessageUnRead", ({ idChat, messageTo }) => {
+  socket.on("isMessageUnRead", ({ chatId, messageTo }) => {
     const unReadMessageQuery = `update chats set message_to=$1 where id=$2;`;
-    client.query(unReadMessageQuery, [messageTo, idChat]);
+    client.query(unReadMessageQuery, [messageTo, chatId]);
   });
 
-  socket.on("joinNewChat", async ({ idChat }) => {
-    const getUsersQuery = `select id_user_1 as "idUser", id_user_2 as "idOwner" from chats where id=$1`;
-    const { rows } = await client.query(getUsersQuery, [idChat]);
-    const userSockets = getSocket(rows[0].idUser);
-    const ownerSockets = getSocket(rows[0].idOwner);
+  socket.on("joinNewChat", async ({ friendshipId, chatId }) => {
+    const getUsersQuery = `select user_id_1 as "firstUser", user_id_2 as "secondUser" from friends where id=$1`;
+    const { rows } = await client.query(getUsersQuery, [friendshipId]);
+
+    const userSockets = getSocket(rows[0].firstUser);
+    const ownerSockets = getSocket(rows[0].secondUser);
 
     const getUserQuery = `select first_name as "firstName", last_name as "lastName",photo from users where id=$1`;
     if (userSockets) {
-      const { rows: user } = await client.query(getUserQuery, [rows[0].idUser]);
+      const { rows: user } = await client.query(getUserQuery, [
+        rows[0].secondUser,
+      ]);
       for (let i = 0; i < userSockets.length; i++) {
         const soc = socketIO.sockets.connected[userSockets[i]];
-        soc.join("chat" + idChat);
+        soc.join("chat" + chatId);
         socketIO.to(userSockets[i]).emit("newChat", {
           newChat: {
             ...user[0],
-            idChat,
+            chatId,
             messageTo: null,
           },
         });
@@ -102,14 +93,16 @@ left join users on users.id = result.id_user_1`;
     }
 
     if (ownerSockets) {
-      const { rows: user } = await client.query(getUserQuery, [rows[0].idUser]);
+      const { rows: user } = await client.query(getUserQuery, [
+        rows[0].firstUser,
+      ]);
       for (let i = 0; i < ownerSockets.length; i++) {
         const soc = socketIO.sockets.connected[ownerSockets[i]];
-        soc.join("chat" + idChat);
+        soc.join("chat" + chatId);
         socketIO.to(ownerSockets[i]).emit("newChat", {
           newChat: {
             ...user[0],
-            idChat,
+            chatId,
             messageTo: null,
           },
         });
@@ -121,17 +114,17 @@ left join users on users.id = result.id_user_1`;
     const token = cookie.parse(socket.handshake.headers.cookie).token;
 
     const {
-      data: { id: idOwner },
+      data: { id: onwerId },
     } = jwt.verify(token, jwtSecret);
 
-    const { rows: chats } = await client.query(getChatsQuery, [idOwner]);
+    const { rows: chats } = await client.query(getChatsQuery, [onwerId]);
     for (let i = 0; i < chats.length; i++) {
-      socket.join("chat" + chats[i].idChat);
+      socket.join("chat" + chats[i].chatId);
     }
   });
 
-  socket.on("singleDisconnect", ({ idUser }) => {
-    userLeave(idUser, socket.id);
+  socket.on("singleDisconnect", ({ userId }) => {
+    userLeave(userId, socket.id);
   });
 
   socket.on("disconnect", async () => {
@@ -139,10 +132,10 @@ left join users on users.id = result.id_user_1`;
 
     if (token) {
       const {
-        data: { id: idOwner },
+        data: { id: onwerId },
       } = jwt.verify(token, jwtSecret);
 
-      userLeave(idOwner, socket.id);
+      userLeave(onwerId, socket.id);
     }
   });
 });
