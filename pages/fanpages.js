@@ -54,7 +54,7 @@ const Fanpages = () => {
               <Search text={text} onChange={setText} />
             </form>
           </div>
-          <ListOfFanpages idUser={owner.id} keyWords={keyWords} />
+          <ListOfFanpages userId={owner.id} keyWords={keyWords} />
         </div>
         <div className="fanpages__side-bar">
           <div
@@ -65,7 +65,7 @@ const Fanpages = () => {
               <IoIosAddCircleOutline />
             </div>
             <div className="fanpages__side-bar__create__text">
-              <span className="fanpages__side-bar__create__text--span">
+              <span className="fanpages__side-bar__create__text__span">
                 {createFanpage}
               </span>
             </div>
