@@ -10,12 +10,9 @@ import Prompt from "@common/PopUp/Prompt/Prompt";
 import Spinner from "@components/Spinner/Spinner";
 import AppContext from "@features/context/AppContext";
 import { getOwner } from "@features/service/Functions/index";
-import i18next from "@i18n";
-import "../styles/settings.scss";
-const { useTranslation } = i18next;
+import "@styles/settings.scss";
 
 const Settings = () => {
-  const { t } = useTranslation(["settings"]);
   const { isPrompt, isError, setOwner } = useContext(AppContext);
 
   const [isAccountCollapsed, setStatusOfAccountCollapse] = useState(true);
@@ -26,7 +23,7 @@ const Settings = () => {
   const [confirmUser, setConfirmUser] = useState(false);
   const [isLoading, setStatusOfLoading] = useState(true);
   const [isAuth, setStatusOfAuth] = useState(null);
-  const [chooseSetting, setChooseSetting] = useState({
+  const [settings, setSettings] = useState({
     name: "",
     title: "",
     category: "",
@@ -112,14 +109,14 @@ const Settings = () => {
           isAccountCollapsed={isAccountCollapsed}
           setStatusOfAccountCollapse={setStatusOfAccountCollapse}
           userSettings={userSettings}
-          setChooseSetting={setChooseSetting}
+          setSettings={setSettings}
           setInputValue={setInputValue}
           isGeneralCollapsed={isGeneralCollapsed}
           setStatusOfGeneralCollapse={setStatusOfGeneralCollapse}
         />
         <Display
-          setChooseSetting={setChooseSetting}
-          chooseSetting={chooseSetting}
+          setSettings={setSettings}
+          settings={settings}
           inputValue={inputValue}
           setInputValue={setInputValue}
           confirmPassword={confirmPassword}
@@ -132,20 +129,20 @@ const Settings = () => {
         />
       </div>
       <div className="settings--mobile">
-        {chooseSetting.name === "" ? (
+        {settings.name === "" ? (
           <Items
             isAccountCollapsed={isAccountCollapsed}
             setStatusOfAccountCollapse={setStatusOfAccountCollapse}
             userSettings={userSettings}
-            setChooseSetting={setChooseSetting}
+            setSettings={setSettings}
             setInputValue={setInputValue}
             isGeneralCollapsed={isGeneralCollapsed}
             setStatusOfGeneralCollapse={setStatusOfGeneralCollapse}
           />
         ) : (
           <Display
-            setChooseSetting={setChooseSetting}
-            chooseSetting={chooseSetting}
+            setSettings={setSettings}
+            settings={settings}
             inputValue={inputValue}
             setInputValue={setInputValue}
             confirmPassword={confirmPassword}

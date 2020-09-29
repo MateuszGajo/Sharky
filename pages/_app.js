@@ -1,6 +1,4 @@
 import React, { useEffect, useState, useReducer } from "react";
-import { useRouter } from "next/router";
-import axios from "axios";
 import socketIOClient from "socket.io-client";
 import AppContext from "@features/context/AppContext";
 import { SERVER_URL } from "../config/config";

@@ -5,12 +5,12 @@ import PrimaryInput from "@common/PrimaryInput/PrimaryInput";
 import i18next from "@i18n";
 import axios from "axios";
 import AppContext from "@features/context/AppContext";
-import CountryCode from "../Utils/CountryCode";
+import countryCode from "@root/utils/countryCode";
 const { useTranslation, i18n } = i18next;
 
 const Display = ({
-  chooseSetting,
-  setChooseSetting,
+  settings,
+  setSettings,
   inputValue,
   setInputValue,
   confirmPassword,
@@ -21,7 +21,7 @@ const Display = ({
   userSettings,
   setUserSettings,
 }) => {
-  const { name } = chooseSetting;
+  const { name } = settings;
   const {
     t,
     i18n: { language },
@@ -33,14 +33,14 @@ const Display = ({
   const [languages, setLanguages] = useState([]);
 
   const title = t(
-    `settings:${chooseSetting.category == "account" ? "account" : "general"}.${
-      chooseSetting.title
+    `settings:${settings.category == "account" ? "account" : "general"}.${
+      settings.title
     }`
   );
-  const changeTitle = t("settings:change");
-  const informationTitle = t("settings:information.title");
-  const informationDescription = t("settings:information.description");
-  const confirmPasswordName = t("settings:account.confirm-password");
+  const changeText = t("settings:change");
+  const informationText = t("settings:information.title");
+  const descriptionText = t("settings:information.description");
+  const confirmPasswordText = t("settings:account.confirm-password");
   const buttonText = t("settings:button");
 
   useEffect(() => {
@@ -71,23 +71,23 @@ const Display = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (chooseSetting.category === "account") {
-      if (chooseSetting.name == "password" && inputValue != confirmPassword)
+    if (settings.category === "account") {
+      if (settings.name == "password" && inputValue != confirmPassword)
         return setError("passwords-do-not-match");
 
       const emailRegex = /^([a-zA-Z\d\.-]+)@([a-z\d-]+)\.([a-z]{2,8})(\.[a-z]{2,8})?$/;
-      if (chooseSetting.name == "email" && !emailRegex.test(inputValue))
+      if (settings.name == "email" && !emailRegex.test(inputValue))
         return setError("invalid-value");
 
       const numberRegex = /\d{3}[\s-]?\d{3}[\s-]?\d{3}$/;
-      if (chooseSetting.name == "phone" && !numberRegex.test(inputValue))
+      if (settings.name == "phone" && !numberRegex.test(inputValue))
         return setError("invalid-value");
 
       setOpenConfirmPopUp(true);
-    } else if (chooseSetting.category === "general") {
-      const value = (chooseSetting.name == "country"
+    } else if (settings.category === "general") {
+      const value = (settings.name == "country"
         ? countries
-        : chooseSetting.name == "language" && languages
+        : settings.name == "language" && languages
       ).find(
         (item) =>
           item.value.toLowerCase().trim() == inputValue.toLowerCase().trim()
@@ -95,17 +95,17 @@ const Display = ({
 
       if (!value) return setError("invalid-value");
       axios
-        .post(`/user/change/${chooseSetting.name}`, { value: value.name })
+        .post(`/user/change/${settings.name}`, { value: value.name })
         .then(() => {
-          const choseCountryCode = CountryCode(value.name.toLowerCase());
-          if (chooseSetting.name == "language" && language != choseCountryCode)
+          const choseCountryCode = countryCode(value.name.toLowerCase());
+          if (settings.name == "language" && language != choseCountryCode)
             i18n.changeLanguage(choseCountryCode);
 
           console.log(t("settings:countries.poland"));
           const newUserSetting = {
             account: [...userSettings.account],
             general: userSettings.general.map((setting) => {
-              return setting.name === chooseSetting.name
+              return setting.name === settings.name
                 ? {
                     ...setting,
                     value: value.name,
@@ -115,8 +115,8 @@ const Display = ({
           };
 
           setUserSettings(newUserSetting);
-          setPrompt(t(`settings:general.${chooseSetting.name}-changed`));
-          setChooseSetting({ name: "", value: "" });
+          setPrompt(t(`settings:general.${settings.name}-changed`));
+          setSettings({ name: "", value: "" });
         })
         .catch(({ response }) => console.log(response));
     }
@@ -125,23 +125,23 @@ const Display = ({
   useEffect(() => {
     if (confirmUser === true) {
       axios
-        .post(`/user/change/${chooseSetting.name}`, { value: inputValue })
-        .then(({ data: { idUser } }) => {
-          if (idUser) {
-            return socket.emit("changedPassword", { idUser });
+        .post(`/user/change/${settings.name}`, { value: inputValue })
+        .then(({ data: { userId } }) => {
+          if (userId) {
+            return socket.emit("changedPassword", { userId });
           }
           const newUserSetting = {
             account: userSettings.account.map((item) => {
-              return item.name === chooseSetting.name
+              return item.name === settings.name
                 ? { ...item, value: inputValue }
                 : item;
             }),
             general: [...userSettings.general],
           };
-          setPrompt(t(`settings:account.${chooseSetting.name}-changed`));
+          setPrompt(t(`settings:account.${settings.name}-changed`));
           setUserSettings(newUserSetting);
           setConfirmUser(false);
-          setChooseSetting({ name: "", value: "" });
+          setSettings({ name: "", value: "" });
         });
     }
   }, [confirmUser]);
@@ -150,24 +150,24 @@ const Display = ({
     <>
       {name !== "" ? (
         <div className="settings__container__display">
-          <h1 className="settings__container__display--title">
-            {changeTitle + " " + title}
+          <h1 className="settings__container__display__title">
+            {changeText + " " + title}
             <span
-              className="settings__container__display--title--icon"
-              onClick={() => setChooseSetting({ name: "", value: "" })}
+              className="settings__container__display__title__icon"
+              onClick={() => setSettings({ name: "", value: "" })}
             >
               <IoMdArrowBack />
             </span>
           </h1>
           <form
-            className="settings__container__display--form"
+            className="settings__container__display__form"
             onSubmit={handleSubmit}
           >
-            <div className="settings__container__display--form--input">
+            <div className="settings__container__display__form__input">
               <PrimaryInput
                 value={inputValue}
                 onChange={setInputValue}
-                type={chooseSetting.name === "password" ? "password" : "text"}
+                type={settings.name === "password" ? "password" : "text"}
                 size="x-large"
                 title={title}
                 withOutMargin={true}
@@ -180,30 +180,28 @@ const Display = ({
                 }
               />
             </div>
-            {chooseSetting.name === "password" ? (
-              <div className="settings__container__display--form--input">
+            {settings.name === "password" ? (
+              <div className="settings__container__display__form__input">
                 <PrimaryInput
                   value={confirmPassword}
                   type="password"
                   onChange={setConfirmPassword}
-                  title={confirmPasswordName}
+                  title={confirmPasswordText}
                   size="x-large"
                 />
               </div>
             ) : null}
-            <div className="settings__container__display--form--button">
+            <div className="settings__container__display__form__button">
               <PrimaryButton value={buttonText} />
             </div>
           </form>
         </div>
       ) : (
         <div className="settings__container__reminder">
-          <h1 className="settings__container__reminder--h1">
-            {informationTitle}
+          <h1 className="settings__container__reminder__h1">
+            {informationText}
           </h1>
-          <p className="settings__container__reminder--p">
-            {informationDescription}
-          </p>
+          <p className="settings__container__reminder__p">{descriptionText}</p>
         </div>
       )}
     </>
