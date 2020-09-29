@@ -151,7 +151,5 @@ module.exports = {
   declineInvitationToGroup,
   createGroupQuery,
   addAdminQuery,
-  createGroupQuery,
-  addAdminQuery,
   changeGroupPhotoQuery,
 };

@@ -10,16 +10,15 @@ const { useTranslation } = i18next;
 const Item = ({ item, setDeleteNotification }) => {
   const {
     id,
-    idSubscribe,
-    idGroup,
-    idUser,
-    date,
+    subscribeId,
+    groupId,
+    userId,
     name,
     photo,
     firstName,
     lastName,
     relation,
-    idRelation,
+    relationId,
     newRelation,
   } = item;
 
@@ -33,25 +32,25 @@ const Item = ({ item, setDeleteNotification }) => {
 
   const acceptNewRelation = () => {
     axios
-      .post("/friend/change/relation/accept", { newRelation, idRelation })
+      .post("/friend/change/relation/accept", { newRelation, relationId })
       .then(() => setDeleteNotification({ id }))
       .catch(({ response: { data: message } }) => setError(message));
   };
   const declineNewRelation = () => {
     axios
-      .post("/friend/change/relation/decline", { idRelation })
+      .post("/friend/change/relation/decline", { relationId })
       .then(() => setDeleteNotification({ id }))
       .catch(({ response: { data: message } }) => setError(message));
   };
   const acceptInvitationToGroup = () => {
     axios
-      .post("/group/user/invitation/accept", { idSubscribe })
+      .post("/group/user/invitation/accept", { subscribeId })
       .then(() => setDeleteNotification({ id }))
       .catch(({ response: { data: message } }) => setError(message));
   };
   const declineInvitationToGroup = () => {
     axios
-      .post("/group/user/invitation/decline", { idSubscribe })
+      .post("/group/user/invitation/decline", { subscribeId })
       .then(() => setDeleteNotification({ id }))
       .catch(({ response: { data: message } }) => setError(message));
   };
@@ -62,7 +61,7 @@ const Item = ({ item, setDeleteNotification }) => {
         className="home-wrapper__main__content__notifications__item"
         onClick={() =>
           router.push(
-            `/${idUser ? "user" : "group"}/${idUser ? idUser : idGroup}`
+            `/${userId ? "user" : "group"}/${userId ? userId : groupId}`
           )
         }
       >
@@ -70,14 +69,14 @@ const Item = ({ item, setDeleteNotification }) => {
           <img
             src={"/static/images/" + photo}
             alt=""
-            className="home-wrapper__main__content__notifications__item__photo--img"
+            className="home-wrapper__main__content__notifications__item__photo__img"
           />
         </div>
         <div className="home-wrapper__main__content__notifications__item__content">
-          <div className="home-wrapper__main__content__notifications__item__content--name">
+          <div className="home-wrapper__main__content__notifications__item__content__name">
             <span
               className={cx(
-                "home-wrapper__main__content__notifications__item__content--name--span bold-text",
+                "home-wrapper__main__content__notifications__item__content__name__span bold-text",
                 {
                   "pal-color": relation == "pal",
                   "family-color": relation == "family",
@@ -85,17 +84,17 @@ const Item = ({ item, setDeleteNotification }) => {
                 }
               )}
             >
-              {idUser ? firstName + " " + lastName : name}
+              {userId ? firstName + " " + lastName : name}
             </span>
           </div>
-          <div className="home-wrapper__main__content__notifications__item__content--text">
-            <span className="home-wrapper__main__content__notifications__item__content--text--span">
-              {idUser && (
+          <div className="home-wrapper__main__content__notifications__item__content__text">
+            <span className="home-wrapper__main__content__notifications__item__content__text__span">
+              {userId && (
                 <span className="bold-text">
                   {firstName + " " + lastName + " "}
                 </span>
               )}
-              {(idUser ? changeRelation : groupInvite) + " "}
+              {(userId ? changeRelation : groupInvite) + " "}
               <span
                 className={cx("bold-text", {
                   "pal-color": newRelation == "pal",
@@ -103,7 +102,7 @@ const Item = ({ item, setDeleteNotification }) => {
                   "primary-color": newRelation == "friend",
                 })}
               >
-                {idUser ? newRelation : name}
+                {userId ? newRelation : name}
               </span>
             </span>
           </div>
@@ -113,8 +112,8 @@ const Item = ({ item, setDeleteNotification }) => {
             className="home-wrapper__main__content__notifications__item__content__buttons__accept"
             onClick={(e) => {
               e.stopPropagation();
-              if (idUser) acceptNewRelation();
-              else if (idGroup) acceptInvitationToGroup();
+              if (userId) acceptNewRelation();
+              else if (groupId) acceptInvitationToGroup();
             }}
           >
             <AiOutlineCheck />
@@ -123,8 +122,8 @@ const Item = ({ item, setDeleteNotification }) => {
             className="home-wrapper__main__content__notifications__item__content__buttons__decline"
             onClick={(e) => {
               e.stopPropagation();
-              if (idUser) declineNewRelation();
-              else if (idGroup) declineInvitationToGroup();
+              if (userId) declineNewRelation();
+              else if (groupId) declineInvitationToGroup();
             }}
           >
             <AiOutlineClose />

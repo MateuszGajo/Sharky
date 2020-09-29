@@ -12,7 +12,7 @@ it("does card displays correct", () => {
   const data = {
     refType: "profile",
     refId: 123,
-    idRelation: null,
+    relationId: null,
     photo: "profile.png",
     radiusPhoto: true,
     name: "Janek Kowalski",
@@ -59,7 +59,7 @@ it("do relation buttons work correct", () => {
   const data = {
     refType: "profile",
     refId: 123,
-    idRelation: null,
+    relationId: null,
     photo: "profile.png",
     radiusPhoto: true,
     name: "Janek Kowalski",

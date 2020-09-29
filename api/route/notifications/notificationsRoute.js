@@ -5,15 +5,15 @@ const { groupInvitationQuery, changeRelationRequestQuery } = require("./query");
 const router = express.Router();
 
 router.get("/get", async (req, res) => {
-  const { id: idOwner } = decodeToken(req);
+  const { id: ownerId } = decodeToken(req);
 
   try {
     const { rows: invitations } = await client.query(groupInvitationQuery, [
-      idOwner,
+      ownerId,
     ]);
     const {
       rows: newRelations,
-    } = await client.query(changeRelationRequestQuery, [idOwner]);
+    } = await client.query(changeRelationRequestQuery, [ownerId]);
     res.status(200).json({ invitations, newRelations });
   } catch {
     res.status(400).json("bad-request");

@@ -8,7 +8,7 @@ import Item from "@components/Notifications/Item/Item";
 import Spinner from "@components/Spinner/Spinner";
 import AppContext from "@features/context/AppContext";
 import { getOwner } from "@features/service/Functions/index";
-import "../styles/notifications.scss";
+import "@styles/notifications.scss";
 
 const notifications = () => {
   const { setOwner } = useContext(AppContext);

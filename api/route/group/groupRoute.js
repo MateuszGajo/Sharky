@@ -234,9 +234,9 @@ router.post("/user/invite", async (req, res) => {
 });
 
 router.post("/user/invitation/accept", async (req, res) => {
-  const { idSubscribe } = req.body;
+  const { subscribeId } = req.body;
   try {
-    await client.query(acceptInvitationToGroup, [idSubscribe]);
+    await client.query(acceptInvitationToGroup, [subscribeId]);
 
     res.status(200).json({ success: true });
   } catch {
@@ -245,10 +245,10 @@ router.post("/user/invitation/accept", async (req, res) => {
 });
 
 router.post("/user/invitation/decline", async (req, res) => {
-  const { idSubscribe } = req.body;
+  const { subscribeId } = req.body;
 
   try {
-    await client.query(declineInvitationToGroup, [idSubscribe]);
+    await client.query(declineInvitationToGroup, [subscribeId]);
 
     res.status(200).json({ success: true });
   } catch {
