@@ -40,27 +40,27 @@ with numberOfGroups as(
 const getLanguageQuery = "select language from users where id=$1";
 
 const muteUserQuery = `
-insert into user_mute(id_user_1, id_user_2, date) 
-select $1, $2, $3 where not exists (select id from user_mute where id_user_1 =$1 and id_user_2=$2)`;
+insert into user_mutes(user_id_1, user_id_2, date) 
+select $1, $2, $3 where not exists (select id from user_mutes where user_id_1 =$1 and user_id_2=$2)`;
 
 const removeFriendQuery = `
 delete from friends where id =
   (
-  select id from friends where id_user_1=$1 and id_user_2=$2
+  select id from friends where user_id_1=$1 and user_id_2=$2
   union
-  select id from friends where id_user_1=$2 and id_user_2=$1
+  select id from friends where user_id_1=$2 and user_id_2=$1
   )`;
 
 const blockUserQuery = `
-insert into user_block(id_user_1,id_user_2,date)
-select $1,$2,$3 where not exists (select id from user_block where id_user_1=$1 and id_user_2=$2)
+insert into user_blocks(user_id_1,user_id_2,date)
+select $1,$2,$3 where not exists (select id from user_blocks where user_id_1=$1 and user_id_2=$2)
     `;
 
 const addPhotoQuery = `insert into user_photos(id_user, name, date) values($1, $2, $3)`;
 
 const changePhotoQuery = `update users set photo=$1 where id=$2`;
 const getPhotosQuery = `
-    select id, name, date from user_photos where id_user=$1 limit 7 offset $2
+    select id, name, date from user_photos where user_id=$1 limit 7 offset $2
 `;
 
 const verifyCountryQuery = "select id from countries where name=$1";

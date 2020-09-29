@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import { AiOutlineCheck } from "react-icons/ai";
-import Router from "@features/route/routes";
+import Router from "next/router";
 import { editPost } from "../../services/Functions";
 import PostContext from "../../context/PostContext";
 import WizzardContext from "../../context/WizzardContext";
@@ -25,7 +25,7 @@ const Content = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     editPost({
-      idPost: post.idPost,
+      postId: post.postId,
       content,
       setNewContent,
       setStatusOfEdit,
@@ -41,7 +41,7 @@ const Content = () => {
   }, [isEdit]);
 
   useEffect(() => {
-    if (newContent.idPost == post.idPost) {
+    if (newContent.postId == post.postId) {
       setContent(newContent.text);
     }
   }, [newContent]);
@@ -50,7 +50,7 @@ const Content = () => {
       <div
         className="post__item__content"
         onClick={() => {
-          !isEdit && Router.pushRoute("post", { id: post.idPost });
+          !isEdit && Router.push(`/post/${post.postId}`);
         }}
       >
         {isEdit ? (
@@ -59,7 +59,7 @@ const Content = () => {
               <AiOutlineCheck />
             </button>
             <textarea
-              className="post__item__content__form--textarea"
+              className="post__item__content__form__textarea"
               ref={textareaRef}
               rows={rows}
               value={content}
@@ -68,7 +68,7 @@ const Content = () => {
             ></textarea>
           </form>
         ) : (
-          <pre className="post__item__content--pre" data-testid="post-content">
+          <pre className="post__item__content__pre" data-testid="post-content">
             {content}
           </pre>
         )}
@@ -78,13 +78,13 @@ const Content = () => {
           className="post__item__photo"
           data-testid="post-photo"
           onClick={() => {
-            Router.pushRoute("post", { id: post.idPost });
+            Router.push(`/post/${post.postId}`);
           }}
         >
           <img
             src={"/static/images/" + post.photo}
             alt=""
-            className="post__item__photo--img"
+            className="post__item__photo__img"
           />
         </div>
       )}

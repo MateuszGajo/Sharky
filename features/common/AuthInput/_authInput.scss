@@ -1,27 +1,27 @@
-.auth-input-container {
+.auth-input {
   position: relative;
   width: 350px;
   height: 50px;
   border: 1px solid $secondaryBackgroundColor;
 }
 
-.auth-input-container--x-large {
+.auth-input--x-large {
   width: 100%;
 }
 
-.auth-input-container--large {
+.auth-input--large {
   width: 90%;
 }
 
-.auth-input-container--medium {
+.auth-input--medium {
   width: 80%;
 }
 
-.auth-input-container--small {
+.auth-input--small {
   width: 70%;
 }
 
-.auth-input-container--input {
+.auth-input__input {
   border: 1px solid #d2d2d2;
   width: 100%;
   height: 100%;
@@ -32,12 +32,12 @@
   &:focus {
     border: 1px solid $primaryColor;
   }
-  &:valid + .auth-input-container--placeholder {
+  &:valid + .auth-input__placeholder {
     transform: translateY(-100%);
     margin-top: -15px;
     font-size: 1rem;
   }
-  &:focus + .auth-input-container--placeholder {
+  &:focus + .auth-input__placeholder {
     transform: translateY(-100%);
     margin-top: -15px;
     font-size: 1rem;
@@ -45,7 +45,7 @@
   }
 }
 
-.auth-input-container--placeholder {
+.auth-input__placeholder {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -59,10 +59,10 @@
 }
 
 @media(max-width:767px) {
-  .auth-input-container{
-    height:38px;
+  .auth-input{
+    height:35px;
   }
-  .auth-input-container--input {
+  .auth-input__input {
     font-size: 1.1rem;
     &:valid + .auth-input-container--placeholder {
       transform: translateY(-100%);
@@ -78,4 +78,9 @@
   }
 }
 
+@media(max-width:767px) and (orientation:landscape) {
+  .auth-input{
+    height:32px;
+  }
+}
 

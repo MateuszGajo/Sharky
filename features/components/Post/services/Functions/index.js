@@ -3,16 +3,16 @@ import { uuid } from "uuidv4";
 import Router from "next/router";
 
 export const getUsers = async (users, setUsers, elements) => {
-  const idUsers = [];
+  const userIds = [];
 
   for (let i = 0; i < elements.length; i++) {
-    const { idUser } = elements[i];
-    if (users[idUser] === undefined) idUsers.push(idUser);
+    const { userId } = elements[i];
+    if (users[userId] === undefined) userIds.push(userId);
   }
-  if (idUsers.length > 0)
+  if (userIds.length > 0)
     await axios
       .post("/user/get", {
-        idUsers,
+        userIds,
       })
       .then(({ data: { users: u } }) => {
         let usersKey = {};
@@ -40,7 +40,7 @@ export const muteUser = ({ idMuteUser, setMuteUser, isSingle, setError }) => {
     })
     .then((resp) => {
       isSingle && Router.push("/");
-      setMuteUser({ idUser: idMuteUser });
+      setMuteUser({ userId: idMuteUser });
     })
     .catch((err) => {
       const {
@@ -50,20 +50,15 @@ export const muteUser = ({ idMuteUser, setMuteUser, isSingle, setError }) => {
     });
 };
 
-export const blockUser = ({
-  idBlockUser,
-  posts,
-  setPosts,
-  isSingle,
-  setError,
-}) => {
+export const blockUser = ({ userId, posts, setPosts, isSingle, setError }) => {
   axios
-    .post("/user/block", { idBlockUser })
+    .post("/user/block", { userId })
     .then((resp) => {
+      const userBlockedID = userId;
       isSingle && Router.push("/");
       const filtredPosts = posts.filter((post) => {
-        const idUser = post.idUserShare || post.idUser;
-        return idUser != idBlockUser;
+        const userId = post.postSharedUserId || post.userId;
+        return userId != userBlockedID;
       });
       setPosts(filtredPosts);
     })
@@ -76,10 +71,10 @@ export const blockUser = ({
 };
 
 export const getPosts = ({
-  idFanpage,
-  idGroup,
+  fanpageId,
+  groupId,
   news,
-  idUser,
+  userId,
   authorPost,
   posts,
   setPosts,
@@ -87,38 +82,37 @@ export const getPosts = ({
   users,
   setUsers,
   setStatusOfMorePosts,
-  setStatusOfMoreComments,
 }) => {
   axios
-    .post("/post/get", { from, idGroup, idFanpage, news, authorPost, idUser })
+    .post("/post/get", { from, groupId, fanpageId, news, authorPost, userId })
     .then(async ({ data: { posts: p, comments, isMorePosts } }) => {
       await getUsers(users, setUsers, [...p, ...comments]);
       const commentsKey = {};
       for (let i = 0; i < comments.length; i++) {
-        if (!commentsKey[comments[i].idPost])
-          commentsKey[comments[i].idPost] = [];
-        commentsKey[comments[i].idPost].push(comments[i]);
+        if (!commentsKey[comments[i].postId])
+          commentsKey[comments[i].postId] = [];
+        commentsKey[comments[i].postId].push(comments[i]);
       }
       const newPosts = p.map((item) => {
-        if (!commentsKey[item.idPost]) {
+        if (!commentsKey[item.postId]) {
           return {
             ...item,
             id: uuid(),
             comments: [],
             isMoreComments: false,
           };
-        } else if (Object.keys(commentsKey[item.idPost]).length < 3)
+        } else if (Object.keys(commentsKey[item.postId]).length < 3)
           return {
             ...item,
             id: uuid(),
-            comments: commentsKey[item.idPost],
+            comments: commentsKey[item.postId],
             isMoreComments: false,
           };
         else
           return {
             ...item,
             id: uuid(),
-            comments: commentsKey[item.idPost].slice(0, -1),
+            comments: commentsKey[item.postId].slice(0, -1),
             isMoreComments: true,
           };
       });
@@ -142,12 +136,12 @@ export const addPost = ({
       date,
       photo,
     })
-    .then(({ data: { idPost: id, idUser } }) => {
+    .then(({ data: { postId: id, userId } }) => {
       setUser(data.user);
       setPosts([
         {
           id,
-          idUser,
+          userId,
           content,
           date,
           comments: null,
@@ -168,11 +162,11 @@ export const addPost = ({
     });
 };
 
-export const likePost = ({ idPost, setNewLike, setError }) => {
+export const likePost = ({ postId, setNewLike, setError }) => {
   axios
-    .post("/post/like", { idPost })
-    .then(({ data: { idLike } }) =>
-      setNewLike({ idLike, idElement: idPost, type: "post" })
+    .post("/post/like", { postId })
+    .then(({ data: { likeId } }) =>
+      setNewLike({ likeId, idElement: postId, type: "post" })
     )
     .catch((err) => {
       const {
@@ -182,11 +176,11 @@ export const likePost = ({ idPost, setNewLike, setError }) => {
     });
 };
 
-export const unlikePost = ({ idLike, idPost, setNewLike, setError }) => {
+export const unlikePost = ({ likeId, postId, setNewLike, setError }) => {
   axios
-    .post("/post/unlike", { idLike })
+    .post("/post/unlike", { likeId })
     .then((resp) =>
-      setNewLike({ idLike: null, idElement: idPost, type: "post" })
+      setNewLike({ likeId: null, idElement: postId, type: "post" })
     )
     .catch((err) => {
       const {
@@ -211,10 +205,10 @@ export const sharePost = ({
   const date = new Date();
   axios
     .post("/post/share", {
-      idPost: post.idPost,
+      postId: post.postId,
       date,
     })
-    .then(({ data: { idShare, idUser } }) => {
+    .then(({ data: { shareId, userId } }) => {
       if (!isSingle) {
         setNewComment({});
         setPosts([
@@ -222,10 +216,10 @@ export const sharePost = ({
             ...post,
             comments: [],
             isMoreComments: comments.length ? true : false,
-            idShare,
+            shareId,
             id: uuid(),
             date,
-            idUserShare: idUser,
+            postSharedUserId: userId,
             numberOfShares: Number(numberOfShares) + 1,
             numberOfComments: numberOfComments,
             numberOfLikes,
@@ -243,16 +237,16 @@ export const sharePost = ({
 };
 
 export const editPost = ({
-  idPost,
+  postId,
   content,
   setNewContent,
   setStatusOfEdit,
   setError,
 }) => {
   axios
-    .post("/post/edit", { idPost, content })
+    .post("/post/edit", { postId, content })
     .then((resp) => {
-      setNewContent({ text: content, idPost });
+      setNewContent({ text: content, postId });
       setStatusOfEdit(false);
     })
     .catch((err) => {
@@ -263,12 +257,12 @@ export const editPost = ({
     });
 };
 
-export const deletePost = ({ idPost, posts, setPosts, isSingle, setError }) => {
+export const deletePost = ({ postId, posts, setPosts, isSingle, setError }) => {
   axios
-    .post("/post/delete", { idPost })
+    .post("/post/delete", { postId })
     .then((resp) => {
       isSingle && Router.push("/");
-      const newPosts = posts.filter((post) => post.idPost != idPost);
+      const newPosts = posts.filter((post) => post.postId != postId);
       setPosts(newPosts);
     })
     .catch((err) => {
@@ -280,17 +274,17 @@ export const deletePost = ({ idPost, posts, setPosts, isSingle, setError }) => {
 };
 
 export const deletePostShare = ({
-  idShare,
+  shareId,
   posts,
   setPosts,
   isSingle,
   setError,
 }) => {
   axios
-    .post("/post/share/delete", { idShare })
+    .post("/post/share/delete", { shareId })
     .then((resp) => {
       isSingle && Router.push("/");
-      const newPosts = posts.filter((post) => post.idShare != idShare);
+      const newPosts = posts.filter((post) => post.shareId != shareId);
       setPosts(newPosts);
     })
     .catch((err) => {
@@ -302,7 +296,7 @@ export const deletePostShare = ({
 };
 
 export const getComments = ({
-  idPost,
+  postId,
   from,
   users,
   setUsers,
@@ -311,7 +305,7 @@ export const getComments = ({
   setStatusOfMoreData,
 }) => {
   axios
-    .post("/comment/get", { idPost, from })
+    .post("/comment/get", { postId, from })
     .then(async ({ data: { comments: newComments, isMore } }) => {
       await getUsers(users, setUsers, newComments);
       setComments([...comments, ...newComments]);
@@ -320,7 +314,7 @@ export const getComments = ({
 };
 
 export const addComent = ({
-  idPost,
+  postId,
   content,
   date,
   clearText,
@@ -329,15 +323,15 @@ export const addComent = ({
 }) => {
   axios
     .post("/comment/add", {
-      idPost,
+      postId,
       content,
       date,
     })
-    .then(({ data: { idComment } }) => {
+    .then(({ data: { commnetId } }) => {
       setNewComment({
         content,
-        idElement: idPost,
-        idComment,
+        idElement: postId,
+        commnetId,
         type: "post",
         date,
       });
@@ -351,13 +345,13 @@ export const addComent = ({
     });
 };
 
-export const likeComment = ({ idComment, setNewLike, setError }) => {
+export const likeComment = ({ commnetId, setNewLike, setError }) => {
   axios
-    .post("/comment/like", { idComment })
-    .then(({ data: { idLike } }) => {
+    .post("/comment/like", { commnetId })
+    .then(({ data: { likeId } }) => {
       setNewLike({
-        idLike,
-        idElement: idComment,
+        likeId,
+        idElement: commnetId,
         type: "comment",
       });
     })
@@ -369,11 +363,11 @@ export const likeComment = ({ idComment, setNewLike, setError }) => {
     });
 };
 
-export const unlikeComment = ({ idLike, idComment, setNewLike, setError }) => {
+export const unlikeComment = ({ likeId, commnetId, setNewLike, setError }) => {
   axios
-    .post("/comment/unlike", { idLike })
+    .post("/comment/unlike", { likeId })
     .then((resp) =>
-      setNewLike({ idLike: null, idElement: idComment, type: "comment" })
+      setNewLike({ likeId: null, idElement: commnetId, type: "comment" })
     )
     .catch((err) => {
       const {
@@ -384,7 +378,7 @@ export const unlikeComment = ({ idLike, idComment, setNewLike, setError }) => {
 };
 
 export const getReplies = async ({
-  idComment,
+  commnetId,
   from,
   replies,
   setReplies,
@@ -394,7 +388,7 @@ export const getReplies = async ({
 }) => {
   axios
     .post("/reply/get", {
-      idComment,
+      commnetId,
       from,
     })
     .then(async ({ data: { replies: r, isMore } }) => {
@@ -405,7 +399,7 @@ export const getReplies = async ({
 };
 
 export const addReply = ({
-  idComment,
+  commnetId,
   content,
   date,
   clearText,
@@ -414,15 +408,15 @@ export const addReply = ({
 }) => {
   axios
     .post("/reply/add", {
-      idComment,
+      commnetId,
       content,
       date,
     })
-    .then(({ data: { idReply } }) => {
+    .then(({ data: { replyId } }) => {
       setNewComment({
         content,
-        idElement: idComment,
-        idReply,
+        idElement: commnetId,
+        replyId,
         type: "comment",
         date,
       });
@@ -436,11 +430,11 @@ export const addReply = ({
     });
 };
 
-export const likeReply = async ({ idReply, setNewLike, setError }) => {
+export const likeReply = async ({ replyId, setNewLike, setError }) => {
   axios
-    .post("/reply/like", { idReply })
-    .then(({ data: { idLike } }) =>
-      setNewLike({ idLike, idElement: idReply, type: "reply" })
+    .post("/reply/like", { replyId })
+    .then(({ data: { likeId } }) =>
+      setNewLike({ likeId, idElement: replyId, type: "reply" })
     )
     .catch((err) => {
       const {
@@ -451,15 +445,15 @@ export const likeReply = async ({ idReply, setNewLike, setError }) => {
 };
 
 export const unlikeReply = async ({
-  idLike,
-  idReply,
+  likeId,
+  replyId,
   setNewLike,
   setError,
 }) => {
   axios
-    .post("/reply/unlike", { idLike })
+    .post("/reply/unlike", { likeId })
     .then((resp) =>
-      setNewLike({ idLike: null, idElement: idReply, type: "reply" })
+      setNewLike({ likeId: null, idElement: replyId, type: "reply" })
     )
     .catch((err) => {
       const {

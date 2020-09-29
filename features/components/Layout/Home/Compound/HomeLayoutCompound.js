@@ -8,8 +8,7 @@ import Wrapper from "./components/Wrapper/Wrapper";
 
 const Wizzard = ({ children }) => {
   const [isMessengerClose, setStatusOfMessenger] = useState(true);
-  const [chat, setChat] = useState({ user: {}, idChat: null });
-  const [searchContent, setSearchContent] = useState("");
+  const [chat, setChat] = useState({ user: {}, chatId: null });
   const [postContent, setPostContent] = useState("");
 
   return (
@@ -17,8 +16,6 @@ const Wizzard = ({ children }) => {
       value={{
         isMessengerClose,
         setStatusOfMessenger,
-        searchContent,
-        setSearchContent,
         postContent,
         setPostContent,
         chat,

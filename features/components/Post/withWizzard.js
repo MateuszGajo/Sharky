@@ -6,13 +6,13 @@ import AppContext from "@features/context/AppContext";
 
 const withWizzard = (WrappedComponent) => {
   return (props) => {
-    const { newPost, idFanpage = "", idGroup = "", news = "" } = props;
+    const { newPost, fanpageId = "", groupId = "", news = "" } = props;
 
     const { setError, owner } = useContext(AppContext);
-    const [isMoreComment, setStatusOfMoreComments] = useState();
-    const [isMorePosts, setStatusOfMorePosts] = useState(true);
+    const [isMoreComment, setStatusOfMoreComments] = useState(false);
+    const [isMorePosts, setStatusOfMorePosts] = useState(false);
     const [newLike, setNewLike] = useState({
-      idLike: null,
+      likeId: null,
       idElement: null,
       type: "",
       date: null,
@@ -23,8 +23,8 @@ const withWizzard = (WrappedComponent) => {
       type: "",
       date: null,
     });
-    const [newContent, setNewContent] = useState({ text: "", idPost: null });
-    const [muteUser, setMuteUser] = useState({ idUser: null });
+    const [newContent, setNewContent] = useState({ text: "", postId: null });
+    const [muteUser, setMuteUser] = useState({ userId: null });
 
     const [users, setUsers] = useState({
       [owner.id]: {
@@ -44,27 +44,27 @@ const withWizzard = (WrappedComponent) => {
         data.append("file", file);
         data.set("content", content);
         data.set("date", date.toUTCString());
-        data.set("idGroup", idGroup);
-        data.set("idFanpage", idFanpage);
+        data.set("groupId", groupId);
+        data.set("fanpageId", fanpageId);
         data.set("news", news);
 
         axios
           .post(`/post/add`, data)
-          .then(({ data: { idPost, fileName } }) => {
+          .then(({ data: { postId, fileName } }) => {
             setPosts([
               {
                 id: uuid(),
-                idPost,
-                idUser: owner.id,
+                postId,
+                userId: owner.id,
                 content,
                 date,
                 photo: fileName,
                 numberOfShares: 0,
                 numberOfComments: 0,
                 numberOfLikes: 0,
-                idShare: null,
-                idUserShare: null,
-                idLike: null,
+                shareId: null,
+                postSharedUserId: null,
+                likeId: null,
               },
               ...posts,
             ]);

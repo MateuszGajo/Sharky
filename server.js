@@ -56,21 +56,21 @@ socketIO.sockets.on("connection", (socket) => {
     const token = cookie.parse(socket.handshake.headers.cookie).token;
 
     const {
-      data: { id: idOwner },
+      data: { id: onwerId },
     } = jwt.verify(token, jwtSecret);
-    userJoin(idOwner, socket.id);
+    userJoin(onwerId, socket.id);
   });
 
   socket.on(
     "sendChatMessage",
-    ({ idMessage, idChat, idUser, message, date, messageTo }) => {
+    ({ messageId, chatId, userId, message, date, messageTo }) => {
       const unReadMessageQuery = `update chats set message_to=$1 where id=$2;`;
       if (!existUser(messageTo))
-        client.query(unReadMessageQuery, [messageTo, idChat]);
-      socket.broadcast.to("chat" + idChat).emit("message", {
-        idMessage,
-        idChat,
-        idUser,
+        client.query(unReadMessageQuery, [messageTo, chatId]);
+      socket.broadcast.to("chat" + chatId).emit("message", {
+        messageId,
+        chatId,
+        userId,
         message,
         date,
         messageTo,
@@ -78,14 +78,14 @@ socketIO.sockets.on("connection", (socket) => {
     }
   );
 
-  socket.on("isMessageUnRead", ({ idChat, messageTo }) => {
+  socket.on("isMessageUnRead", ({ chatId, messageTo }) => {
     const unReadMessageQuery = `update chats set message_to=$1 where id=$2;`;
-    client.query(unReadMessageQuery, [messageTo, idChat]);
+    client.query(unReadMessageQuery, [messageTo, chatId]);
   });
 
-  socket.on("joinNewChat", async ({ idFriendShip, idChat }) => {
-    const getUsersQuery = `select id_user_1 as "firstUser", id_user_2 as "secondUser" from friends where id=$1`;
-    const { rows } = await client.query(getUsersQuery, [idFriendShip]);
+  socket.on("joinNewChat", async ({ friendshipId, chatId }) => {
+    const getUsersQuery = `select user_id_1 as "firstUser", user_id_2 as "secondUser" from friends where id=$1`;
+    const { rows } = await client.query(getUsersQuery, [friendshipId]);
 
     const userSockets = getSocket(rows[0].firstUser);
     const ownerSockets = getSocket(rows[0].secondUser);
@@ -97,11 +97,11 @@ socketIO.sockets.on("connection", (socket) => {
       ]);
       for (let i = 0; i < userSockets.length; i++) {
         const soc = socketIO.sockets.connected[userSockets[i]];
-        soc.join("chat" + idChat);
+        soc.join("chat" + chatId);
         socketIO.to(userSockets[i]).emit("newChat", {
           newChat: {
             ...user[0],
-            idChat,
+            chatId,
             messageTo: null,
           },
         });
@@ -114,11 +114,11 @@ socketIO.sockets.on("connection", (socket) => {
       ]);
       for (let i = 0; i < ownerSockets.length; i++) {
         const soc = socketIO.sockets.connected[ownerSockets[i]];
-        soc.join("chat" + idChat);
+        soc.join("chat" + chatId);
         socketIO.to(ownerSockets[i]).emit("newChat", {
           newChat: {
             ...user[0],
-            idChat,
+            chatId,
             messageTo: null,
           },
         });
@@ -137,17 +137,17 @@ socketIO.sockets.on("connection", (socket) => {
     const token = cookie.parse(socket.handshake.headers.cookie).token;
 
     const {
-      data: { id: idOwner },
+      data: { id: onwerId },
     } = jwt.verify(token, jwtSecret);
 
-    const { rows: chats } = await client.query(getChatsQuery, [idOwner]);
+    const { rows: chats } = await client.query(getChatsQuery, [onwerId]);
     for (let i = 0; i < chats.length; i++) {
-      socket.join("chat" + chats[i].idChat);
+      socket.join("chat" + chats[i].chatId);
     }
   });
 
-  socket.on("singleDisconnect", ({ idUser }) => {
-    userLeave(idUser, socket.id);
+  socket.on("singleDisconnect", ({ userId }) => {
+    userLeave(userId, socket.id);
   });
 
   socket.on("disconnect", async () => {
@@ -155,10 +155,10 @@ socketIO.sockets.on("connection", (socket) => {
 
     if (token) {
       const {
-        data: { id: idOwner },
+        data: { id: onwerId },
       } = jwt.verify(token, jwtSecret);
 
-      userLeave(idOwner, socket.id);
+      userLeave(onwerId, socket.id);
     }
   });
 });

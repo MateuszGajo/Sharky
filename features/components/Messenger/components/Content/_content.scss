@@ -5,28 +5,28 @@
   }
   
   
-.messenger__text--myself {
+.messenger__text__myself {
     display: flex;
     justify-content: flex-end;
     margin-right: 5px;
     margin-top: 8px;
   }
 
-  .messenger__text--myself + .messenger__text--myself{
+  .messenger__text__myself + .messenger__text__myself{
     margin-top:4px;
   }
   
-  .messenger__text--stranger {
+  .messenger__text__stranger {
     display:flex;
     margin-left: 5px;
     margin-top: 8px;
   }
 
-  .messenger__text--stranger  +  .messenger__text--stranger {
+  .messenger__text__stranger  +  .messenger__text__stranger {
       margin-top:4px;
     }
 
-  .messenger__text--stranger__user{
+  .messenger__text__stranger__user{
     display:flex;
     align-items: flex-end;
     padding-left:$smallMargin;
@@ -34,29 +34,29 @@
     
   }
 
-  .messenger__text--stranger__user__container{
+  .messenger__text__stranger__user__container{
     display:flex;
     cursor:pointer;
   }
 
-  .messenger__text--stranger__user__container__photo{
+  .messenger__text__stranger__user__container__photo{
     margin-right:10px;
   }
 
-  .messenger__text--stranger__user__container__photo--img{
+  .messenger__text__stranger__user__container__photo--img{
     width:20px;
     height:20px;
     object-fit: cover;
     border-radius: 50%;
   }
 
-  .messenger__text--stranger__user__container__name{
+  .messenger__text__stranger__user__container__name{
     display:flex;
     align-items: center;
     justify-content: center;
   }
 
-  .messenger__text--stranger__user__container__name--span{
+  .messenger__text__stranger__user__container__name__span{
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 1;
@@ -66,13 +66,13 @@
     overflow: hidden;
   }
 
-.messenger__text--myself--primary-color {
+.messenger__text__myself--primary-color {
     display: inline-block;
     background-color: $primaryColor;
     color: white;
   }
   
-  .messenger__text--stranger--primary-background-color {
+  .messenger__text__stranger--primary-background-color {
     display: inline-block;
     background-color: $primaryBackgroundColor;
   }

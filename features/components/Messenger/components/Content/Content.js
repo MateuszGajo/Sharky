@@ -1,8 +1,9 @@
 import React, { useRef, useContext, useEffect } from "react";
-import Router from "@features/route/routes";
+import Router from "next/router";
 import AppContext from "@features/context/AppContext";
 
 const Content = ({ messages, user }) => {
+  const { firstName, lastName, photo } = user;
   const { owner } = useContext(AppContext);
 
   const contentRef = useRef(null);
@@ -21,38 +22,36 @@ const Content = ({ messages, user }) => {
       {messages.map((message, index) => {
         const addAuthor =
           index + 1 === messages.length ||
-          messages[index + 1].idUser !== message.idUser;
+          messages[index + 1].userId !== message.userId;
 
-        return message.idUser == owner.id ? (
-          <div className="messenger__text--myself" key={index}>
-            <span className="messenger__text--myself--primary-color messenger-text-style">
+        return message.userId == owner.id ? (
+          <div className="messenger__text__myself" key={index}>
+            <span className="messenger__text__myself--primary-color messenger-text-style">
               {message.message}
             </span>
           </div>
         ) : (
-          <div className="messenger__text--stranger" key={index}>
-            <span className="messenger__text--stranger--primary-background-color messenger-text-style">
+          <div className="messenger__text__stranger" key={index}>
+            <span className="messenger__text__stranger--primary-background-color messenger-text-style">
               {message.message}
             </span>
             {addAuthor ? (
-              <div className="messenger__text--stranger__user">
+              <div className="messenger__text__stranger__user">
                 <div
-                  className="messenger__text--stranger__user__container"
-                  title={user.firstName + " " + user.lastName}
-                  onClick={() =>
-                    Router.pushRoute("profile", { id: message.idUser })
-                  }
+                  className="messenger__text__stranger__user__container"
+                  title={firstName + " " + lastName}
+                  onClick={() => Route.pust(`/profile/${message.userId}`)}
                 >
-                  <div className="messenger__text--stranger__user__container__photo">
+                  <div className="messenger__text__stranger__user__container__photo">
                     <img
-                      src={"/static/images/" + user.photo}
+                      src={"/static/images/" + photo}
                       alt=""
-                      className="messenger__text--stranger__user__container__photo--img"
+                      className="messenger__text__stranger__user__container__photo--img"
                     />
                   </div>
-                  <div className="messenger__text--stranger__user__container__name">
-                    <span className="messenger__text--stranger__user__container__name--span">
-                      {user.firstName} {user.lastName}
+                  <div className="messenger__text__stranger__user__container__name">
+                    <span className="messenger__text__stranger__user__container__name__span">
+                      {firstName} {lastName}
                     </span>
                   </div>
                 </div>

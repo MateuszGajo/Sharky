@@ -1,3 +1,31 @@
 import React from "react";
 
-export default React.createContext({});
+export default React.createContext({
+  user: { id: null, firstName: "", lastName: "", photo: "" },
+  setUser: () => {},
+  userShare: { id: null, firstName: "", lastName: "", photo: "" },
+  setUserShare: () => {},
+  comments: [],
+  setComments: () => {},
+  post: {
+    id: null,
+    content: "",
+    numberOfLikes: null,
+    numberOfShares: null,
+    numberOfComments: null,
+    userId: null,
+  },
+  setPost: () => {},
+  isMoreComments: false,
+  setStatusOfMoreComments: () => {},
+  numberOfComments: null,
+  setNumberOfComments: () => {},
+  isHidenPost: false,
+  setStatusOfHiddenPost: () => {},
+  isReport: false,
+  setStatusOfReport: () => {},
+  isEdit: false,
+  setStatusOfEdit: () => {},
+  isSingle: false,
+  setStatusOfSingle: () => {},
+});
