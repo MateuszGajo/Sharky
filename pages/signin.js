@@ -64,7 +64,7 @@ const SignIn = () => {
           <div className="authentication__form__wrapper__icons__icon">
             <a
               href="/auth/google"
-              className="authentication__form__wrapper__icons__icon--link"
+              className="authentication__form__wrapper__icons__icon__link"
             >
               <FaGooglePlusG />
             </a>
@@ -72,7 +72,7 @@ const SignIn = () => {
           <div className="authentication__form__wrapper__icons__icon">
             <a
               href="/auth/twitter"
-              className="authentication__form__wrapper__icons__icon--link"
+              className="authentication__form__wrapper__icons__icon__link"
             >
               <FiTwitter />
             </a>
@@ -80,13 +80,13 @@ const SignIn = () => {
           <div className="authentication__form__wrapper__icons__icon">
             <a
               href="/auth/facebook"
-              className="authentication__form__wrapper__icons__icon--link"
+              className="authentication__form__wrapper__icons__icon__link"
             >
               <FaFacebookF />
             </a>
           </div>
         </div>
-        <p className="authentication__form__wrapper--text">{description}</p>
+        <p className="authentication__form__wrapper__text">{description}</p>
         <div className="authentication__form__wrapper__inputs">
           <form
             className="authentication__form__wrapper__inputs__wrapper"
@@ -97,7 +97,7 @@ const SignIn = () => {
                 {t(`signin:error.${authUserError}`)}
               </p>
             )}
-            <div className="authentication__form__wrapper__inputs__wrapper__input--signin">
+            <div className="authentication__form__wrapper__inputs__wrapper__input__signin">
               <AuthInput
                 value={email}
                 onChange={setEmail}
@@ -105,7 +105,7 @@ const SignIn = () => {
                 size="x-large"
               />
             </div>
-            <div className="authentication__form__wrapper__inputs__wrapper__input--signin">
+            <div className="authentication__form__wrapper__inputs__wrapper__input__signin">
               <AuthInput
                 type="password"
                 value={password}
@@ -116,18 +116,18 @@ const SignIn = () => {
             </div>
 
             <div className="authentication__form__wrapper__inputs__wrapper__helpers">
-              <div className="authentication__form__wrapper__inputs__wrapper__helpers--remberme">
+              <div className="authentication__form__wrapper__inputs__wrapper__helpers__rember-me">
                 <Checkbox
                   value={isRembermeChecked}
                   onChange={setStatusOfRemberme}
                 />
               </div>
 
-              <span className="authentication__form__wrapper__inputs__wrapper__helpers--remberme--text">
+              <span className="authentication__form__wrapper__inputs__wrapper__helpers__rember-me__text">
                 {remindPassword}
               </span>
             </div>
-            <div className="authentication__form__wrapper__inputs__wrapper--button">
+            <div className="authentication__form__wrapper__inputs__wrapper__button">
               <PrimaryButton value={buttonText} size="large" />
             </div>
             {authError && (

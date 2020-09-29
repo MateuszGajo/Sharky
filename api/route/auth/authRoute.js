@@ -31,7 +31,7 @@ router.get(
       jwtSecret
     );
     res.cookie("token", token);
-    res.redirect("/");
+    res.redirect("/home");
   }
 );
 
@@ -52,7 +52,7 @@ router.get(
       jwtSecret
     );
     res.cookie("token", token);
-    res.redirect("/");
+    res.redirect("/home");
   }
 );
 
@@ -73,7 +73,7 @@ router.get(
       jwtSecret
     );
     res.cookie("token", token);
-    res.redirect("/");
+    res.redirect("/home");
   }
 );
 
@@ -128,8 +128,8 @@ router.post("/signup", async (req, res) => {
   const { creds } = req.body;
   const { email, password, firstName, lastName, phone } = creds;
   try {
-    const idUser = await client.query(getIdUserQuery, [email]);
-    if (idUser.rowCount) return res.status(403).json("user-exist");
+    const { rowCount } = await client.query(getIdUserQuery, [email]);
+    if (rowCount) return res.status(403).json("user-exist");
 
     try {
       const pwHash = await bcrypt.hash(password, saltRounds);
