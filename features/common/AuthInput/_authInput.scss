@@ -64,17 +64,6 @@
   }
   .auth-input__input {
     font-size: 1.1rem;
-    &:valid + .auth-input-container--placeholder {
-      transform: translateY(-100%);
-      margin-top: -7px;
-      font-size: 1rem;
-    }
-    &:focus + .auth-input-container--placeholder {
-      transform: translateY(-100%);
-      margin-top: -7px;
-      font-size: 1rem;
-      color: $primaryColor;
-    }
   }
 }
 
