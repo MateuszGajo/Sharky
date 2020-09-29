@@ -14,7 +14,7 @@
     }
   }
  
-  .profile__container__person__photo--img {
+  .profile__container__person__photo__img {
     display: block;
     width: 300px;
     height: 350px;
@@ -54,7 +54,7 @@
     text-align: center;
   }
   
-  .profile__container__person__name--span {
+  .profile__container__person__name__span {
     font-weight: bold;
     font-size: 1.2rem;
   }
@@ -110,11 +110,11 @@
       order:1;
     }
 
-    .profile__container__person__name--span{
+    .profile__container__person__name__span{
       font-size: 1.8rem;
     }
 
-    .profile__container__person__photo--img{
+    .profile__container__person__photo__img{
       height:200px;
       width:200px;
       border-radius:50%;
@@ -131,7 +131,7 @@
     .profile__container__person__name{
       height:150px;
     }
-    .profile__container__person__photo--img{
+    .profile__container__person__photo__img{
       width:150px;
       height:150px;
     }

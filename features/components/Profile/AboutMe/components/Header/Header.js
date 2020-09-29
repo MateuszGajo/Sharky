@@ -7,21 +7,21 @@ import AppContex from "@features/context/AppContext";
 import i18next from "@i18n";
 const { useTranslation } = i18next;
 
-const Header = ({ info, setNumberOfPhotos, idUser }) => {
+const Header = ({ info, setNumberOfPhotos, userId }) => {
   const { t } = useTranslation();
 
   const { firstName, lastName, photo: initialPhoto } = info;
   const { setError, owner } = useContext(AppContex);
 
   const [photo, setPhoto] = useState(initialPhoto);
-  const [uploadPhotoPrompt, setUploadPhotoPrompt] = useState();
+  const [prompt, setPrompt] = useState();
 
   const addPhoto = t("profile:add-photo");
   const photoAddedSuccessfully = t("profile:photo-added-successfully");
   const changePhoto = t("profile:change-photo");
 
-  const phototextTimeOut = () => {
-    setTimeout(() => setUploadPhotoPrompt(""), 1500);
+  const clearPrompt = () => {
+    setTimeout(() => setPrompt(""), 1500);
   };
 
   const handlePhotoUpload = (e) => {
@@ -39,8 +39,8 @@ const Header = ({ info, setNumberOfPhotos, idUser }) => {
     axios
       .post("/user/add/photo", data)
       .then(() => {
-        setUploadPhotoPrompt(photoAddedSuccessfully);
-        phototextTimeOut();
+        setPrompt(photoAddedSuccessfully);
+        clearPrompt();
         setNumberOfPhotos((prev) => prev + 1);
       })
       .catch(({ response: { data: message } }) => setError(message));
@@ -71,20 +71,20 @@ const Header = ({ info, setNumberOfPhotos, idUser }) => {
   return (
     <div className="profile__container__person">
       <div className="profile__container__person__name">
-        <span className="profile__container__person__name--span">
+        <span className="profile__container__person__name__span">
           {firstName + " " + lastName}
         </span>
       </div>
       <div className="profile__container__person__photo">
         <div
           className={cx({
-            "profile__container__person__photo--owner": owner.id == idUser,
+            "profile__container__person__photo--owner": owner.id == userId,
           })}
         >
           <img
             src={`/static/images/${photo}`}
             alt=""
-            className="profile__container__person__photo--img"
+            className="profile__container__person__photo__img"
           />
           <div className="profile__container__person__photo__overlay">
             <label htmlFor="profile-change">
@@ -101,16 +101,16 @@ const Header = ({ info, setNumberOfPhotos, idUser }) => {
           </div>
         </div>
 
-        {owner.id == idUser && (
+        {owner.id == userId && (
           <div className="profile__container__person__add-photo">
-            {uploadPhotoPrompt ? (
+            {prompt ? (
               <div className="profile__container__person__add-photo__text">
-                {uploadPhotoPrompt}
+                {prompt}
               </div>
             ) : (
               <>
                 <div className="profile__container__person__add-photo__title">
-                  <span className="profile__container__person__add-photo__title--text">
+                  <span className="profile__container__person__add-photo__title__text">
                     {addPhoto}
                   </span>
                 </div>
@@ -126,7 +126,7 @@ const Header = ({ info, setNumberOfPhotos, idUser }) => {
                     type="file"
                     name="file"
                     id="file-upload"
-                    className="profile__container__person__add-photo__icon__upload--file"
+                    className="profile__container__person__add-photo__icon__upload__file"
                     onChange={handlePhotoUpload}
                   />
                 </div>

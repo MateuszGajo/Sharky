@@ -6,7 +6,7 @@ import i18next from "@i18n";
 
 const { useTranslation } = i18next;
 
-const ProfileInfo = ({ setChooseItem, info, idUser }) => {
+const ProfileInfo = ({ setChooseItem, info, userId }) => {
   const { numberOfPhotos: initialNumberOfPhotos } = info;
 
   const [isDisplayAbout, setStatusOfDisplayAbout] = useState(false);
@@ -17,28 +17,28 @@ const ProfileInfo = ({ setChooseItem, info, idUser }) => {
 
   const { t } = useTranslation(["profile"]);
 
-  const aboutItemName = t("profile:about-me");
+  const aboutText = t("profile:about-me");
 
   return (
     <div className="profile__container">
       <Header
         info={info}
         setNumberOfPhotos={setNumberOfPhotos}
-        idUser={idUser}
+        userId={userId}
       />
       {isDisplayAbout ? (
         <DisplayItem
-          chooseItem={aboutItemName}
+          chooseItem={aboutText}
           setChooseItem={setStatusOfDisplayAbout}
           info={info}
-          idUser={idUser}
+          userId={userId}
         />
       ) : (
         <Content
           info={info}
           numberOfPhotos={numberOfPhotos}
           setChooseItem={setChooseItem}
-          aboutItemName={aboutItemName}
+          aboutText={aboutText}
           setStatusOfDisplayAbout={setStatusOfDisplayAbout}
         />
       )}

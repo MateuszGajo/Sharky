@@ -29,7 +29,7 @@ const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
 
 router.post("/add/photo", async (req, res) => {
-  const { id: idOwner } = decodeToken(req);
+  const { id: ownerId } = decodeToken(req);
 
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -63,7 +63,7 @@ router.post("/add/photo", async (req, res) => {
 
     try {
       await client.query(addPhotoQuery, [
-        idOwner,
+        ownerId,
         fileName,
         new Date().toUTCString(),
       ]);
@@ -76,7 +76,7 @@ router.post("/add/photo", async (req, res) => {
 });
 
 router.post("/change/photo", async (req, res) => {
-  const { id: idOwner } = decodeToken(req);
+  const { id: ownerId } = decodeToken(req);
 
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -99,9 +99,9 @@ router.post("/change/photo", async (req, res) => {
     const fileName = filename;
 
     try {
-      await client.query(changePhotoQuery, [fileName, idOwner]);
+      await client.query(changePhotoQuery, [fileName, ownerId]);
       await client.query(addPhotoQuery, [
-        idOwner,
+        ownerId,
         fileName,
         new Date().toUTCString(),
       ]);
@@ -126,10 +126,10 @@ router.post("/get", async (req, res) => {
 });
 
 router.post("/info", async (req, res) => {
-  const { idUser } = req.body;
+  const { userId } = req.body;
 
   try {
-    const { rows } = await client.query(getUserInfoQuery, [idUser]);
+    const { rows } = await client.query(getUserInfoQuery, [userId]);
     if (!rows[0]) return res.status(404).json("user-does-not-exist");
 
     res.status(200).json({ info: rows[0] });
