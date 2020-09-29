@@ -57,7 +57,7 @@ export const blockUser = ({ userId, posts, setPosts, isSingle, setError }) => {
       const userBlockedID = userId;
       isSingle && Router.push("/");
       const filtredPosts = posts.filter((post) => {
-        const userId = post.idUserShare || post.userId;
+        const userId = post.postSharedUserId || post.userId;
         return userId != userBlockedID;
       });
       setPosts(filtredPosts);
@@ -219,7 +219,7 @@ export const sharePost = ({
             shareId,
             id: uuid(),
             date,
-            idUserShare: userId,
+            postSharedUserId: userId,
             numberOfShares: Number(numberOfShares) + 1,
             numberOfComments: numberOfComments,
             numberOfLikes,

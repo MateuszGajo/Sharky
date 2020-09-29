@@ -40,9 +40,7 @@ const Content = ({ messages, user }) => {
                 <div
                   className="messenger__text__stranger__user__container"
                   title={firstName + " " + lastName}
-                  onClick={() =>
-                    Router.pushRoute("profile", { id: message.userId })
-                  }
+                  onClick={() => Route.pust(`/profile/${message.userId}`)}
                 >
                   <div className="messenger__text__stranger__user__container__photo">
                     <img
