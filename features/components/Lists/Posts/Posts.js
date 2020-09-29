@@ -77,7 +77,6 @@ const PostList = ({
           </p>
         }
       >
-        {console.log(posts)}
         {posts.map((post) => {
           return (
             <div className="post-list__post" key={post.id}>
