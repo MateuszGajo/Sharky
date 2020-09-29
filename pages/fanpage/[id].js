@@ -17,7 +17,7 @@ const { useTranslation } = i18next;
 
 const Fanpage = () => {
   const router = useRouter();
-  const idFanpage = router.query.id;
+  const fanpageId = router.query.id;
 
   const { t } = useTranslation(["fanpage"]);
 
@@ -26,19 +26,19 @@ const Fanpage = () => {
   const { isError, isPrompt, setOwner } = useContext(AppContext);
 
   const [section, setSection] = useState(homeName);
-  const [idSub, setIdSub] = useState(null);
+  const [subId, setIdSub] = useState(null);
   const [role, setRole] = useState(null);
   const [isLoading, setStatusOfLoading] = useState(true);
   const [fanpageError, setFanpageError] = useState("");
   const [isAuth, setStatusOfAuth] = useState(null);
 
   useEffect(() => {
-    idFanpage &&
+    fanpageId &&
       isAuth &&
       axios
-        .post("/fanpage/enter", { idFanpage })
-        .then(({ data: { idSub, role } }) => {
-          setIdSub(idSub);
+        .post("/fanpage/enter", { fanpageId })
+        .then(({ data: { subId, role } }) => {
+          setIdSub(subId);
           setRole(role);
           setStatusOfLoading(false);
         })
@@ -48,7 +48,7 @@ const Fanpage = () => {
             setStatusOfLoading(false);
           }
         });
-  }, [idFanpage, isAuth]);
+  }, [fanpageId, isAuth]);
 
   useEffect(() => {
     getOwner({ setStatusOfAuth, setOwner });
@@ -70,11 +70,11 @@ const Fanpage = () => {
             <Navbar
               setIdSub={setIdSub}
               setSection={setSection}
-              idSub={idSub}
+              subId={subId}
               role={role}
-              idFanpage={idFanpage}
+              fanpageId={fanpageId}
             />
-            <Content section={section} idFanpage={idFanpage} role={role} />
+            <Content section={section} fanpageId={fanpageId} role={role} />
           </>
         ) : (
           <div className="fanpage__error">

@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import i18next from "@i18n";
 
-const About = ({ idFanpage }) => {
+const { useTranslation } = i18next;
+
+const About = ({ fanpageId }) => {
+  const { t } = useTranslation(["fanpage"]);
+
+  const nameText = t("fanpage:name");
+  const numberOfSubscribersText = t("fanpage:number-of-subscribers");
+  const startingDateText = t("fanpage:starting-date");
+
   const [data, setData] = useState({
     name: "aa",
     numberOfSubscribers: null,
@@ -18,7 +27,7 @@ const About = ({ idFanpage }) => {
 
   useEffect(() => {
     axios
-      .post("/fanpage/about", { idFanpage })
+      .post("/fanpage/about", { fanpageId })
       .then(({ data: { fanpageInfo } }) => setData(fanpageInfo));
   }, []);
 
@@ -26,32 +35,34 @@ const About = ({ idFanpage }) => {
     <div className="fanpage-about">
       <div className="fanpage-about__item">
         <div className="fanpage-about__item__property">
-          <span className="fanpage-about__item__property--span">Nazwa:</span>
+          <span className="fanpage-about__item__property__span">
+            {nameText}:
+          </span>
         </div>
         <div className="fanpage-about__item__name">
-          <span className="fanpage-about__item__name--span">{data.name}</span>
+          <span className="fanpage-about__item__name__span">{data.name}</span>
         </div>
       </div>
       <div className="fanpage-about__item">
         <div className="fanpage-about__item__property">
-          <span className="fanpage-about__item__property--span">
-            Liczba subskrybentów:
+          <span className="fanpage-about__item__property__span">
+            {numberOfSubscribersText}:
           </span>
         </div>
         <div className="fanpage-about__item__name">
-          <span className="fanpage-about__item__name--span">
+          <span className="fanpage-about__item__name__span">
             {data.numberOfSubscribers}
           </span>
         </div>
       </div>
       <div className="fanpage-about__item">
         <div className="fanpage-about__item__property">
-          <span className="fanpage-about__item__property--span">
-            Data Założenia:
+          <span className="fanpage-about__item__property__span">
+            {startingDateText}:
           </span>
         </div>
         <div className="fanpage-about__item__name">
-          <span className="fanpage-about__item__name--span">
+          <span className="fanpage-about__item__name__span">
             {da + " " + mo + " " + ye}
           </span>
         </div>

@@ -9,7 +9,7 @@ import i18next from "@i18n";
 import AppContext from "@features/context/AppContext";
 const { useTranslation } = i18next;
 
-const Navbar = ({ setIdSub, setSection, idSub, role, idFanpage }) => {
+const Navbar = ({ setIdSub, setSection, subId, role, fanpageId }) => {
   const { t } = useTranslation(["fanpage"]);
 
   const router = useRouter();
@@ -34,7 +34,7 @@ const Navbar = ({ setIdSub, setSection, idSub, role, idFanpage }) => {
 
   const deleteFanpage = (e) => {
     axios
-      .post("/fanpage/delete", { idFanpage })
+      .post("/fanpage/delete", { fanpageId })
       .then(() => {
         router.push("/");
       })
@@ -57,7 +57,7 @@ const Navbar = ({ setIdSub, setSection, idSub, role, idFanpage }) => {
 
     const data = new FormData();
     data.append("file", e.target.files[0]);
-    data.set("idFanpage", idFanpage);
+    data.set("fanpageId", fanpageId);
 
     axios
       .post("/fanpage/change/photo", data)
@@ -69,7 +69,7 @@ const Navbar = ({ setIdSub, setSection, idSub, role, idFanpage }) => {
 
   const subscribeFanpage = () => {
     axios
-      .post("/fanpage/user/add", { idFanpage })
+      .post("/fanpage/user/add", { fanpageId })
       .then(({ data: { id } }) => {
         setIdSub(id);
       })
@@ -78,7 +78,7 @@ const Navbar = ({ setIdSub, setSection, idSub, role, idFanpage }) => {
 
   const unSubscribeFanpage = () => {
     axios
-      .post("/fanpage/user/delete", { idSub, role, idFanpage })
+      .post("/fanpage/user/delete", { subId, role, fanpageId })
       .then(() => {
         setIdSub(null);
       })
@@ -112,22 +112,22 @@ const Navbar = ({ setIdSub, setSection, idSub, role, idFanpage }) => {
             setSection(item);
           }}
         >
-          <span className="fanpage__navbar__item--span">{item}</span>
+          <span className="fanpage__navbar__item__span">{item}</span>
         </div>
       ))}
       <div
         className={cx("fanpage__navbar__subscribe", {
-          "fanpage__navbar__subscribe--active": idSub,
+          "fanpage__navbar__subscribe--active": subId,
         })}
         onClick={() => {
-          idSub ? unSubscribeFanpage() : subscribeFanpage();
+          subId ? unSubscribeFanpage() : subscribeFanpage();
         }}
       >
         <div className="fanpage__navbar__subscribe__icon">
-          {idSub ? <AiOutlineCheck /> : null}
+          {subId ? <AiOutlineCheck /> : null}
         </div>
-        <span className="fanpage__navbar__subscribe--span">
-          {idSub ? subscribedName : subscribeName}
+        <span className="fanpage__navbar__subscribe__span">
+          {subId ? subscribedName : subscribeName}
         </span>
         {role == "admin" && (
           <div className="fanpage__navbar__admin-panel">
@@ -147,7 +147,7 @@ const Navbar = ({ setIdSub, setSection, idSub, role, idFanpage }) => {
               onClick={(e) => e.stopPropagation()}
             >
               <label
-                className="fanpage__navbar__admin-panel__item--label"
+                className="fanpage__navbar__admin-panel__item__label"
                 htmlFor="change-fanpage-photo"
               >
                 <div className="fanpage__navbar__admin-panel__item__icon">
@@ -168,10 +168,10 @@ const Navbar = ({ setIdSub, setSection, idSub, role, idFanpage }) => {
       </div>
       <div
         className={cx("fanpage__navbar__subscribe--mobile", {
-          "fanpage__navbar__subscribe--mobile--active": idSub,
+          "fanpage__navbar__subscribe--mobile--active": subId,
         })}
         onClick={() => {
-          idSub ? unSubscribeFanpage() : subscribeFanpage();
+          subId ? unSubscribeFanpage() : subscribeFanpage();
         }}
       >
         <div className="fanpage__navbar__subscribe--mobile__icon">
