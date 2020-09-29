@@ -4,6 +4,11 @@
         "moderator":"Moderator",
         "member":"Członek"
     },
+    "about":{
+        "name":"Nazwa",
+        "number-of-members":"Liczba członków",
+        "starting-date":"Data założenia"
+    },
     "side-bar":{
         "home":"Przeglądaj",
         "members":"Członkowie",

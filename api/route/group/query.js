@@ -111,24 +111,24 @@ where not exists(
 `;
 
 const getMembersQuery = `
-select b.first_name as "firstName", b.last_name as "lastName", b.id as "idUser", b.photo, a.role, a.id "idSub" from group_users as a
-inner join users as b on b.id = a.id_user
-where a.id_group=$1
+select b.first_name as "firstName", b.last_name as "lastName", b.id as "userId", b.photo, a.role, a.id "subId" from group_users as a
+inner join users as b on b.id = a.user_id
+where a.group_id=$1
 `;
 
 const getInfoQuery = `
 select name, date, b."numberOfMembers" 
 from groups as a 
 inner join(
-select id_group, count(*) as "numberOfMembers" from group_users where id_group=$1 group by id_group) as b
-on a.id = b.id_group`;
+select group_id, count(*) as "numberOfMembers" from group_users where group_id=$1 group by group_id) as b
+on a.id = b.group_id`;
 
 const enterQuery = `
-select a.id, a.name, a.photo, b.id as "idMember", b.role
+select a.id, a.name, a.photo, b.id as "memberId", b.role
 from (select id, name, photo from groups where id = $1) as a
 left join(
-select id,id_group, role from group_users where id_group=$1 and id_user=$2) as b
-on a.id = b.id_group
+select id,group_id, role from group_users where group_id=$1 and user_id=$2) as b
+on a.id = b.group_id
 `;
 const acceptInvitationToGroup = `update group_users set status='1', role='user' where id=$1`;
 

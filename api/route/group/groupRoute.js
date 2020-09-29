@@ -23,35 +23,35 @@ const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
 
 router.post("/enter", async (req, res) => {
-  const { idGroup } = req.body;
+  const { groupId } = req.body;
 
-  const { id: idOwner } = decodeToken(req);
+  const { id: ownerId } = decodeToken(req);
 
   try {
-    const { rows: info } = await client.query(enterQuery, [idGroup, idOwner]);
+    const { rows: info } = await client.query(enterQuery, [groupId, ownerId]);
 
     if (!info[0]) {
       return res
         .status(200)
-        .json({ idMember: null, name: null, role: null, id: null });
+        .json({ memberId: null, name: null, role: null, id: null });
     }
     const id = info[0].id;
     const name = info[0].name;
     const photo = info[0].photo;
-    const idMember = info[0] ? info[0].idMember : null;
+    const memberId = info[0] ? info[0].memberId : null;
     const role = info[0] ? info[0].role : null;
 
-    res.status(200).json({ id, idMember, name, role, photo });
+    res.status(200).json({ id, memberId, name, role, photo });
   } catch {
     res.status(400).json("bad-request");
   }
 });
 
 router.post("/about", async (req, res) => {
-  const { idGroup } = req.body;
+  const { groupId } = req.body;
 
   try {
-    const { rows: info } = await client.query(getInfoQuery, [idGroup]);
+    const { rows: info } = await client.query(getInfoQuery, [groupId]);
     res
       .status(200)
       .json({ numberOfMembers: info[0].numberOfMembers, date: info[0].date });
@@ -61,22 +61,22 @@ router.post("/about", async (req, res) => {
 });
 
 router.post("/leave", async (req, res) => {
-  const { idMember, idGroup, role } = req.body;
+  const { memberId, groupId, role } = req.body;
 
   let admins;
 
   if (role == "admin") {
     const getAdminsQuery =
-      "select * from group_users where id_group=$1 and role='admin'";
+      "select * from group_users where group_id=$1 and role='admin'";
 
-    admins = await client.query(getAdminsQuery, [idGroup]);
+    admins = await client.query(getAdminsQuery, [groupId]);
   }
 
   if (role != "admin" || admins.rowCount > 1) {
     const leaveQuery = "delete from group_users where id=$1";
 
     try {
-      await client.query(leaveQuery, [idMember]);
+      await client.query(leaveQuery, [memberId]);
 
       res.status(200).json({ success: true });
     } catch {
@@ -88,15 +88,15 @@ router.post("/leave", async (req, res) => {
 });
 
 router.post("/delete", async (req, res) => {
-  const { idGroup } = req.body;
+  const { groupId } = req.body;
 
   const deleteGroupQuery = ` delete from groups where id=$1; `;
 
-  const deleteUserQuery = "delete from group_users where id_group =$1;";
+  const deleteUserQuery = "delete from group_users where group_id =$1;";
 
   try {
-    await client.query(deleteGroupQuery, [idGroup]);
-    await client.query(deleteUserQuery, [idGroup]);
+    await client.query(deleteGroupQuery, [groupId]);
+    await client.query(deleteUserQuery, [groupId]);
 
     res.status(200).json({ success: true });
   } catch {
@@ -105,10 +105,10 @@ router.post("/delete", async (req, res) => {
 });
 
 router.post("/member/get", async (req, res) => {
-  const { idGroup } = req.body;
+  const { groupId } = req.body;
 
   try {
-    const { rows: members } = await client.query(getMembersQuery, [idGroup]);
+    const { rows: members } = await client.query(getMembersQuery, [groupId]);
 
     res.status(200).json({ members });
   } catch {
@@ -284,10 +284,10 @@ router.post("/change/photo", async (req, res) => {
         return res.status(413).json("file-too-large");
       }
     }
-    const { idGroup } = req.body;
+    const { groupId } = req.body;
 
     try {
-      await client.query(changeGroupPhotoQuery, [fileName, idGroup]);
+      await client.query(changeGroupPhotoQuery, [fileName, groupId]);
       res.status(200).json({ fileName });
     } catch {
       res.status(400).json("bad-request");
