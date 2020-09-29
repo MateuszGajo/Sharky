@@ -7,7 +7,6 @@ import { authInitState } from "@features/context/initState";
 import { checkLanguage } from "@features/service/Functions";
 
 const MyApp = ({ Component, pageProps }) => {
-  const router = useRouter();
   const [owner, setOwner] = useState({});
   const [newMessage, setNewMessage] = useState({});
   const [newChat, setNewChat] = useState({
