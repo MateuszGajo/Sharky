@@ -11,7 +11,7 @@ const getPostQuery = `
   select post_id as "postId", count(id)  from post_shares where post_id=$1 group by post_id
   )
   select a.*, coalesce(b.count,0) as "numberOfLikes", coalesce(c.count ,0) as "numberOfComments", 
-  coalesce(d.count,0) as "numberOfShares", e.id as "likeId",null as "shareId", null as "idUserShare"
+  coalesce(d.count,0) as "numberOfShares", e.id as "likeId",null as "shareId", null as "postSharedUserId"
   from(select id as "postId",fanpage_id as "fanpageId", group_id as "groupId", content, photo, date, user_id as "userId" from posts where id=$1 ) as a
   left join numberOfLikes as b on a."postId" = b."postId"
   left join numberOfComments as c on a."postId" = c."postId"
@@ -60,7 +60,7 @@ with userIds as(
   ),
   
   postsShared as (
-  select a.post_id as "postId", c."numberOfShares", d."numberOfComments", e."numberOfLikes",b.user_id as "userId",b.content,b.photo,a.date , a.id::text as "shareId", a.user_id::text as "idUserShare" 
+  select a.post_id as "postId", c."numberOfShares", d."numberOfComments", e."numberOfLikes",b.user_id as "userId",b.content,b.photo,a.date , a.id::text as "shareId", a.user_id::text as "postSharedUserId" 
   from post_shares as a
   inner join posts as b on a.post_id = b.id
   inner join numberOfShares as c on a.post_id =c."postId"
@@ -69,7 +69,7 @@ with userIds as(
   where a.id in (select * from shareIDs)
   ),
   posts as (
-  select a.id as "postId",b."numberOfShares", c."numberOfComments",d."numberOfLikes",a.user_id as "userId", a.content, a.photo, a.date, null as "shareId", null as "idUserShare" from 
+  select a.id as "postId",b."numberOfShares", c."numberOfComments",d."numberOfLikes",a.user_id as "userId", a.content, a.photo, a.date, null as "shareId", null as "postSharedUserId" from 
   posts as a
   inner join numberOfShares as b on a.id =b."postId"
   inner join numberOfComments as c on a.id =c."postId"
@@ -105,7 +105,7 @@ with postIds as(
   )
   
   select e.*, f.id as "likeId"
-  from(select a.id as "postId", a.user_id as "userId", a.content, a.photo, a.date, b."numberOfShares", c."numberOfComments", d."numberOfLikes",null as "shareId", null as "idUserShare"  
+  from(select a.id as "postId", a.user_id as "userId", a.content, a.photo, a.date, b."numberOfShares", c."numberOfComments", d."numberOfLikes",null as "shareId", null as "postSharedUserId"  
     from posts as a
     inner join numberOfShares as b on a.id = b."postId"
     inner join numberOfComments as c on a.id=c."postId"
@@ -135,7 +135,7 @@ with postIds as(
  )
  
  select e.*, f.id as "likeId"
- from(select a.id as "postId", a.user_id as "userId", a.content, a.photo, a.date, b."numberOfShares", c."numberOfComments", d."numberOfLikes",null as "shareId", null as "idUserShare"  
+ from(select a.id as "postId", a.user_id as "userId", a.content, a.photo, a.date, b."numberOfShares", c."numberOfComments", d."numberOfLikes",null as "shareId", null as "postSharedUserId"  
    from posts as a
    inner join numberOfShares as b on a.id = b."postId"
    inner join numberOfComments as c on a.id=c."postId"
@@ -165,7 +165,7 @@ with postIds as(
   )
   
   select e.*, f.id as "likeId"
-  from(select a.id as "postId", a.user_id as "userId", a.content, a.photo, a.date, b."numberOfShares", c."numberOfComments", d."numberOfLikes",null as "shareId", null as "idUserShare"  
+  from(select a.id as "postId", a.user_id as "userId", a.content, a.photo, a.date, b."numberOfShares", c."numberOfComments", d."numberOfLikes",null as "shareId", null as "postSharedUserId"  
     from posts as a
     inner join numberOfShares as b on a.id = b."postId"
     inner join numberOfComments as c on a.id=c."postId"
@@ -195,7 +195,7 @@ with postIds as(
   )
   
   select e.*, f.id as "likeId"
-  from(select a.id as "postId", a.user_id as "userId", a.content, a.photo, a.date, b."numberOfShares", c."numberOfComments", d."numberOfLikes",null as "shareId", null as "idUserShare"  
+  from(select a.id as "postId", a.user_id as "userId", a.content, a.photo, a.date, b."numberOfShares", c."numberOfComments", d."numberOfLikes",null as "shareId", null as "postSharedUserId"  
     from posts as a
     inner join numberOfShares as b on a.id = b."postId"
     inner join numberOfComments as c on a.id=c."postId"

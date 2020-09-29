@@ -54,7 +54,7 @@ const PostList = ({
   useEffect(() => {
     if (muteUser.userId !== null) {
       const newPosts = posts?.filter((post) => {
-        const userId = post.usershareID || post.userId;
+        const userId = post.postSharedUserId || post.userId;
 
         return muteUser.userId != userId;
       });
@@ -77,13 +77,14 @@ const PostList = ({
           </p>
         }
       >
+        {console.log(posts)}
         {posts.map((post) => {
           return (
             <div className="post-list__post" key={post.id}>
               <Post
                 post={post}
                 user={users[post.userId]}
-                userShare={users[post.usershareID]}
+                userShare={users[post.postSharedUserId]}
                 focusElement={focusElement}
                 single={false}
               />
