@@ -270,10 +270,10 @@ const deleteRepliesQuery = `delete from comment_replies where comment_id in(sele
 const deleteSharePostQuery = `delete from post_shares where id=$1`;
 
 const doesUserBelongToFanpageQuery =
-  "select id from fanpage_users where id_user=$1";
+  "select id from fanpage_users where user_id=$1";
 
 const doesUserBelongToGroupqQuery =
-  "select id from group_users where id_user=$1";
+  "select id from group_users where user_id=$1";
 
 module.exports = {
   getPostQuery,
