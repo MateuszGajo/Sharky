@@ -126,9 +126,9 @@ const Display = ({
     if (confirmUser === true) {
       axios
         .post(`/user/change/${settings.name}`, { value: inputValue })
-        .then(({ data: { idUser } }) => {
-          if (idUser) {
-            return socket.emit("changedPassword", { idUser });
+        .then(({ data: { userId } }) => {
+          if (userId) {
+            return socket.emit("changedPassword", { userId });
           }
           const newUserSetting = {
             account: userSettings.account.map((item) => {

@@ -162,13 +162,13 @@ router.post("/change/country", async (req, res) => {
   let { value } = req.body;
   value = value.toLowerCase();
 
-  const { id: idOwner } = decodeToken(req);
+  const { id: ownerId } = decodeToken(req);
 
   try {
     const country = await client.query(verifyCountryQuery, [value]);
     if (!country.rows[0]) return res.status(406).json("country-does-not-exist");
 
-    await client.query(changeCountryQuery, [value, idOwner]);
+    await client.query(changeCountryQuery, [value, ownerId]);
 
     res.status(200).json({ sucess: true });
   } catch {
@@ -180,14 +180,14 @@ router.post("/change/language", async (req, res) => {
   let { value } = req.body;
   value = value.toLowerCase();
 
-  const { id: idOwner } = decodeToken(req);
+  const { id: ownerId } = decodeToken(req);
 
   try {
     const language = await client.query(verifyLanguageQuery, [value]);
     if (!language.rows[0])
       return res.status(406).json("language-does-not-exist");
 
-    await client.query(changeLanguageQuery, [value, idOwner]);
+    await client.query(changeLanguageQuery, [value, ownerId]);
 
     res.status(200).json({ success: true });
   } catch {
@@ -198,10 +198,10 @@ router.post("/change/language", async (req, res) => {
 router.post("/change/email", async (req, res) => {
   const { value } = req.body;
 
-  const { id: idOwner } = decodeToken(req);
+  const { id: ownerId } = decodeToken(req);
 
   try {
-    await client.query(changeEmailQuery, [value, idOwner]);
+    await client.query(changeEmailQuery, [value, ownerId]);
 
     res.status(200).json({ success: true });
   } catch {
@@ -213,10 +213,10 @@ router.post("/change/phone", async (req, res) => {
   const { value } = req.body;
   const phone = value.replace(/[\s-]/gi, "");
 
-  const { id: idOwner } = decodeToken(req);
+  const { id: ownerId } = decodeToken(req);
 
   try {
-    await client.query(changePhoneQuery, [phone, idOwner]);
+    await client.query(changePhoneQuery, [phone, ownerId]);
 
     res.status(200).json({ success: true });
   } catch {
@@ -238,14 +238,14 @@ router.post("/get/language", async (req, res) => {
 router.post("/change/password", async (req, res) => {
   const { value } = req.body;
 
-  const { id: idOwner } = decodeToken(req);
+  const { id: ownerId } = decodeToken(req);
 
   bcrypt.hash(value, saltRounds, async (err, hash) => {
     if (hash) {
       try {
-        await client.query(changePasswordQuery, [hash, idOwner]);
+        await client.query(changePasswordQuery, [hash, ownerId]);
 
-        res.status(200).json({ idUser: idOwner });
+        res.status(200).json({ userId: ownerId });
       } catch {
         res.status(400).json("bad-request");
       }

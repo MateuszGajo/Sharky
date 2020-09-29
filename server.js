@@ -126,8 +126,8 @@ socketIO.sockets.on("connection", (socket) => {
     }
   });
 
-  socket.on("changedPassword", async ({ idUser }) => {
-    const sockets = getSocket(idUser);
+  socket.on("changedPassword", async ({ userId }) => {
+    const sockets = getSocket(userId);
     for (let i = 0; i < sockets.length; i++) {
       socketIO.to(sockets[i]).emit("logOutChangedPassword");
     }
