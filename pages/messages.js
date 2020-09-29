@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import Router from "next/router";
-import NavBar from "../features/components/Layout/Home/Compound/components/NavBar/NavBar";
-import Messenger from "../features/components/Messenger/Messenger";
-import Conversations from "../features/components/Messages/Conversations/Conversations";
+import NavBar from "@components/Layout/Home/Compound/components/NavBar/NavBar";
+import Messenger from "@components/Messenger/Messenger";
+import Conversations from "@components/Messages/Conversations/Conversations";
 import Spinner from "@components/Spinner/Spinner";
 import AppContext from "@features/context/AppContext";
 import { getOwner } from "@features/service/Functions/index";
@@ -19,7 +19,7 @@ const Messages = () => {
   const noFriends = t("messages:no-friends");
 
   const [conversations, setConversations] = useState([]);
-  const [chat, setChat] = useState({ idChat: null });
+  const [chat, setChat] = useState({ chatId: null });
   const [isLoading, setStatusOfLoading] = useState(true);
   const [isAuth, setStatusOfAuth] = useState(null);
   const [isDisplayMobile, setStatusOfDisplayMobile] = useState(false);
@@ -35,20 +35,20 @@ const Messages = () => {
         .then(({ data: { conversations } }) => {
           if (conversations.length) {
             const {
-              idUser,
+              userId,
               firstName,
               lastName,
               photo,
-              idChat,
+              chatId,
             } = conversations[0];
             setChat({
               user: {
-                id: idUser,
+                id: userId,
                 firstName,
                 lastName,
                 photo,
               },
-              idChat,
+              chatId,
             });
             setConversations(conversations);
           }
@@ -68,16 +68,21 @@ const Messages = () => {
   return (
     <section className="messages">
       <NavBar />
-      {chat.idChat ? (
+      {chat.chatId ? (
         <>
           <div className="messages__container messages__container--desktop">
             <Conversations
               items={conversations}
               setChat={setChat}
               chat={chat}
+              setStatusOfDisplayMobile={setStatusOfDisplayMobile}
             />
             <div className="messages__container__display">
-              <Messenger chat={chat} setChat={setChat} />
+              <Messenger
+                chat={chat}
+                setChat={setChat}
+                setStatusOfDisplayMobile={setStatusOfDisplayMobile}
+              />
             </div>
           </div>
           <div className="messages__container messages__container--mobile">

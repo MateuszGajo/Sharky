@@ -26,10 +26,10 @@ router.post("/get", async (req, res) => {
 });
 
 router.get("/conversation/get", async (req, res) => {
-  const { id: idOwner } = decodeToken(req);
+  const { id: ownerId } = decodeToken(req);
   try {
     const { rows: conversations } = await client.query(getConversationsQuery, [
-      idOwner,
+      ownerId,
     ]);
     res.status(200).json({ conversations });
   } catch {
