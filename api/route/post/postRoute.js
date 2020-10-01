@@ -1,5 +1,7 @@
 const express = require("express");
 const multer = require("multer");
+const fs = require("fs");
+const path = require("path");
 const { client } = require("../../../config/pgAdaptor");
 const {
   getPostQuery,
@@ -60,6 +62,19 @@ router.post("/add", async (req, res) => {
     }
 
     const { content, date, groupId, fanpageId, news } = req.body;
+
+    const addGroupPostQuery = fs
+      .readFileSync(path.join(__dirname, "./query/add/groupPost.sql"))
+      .toString();
+    const addFanpagePostQuery = fs
+      .readFileSync(path.join(__dirname, "./query/add/fanpagePost.sql"))
+      .toString();
+    const addNewsQuery = fs
+      .readFileSync(path.join(__dirname, "./query/add/news.sql"))
+      .toString();
+    const addPostQuery = fs
+      .readFileSync(path.join(__dirname, "./query/add/post.sql"))
+      .toString();
     let newPost;
     try {
       if (groupId)
@@ -106,6 +121,24 @@ router.post("/get", async (req, res) => {
   const { from, fanpageId, groupId, news, userId, authorPost } = req.body;
   const { id: onwerId } = decodeToken(req);
 
+  const getFanpagePostsQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/fanpagePosts.sql"))
+    .toString();
+  const getGroupPostsQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/groupPosts.sql"))
+    .toString();
+  const getUserPostsQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/userPosts.sql"))
+    .toString();
+  const getNewsQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/news.sql"))
+    .toString();
+  const getPostsQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/posts.sql"))
+    .toString();
+  const getCommentsQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/comment.sql"))
+    .toString();
   let postsResult, commentsResult;
 
   try {
@@ -122,7 +155,7 @@ router.post("/get", async (req, res) => {
         from,
       ]);
     else if (authorPost)
-      postsResult = await client.query(getUserPostQuery, [
+      postsResult = await client.query(getUserPostsQuery, [
         userId,
         onwerId,
         from,
@@ -159,8 +192,11 @@ router.post("/get", async (req, res) => {
 
 router.post("/get/single", async (req, res) => {
   const { postId } = req.body;
-
   const { id: onwerId } = decodeToken(req);
+
+  const getPostQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/post.sql"))
+    .toString();
 
   try {
     const { rows: post } = await client.query(getPostQuery, [postId, onwerId]);
