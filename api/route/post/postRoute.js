@@ -3,28 +3,6 @@ const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
 const { client } = require("../../../config/pgAdaptor");
-const {
-  getPostQuery,
-  getPostsQuery,
-  getUserPostQuery,
-  getFanpagePostsQuery,
-  getGroupPostsQuery,
-  getNewsQuery,
-  getCommentsQuery,
-  addGroupPostQuery,
-  addFanpagePostQuery,
-  addPostQuery,
-  addNewsQuery,
-  postLikeQuery,
-  unLikeQuery,
-  postShareQuery,
-  editPostQuery,
-  deletePostQuery,
-  deleteSharePostQuery,
-  getIdPostQuery,
-  deleteCommentsQuery,
-  deleteRepliesQuery,
-} = require("./query");
 const decodeToken = require("../../../utils/decodeToken");
 
 const router = express.Router();
@@ -137,7 +115,7 @@ router.post("/get", async (req, res) => {
     .readFileSync(path.join(__dirname, "./query/get/posts.sql"))
     .toString();
   const getCommentsQuery = fs
-    .readFileSync(path.join(__dirname, "./query/get/comment.sql"))
+    .readFileSync(path.join(__dirname, "./query/get/comments.sql"))
     .toString();
   let postsResult, commentsResult;
 
@@ -197,23 +175,28 @@ router.post("/get/single", async (req, res) => {
   const getPostQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/post.sql"))
     .toString();
+  const getFanpageMemberIdQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/fanpageMemberId.sql"))
+    .toString();
+  const getGroupMemberIdQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/groupMemberId.sql"))
+    .toString();
+  const getCommentsQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/comments.sql"))
+    .toString();
 
   try {
     const { rows: post } = await client.query(getPostQuery, [postId, onwerId]);
     if (!post[0]) return res.status(404).json("post-does-not-exist");
 
     if (post[0].fanpageId) {
-      const { rows } = await client.query(doesUserBelongToFanpageQuery, [
-        userId,
-      ]);
+      const { rows } = await client.query(getFanpageMemberIdQuery, [userId]);
       if (!rows[0])
         return res.status(403).json("user-does-not-have-permission");
     }
 
     if (post[0].groupId) {
-      const { rows } = await client.query(doesUserBelongToGroupqQuery, [
-        userId,
-      ]);
+      const { rows } = await client.query(getGroupMemberIdQuery, [userId]);
       if (!rows[0])
         return res.status(403).json("user-does-not-have-permission");
     }
@@ -239,19 +222,24 @@ router.post("/get/single", async (req, res) => {
 
 router.post("/like", async (req, res) => {
   const { postId } = req.body;
-
   const { id: onwerId } = decodeToken(req);
 
+  const likePostQuery = fs
+    .readFileSync(path.join(__dirname, "./query/add/like.sql"))
+    .toString();
+  const getPostIdQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/postId.sql"))
+    .toString();
+
   try {
-    const { rows: newLike } = await client.query(postLikeQuery, [
+    const { rows: newLike } = await client.query(likePostQuery, [
       onwerId,
       postId,
     ]);
-
     let likeId;
 
     if (!newLike[0]) {
-      const { rows } = await client.query(getIdPostQuery, [onwerId, postId]);
+      const { rows } = await client.query(getPostIdQuery, [onwerId, postId]);
       likeId = rows[0].id;
     } else likeId = newLike[0].id;
 
@@ -264,8 +252,12 @@ router.post("/like", async (req, res) => {
 router.post("/unlike", async (req, res) => {
   const { likeId } = req.body;
 
+  const unlikePostQuery = fs
+    .readFileSync(path.join(__dirname, "./query/delete/like"))
+    .toString();
+
   try {
-    await client.query(unLikeQuery, [likeId]);
+    await client.query(unlikePostQuery, [likeId]);
     res.status(200).json({ success: true });
   } catch {
     res.status(400).json("bad-request");
@@ -275,6 +267,10 @@ router.post("/unlike", async (req, res) => {
 router.post("/share", async (req, res) => {
   const { postId, date } = req.body;
   const { id: onwerId } = decodeToken(req);
+
+  const postShareQuery = fs
+    .readFileSync(path.join(__dirname, "./query/add/sharePost.sql"))
+    .toString();
 
   try {
     const postShare = await client.query(postShareQuery, [
@@ -291,8 +287,12 @@ router.post("/share", async (req, res) => {
 router.post("/edit", async (req, res) => {
   const { postId, content } = req.body;
 
+  const updatePostContentQuery = fs
+    .readFileSync(path.join(__dirname, "./query/update/postContent.sql"))
+    .toString();
+
   try {
-    await client.query(editPostQuery, [content, postId]);
+    await client.query(updatePostContentQuery, [content, postId]);
 
     res.status(200).json({ success: true });
   } catch {
@@ -302,6 +302,16 @@ router.post("/edit", async (req, res) => {
 
 router.post("/delete", async (req, res) => {
   const { postId } = req.body;
+
+  const deletePostQuery = fs
+    .readFileSync(path.join(__dirname, "./query/delete/post.sql"))
+    .toString();
+  const deleteRepliesQuery = fs
+    .readFileSync(path.join(__dirname, "./query/delete/replies.sql"))
+    .toString();
+  const deleteCommentsQuery = fs
+    .readFileSync(path.join(__dirname, "./query/delete/comments.sql"))
+    .toString();
 
   try {
     await client.query(deletePostQuery, [postId]);
@@ -316,6 +326,10 @@ router.post("/delete", async (req, res) => {
 
 router.post("/share/delete", async (req, res) => {
   const { shareId } = req.body;
+
+  const deleteSharePostQuery = fs
+    .readFileSync(path.join(__dirname, "./query/delete/postShared.sql"))
+    .toString();
 
   try {
     await client.query(deleteSharePostQuery, [shareId]);
