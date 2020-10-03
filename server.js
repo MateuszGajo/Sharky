@@ -6,6 +6,8 @@ const cookie = require("cookie");
 const cookieParser = require("cookie-parser");
 const nextI18NextMiddleware = require("next-i18next/middleware").default;
 const jwt = require("jsonwebtoken");
+const fs = require("fs");
+const path = require("path");
 const commentRoute = require("./api/route/comment/commentRoute");
 const replyRoute = require("./api/route/reply/replyRoute");
 const postRoute = require("./api/route/post/postRoute");
@@ -21,7 +23,6 @@ const { client } = require("./config/pgAdaptor");
 const { jwtSecret } = require("./config/keys");
 const bodyParser = require("body-parser");
 const { userJoin, userLeave, getSocket, existUser } = require("./utils/users");
-const { getChatsQuery } = require("./api/route/friend/query");
 
 const nextI18Next = require("./i18n/server");
 
@@ -122,6 +123,12 @@ socketIO.sockets.on("connection", (socket) => {
     const {
       data: { id: onwerId },
     } = jwt.verify(token, jwtSecret);
+
+    const getChatsQuery = fs
+      .readFileSync(
+        path.join(__dirname, "./api/route/friend/query/get/chats.sql")
+      )
+      .toString();
 
     const { rows: chats } = await client.query(getChatsQuery, [onwerId]);
     for (let i = 0; i < chats.length; i++) {
