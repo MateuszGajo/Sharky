@@ -7,11 +7,17 @@ const router = express.Router();
 
 router.post("/enter", async (req, res) => {
   const { groupId } = req.body;
-
   const { id: ownerId } = decodeToken(req);
 
+  const getPrimaryInfoQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/primaryInfo.sql"))
+    .toString();
+
   try {
-    const { rows: info } = await client.query(enterQuery, [groupId, ownerId]);
+    const { rows: info } = await client.query(getPrimaryInfoQuery, [
+      groupId,
+      ownerId,
+    ]);
 
     if (!info[0]) {
       return res
@@ -33,6 +39,10 @@ router.post("/enter", async (req, res) => {
 router.post("/about", async (req, res) => {
   const { groupId } = req.body;
 
+  const getInfoQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/groupInfo.sql"))
+    .toString();
+
   try {
     const { rows: info } = await client.query(getInfoQuery, [groupId]);
     res
@@ -46,20 +56,21 @@ router.post("/about", async (req, res) => {
 router.post("/leave", async (req, res) => {
   const { memberId, groupId, role } = req.body;
 
+  const getAdminsQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/admins.sql"))
+    .toString();
+  const deleteMemberQuery = fs
+    .readFileSync(path.join(__dirname, "./query/delete/user.sql"))
+    .toString();
   let admins;
 
   if (role == "admin") {
-    const getAdminsQuery =
-      "select * from group_users where group_id=$1 and role='admin'";
-
     admins = await client.query(getAdminsQuery, [groupId]);
   }
 
   if (role != "admin" || admins.rowCount > 1) {
-    const leaveQuery = "delete from group_users where id=$1";
-
     try {
-      await client.query(leaveQuery, [memberId]);
+      await client.query(deleteMemberQuery, [memberId]);
 
       res.status(200).json({ success: true });
     } catch {
@@ -73,13 +84,16 @@ router.post("/leave", async (req, res) => {
 router.post("/delete", async (req, res) => {
   const { groupId } = req.body;
 
-  const deleteGroupQuery = ` delete from groups where id=$1; `;
-
-  const deleteUserQuery = "delete from group_users where group_id =$1;";
+  const deleteGroupQuery = fs
+    .readFileSync(path.join(__dirname, "./query/delete/group.sql"))
+    .toString();
+  const deleteUsersQuery = fs
+    .readFileSync(path.join(__dirname, "./query/delete/users.sql"))
+    .toString();
 
   try {
     await client.query(deleteGroupQuery, [groupId]);
-    await client.query(deleteUserQuery, [groupId]);
+    await client.query(deleteUsersQuery, [groupId]);
 
     res.status(200).json({ success: true });
   } catch {
@@ -89,6 +103,10 @@ router.post("/delete", async (req, res) => {
 
 router.post("/member/get", async (req, res) => {
   const { groupId } = req.body;
+
+  const getMembersQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/members.sql"))
+    .toString();
 
   try {
     const { rows: members } = await client.query(getMembersQuery, [groupId]);
@@ -299,6 +317,10 @@ router.post("/change/photo", async (req, res) => {
       }
     }
     const { groupId } = req.body;
+
+    const changeGroupPhotoQuery = fs
+      .readFileSync(path.join(__dirname, "./query/update/groupPhoto.sql"))
+      .toString();
 
     try {
       await client.query(changeGroupPhotoQuery, [fileName, groupId]);
