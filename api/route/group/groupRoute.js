@@ -1,20 +1,7 @@
 const express = require("express");
-
+const fs = require("fs");
+const path = require("path");
 const { client } = require("../../../config/pgAdaptor");
-const {
-  getGroupsQuery,
-  getSortedGroupsQuery,
-  getSortedSubscribedGroupsQuery,
-  addUserQuery,
-  deleteUserQuery,
-  inviteUserQuery,
-  getIdUserQuery,
-  acceptInvitationToGroup,
-  declineInvitationToGroup,
-  getuserIDQuery,
-  createGroupQuery,
-  addAdminQuery,
-} = require("./query");
 const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
 
@@ -22,6 +9,17 @@ router.post("/get", async (req, res) => {
   const { from, userId, keyWords, onlySubscribed } = req.body;
   const { id: onwerId } = decodeToken(req);
 
+  const getGroupsQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/groups.sql"))
+    .toString();
+  const getGroupsSortedSubscirbedQuery = fs
+    .readFileSync(
+      path.join(__dirname, "./query/get/groupsSortedSubscribed.sql")
+    )
+    .toString();
+  const getGroupsSortedQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/groupsSorted.sql"))
+    .toString();
   let getGroups;
 
   if (!keyWords) {
@@ -33,14 +31,14 @@ router.post("/get", async (req, res) => {
   } else {
     try {
       if (onlySubscribed)
-        getGroups = await client.query(getSortedSubscribedGroupsQuery, [
+        getGroups = await client.query(getGroupsSortedSubscirbedQuery, [
           userId,
           `%${keyWords}%`,
           onwerId,
           from,
         ]);
       else
-        getGroups = await client.query(getSortedGroupsQuery, [
+        getGroups = await client.query(getGroupsSortedQuery, [
           `%${keyWords}%`,
           onwerId,
           from,
@@ -64,9 +62,15 @@ router.post("/get", async (req, res) => {
 
 router.post("/create", async (req, res) => {
   const { name, description } = req.body;
-
   const { id: onwerId } = decodeToken(req);
+
   const date = new Date();
+  const createGroupQuery = fs
+    .readFileSync(path.join(__dirname, "./query/add/group.sql"))
+    .toString();
+  const addAdminQuery = fs
+    .readFileSync(path.join(__dirname, "./query/add/admin.sql"))
+    .toString();
 
   try {
     const { rows } = await client.query(createGroupQuery, [
@@ -84,11 +88,16 @@ router.post("/create", async (req, res) => {
 
 router.post("/user/add", async (req, res) => {
   const { groupId } = req.body;
-
   const { id: onwerId } = decodeToken(req);
 
   const role = "member";
   const date = new Date();
+  const addUserQuery = fs
+    .readFileSync(path.join(__dirname, "./query/add/user.sql"))
+    .toString();
+  const getUserIdQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/userId.sql"))
+    .toString();
 
   try {
     const { rows: addUser } = await client.query(addUserQuery, [
@@ -100,7 +109,7 @@ router.post("/user/add", async (req, res) => {
 
     let id;
     if (!addUser[0]) {
-      const { rows } = await client.query(getuserIDQuery, [groupId, onwerId]);
+      const { rows } = await client.query(getUserIdQuery, [groupId, onwerId]);
       id = rows[0].id;
     } else {
       id = addUser[0].id;
@@ -115,6 +124,10 @@ router.post("/user/add", async (req, res) => {
 router.post("/user/delete", async (req, res) => {
   const { subId } = req.body;
 
+  const deleteUserQuery = fs
+    .readFileSync(path.join(__dirname, "./query/delete/user.sql"))
+    .toString();
+
   try {
     await client.query(deleteUserQuery, [subId]);
 
@@ -127,8 +140,13 @@ router.post("/user/delete", async (req, res) => {
 router.post("/user/invite", async (req, res) => {
   const { userId, targetId } = req.body;
 
+  const inviteUserQuery = fs
+    .readFileSync(path.join(__dirname, "./query/add/inviteUser.sql"))
+    .toString();
+
   try {
-    const a = await client.query(inviteUserQuery, [targetId, userId]);
+    await client.query(inviteUserQuery, [targetId, userId]);
+
     res.status(200).json({ success: true });
   } catch {
     res.status(400).json("bad-request");
@@ -137,8 +155,12 @@ router.post("/user/invite", async (req, res) => {
 
 router.post("/user/invitation/accept", async (req, res) => {
   const { subscribeId } = req.body;
+
+  const acceptInvitationQuery = fs
+    .readFileSync(path.join(__dirname, "./query/update/memberStatus.sql"))
+    .toString();
   try {
-    await client.query(acceptInvitationToGroup, [subscribeId]);
+    await client.query(acceptInvitationQuery, [subscribeId]);
 
     res.status(200).json({ success: true });
   } catch {
@@ -149,8 +171,12 @@ router.post("/user/invitation/accept", async (req, res) => {
 router.post("/user/invitation/decline", async (req, res) => {
   const { subscribeId } = req.body;
 
+  const declineInvitationQuery = fs
+    .readFileSync(path.join(__dirname, "./query/delete/invitation.sql"))
+    .toString();
+
   try {
-    await client.query(declineInvitationToGroup, [subscribeId]);
+    await client.query(declineInvitationQuery, [subscribeId]);
 
     res.status(200).json({ success: true });
   } catch {
