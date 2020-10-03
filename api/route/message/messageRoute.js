@@ -28,6 +28,10 @@ router.post("/get", async (req, res) => {
 
 router.get("/conversation/get", async (req, res) => {
   const { id: ownerId } = decodeToken(req);
+
+  const getConversationsQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/conversations.sql"))
+    .toString();
   try {
     const { rows: conversations } = await client.query(getConversationsQuery, [
       ownerId,
