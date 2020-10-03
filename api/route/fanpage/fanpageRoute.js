@@ -8,8 +8,12 @@ const router = express.Router();
 router.post("/about", async (req, res) => {
   const { fanpageId } = req.body;
 
+  const getFanpageInfoQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/fanpageInfo.sql"))
+    .toString();
+
   try {
-    const { rows: fanpageInfo } = await client.query(fanpageInfoQuery, [
+    const { rows: fanpageInfo } = await client.query(getFanpageInfoQuery, [
       fanpageId,
     ]);
 
@@ -21,11 +25,17 @@ router.post("/about", async (req, res) => {
 
 router.post("/enter", async (req, res) => {
   const { fanpageId } = req.body;
-
   const { id: ownerId } = decodeToken(req);
 
+  const getPermissionQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/permissions.sql"))
+    .toString();
+
   try {
-    const { rows } = await client.query(checkUserQuery, [fanpageId, ownerId]);
+    const { rows } = await client.query(getPermissionQuery, [
+      fanpageId,
+      ownerId,
+    ]);
     if (!rows[0]) return res.status(404).json("fanpage-does-not-exist");
 
     const subId = rows[0] ? rows[0].subId : null;
@@ -39,6 +49,16 @@ router.post("/enter", async (req, res) => {
 
 router.post("/delete", async (req, res) => {
   const { fanpageId } = req.body;
+
+  const deleteFanpageQuery = fs
+    .readFileSync(path.join(__dirname, "./query/delete/fanpage.sql"))
+    .toString();
+  const deleteFanpagePostsQuery = fs
+    .readFileSync(path.join(__dirname, "./query/delete/fanpagePosts.sql"))
+    .toString();
+  const deleteFanpageUsersQuery = fs
+    .readFileSync(path.join(__dirname, "./query/delete/fanpageUsers.sql"))
+    .toString();
 
   try {
     await client.query(deleteFanpageQuery, [fanpageId]);
@@ -54,6 +74,9 @@ router.post("/delete", async (req, res) => {
 router.post("/member/get", async (req, res) => {
   const { fanpageId, from } = req.body;
 
+  const getMembersQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/members.sql"))
+    .toString();
   let result;
   try {
     result = await client.query(getMembersQuery, [fanpageId, from]);
@@ -74,6 +97,10 @@ router.post("/member/get", async (req, res) => {
 
 router.post("/member/relation/change", async (req, res) => {
   const { subId, relation } = req.body;
+
+  const updateMemberRealtionQuery = fs
+    .readFileSync(path.join(__dirname, "./query/update/memberRelation.sql"))
+    .toString();
 
   try {
     await client.query(updateMemberRealtionQuery, [relation, subId]);
@@ -204,11 +231,9 @@ router.post("/user/add", async (req, res) => {
 
 router.post("/user/delete", async (req, res) => {
   const { subId, fanpageId, role } = req.body;
-
   const deleteUserQuery = fs
     .readFileSync(path.join(__dirname, "./query/delete/user.sql"))
     .toString();
-
   let admins;
   if (role == "admin") {
     admins = await client.query(getFanpageAdminsQuery, [fanpageId]);
@@ -254,6 +279,10 @@ router.post("/change/photo", async (req, res) => {
       }
     }
     const { fanpageId } = req.body;
+
+    const changeFanpagePhotoQuery = fs
+      .readFileSync(path.join(__dirname, "./query/update/photo.sql"))
+      .toString();
 
     try {
       await client.query(changeFanpagePhotoQuery, [fileName, fanpageId]);
