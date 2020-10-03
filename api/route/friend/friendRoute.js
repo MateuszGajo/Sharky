@@ -214,8 +214,12 @@ router.post("/update/relation", async (req, res) => {
 router.post("/change/relation/accept", async (req, res) => {
   const { relationId, newRelation } = req.body;
 
+  const acceptNewRelationQuery = fs
+    .readFileSync(path.join(__dirname, "./query/update/acceptNewRelation.sql"))
+    .toString();
+
   try {
-    await client.query(acceptChangeRealtionQuery, [newRelation, relationId]);
+    await client.query(acceptNewRelationQuery, [newRelation, relationId]);
 
     res.status(200).json({ sucess: true });
   } catch {
@@ -226,8 +230,12 @@ router.post("/change/relation/accept", async (req, res) => {
 router.post("/change/relation/decline", async (req, res) => {
   const { relationId } = req.body;
 
+  const declineNewRelationQuery = fs
+    .readFileSync(path.join(__dirname, "./query/update/declineNewRelation.sql"))
+    .toString();
+
   try {
-    await client.query(declineChangeRealtionQuery, [relationId]);
+    await client.query(declineNewRelationQuery, [relationId]);
 
     res.status(200).json({ sucess: true });
   } catch {

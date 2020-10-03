@@ -267,8 +267,12 @@ router.post("/user/invite", async (req, res) => {
 
 router.post("/user/invitation/accept", async (req, res) => {
   const { subscribeId } = req.body;
+
+  const acceptInvitationQuery = fs
+    .readFileSync(path.join(__dirname, "./query/update/memberStatus.sql"))
+    .toString();
   try {
-    await client.query(acceptInvitationToGroup, [subscribeId]);
+    await client.query(acceptInvitationQuery, [subscribeId]);
 
     res.status(200).json({ success: true });
   } catch {
@@ -279,8 +283,12 @@ router.post("/user/invitation/accept", async (req, res) => {
 router.post("/user/invitation/decline", async (req, res) => {
   const { subscribeId } = req.body;
 
+  const declineInvitationQuery = fs
+    .readFileSync(path.join(__dirname, "./query/delete/invitation.sql"))
+    .toString();
+
   try {
-    await client.query(declineInvitationToGroup, [subscribeId]);
+    await client.query(declineInvitationQuery, [subscribeId]);
 
     res.status(200).json({ success: true });
   } catch {
