@@ -19,8 +19,8 @@ const OwnerSettings = () => {
   const { setStatusOfEdit, post, isSingle } = useContext(PostContext);
   const { posts, setPosts } = useContext(WizzardContext);
 
-  const isShare = post.idUserShare !== null;
-  const selfShare = post.idUserShare == post.userId;
+  const isShare = post.postSharedUserId !== null;
+  const selfShare = post.postSharedUserId == post.userId;
   const { shareId, postId } = post;
 
   const editPostText = t("component:post.settings.edit");

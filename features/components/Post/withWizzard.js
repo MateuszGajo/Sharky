@@ -63,7 +63,7 @@ const withWizzard = (WrappedComponent) => {
                 numberOfComments: 0,
                 numberOfLikes: 0,
                 shareId: null,
-                idUserShare: null,
+                postSharedUserId: null,
                 likeId: null,
               },
               ...posts,
