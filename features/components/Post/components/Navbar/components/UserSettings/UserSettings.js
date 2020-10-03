@@ -21,7 +21,7 @@ const UserSettings = () => {
     post,
   } = useContext(PostContext);
   const { posts, setPosts, setMuteUser } = useContext(WizzardContext);
-  const postOwnerID = post.idUserShare || post.userId;
+  const postOwnerID = post.postSharedUserId || post.userId;
 
   const hiddenPostText = t("component:post.settings.hidden");
   const reportPostText = t("component:post.settings.report");

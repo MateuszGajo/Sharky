@@ -32,7 +32,6 @@ const PrimaryInput = ({
   };
 
   const showList = () => {
-    console.log("focus");
     setStatusOfFocus(true);
     window.addEventListener("click", hideList);
   };
@@ -42,8 +41,6 @@ const PrimaryInput = ({
       e.target.className != "primary-input-container__autocomplete__item" &&
       document.activeElement.className != "primary-input-container__input"
     ) {
-      console.log("wchodzimy");
-      console.log();
       setStatusOfFocus(false);
       removeEventListener("click", hideList);
     }
