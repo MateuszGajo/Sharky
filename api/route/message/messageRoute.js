@@ -1,6 +1,7 @@
 const express = require("express");
+const fs = require("fs");
+const path = require("path");
 const { client } = require("../../../config/pgAdaptor");
-const { getMessagesQuery, addMessageQuery } = require("./query");
 const decodeToken = require("../../../utils/decodeToken");
 
 const router = express.Router();
@@ -8,6 +9,10 @@ const router = express.Router();
 router.post("/get", async (req, res) => {
   const { chatId } = req.body;
   const { id, firstName, lastName, photo } = decodeToken(req);
+
+  const getMessagesQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/messages.sql"))
+    .toString();
 
   try {
     const messages = await client.query(getMessagesQuery, [chatId]);
@@ -23,6 +28,10 @@ router.post("/get", async (req, res) => {
 
 router.post("/add", async (req, res) => {
   const { chatId, message, userId, date } = req.body;
+
+  const addMessageQuery = fs
+    .readFileSync(path.join(__dirname, "./query/add/message.sql"))
+    .toString();
 
   try {
     const { rows } = await client.query(addMessageQuery, [

@@ -50,7 +50,7 @@ const Content = () => {
       <div
         className="post__item__content"
         onClick={() => {
-          !isEdit && Router.pushRoute("post", { id: post.postId });
+          !isEdit && Router.push(`/post/${post.postId}`);
         }}
       >
         {isEdit ? (
@@ -78,7 +78,7 @@ const Content = () => {
           className="post__item__photo"
           data-testid="post-photo"
           onClick={() => {
-            Router.pushRoute("post", { id: post.postId });
+            Router.push(`/post/${post.postId}`);
           }}
         >
           <img
