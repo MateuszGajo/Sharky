@@ -3,11 +3,6 @@ const fs = require("fs");
 const path = require("path");
 const { client } = require("../../../config/pgAdaptor");
 const decodeToken = require("../../../utils/decodeToken");
-const {
-  getMessagesQuery,
-  getConversationsQuery,
-  addMessageQuery,
-} = require("./query");
 
 const router = express.Router();
 
