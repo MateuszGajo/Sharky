@@ -1,34 +1,19 @@
 const express = require("express");
-const multer = require("multer");
+const fs = require("fs");
+const path = require("path");
 const { client } = require("../../../config/pgAdaptor");
-const {
-  getFanpagesQuery,
-  getSortedFanpagesQuery,
-  getSortedSubscribedFanpagesQuery,
-  addUserQuery,
-  deleteUserQuery,
-  getIdUserQuery,
-  getFanpageAdminsQuery,
-  fanpageInfoQuery,
-  checkUserQuery,
-  deleteFanpageQuery,
-  deleteFanpageUsersQuery,
-  deleteFanpagePostsQuery,
-  getMembersQuery,
-  updateMemberRealtionQuery,
-  getuserIDQuery,
-  createFanpageQuery,
-  addAdminQuery,
-  changeFanpagePhotoQuery,
-} = require("./query");
 const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
 
 router.post("/about", async (req, res) => {
   const { fanpageId } = req.body;
 
+  const getFanpageInfoQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/fanpageInfo.sql"))
+    .toString();
+
   try {
-    const { rows: fanpageInfo } = await client.query(fanpageInfoQuery, [
+    const { rows: fanpageInfo } = await client.query(getFanpageInfoQuery, [
       fanpageId,
     ]);
 
@@ -40,11 +25,17 @@ router.post("/about", async (req, res) => {
 
 router.post("/enter", async (req, res) => {
   const { fanpageId } = req.body;
-
   const { id: ownerId } = decodeToken(req);
 
+  const getPermissionQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/permissions.sql"))
+    .toString();
+
   try {
-    const { rows } = await client.query(checkUserQuery, [fanpageId, ownerId]);
+    const { rows } = await client.query(getPermissionQuery, [
+      fanpageId,
+      ownerId,
+    ]);
     if (!rows[0]) return res.status(404).json("fanpage-does-not-exist");
 
     const subId = rows[0] ? rows[0].subId : null;
@@ -58,6 +49,16 @@ router.post("/enter", async (req, res) => {
 
 router.post("/delete", async (req, res) => {
   const { fanpageId } = req.body;
+
+  const deleteFanpageQuery = fs
+    .readFileSync(path.join(__dirname, "./query/delete/fanpage.sql"))
+    .toString();
+  const deleteFanpagePostsQuery = fs
+    .readFileSync(path.join(__dirname, "./query/delete/fanpagePosts.sql"))
+    .toString();
+  const deleteFanpageUsersQuery = fs
+    .readFileSync(path.join(__dirname, "./query/delete/fanpageUsers.sql"))
+    .toString();
 
   try {
     await client.query(deleteFanpageQuery, [fanpageId]);
@@ -73,6 +74,9 @@ router.post("/delete", async (req, res) => {
 router.post("/member/get", async (req, res) => {
   const { fanpageId, from } = req.body;
 
+  const getMembersQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/members.sql"))
+    .toString();
   let result;
   try {
     result = await client.query(getMembersQuery, [fanpageId, from]);
@@ -94,6 +98,10 @@ router.post("/member/get", async (req, res) => {
 router.post("/member/relation/change", async (req, res) => {
   const { subId, relation } = req.body;
 
+  const updateMemberRealtionQuery = fs
+    .readFileSync(path.join(__dirname, "./query/update/memberRelation.sql"))
+    .toString();
+
   try {
     await client.query(updateMemberRealtionQuery, [relation, subId]);
 
@@ -105,9 +113,21 @@ router.post("/member/relation/change", async (req, res) => {
 
 router.post("/get", async (req, res) => {
   const { from, userId, keyWords, onlySubscribed } = req.body;
-
   const { id: onwerId } = decodeToken(req);
+
+  const getFanpagesQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/fanpages.sql"))
+    .toString();
+  const getFanpagesSortedSubscribed = fs
+    .readFileSync(
+      path.join(__dirname, "./query/get/fanpagesSortedSubscribed.sql")
+    )
+    .toString();
+  const getFanpagesSorted = fs
+    .readFileSync(path.join(__dirname, "./query/get/fanpagesSorted.sql"))
+    .toString();
   let getFanpages;
+
   if (!keyWords) {
     try {
       getFanpages = await client.query(getFanpagesQuery, [
@@ -121,17 +141,16 @@ router.post("/get", async (req, res) => {
   } else {
     try {
       if (onlySubscribed)
-        getFanpages = await client.query(getSortedSubscribedFanpagesQuery, [
+        getFanpages = await client.query(getFanpagesSortedSubscribed, [
           userId,
           `%${keyWords}%`,
           onwerId,
           from,
         ]);
       else
-        getFanpages = await client.query(getSortedFanpagesQuery, [
+        getFanpages = await client.query(getFanpagesSorted, [
           `%${keyWords}%`,
           onwerId,
-
           from,
         ]);
     } catch {
@@ -153,9 +172,15 @@ router.post("/get", async (req, res) => {
 
 router.post("/create", async (req, res) => {
   const { name, description } = req.body;
-
   const { id: onwerId } = decodeToken(req);
+
   const date = new Date();
+  const createFanpageQuery = fs
+    .readFileSync(path.join(__dirname, "./query/add/fanpage.sql"))
+    .toString();
+  const addAdminQuery = fs
+    .readFileSync(path.join(__dirname, "./query/add/admin.sql"))
+    .toString();
 
   try {
     const { rows } = await client.query(createFanpageQuery, [
@@ -174,10 +199,15 @@ router.post("/create", async (req, res) => {
 
 router.post("/user/add", async (req, res) => {
   const { fanpageId } = req.body;
-
   const { id: onwerId } = decodeToken(req);
 
   const role = "user";
+  const addUserQuery = fs
+    .readFileSync(path.join(__dirname, "./query/add/user.sql"))
+    .toString();
+  const getUserIdQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/userId.sql"))
+    .toString();
 
   try {
     const { rows: addUser } = await client.query(addUserQuery, [
@@ -189,7 +219,7 @@ router.post("/user/add", async (req, res) => {
     let id;
 
     if (!addUser[0]) {
-      const { rows } = await client.query(getuserIDQuery, [fanpageId, onwerId]);
+      const { rows } = await client.query(getUserIdQuery, [fanpageId, onwerId]);
       id = rows[0].id;
     } else id = addUser[0].id;
 
@@ -201,7 +231,9 @@ router.post("/user/add", async (req, res) => {
 
 router.post("/user/delete", async (req, res) => {
   const { subId, fanpageId, role } = req.body;
-
+  const deleteUserQuery = fs
+    .readFileSync(path.join(__dirname, "./query/delete/user.sql"))
+    .toString();
   let admins;
   if (role == "admin") {
     admins = await client.query(getFanpageAdminsQuery, [fanpageId]);
@@ -247,6 +279,10 @@ router.post("/change/photo", async (req, res) => {
       }
     }
     const { fanpageId } = req.body;
+
+    const changeFanpagePhotoQuery = fs
+      .readFileSync(path.join(__dirname, "./query/update/photo.sql"))
+      .toString();
 
     try {
       await client.query(changeFanpagePhotoQuery, [fileName, fanpageId]);

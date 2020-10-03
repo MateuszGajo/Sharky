@@ -2,10 +2,11 @@ const passport = require("passport");
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const fs = require("fs");
+const path = require("path");
 const { client } = require("../../../config/pgAdaptor");
 const { jwtSecret } = require("../../../config/keys");
 const router = express.Router();
-const { findUserQuery, createUserQuery, getIdUserQuery } = require("./query");
 
 const saltRounds = 10;
 
@@ -79,6 +80,10 @@ router.get(
 
 router.post("/signin", async (req, res) => {
   const { email, password } = req.body;
+
+  const findUserQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/user.sql"))
+    .toString();
   try {
     const findUser = await client.query(findUserQuery, [email]);
     if (!findUser.rowCount) return res.status(401).json("invalid-creds");
@@ -127,8 +132,15 @@ router.post("/signin", async (req, res) => {
 router.post("/signup", async (req, res) => {
   const { creds } = req.body;
   const { email, password, firstName, lastName, phone } = creds;
+
+  const getUserIdQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/userId.sql"))
+    .toString();
+  const createUserQuery = fs
+    .readFileSync(path.join(__dirname, "./query/add/user.sql"))
+    .toString();
   try {
-    const { rowCount } = await client.query(getIdUserQuery, [email]);
+    const { rowCount } = await client.query(getUserIdQuery, [email]);
     if (rowCount) return res.status(403).json("user-exist");
 
     try {

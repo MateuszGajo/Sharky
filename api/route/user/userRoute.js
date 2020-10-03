@@ -1,32 +1,15 @@
 const express = require("express");
 const multer = require("multer");
 const bcrypt = require("bcrypt");
-const { client } = require("../../../config/pgAdaptor");
-const {
-  getUserQuery,
-  getUserInfoQuery,
-  getPhotosQuery,
-  muteUserQuery,
-  removeFriendQuery,
-  blockUserQuery,
-  addPhotoQuery,
-  changePhotoQuery,
-  verifyCountryQuery,
-  changeCountryQuery,
-  verifyLanguageQuery,
-  changeLanguageQuery,
-  changeEmailQuery,
-  changePhoneQuery,
-  changePasswordQuery,
-  getPasswordQuery,
-  getUserPersonalInfoQuery,
-  getLanguageQuery,
-} = require("./query");
+const fs = require("fs");
+const path = require("path");
 const jwt = require("jsonwebtoken");
+const { client } = require("../../../config/pgAdaptor");
 const { jwtSecret } = require("../../../config/keys");
 const decodeToken = require("../../../utils/decodeToken");
 
 const router = express.Router();
+const saltRounds = 10;
 
 router.post("/add/photo", async (req, res) => {
   const { id: ownerId } = decodeToken(req);
@@ -60,6 +43,10 @@ router.post("/add/photo", async (req, res) => {
     if (size > 200000) {
       return res.status(413).json("file-too-large");
     }
+
+    const addPhotoQuery = fs
+      .readFileSync(path.join(__dirname, "./query/add/photo.sql"))
+      .toString();
 
     try {
       await client.query(addPhotoQuery, [
@@ -96,6 +83,12 @@ router.post("/change/photo", async (req, res) => {
       file: { mimetype, filename, size },
     } = req;
 
+    const changePhotoQuery = fs
+      .readFileSync(path.join(__dirname, "./query/update/photo.sql"))
+      .toString();
+    const addPhotoQuery = fs
+      .readFileSync(path.join(__dirname, "./query/add/photo.sql"))
+      .toString();
     const fileName = filename;
 
     try {
@@ -111,10 +104,13 @@ router.post("/change/photo", async (req, res) => {
     }
   });
 });
-const saltRounds = 10;
 
 router.post("/get", async (req, res) => {
   const { userIds } = req.body;
+
+  const getUserQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/user.sql"))
+    .toString();
 
   try {
     const { rows: users } = await client.query(getUserQuery, [userIds]);
@@ -128,6 +124,10 @@ router.post("/get", async (req, res) => {
 router.post("/info", async (req, res) => {
   const { userId } = req.body;
 
+  const getUserInfoQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/userInfo.sql"))
+    .toString();
+
   try {
     const { rows } = await client.query(getUserInfoQuery, [userId]);
     if (!rows[0]) return res.status(404).json("user-does-not-exist");
@@ -140,7 +140,12 @@ router.post("/info", async (req, res) => {
 
 router.post("/get/photo", async (req, res) => {
   const { userId, from } = req.body;
+
+  const getPhotosQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/photos.sql"))
+    .toString();
   let result;
+
   try {
     result = await client.query(getPhotosQuery, [userId, from]);
   } catch {
@@ -160,12 +165,19 @@ router.post("/get/photo", async (req, res) => {
 
 router.post("/change/country", async (req, res) => {
   let { value } = req.body;
-  value = value.toLowerCase();
-
   const { id: ownerId } = decodeToken(req);
 
+  value = value.toLowerCase();
+
+  const getCountryIdQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/countryId.sql"))
+    .toString();
+  const changeCountryQuery = fs
+    .readFileSync(path.join(__dirname, "./query/update/country.sql"))
+    .toString();
+
   try {
-    const country = await client.query(verifyCountryQuery, [value]);
+    const country = await client.query(getCountryIdQuery, [value]);
     if (!country.rows[0]) return res.status(406).json("country-does-not-exist");
 
     await client.query(changeCountryQuery, [value, ownerId]);
@@ -178,12 +190,19 @@ router.post("/change/country", async (req, res) => {
 
 router.post("/change/language", async (req, res) => {
   let { value } = req.body;
-  value = value.toLowerCase();
-
   const { id: ownerId } = decodeToken(req);
 
+  value = value.toLowerCase();
+
+  const getLanguageIdQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/languageId.sql"))
+    .toString();
+  const changeLanguageQuery = fs
+    .readFileSync(path.join(__dirname, "./query/update/language.sql"))
+    .toString();
+
   try {
-    const language = await client.query(verifyLanguageQuery, [value]);
+    const language = await client.query(getLanguageIdQuery, [value]);
     if (!language.rows[0])
       return res.status(406).json("language-does-not-exist");
 
@@ -197,8 +216,11 @@ router.post("/change/language", async (req, res) => {
 
 router.post("/change/email", async (req, res) => {
   const { value } = req.body;
-
   const { id: ownerId } = decodeToken(req);
+
+  const changeEmailQuery = fs
+    .readFileSync(path.join(__dirname, "./query/change/email.sql"))
+    .toString();
 
   try {
     await client.query(changeEmailQuery, [value, ownerId]);
@@ -211,9 +233,12 @@ router.post("/change/email", async (req, res) => {
 
 router.post("/change/phone", async (req, res) => {
   const { value } = req.body;
-  const phone = value.replace(/[\s-]/gi, "");
-
   const { id: ownerId } = decodeToken(req);
+
+  const changePhoneQuery = fs
+    .readFileSync(path.join(__dirname, "./query/change/phone.sql"))
+    .toString();
+  const phone = value.replace(/[\s-]/gi, "");
 
   try {
     await client.query(changePhoneQuery, [phone, ownerId]);
@@ -227,6 +252,10 @@ router.post("/change/phone", async (req, res) => {
 router.post("/get/language", async (req, res) => {
   const { userId } = req.body;
 
+  const getLanguageQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/language.sql"))
+    .toString();
+
   try {
     const { rows } = await client.query(getLanguageQuery, [userId]);
     res.status(200).json({ language: rows[0].language });
@@ -237,8 +266,11 @@ router.post("/get/language", async (req, res) => {
 
 router.post("/change/password", async (req, res) => {
   const { value } = req.body;
-
   const { id: ownerId } = decodeToken(req);
+
+  const changePasswordQuery = fs
+    .readFileSync(path.join(__dirname, "./query/change/password.sql"))
+    .toString();
 
   bcrypt.hash(value, saltRounds, async (err, hash) => {
     if (hash) {
@@ -255,9 +287,11 @@ router.post("/change/password", async (req, res) => {
 
 router.post("/mute", async (req, res) => {
   const { idMuteUser } = req.body;
-
   const { id: onwerId } = decodeToken(req);
 
+  const muteUserQuery = fs
+    .readFileSync(path.join(__dirname, "./query/add/muteUser.sql"))
+    .toString();
   const date = new Date();
 
   try {
@@ -271,12 +305,21 @@ router.post("/mute", async (req, res) => {
 
 router.post("/block", async (req, res) => {
   const { userId } = req.body;
-  const date = new Date();
-
   const { id: onwerId } = decodeToken(req);
 
+  const deleteFriendQuery = fs
+    .readFileSync(path.join(__dirname, "./query/delete/friend.sql"))
+    .toString();
+  const muteUserQuery = fs
+    .readFileSync(path.join(__dirname, "./query/add/muteUser.sql"))
+    .toString();
+  const blockUserQuery = fs
+    .readFileSync(path.join(__dirname, "./query/add/blockUser.sql"))
+    .toString();
+  const date = new Date();
+
   try {
-    await client.query(removeFriendQuery, [onwerId, userId]);
+    await client.query(deleteFriendQuery, [onwerId, userId]);
     await client.query(muteUserQuery, [onwerId, userId, date]);
     await client.query(blockUserQuery, [onwerId, userId, date]);
 
@@ -295,32 +338,42 @@ router.get("/logout", async (req, res) => {
 router.get("/me", (req, res) => {
   if (!req.cookies.token) return res.status(401).json("un-authorized");
   jwt.verify(req.cookies.token, jwtSecret, function (err, decoded) {
-    if (decoded) {
-      return res.json({ user: decoded.data });
-    }
+    if (decoded) return res.json({ user: decoded.data });
+
     return res.status(401).json("un-authorized");
   });
 });
 
 router.post("/check/password", async (req, res) => {
   const { password } = req.body;
-
   const { id: onwerId } = decodeToken(req);
 
-  const { rows } = await client.query(getPasswordQuery, [onwerId]);
-  bcrypt.compare(password, rows[0].password, function (err, result) {
-    if (result) {
-      return res.status(200).json({ success: true });
-    }
-    res.status(401).json("bad-password");
-  });
+  const getPasswordQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/password.sql"))
+    .toString();
+
+  try {
+    const { rows } = await client.query(getPasswordQuery, [onwerId]);
+
+    await bcrypt.compare(password, rows[0].password, function (err, result) {
+      if (result) return res.status(200).json({ success: true });
+
+      res.status(401).json("bad-password");
+    });
+  } catch {
+    res.status(400).json("bad-request");
+  }
 });
 
 router.get("/me/info", async (req, res) => {
   const { id } = decodeToken(req);
 
+  const getUserSettingsQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/userSettings.sql"))
+    .toString();
+
   try {
-    const { rows } = await client.query(getUserPersonalInfoQuery, [id]);
+    const { rows } = await client.query(getUserSettingsQuery, [id]);
 
     res.status(200).json({ ...rows[0] });
   } catch {
