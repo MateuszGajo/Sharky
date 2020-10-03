@@ -1,20 +1,18 @@
 const express = require("express");
+const fs = require("fs");
+const path = require("path");
 const { client } = require("../../../config/pgAdaptor");
-const {
-  addReplyQuery,
-  replyQuery,
-  likeReplyQuery,
-  unlikeReplyQuery,
-  getIdLike,
-} = require("./query");
 const decodeToken = require("../../../utils/decodeToken");
 
 const router = express.Router();
 
 router.post("/add", async (req, res) => {
   const { commnetId, content, date } = req.body;
-
   const { id: onwerId } = decodeToken(req);
+
+  const addReplyQuery = fs
+    .readFileSync(path.join(__dirname, "./query/add/reply.sql"))
+    .toString();
 
   try {
     const reply = await client.query(addReplyQuery, [
@@ -32,13 +30,15 @@ router.post("/add", async (req, res) => {
 
 router.post("/get", async (req, res) => {
   const { commnetId, from } = req.body;
-
   const { id: onwerId } = decodeToken(req);
 
+  const getRepliesQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/replies.sql"))
+    .toString();
   let result;
 
   try {
-    result = await client.query(replyQuery, [commnetId, onwerId, from]);
+    result = await client.query(getRepliesQuery, [commnetId, onwerId, from]);
   } catch {
     return res.status(400).json("bad-request");
   }
@@ -59,8 +59,14 @@ router.post("/get", async (req, res) => {
 
 router.post("/like", async (req, res) => {
   const { replyId } = req.body;
-
   const { id: onwerId } = decodeToken(req);
+
+  const likeReplyQuery = fs
+    .readFileSync(path.join(__dirname, "./query/add/like.sql"))
+    .toString();
+  const getLikeIdQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/likeId.sql"))
+    .toString();
 
   try {
     const { rows: newLike } = await client.query(likeReplyQuery, [
@@ -70,7 +76,7 @@ router.post("/like", async (req, res) => {
 
     let likeId;
     if (!newLike[0]) {
-      const { rows } = await client.query(getIdLike, [replyId, onwerId]);
+      const { rows } = await client.query(getLikeIdQuery, [replyId, onwerId]);
 
       likeId = rows[0].id;
     } else likeId = newLike[0].id;
@@ -83,6 +89,10 @@ router.post("/like", async (req, res) => {
 
 router.post("/unlike", async (req, res) => {
   const { likeId } = req.body;
+
+  const unlikeReplyQuery = fs
+    .readFileSync(path.join(__dirname, "./query/delete/like.sql"))
+    .toString();
 
   try {
     await client.query(unlikeReplyQuery, [likeId]);
