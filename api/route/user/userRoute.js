@@ -1,16 +1,9 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
-const { client } = require("../../../config/pgAdaptor");
-const {
-  getUserQuery,
-  getPhotosQuery,
-  muteUserQuery,
-  removeFriendQuery,
-  blockUserQuery,
-  getPasswordQuery,
-  getLanguageQuery,
-} = require("./query");
+const fs = require("fs");
+const path = require("path");
 const jwt = require("jsonwebtoken");
+const { client } = require("../../../config/pgAdaptor");
 const { jwtSecret } = require("../../../config/keys");
 const decodeToken = require("../../../utils/decodeToken");
 
@@ -18,6 +11,10 @@ const router = express.Router();
 
 router.post("/get", async (req, res) => {
   const { userIds } = req.body;
+
+  const getUserQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/user.sql"))
+    .toString();
 
   try {
     const { rows: users } = await client.query(getUserQuery, [userIds]);
@@ -30,7 +27,12 @@ router.post("/get", async (req, res) => {
 
 router.post("/get/photo", async (req, res) => {
   const { userId, from } = req.body;
+
+  const getPhotosQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/photos.sql"))
+    .toString();
   let result;
+
   try {
     result = await client.query(getPhotosQuery, [userId, from]);
   } catch {
@@ -51,6 +53,10 @@ router.post("/get/photo", async (req, res) => {
 router.post("/get/language", async (req, res) => {
   const { userId } = req.body;
 
+  const getLanguageQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/language.sql"))
+    .toString();
+
   try {
     const { rows } = await client.query(getLanguageQuery, [userId]);
     res.status(200).json({ language: rows[0].language });
@@ -61,9 +67,11 @@ router.post("/get/language", async (req, res) => {
 
 router.post("/mute", async (req, res) => {
   const { idMuteUser } = req.body;
-
   const { id: onwerId } = decodeToken(req);
 
+  const muteUserQuery = fs
+    .readFileSync(path.join(__dirname, "./query/add/muteUser.sql"))
+    .toString();
   const date = new Date();
 
   try {
@@ -77,12 +85,21 @@ router.post("/mute", async (req, res) => {
 
 router.post("/block", async (req, res) => {
   const { userId } = req.body;
-  const date = new Date();
-
   const { id: onwerId } = decodeToken(req);
 
+  const deleteFriendQuery = fs
+    .readFileSync(path.join(__dirname, "./query/delete/friend.sql"))
+    .toString();
+  const muteUserQuery = fs
+    .readFileSync(path.join(__dirname, "./query/add/muteUser.sql"))
+    .toString();
+  const blockUserQuery = fs
+    .readFileSync(path.join(__dirname, "./query/add/blockUser.sql"))
+    .toString();
+  const date = new Date();
+
   try {
-    await client.query(removeFriendQuery, [onwerId, userId]);
+    await client.query(deleteFriendQuery, [onwerId, userId]);
     await client.query(muteUserQuery, [onwerId, userId, date]);
     await client.query(blockUserQuery, [onwerId, userId, date]);
 
@@ -110,16 +127,24 @@ router.get("/me", (req, res) => {
 
 router.post("/check/password", async (req, res) => {
   const { password } = req.body;
-
   const { id: onwerId } = decodeToken(req);
 
-  const { rows } = await client.query(getPasswordQuery, [onwerId]);
-  bcrypt.compare(password, rows[0].password, function (err, result) {
-    if (result) {
-      return res.status(200).json({ success: true });
-    }
-    res.status(401).json("bad-password");
-  });
+  const getPasswordQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/password.sql"))
+    .toString();
+
+  try {
+    const { rows } = await client.query(getPasswordQuery, [onwerId]);
+
+    await bcrypt.compare(password, rows[0].password, function (err, result) {
+      if (result) {
+        return res.status(200).json({ success: true });
+      }
+      res.status(401).json("bad-password");
+    });
+  } catch {
+    res.status(400).json("bad-request");
+  }
 });
 
 module.exports = router;

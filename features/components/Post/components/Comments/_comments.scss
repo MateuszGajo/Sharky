@@ -8,6 +8,16 @@
     margin-top:$smallMargin;
 }
 
+.post__item__comments__container__item__photo:hover{
+    cursor: pointer;
+}
+
+.post__item__comments__container__item__photo:hover + 
+.post__item__comments__container__item__content 
+    .post__item__comments__container__item__content__item__top-bar__user-name__span{
+    text-decoration: underline;
+}
+
 .post__item__comments__container__item__photo--img{
     object-fit: cover;
     width:30px;
@@ -33,6 +43,12 @@
     width:100%;
     justify-content: space-between;
     
+}
+
+.post__item__comments__container__item__content__item__top-bar__user-name:hover 
+    .post__item__comments__container__item__content__item__top-bar__user-name__span{
+        text-decoration: underline;
+        cursor: pointer;
 }
 
 .post__item__comments__container__item__content__item__top-bar__user-name__span{
