@@ -43,6 +43,10 @@ router.post("/add/photo", async (req, res) => {
       return res.status(413).json("file-too-large");
     }
 
+    const addPhotoQuery = fs
+      .readFileSync(path.join(__dirname, "./query/add/photo.sql"))
+      .toString();
+
     try {
       await client.query(addPhotoQuery, [
         ownerId,
@@ -78,6 +82,12 @@ router.post("/change/photo", async (req, res) => {
       file: { mimetype, filename, size },
     } = req;
 
+    const changePhotoQuery = fs
+      .readFileSync(path.join(__dirname, "./query/update/photo.sql"))
+      .toString();
+    const addPhotoQuery = fs
+      .readFileSync(path.join(__dirname, "./query/add/photo.sql"))
+      .toString();
     const fileName = filename;
 
     try {
@@ -113,6 +123,10 @@ router.post("/get", async (req, res) => {
 
 router.post("/info", async (req, res) => {
   const { userId } = req.body;
+
+  const getUserInfoQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/userInfo.sql"))
+    .toString();
 
   try {
     const { rows } = await client.query(getUserInfoQuery, [userId]);
