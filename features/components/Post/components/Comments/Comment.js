@@ -4,6 +4,7 @@ import { FiMessageCircle, FiVolumeX, FiFlag } from "react-icons/fi";
 import { BsThreeDots } from "react-icons/bs";
 import { IconContext } from "react-icons";
 import cx from "classnames";
+import Router from "next/router";
 import i18next from "@i18n";
 import {
   likeComment,
@@ -131,9 +132,14 @@ const Commnet = ({
 
   return (
     <div className="post__item__comments__container__item">
-      <div className="post__item__comments__container__item__photo">
+      <div
+        className="post__item__comments__container__item__photo"
+        onClick={() => {
+          Router.push(`/profile/${id}`);
+        }}
+      >
         <img
-          src={"/static/images/" + user.photo}
+          src={"/static/images/" + photo}
           alt=""
           className="post__item__comments__container__item__photo--img"
         />
@@ -141,9 +147,14 @@ const Commnet = ({
       <div className="post__item__comments__container__item__content">
         <div className="post__item__comments__container__item__content__item">
           <div className="post__item__comments__container__item__content__item__top-bar">
-            <div className="post__item__comments__container__item__content__item__top-bar__user-name">
+            <div
+              className="post__item__comments__container__item__content__item__top-bar__user-name"
+              onClick={() => {
+                Router.push(`/profile/${id}`);
+              }}
+            >
               <span className="post__item__comments__container__item__content__item__top-bar__user-name__span">
-                {user.firstName + " " + user.lastName}
+                {firstName + " " + lastName}
               </span>
             </div>
             <div
@@ -155,7 +166,7 @@ const Commnet = ({
               <div className="post__item__comments__container__item__content__item__top-bar__icon__collapse is-close">
                 <div
                   className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item"
-                  onClick={() => muteUser({ idMuteUser: user.id, posts })}
+                  onClick={() => muteUser({ idMuteUser: id, posts })}
                 >
                   <div className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item__icon">
                     <IconContext.Provider
