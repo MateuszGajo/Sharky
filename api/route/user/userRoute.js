@@ -9,6 +9,7 @@ const { jwtSecret } = require("../../../config/keys");
 const decodeToken = require("../../../utils/decodeToken");
 
 const router = express.Router();
+const saltRounds = 10;
 
 router.post("/add/photo", async (req, res) => {
   const { id: ownerId } = decodeToken(req);
@@ -103,7 +104,6 @@ router.post("/change/photo", async (req, res) => {
     }
   });
 });
-const saltRounds = 10;
 
 router.post("/get", async (req, res) => {
   const { userIds } = req.body;
@@ -165,12 +165,19 @@ router.post("/get/photo", async (req, res) => {
 
 router.post("/change/country", async (req, res) => {
   let { value } = req.body;
-  value = value.toLowerCase();
-
   const { id: ownerId } = decodeToken(req);
 
+  value = value.toLowerCase();
+
+  const getCountryIdQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/countryId.sql"))
+    .toString();
+  const changeCountryQuery = fs
+    .readFileSync(path.join(__dirname, "./query/update/country.sql"))
+    .toString();
+
   try {
-    const country = await client.query(verifyCountryQuery, [value]);
+    const country = await client.query(getCountryIdQuery, [value]);
     if (!country.rows[0]) return res.status(406).json("country-does-not-exist");
 
     await client.query(changeCountryQuery, [value, ownerId]);
@@ -183,12 +190,19 @@ router.post("/change/country", async (req, res) => {
 
 router.post("/change/language", async (req, res) => {
   let { value } = req.body;
-  value = value.toLowerCase();
-
   const { id: ownerId } = decodeToken(req);
 
+  value = value.toLowerCase();
+
+  const getLanguageIdQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/languageId.sql"))
+    .toString();
+  const changeLanguageQuery = fs
+    .readFileSync(path.join(__dirname, "./query/update/language.sql"))
+    .toString();
+
   try {
-    const language = await client.query(verifyLanguageQuery, [value]);
+    const language = await client.query(getLanguageIdQuery, [value]);
     if (!language.rows[0])
       return res.status(406).json("language-does-not-exist");
 
@@ -202,8 +216,11 @@ router.post("/change/language", async (req, res) => {
 
 router.post("/change/email", async (req, res) => {
   const { value } = req.body;
-
   const { id: ownerId } = decodeToken(req);
+
+  const changeEmailQuery = fs
+    .readFileSync(path.join(__dirname, "./query/change/email.sql"))
+    .toString();
 
   try {
     await client.query(changeEmailQuery, [value, ownerId]);
@@ -216,9 +233,12 @@ router.post("/change/email", async (req, res) => {
 
 router.post("/change/phone", async (req, res) => {
   const { value } = req.body;
-  const phone = value.replace(/[\s-]/gi, "");
-
   const { id: ownerId } = decodeToken(req);
+
+  const changePhoneQuery = fs
+    .readFileSync(path.join(__dirname, "./query/change/phone.sql"))
+    .toString();
+  const phone = value.replace(/[\s-]/gi, "");
 
   try {
     await client.query(changePhoneQuery, [phone, ownerId]);
@@ -246,8 +266,11 @@ router.post("/get/language", async (req, res) => {
 
 router.post("/change/password", async (req, res) => {
   const { value } = req.body;
-
   const { id: ownerId } = decodeToken(req);
+
+  const changePasswordQuery = fs
+    .readFileSync(path.join(__dirname, "./query/change/password.sql"))
+    .toString();
 
   bcrypt.hash(value, saltRounds, async (err, hash) => {
     if (hash) {
@@ -315,9 +338,8 @@ router.get("/logout", async (req, res) => {
 router.get("/me", (req, res) => {
   if (!req.cookies.token) return res.status(401).json("un-authorized");
   jwt.verify(req.cookies.token, jwtSecret, function (err, decoded) {
-    if (decoded) {
-      return res.json({ user: decoded.data });
-    }
+    if (decoded) return res.json({ user: decoded.data });
+
     return res.status(401).json("un-authorized");
   });
 });
@@ -334,9 +356,8 @@ router.post("/check/password", async (req, res) => {
     const { rows } = await client.query(getPasswordQuery, [onwerId]);
 
     await bcrypt.compare(password, rows[0].password, function (err, result) {
-      if (result) {
-        return res.status(200).json({ success: true });
-      }
+      if (result) return res.status(200).json({ success: true });
+
       res.status(401).json("bad-password");
     });
   } catch {
@@ -347,8 +368,12 @@ router.post("/check/password", async (req, res) => {
 router.get("/me/info", async (req, res) => {
   const { id } = decodeToken(req);
 
+  const getUserSettingsQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/userSettings.sql"))
+    .toString();
+
   try {
-    const { rows } = await client.query(getUserPersonalInfoQuery, [id]);
+    const { rows } = await client.query(getUserSettingsQuery, [id]);
 
     res.status(200).json({ ...rows[0] });
   } catch {
