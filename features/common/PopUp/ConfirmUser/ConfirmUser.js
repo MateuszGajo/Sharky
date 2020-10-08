@@ -32,13 +32,11 @@ const ConfirmUser = ({ setOpen, setVerify }) => {
       });
   };
   return (
-    <div
-      data-testid="confrim-user-container"
-      className="confrim-user-container"
-    >
+    <div className="confrim-user-container">
       <div className="confrim-user-container__content">
         <div
           className="confrim-user-container__content__icon"
+          data-testid="close-icon"
           onClick={() => setOpen(false)}
         >
           <IoMdClose />

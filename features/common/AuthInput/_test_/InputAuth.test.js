@@ -5,33 +5,33 @@ import {
   toHaveValue,
   toHaveClass,
 } from "@testing-library/jest-dom/matchers";
-import AuthInput from "../authInput";
+import AuthInput from "../AuthInput";
 
 expect.extend({ toHaveTextContent, toHaveValue, toHaveClass });
 
 it("does auth input property works correct", () => {
   const inputValue = "e-mail";
-  const inputTitle = "E-mail";
+  const titleText = "E-mail";
   const inputOnChange = jest.fn();
   const { getByTestId } = render(
     <AuthInput
       value={inputValue}
-      title={inputTitle}
+      title={titleText}
       onChange={inputOnChange}
       size="large"
     />
   );
 
-  const authInput = getByTestId("auth-input");
-  const authInputContainer = getByTestId("auth-input");
-  const authInputLabel = getByTestId("auth-input-placeholder");
+  const container = getByTestId("container");
+  const field = getByTestId("field");
+  const title = getByTestId("title");
 
-  expect(authInputLabel).toHaveTextContent(inputTitle);
-  expect(authInput).toHaveValue(inputValue);
-  expect(authInputContainer).toHaveClass("auth-input--large");
+  expect(title).toHaveTextContent(titleText);
+  expect(field).toHaveValue(inputValue);
+  expect(container).toHaveClass("auth-input--large");
 
   const newInputValue = "e-mail2";
-  fireEvent.change(authInput, {
+  fireEvent.change(field, {
     target: { value: newInputValue },
   });
 

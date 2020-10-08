@@ -10,7 +10,7 @@ const InputAuth = ({
 }) => {
   return (
     <div
-      data-testid="auth-input"
+      data-testid="container"
       className={cx("auth-input", {
         "auth-input--x-large": size === "x-large",
         "auth-input--large": size === "large",
@@ -21,15 +21,12 @@ const InputAuth = ({
       <input
         className="auth-input__input"
         type={type}
-        data-testid="auth-input"
+        data-testid="field"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         required
       />
-      <h2
-        data-testid="auth-input-placeholder"
-        className="auth-input__placeholder"
-      >
+      <h2 data-testid="title" className="auth-input__placeholder">
         {title}
       </h2>
     </div>
