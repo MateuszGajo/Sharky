@@ -9,7 +9,7 @@ import AuthInput from "../AuthInput";
 
 expect.extend({ toHaveTextContent, toHaveValue, toHaveClass });
 
-it("does auth input property works correct", () => {
+it("does auth input property work correct", () => {
   const inputValue = "e-mail";
   const titleText = "E-mail";
   const inputOnChange = jest.fn();
