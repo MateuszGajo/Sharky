@@ -16,8 +16,8 @@ const Groups = ({
 }) => {
   const { t } = useTranslation(["component"]);
   const description = t("component:lists.groups.description");
-  const buttonJoin = t("component:lists.groups.button-join");
-  const buttonLeave = t("component:lists.groups.button-leave");
+  const joinText = t("component:lists.groups.join");
+  const leaveText = t("component:lists.groups.leave");
   const emptyContent = t("component:lists.groups.empty-content");
   const noResult = t("component:lists.groups.no-result");
 
@@ -53,17 +53,18 @@ const Groups = ({
   }, [keyWords]);
 
   useEffect(() => {
-    const { number, setNumber, idRef, setIdRef, id } = group;
-    if (idRef)
+    const { number, setNumber, refId, setRefId, id, setTitle } = group;
+    if (refId)
       axios
-        .post("/group/user/delete", { subId: group.idRef })
+        .post("/group/user/delete", { subId: group.refId })
         .then(() => {
-          if (userId == owner.id) {
+          if (userId == owner.id && !keyWords) {
             const newGroups = groups.filter((group) => group.groupId != id);
             setGroups(newGroups);
           } else {
+            setTitle(leaveText);
             setNumber(Number(number) - 1);
-            setIdRef(null);
+            setRefId(null);
           }
         })
         .catch(({ response: { data: message } }) => setError(message));
@@ -71,7 +72,8 @@ const Groups = ({
       axios
         .post("/group/user/add", { groupId: group.id })
         .then(({ data: { id } }) => {
-          setIdRef(id);
+          setTitle(joinText);
+          setRefId(id);
           setNumber(Number(number) + 1);
         })
         .catch(({ response: { data: message } }) => setError(message));
@@ -89,17 +91,16 @@ const Groups = ({
         {groups.map((group) => {
           const { groupId, subId, name, photo, numberOfMembers } = group;
           const data = {
-            refType: "group",
             id: groupId,
-            idRef: group.subId || null,
+            refId: subId || null,
+            refType: "group",
             photo,
             radiusPhoto: true,
             name,
             description,
             number: numberOfMembers,
-            button: "join",
-            subTitle: buttonJoin,
-            unsubTitle: buttonLeave,
+            buttonType: "join",
+            title: subId ? leaveText : joinText,
             collapse: false,
           };
           return <Card data={data} key={groupId} handleClick={setGroup} />;

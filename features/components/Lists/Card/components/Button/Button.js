@@ -1,39 +1,34 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
 import cx from "classnames";
 import { BsEnvelope } from "react-icons/bs";
+import CardContext from "../../context/CardContext";
 
-const Button = ({
-  button,
-  greenName,
-  blueName,
-  pinkName,
-  buttonName,
-  setButtonName,
-  collapseItems,
-  handleClick,
-  idRef,
-  setIdRef,
-  id,
-  refType,
-  number,
-  setNumber,
-  title,
-  setTitle: sT,
-  collapse,
-  setCollapse,
-  subTitle,
-  unsubTitle,
-  acceptInvite,
-  declineInvite,
-  inviteSent,
-  inviteType,
-  setInvite,
-  setInviteType,
-  setButton,
-  collapseRef,
-  isInvited,
-  isInvitationSent: statusOfSendInvitation,
-}) => {
+const Button = ({ collapseRef, title: primaryTitle, invitationType }) => {
+  const {
+    buttonType,
+    buttonName,
+    setButtonName,
+    collapseItems,
+    handleClick,
+    refId,
+    setRefId,
+    id,
+    refType,
+    number,
+    setNumber,
+    title,
+    setTitle,
+    collapse,
+    setCollapse,
+    setInvite,
+    setButtonType,
+    isInvitationSent: statusOfSendInvitation,
+    deleteText,
+    isInvited,
+    setStatusOfInvited,
+  } = useContext(CardContext);
+
+  const { green, blue, pink } = collapseItems || {};
   const buttonRef = useRef(null);
 
   const [isInvitationSent, setStatusOfInvitation] = useState(
@@ -44,14 +39,14 @@ const Button = ({
   const removeFriend = () => {
     handleClick({
       name: refType,
-      idRef,
-      setIdRef,
+      refId,
+      setRefId,
       id,
     });
   };
 
   const changeFriendButton = () => {
-    setButton("join");
+    setButtonType("join");
 
     buttonRef.current.addEventListener("click", removeFriend);
 
@@ -59,7 +54,7 @@ const Button = ({
   };
 
   const resetFriendButton = () => {
-    setButton("relation");
+    setButtonType("relation");
     removeEventListener("click", removeFriend);
 
     setStatusOfOpen(false);
@@ -98,42 +93,49 @@ const Button = ({
     <div
       className={cx("card__item__info__second-column__buttons__main-button ", {
         "card__item__info__second-column__buttons--relation":
-          button === "relation",
-        "card__item__info__second-column__buttons--join": button === "join",
+          buttonType === "relation",
+        "card__item__info__second-column__buttons--join": buttonType === "join",
         "card__item__info__second-column__buttons--join--no-cursor":
-          button === "join" && isInvitationSent,
+          buttonType === "join" && isInvitationSent,
         "primary-background":
-          greenName === buttonName && collapseItems && button == "relation",
+          green?.name === buttonName &&
+          collapseItems &&
+          buttonType == "relation",
         "family-background":
-          blueName === buttonName && collapseItems && button == "relation",
+          blue?.name === buttonName &&
+          collapseItems &&
+          buttonType == "relation",
         "pal-background":
-          pinkName === buttonName && collapseItems && button == "relation",
+          pink?.name === buttonName &&
+          collapseItems &&
+          buttonType == "relation",
       })}
       ref={buttonRef}
       data-testid="card-button"
       onClick={() => {
-        if (button == "join" && !isInvitationSent) {
-          if (inviteType) {
+        if (buttonType == "join" && !isInvitationSent) {
+          if (isInvited) {
             setInvite({
-              inviteType,
-              setInviteType,
-              setButton,
-              setTitle: sT,
+              invitationType,
+              setButtonType,
+              setTitle,
               setCollapse,
               setButtonName,
               number,
               setNumber,
-              friendshipId: idRef,
+              friendshipId: refId,
+              setStatusOfInvited,
             });
           } else {
             handleClick({
               name: refType,
-              idRef,
-              setIdRef,
+              refId,
+              setRefId,
               id,
               number,
               setNumber,
               setStatusOfInvitation,
+              setTitle,
             });
           }
         }
@@ -148,17 +150,7 @@ const Button = ({
         className="card__item__info__second-column__buttons__main-button__span"
         data-testid="card-button-text"
       >
-        {inviteType == "accept"
-          ? acceptInvite
-          : [
-              inviteType == "decline"
-                ? declineInvite
-                : [
-                    isInvitationSent
-                      ? inviteSent
-                      : [!idRef ? subTitle : [isOpen ? unsubTitle : title]],
-                  ],
-            ]}
+        {primaryTitle ? primaryTitle : isOpen ? deleteText : title}
       </span>
     </div>
   );
