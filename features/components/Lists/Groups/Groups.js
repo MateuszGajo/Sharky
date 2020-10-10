@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import PropTypes from "prop-types";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { AiOutlineSearch } from "react-icons/ai";
@@ -6,6 +7,7 @@ import Card from "../Card/Card";
 import i18next from "@i18n";
 import AppContext from "@features/context/AppContext";
 import Spinner from "@components/Spinner/Spinner";
+
 const { useTranslation } = i18next;
 
 const Groups = ({
@@ -120,6 +122,13 @@ const Groups = ({
       )}
     </InfiniteScroll>
   );
+};
+
+Groups.propTypes = {
+  userId: PropTypes.number.isRequired,
+  keyWords: PropTypes.string,
+  onlySubscribed: PropTypes.bool,
+  helpInformation: PropTypes.bool,
 };
 
 export default Groups;

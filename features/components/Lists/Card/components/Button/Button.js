@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect, useContext } from "react";
+import PropTypes from "prop-types";
 import cx from "classnames";
 import { BsEnvelope } from "react-icons/bs";
 import CardContext from "../../context/CardContext";
@@ -155,5 +156,14 @@ const Button = ({ collapseRef, title: primaryTitle, invitationType }) => {
     </div>
   );
 };
+
+Button.propTypes = {
+  collapseRef:PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({current:PropTypes.elementType})
+  ]),
+  title:PropTypes.string,
+  invitationType:PropTypes.string
+}
 
 export default Button;

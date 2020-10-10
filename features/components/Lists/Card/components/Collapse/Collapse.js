@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import PropTypes from "prop-types";
 import cx from "classnames";
 import CardContext from "../../context/CardContext";
 
@@ -67,5 +68,12 @@ const Collapse = ({ collapseRef }) => {
     </div>
   );
 };
+
+Collapse.propTypes = {
+  collapseRef:PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({current:PropTypes.elementType})
+  ])
+}
 
 export default Collapse;

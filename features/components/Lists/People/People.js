@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import PropTypes from "prop-types"
 import Card from "../Card/Card";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -140,7 +141,7 @@ const People = ({
             setFriends(newFriends);
           } else {
             setRefId(null);
-            setNumber(Number(number) - 1);
+            setNumber(prev=>prev - 1);
           }
         })
         .catch(({ response: { data: message } }) => setError(message));
@@ -185,7 +186,7 @@ const People = ({
             : !relation
             ? addText
             : t(`component:lists.people.${relation}`);
-
+            
           const data = {
             id,
             refId: friendshipId,
@@ -244,5 +245,12 @@ const People = ({
     </InfiniteScroll>
   );
 };
+
+People.propTypes = {
+  userId: PropTypes.number.isRequired,
+  keyWords: PropTypes.string,
+  onlySubscribed: PropTypes.bool,
+  helpInformation: PropTypes.bool,
+}
 
 export default People;

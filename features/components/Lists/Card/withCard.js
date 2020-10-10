@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import CardContext from "./context/CardContext";
 
-const withCard = (WrappedComponent) => {
-  return (props) => {
+const withCard = (Component) => {
+  const Wrapped = (props) => {
     const { data, setRelation, handleClick, setInvite } = props;
     const {
       refType,
@@ -65,10 +66,51 @@ const withCard = (WrappedComponent) => {
           secondTitle,
         }}
       >
-        <WrappedComponent {...props} />
+        <Component {...props} />
       </CardContext.Provider>
     );
   };
+ 
+  Wrapped.propTypes = {
+    data:PropTypes.shape({
+      id:PropTypes.number,
+      refId:PropTypes.number.isRequired,
+      refType:PropTypes.string.isRequired,
+      photo: PropTypes.string.isRequired,
+      isInvited: PropTypes.bool,
+      isInvitationSent: PropTypes.bool,
+      radiusPhoto: PropTypes.bool,
+      name: PropTypes.string,
+      description: PropTypes.string,
+      number: PropTypes.number,
+      buttonType: PropTypes.string,
+      title: PropTypes.string,
+      secondTitle: PropTypes.string,
+      deleteText: PropTypes.string,
+      buttonName: PropTypes.string,
+      collapse:PropTypes.bool,
+      collapseItems:PropTypes.shape({
+        pink:PropTypes.shape({
+          name: PropTypes.string,
+          title: PropTypes.string
+        }),
+        blue:PropTypes.shape({
+          name: PropTypes.string,
+          title: PropTypes.string
+        }),
+        green:PropTypes.shape({
+          name: PropTypes.string,
+          title: PropTypes.string
+        })
+      })
+
+    }),
+    setRelation: PropTypes.func,
+    handleClick: PropTypes.func,
+    setInvite: PropTypes.func
+  }
+
+  return Wrapped;
 };
 
 export default withCard;

@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useRef } from "react";
+import PropTypes from "prop-types";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Post from "@components/Post/Post";
 import Spinner from "@components/Spinner/Spinner";
@@ -9,7 +10,7 @@ import i18next from "@i18n";
 
 const { useTranslation } = i18next;
 
-const PostList = ({
+const Posts = ({
   fanpageId = null,
   groupId = null,
   news = false,
@@ -95,4 +96,12 @@ const PostList = ({
   );
 };
 
-export default withWizzard(PostList);
+Posts.propTypes = {
+  fanpageId: PropTypes.number,
+  groupId: PropTypes.number,
+  news: PropTypes.bool,
+  authorPost:PropTypes.bool,
+  userId: PropTypes.number.isRequired,
+}
+
+export default withWizzard(Posts);
