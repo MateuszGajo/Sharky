@@ -27,7 +27,11 @@ const InputAuth = ({
         onChange={(e) => onChange(e.target.value)}
         required
       />
-      <h2 data-testid="title" className="auth-input__placeholder">
+        <h2
+        data-testid="auth-input-placeholder"
+        className="auth-input__placeholder"
+        onClick={() => input.current.focus()}
+      >
         {title}
       </h2>
     </div>

@@ -138,16 +138,6 @@ const withContainer = (WrappedComponent) => {
       PropTypes.func,
       PropTypes.shape({current: PropTypes.elementType})
     ]),
-    comment: PropTypes.shape({
-      userId: PropTypes.number,
-      commentId: PropTypes.number,
-      likeId: PropTypes.number,
-      postId: PropTypes.number,
-      numberOfLikes: PropTypes.number,
-      numberOfReplies: PropTypes.number,
-      content: PropTypes.string,
-      date: PropTypes.string,
-    })
   }
 
   return WithContainer;
