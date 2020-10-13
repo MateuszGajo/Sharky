@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
+import PropTypes from "prop-types";
 import { IoIosHeartEmpty } from "react-icons/io";
 import { FiMessageCircle, FiVolumeX, FiFlag } from "react-icons/fi";
 import { BsThreeDots } from "react-icons/bs";
@@ -246,5 +247,28 @@ const Commnet = ({
     </div>
   );
 };
+
+Commnet.propTypes ={
+  comment: PropTypes.shape({
+    userId: PropTypes.number,
+    commentId: PropTypes.number,
+    likeId: PropTypes.number,
+    postId: PropTypes.number,
+    numberOfLikes: PropTypes.number,
+    numberOfReplies: PropTypes.number,
+    content: PropTypes.string,
+    date: PropTypes.string,
+  }),
+  setStatusOfOpenReplies: PropTypes.func,
+  numberOfReplies: PropTypes.number,
+  isRepliesOpen: PropTypes.bool,
+  getReplies: PropTypes.func,
+  user: PropTypes.shape({
+    id: PropTypes.number,
+    firstName :PropTypes.string,
+    lastName: PropTypes.string,
+    photo: PropTypes.string
+  })
+}
 
 export default Commnet;

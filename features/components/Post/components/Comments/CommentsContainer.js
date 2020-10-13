@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import PropTypes from "prop-types";
 import Comment from "./Comment";
 import SecondaryInput from "@common/SecondaryInput/SecondaryInput";
 import i18next from "@i18n";
@@ -10,7 +11,6 @@ const { useTranslation } = i18next;
 const withContainer = (WrappedComponent) => {
   const WithContainer = ({ comment, focusCollapse, focusIcon }) => {
     const { t } = useTranslation(["component"]);
-
     const { setError, owner } = useContext(AppContext);
     const { users, setUsers, muteUser, newComment, setNewComment } = useContext(
       WizzardContext
@@ -132,6 +132,24 @@ const withContainer = (WrappedComponent) => {
       </>
     );
   };
+
+  withContainer.propTypes = {
+    focusIcon: PropTypes.oneOfType([
+      PropTypes.func,
+      PropTypes.shape({current: PropTypes.elementType})
+    ]),
+    comment: PropTypes.shape({
+      userId: PropTypes.number,
+      commentId: PropTypes.number,
+      likeId: PropTypes.number,
+      postId: PropTypes.number,
+      numberOfLikes: PropTypes.number,
+      numberOfReplies: PropTypes.number,
+      content: PropTypes.string,
+      date: PropTypes.string,
+    })
+  }
+
   return WithContainer;
 };
 

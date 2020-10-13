@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useRouter } from "next/router";
+import CardContext from "../../context/CardContext";
 
-const Description = ({ refType, id, name, description, number }) => {
+const Description = () => {
+  const { refType, id, name, description, number } = useContext(CardContext);
+
   const router = useRouter();
   return (
     <div className="card__item__info__first-column">
