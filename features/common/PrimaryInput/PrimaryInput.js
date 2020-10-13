@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import PropTypes from "prop-types";
 import cx from "classnames";
 
 const PrimaryInput = ({
@@ -117,5 +118,20 @@ const PrimaryInput = ({
     </div>
   );
 };
+
+PrimaryInput.propTypes = {
+  type: PropTypes.string,
+  onChange: PropTypes.func,
+  value: PropTypes.string,
+  name: PropTypes.string,
+  title: PropTypes.string,
+  autocompleteData: PropTypes.arrayOf(PropTypes.shape({
+    value:PropTypes.string,
+    name: PropTypes.string,
+  })),
+  withOutMargin: PropTypes.bool,
+  size: PropTypes.string,
+  require: PropTypes.bool
+}
 
 export default PrimaryInput;

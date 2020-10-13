@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
+import PropTypes from "prop-types";
 import cx from "classnames";
 import { MdClose } from "react-icons/md";
 import axios from "axios";
@@ -151,5 +152,12 @@ const InvitePerson = ({ isOpen = true, setStatusOfOpen, type, targetId }) => {
     </section>
   );
 };
+
+InvitePerson.propTypes = {
+  isOpen: PropTypes.bool,
+  setStatusOfOpen: PropTypes.func,
+  type: PropTypes.string,
+  targetId: PropTypes.number
+}
 
 export default InvitePerson;

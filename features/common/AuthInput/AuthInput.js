@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import cx from "classnames";
 
 const InputAuth = ({
@@ -32,5 +33,13 @@ const InputAuth = ({
     </div>
   );
 };
+
+InputAuth.propTypes = {
+  value: PropTypes.string,
+  onChange: PropTypes.func,
+  type: PropTypes.string,
+  title: PropTypes.string,
+  size: PropTypes.string
+}
 
 export default InputAuth;

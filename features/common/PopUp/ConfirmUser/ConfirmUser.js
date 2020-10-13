@@ -1,7 +1,7 @@
-import React, { useState, useContext } from "react";
+import React, { useState} from "react";
+import PropTypes from "prop-types";
 import axios from "axios";
 import { IoMdClose } from "react-icons/io";
-import cx from "classnames";
 import PrimaryInput from "@common/PrimaryInput/PrimaryInput";
 import PrimaryButton from "@common/PrimaryButton/PrimaryButton";
 import i18next from "@i18n";
@@ -74,5 +74,10 @@ const ConfirmUser = ({ setOpen, setVerify }) => {
     </div>
   );
 };
+
+ConfirmUser.propTypes = {
+  setOpen: PropTypes.func,
+  setVerify: PropTypes.func
+}
 
 export default ConfirmUser;

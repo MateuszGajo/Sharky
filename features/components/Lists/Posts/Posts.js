@@ -84,7 +84,7 @@ const Posts = ({
               <Post
                 post={post}
                 user={users[post.userId]}
-                userShare={users[post.postSharedUserId]}
+                secondaryUser={users[post.postSharedUserId]}
                 focusElement={focusElement}
                 single={false}
               />
@@ -101,7 +101,7 @@ Posts.propTypes = {
   groupId: PropTypes.number,
   news: PropTypes.bool,
   authorPost:PropTypes.bool,
-  userId: PropTypes.number.isRequired,
+  userId: PropTypes.number,
 }
 
 export default withWizzard(Posts);
