@@ -38,6 +38,7 @@ const Commnet = ({
   const settingRef = useRef(null);
   const reportComment = t("component:post.comments.settings.report");
   const muteUser = t("component:post.comments.settings.mute");
+  
   const [likeId, setIdLike] = useState(comment?.likeId);
   const [numberOfLikes, setNumberOfLikes] = useState(
     Number(comment.numberOfLikes)
@@ -249,26 +250,10 @@ const Commnet = ({
 };
 
 Commnet.propTypes ={
-  comment: PropTypes.shape({
-    userId: PropTypes.number,
-    commentId: PropTypes.number,
-    likeId: PropTypes.number,
-    postId: PropTypes.number,
-    numberOfLikes: PropTypes.number,
-    numberOfReplies: PropTypes.number,
-    content: PropTypes.string,
-    date: PropTypes.string,
-  }),
   setStatusOfOpenReplies: PropTypes.func,
   numberOfReplies: PropTypes.number,
   isRepliesOpen: PropTypes.bool,
   getReplies: PropTypes.func,
-  user: PropTypes.shape({
-    id: PropTypes.number,
-    firstName :PropTypes.string,
-    lastName: PropTypes.string,
-    photo: PropTypes.string
-  })
 }
 
 export default Commnet;
