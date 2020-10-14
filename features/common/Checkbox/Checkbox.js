@@ -25,7 +25,7 @@ const Checkbox = ({ value, onChange }) => {
   );
 };
 
-Checkbox.PropTypes = {
+Checkbox.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func
 }
