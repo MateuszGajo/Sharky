@@ -35,7 +35,7 @@ WizzardContext.propTypes = {
   setStatusOfMoreComments: PropTypes.number,
   isMorePosts: PropTypes.bool,
   setStatusOfMorePosts: PropTypes.func,
-  newLike: PropsTypes.shape({
+  newLike: PropTypes.shape({
     likeId: PropTypes.number,
     idElement: PropTypes.number,
     type: PropTypes.string,
