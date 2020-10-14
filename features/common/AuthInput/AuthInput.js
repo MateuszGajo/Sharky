@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useRef} from "react";
 import PropTypes from "prop-types";
 import cx from "classnames";
 
@@ -9,6 +9,7 @@ const InputAuth = ({
   title,
   size = "large",
 }) => {
+  const input = useRef(null);
   return (
     <div
       data-testid="container"
@@ -24,10 +25,11 @@ const InputAuth = ({
         type={type}
         data-testid="field"
         value={value}
+        ref={input}
         onChange={(e) => onChange(e.target.value)}
         required
       />
-        <h2
+      <h2
         data-testid="auth-input-placeholder"
         className="auth-input__placeholder"
         onClick={() => input.current.focus()}
