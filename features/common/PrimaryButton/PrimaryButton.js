@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import cx from "classnames";
 
 const PrimaryButton = ({
@@ -30,5 +31,13 @@ const PrimaryButton = ({
     </button>
   );
 };
+
+PrimaryButton.propTypes ={
+  value: PropTypes.string,
+  size: PropTypes.string,
+  border: PropTypes.bool,
+  isDisable: PropTypes.bool,
+  link: PropTypes.string
+}
 
 export default PrimaryButton;

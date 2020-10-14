@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
+import PropTypes from "prop-types";
 import { uuid } from "uuidv4";
 import axios from "axios";
 import WizzardContext from "./context/WizzardContext";
 import AppContext from "@features/context/AppContext";
 
-const withWizzard = (WrappedComponent) => {
-  return (props) => {
+const withWizzard = (Component) => {
+  const Wrapped =(props) => {
     const { newPost, fanpageId = "", groupId = "", news = "" } = props;
 
     const { setError, owner } = useContext(AppContext);
@@ -96,10 +97,23 @@ const withWizzard = (WrappedComponent) => {
           setPosts,
         }}
       >
-        <WrappedComponent {...props} />
+        <Component {...props} />
       </WizzardContext.Provider>
     );
   };
+
+  Wrapped.propTypes = {
+    newPost: PropTypes.shape({
+      content: PropTypes.string, 
+      setContent: PropTypes.func,
+      file:PropTypes.object, 
+      setFile: PropTypes.func
+    }), 
+    fanpageId: PropTypes.number, 
+    groupId: PropTypes.number, 
+    news: PropTypes.bool
+  }
+  return Wrapped
 };
 
 export default withWizzard;
