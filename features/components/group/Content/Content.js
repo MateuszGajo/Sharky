@@ -1,8 +1,12 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { FiLock } from "react-icons/fi";
 import About from "./components/About/About";
 import Members from "./components/Members/Members";
 import Home from "./components/Home/Home";
+import i18next from "@i18n";
+
+const {useTranslation} = i18next;
 
 const Content = ({
   section,
@@ -14,6 +18,9 @@ const Content = ({
   groupName,
   startingDate,
 }) => {
+  const {t} = useTranslation(["group"]);
+
+  const noPermission = t("group:content.no-permission");
   const renderComponent = (name) => {
     switch (name) {
       case "home":
@@ -49,11 +56,22 @@ const Content = ({
           <span className="group__container__content__text__icon">
             <FiLock />
           </span>
-          Nie jesteś członkiem grupy
+          {noPermission}
         </p>
       )}
     </div>
   );
 };
+
+Content.propTypes= {
+  section: PropTypes.string,
+  groupId: PropTypes.number,
+  role: PropTypes.string,
+  memberId: PropTypes.number,
+  setNumberOfMembers: PropTypes.func,
+  numberOfMembers: PropTypes.number,
+  groupName: PropTypes.string,
+  startingDate: PropTypes.string
+}
 
 export default Content;

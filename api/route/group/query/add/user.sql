@@ -1,7 +1,7 @@
 insert into group_users(group_id, user_id, status, role, date)
 select $1,
     $2,
-    '0',
+    '1',
     $3,
     $4
 where not exists(

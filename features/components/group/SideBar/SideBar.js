@@ -1,5 +1,7 @@
 import React, { useContext } from "react";
-import { AiOutlinePlus, AiOutlineMinus, AiOutlineDelete } from "react-icons/ai";
+import PropTypes from "prop-types";
+import {AiOutlineMinus, AiOutlineDelete } from "react-icons/ai";
+import {GoPlus} from "react-icons/go"
 import cx from "classnames";
 import { useRouter } from "next/router";
 import axios from "axios";
@@ -31,7 +33,7 @@ const SideBar = ({
   const aboutName = t("group:side-bar.about");
   const inviteText = t("group:side-bar.invite");
   const leaveText = t("group:side-bar.leave");
-  const joinText = t("component:lists.groups.button-join");
+  const joinText = t("component:lists.groups.join");
   const deleteGroupText = t("group:side-bar.delete");
   const changePhotoText = t("group:side-bar.change-photo");
 
@@ -89,7 +91,8 @@ const SideBar = ({
       <div className="group__container__side-bar--fixed">
         <div className="group__container__side-bar__group-info">
           <div className="group__container__side-bar__group-info__photo">
-            <div className="group__container__side-bar__group-info__photo__overlay">
+            {role== 'admin' && (
+              <div className="group__container__side-bar__group-info__photo__overlay">
               <label htmlFor="group-photo-change">
                 <div className="group__container__side-bar__group-info__photo--overlay__button">
                   {changePhotoText}
@@ -102,6 +105,7 @@ const SideBar = ({
                 onChange={handlePhotoChange}
               />
             </div>
+            )}
             <img
               src={`/static/images/${photo}`}
               className="group__container__side-bar__group-info__photo__img"
@@ -170,7 +174,7 @@ const SideBar = ({
                   {inviteText}
                 </span>
                 <div className="group__container__side-bar__manage__item__icon group__container__side-bar__manage__item__icon--invite">
-                  <AiOutlinePlus />
+                  <GoPlus />
                 </div>
               </div>
               {role == "admin" && (
@@ -198,7 +202,7 @@ const SideBar = ({
                 {joinText}
               </span>
               <div className="group__container__side-bar__manage__item__icon group__container__side-bar__manage__item__icon--invite">
-                <AiOutlinePlus />
+                <GoPlus />
               </div>
             </div>
           </div>
@@ -207,5 +211,19 @@ const SideBar = ({
     </div>
   );
 };
+
+SideBar.propTypes= {
+  setSection: PropTypes.func,
+  setStatusOfPopUp: PropTypes.func,
+  groupName: PropTypes.string,
+  memberId: PropTypes.number,
+  setIdMember: PropTypes.func,
+  setRole: PropTypes.func,
+  section: PropTypes.string,
+  role: PropTypes.string,
+  groupId: PropTypes.number.isRequired,
+  photo: PropTypes.string,
+  setPhoto: PropTypes.func
+}
 
 export default SideBar;
