@@ -88,7 +88,6 @@ const withPost = (Component) => {
         }))
       })
   }
-
   return Wrapped
 };
 
