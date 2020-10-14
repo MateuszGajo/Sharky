@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-export const PostContext =  React.createContext({
+const PostContext =  React.createContext({
   user: { id: null, firstName: "", lastName: "", photo: "" },
   setUser: () => {},
   secondaryUser: { id: null, firstName: "", lastName: "", photo: "" },
@@ -82,41 +82,20 @@ PostContext.Provider.propTypes ={
       date: PropTypes.string
     })),
     setComments: PropTypes.func,
-    post: PropTypes.shape({
-      id: PropTypes.number,
-      userId: PropTypes.number,
-      likeId: PropTypes.number,
-      postSharedUserId: PropTypes.number,
-      shareId: PropTypes.number,
-      content: PropTypes.string,
-      date: PropTypes.string,
-      numberOfLikes: PropTypes.number,
-      numberOfShares: PropTypes.number,
-      numberOfComments: PropTypes.number,
-      isMoreComments: PropTypes.bool,
-      comments:PropTypes.arrayOf(PropTypes.shape({
-        commentId: PropTypes.number,
-        postId: PropTypes.number,
-        userId: PropTypes.number,
-        likeId: PropTypes.number,
-        numberOfLikes: PropTypes.number,
-        numberOfReplies: PropTypes.number,
-        content: PropTypes.string,
-        date: PropTypes.string,
-      }))
-    }),
-    setPost: () => {},
-    isMoreComments: false,
-    setStatusOfMoreComments: () => {},
-    numberOfComments: null,
-    setNumberOfComments: () => {},
-    isHidenPost: false,
-    setStatusOfHiddenPost: () => {},
-    isReport: false,
-    setStatusOfReport: () => {},
-    isEdit: false,
-    setStatusOfEdit: () => {},
-    isSingle: false,
-    setStatusOfSingle: () => {},
+    setPost: PropTypes.func,
+    isMoreComments: PropTypes.bool,
+    setStatusOfMoreComments: PropTypes.func,
+    numberOfComments: PropTypes.number,
+    setNumberOfComments: PropTypes.func,
+    isHidenPost: PropTypes.bool,
+    setStatusOfHiddenPost: PropTypes.func,
+    isReport: PropTypes.bool,
+    setStatusOfReport: PropTypes.func,
+    isEdit: PropTypes.bool,
+    setStatusOfEdit: PropTypes.func,
+    isSingle: PropTypes.bool,
+    setStatusOfSingle: PropTypes.func,
   })
 }
+
+export default PostContext;
