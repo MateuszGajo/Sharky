@@ -16,7 +16,11 @@ const HomeLayout = ({ children }) => {
 };
 
 HomeLayout.propTypes = {
-  children: PropTypes.arrayOf(PropTypes.element)
+  children: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.arrayOf(PropTypes.element)
+  ])
 }
+
 
 export default HomeLayout;
