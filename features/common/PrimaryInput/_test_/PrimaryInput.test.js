@@ -9,7 +9,7 @@ import PrimaryInput from "../PrimaryInput";
 
 expect.extend({ toHaveTextContent, toHaveValue, toHaveClass });
 
-it("Does primary input works correct", () => {
+it("Does primary input work correct", () => {
   const inputName = "email";
   const inputValue = "dwa";
   const inputTitle = "E-mail";
@@ -25,20 +25,18 @@ it("Does primary input works correct", () => {
       size="large"
     />
   );
-  const primaryInput = getByTestId("primary-input");
-  const primaryInputTitle = getByTestId("primary-input-title");
-  const autocomplete = getByTestId("input-primary-autocomplete");
-  const primaryInputContainer = getByTestId("primary-input");
+  const container = getByTestId("container");
+  const title = getByTestId("title");
+  const autocomplete = getByTestId("autocomplete");
+  const field = getByTestId("field");
 
-  expect(primaryInputTitle).toHaveTextContent(inputTitle);
-  expect(primaryInput).toHaveValue(inputValue);
+  expect(title).toHaveTextContent(inputTitle);
+  expect(field).toHaveValue(inputValue);
   expect(autocomplete).toHaveClass("is-close");
-  expect(primaryInputContainer).toHaveClass(
-    "reset-margin primary-input--large"
-  );
+  expect(container).toHaveClass("reset-margin primary-input--large");
 
   const newInputValue = "A";
-  fireEvent.change(primaryInput, {
+  fireEvent.change(field, {
     target: { value: newInputValue },
   });
 

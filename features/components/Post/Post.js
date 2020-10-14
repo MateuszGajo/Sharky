@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect, useContext } from "react";
+import PropTypes from "prop-types";
 import cx from "classnames";
 import DownBarButtons from "./components/DownBarButtons/DownBarButtons";
 import Navbar from "./components/Navbar/Navbar";
@@ -143,5 +144,12 @@ const Post = ({ post, focusElement }) => {
     </div>
   );
 };
+
+Post.propTypes = {
+  focusElement: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({current: PropTypes.elementType})
+  ])
+}
 
 export default withPost(Post);

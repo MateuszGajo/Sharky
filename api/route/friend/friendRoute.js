@@ -81,8 +81,8 @@ router.post("/accept", async (req, res) => {
   const acceptRequestQuery = fs
     .readFileSync(path.join(__dirname, "./query/update/friendStatus.sql"))
     .toString();
-  const updateRelationQuery = fs
-    .readFileSync(path.join(__dirname, "./query/update/relation.sql"))
+  const addRelationQuery = fs
+    .readFileSync(path.join(__dirname, "./query/add/relation.sql"))
     .toString();
   const addChatQuery = fs
     .readFileSync(path.join(__dirname, "./query/add/chat.sql"))
@@ -91,9 +91,8 @@ router.post("/accept", async (req, res) => {
   try {
     const { rows } = await client.query(acceptRequestQuery, [friendshipId]);
     let chatId;
-
     if (rows[0]) {
-      await client.query(updateRelationQuery, [friendshipId, relation]);
+      await client.query(addRelationQuery, [friendshipId, relation]);
       const { rows: chat } = await client.query(addChatQuery, [friendshipId]);
       chatId = chat[0].id;
     }
@@ -112,7 +111,7 @@ router.post("/decline", async (req, res) => {
     .toString();
 
   try {
-    client.query(deleteFriendRequestQuery[friendshipId]);
+    await client.query(deleteFriendRequestQuery, [friendshipId]);
     res.status(200).json({ success: true });
   } catch {
     res.status(400).json("bad-request");

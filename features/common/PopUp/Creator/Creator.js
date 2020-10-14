@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import axios from "axios";
 import Router from "next/router";
 import { RiCloseLine } from "react-icons/ri";
@@ -81,5 +82,10 @@ const Creator = ({ type, setStatusOfOpen }) => {
     </section>
   );
 };
+
+Creator.propTypes = {
+  type: PropTypes.string,
+  setStatusOfOpen: PropTypes.func
+}
 
 export default Creator;

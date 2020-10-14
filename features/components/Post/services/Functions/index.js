@@ -260,7 +260,7 @@ export const editPost = ({
 export const deletePost = ({ postId, posts, setPosts, isSingle, setError }) => {
   axios
     .post("/post/delete", { postId })
-    .then((resp) => {
+    .then(() => {
       isSingle && Router.push("/");
       const newPosts = posts.filter((post) => post.postId != postId);
       setPosts(newPosts);
