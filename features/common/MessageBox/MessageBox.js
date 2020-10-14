@@ -1,4 +1,5 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useRef, useContext } from "react";
+import PropTypes from "prop-types";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { AiOutlineClose } from "react-icons/ai";
 import cx from "classnames";
@@ -9,8 +10,9 @@ const { useTranslation } = i18next;
 
 const MessageBox = ({ value, onChange, btnSize = "medium", file, setFile }) => {
   const { t } = useTranslation();
-
+  
   const { setError } = useContext(AppContext);
+
   const title = t("common:message-box.title");
   const description = t("common:message-box.description");
   const buttonText = t("common:message-box.button");
@@ -110,5 +112,13 @@ const MessageBox = ({ value, onChange, btnSize = "medium", file, setFile }) => {
     </div>
   );
 };
+
+MessageBox.propTypes = {
+  value: PropTypes.string, 
+  onChange: PropTypes.func, 
+  btnSize: PropTypes.string, 
+  file: PropTypes.object, 
+  setFile: PropTypes.func
+}
 
 export default MessageBox;

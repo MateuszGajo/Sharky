@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
+import PropTypes from "prop-types";
 import cx from "classnames";
 import { MdSend } from "react-icons/md";
 import AppContext from "@features/context/AppContext";
@@ -6,7 +7,7 @@ import i18next from "@i18n";
 import { addMessage } from "../../services/Functions";
 const { useTranslation } = i18next;
 
-const Downbar = ({ chatId, setMessages, messages, converser }) => {
+const Downbar = ({ chatId, setMessages, converser }) => {
   const { t } = useTranslation(["component"]);
 
   const placeholder = t("component:messenger.placeholder");
@@ -23,7 +24,7 @@ const Downbar = ({ chatId, setMessages, messages, converser }) => {
 
     if (message) {
       const date = new Date();
-      setMessages([...messages, { userId: owner.id, message, date }]);
+      setMessages(prev =>[...prev, { userId: owner.id, message, date }]);
       addMessage({
         chatId,
         message,
@@ -87,5 +88,7 @@ const Downbar = ({ chatId, setMessages, messages, converser }) => {
     </div>
   );
 };
+
+
 
 export default Downbar;

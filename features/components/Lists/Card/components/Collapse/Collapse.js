@@ -1,95 +1,79 @@
-import React from "react";
+import React, { useContext } from "react";
+import PropTypes from "prop-types";
 import cx from "classnames";
+import CardContext from "../../context/CardContext";
 
-const Collapse = ({
-  id,
-  idRef,
-  buttonName,
-  setButtonName,
-  setTitle,
-  greenName,
-  greenTitle,
-  pinkName,
-  pinkTitle,
-  blueName,
-  blueTitle,
-  setRelation,
-  collapseRef,
-}) => {
+const Collapse = ({ collapseRef }) => {
+  const {
+    refId,
+    setButtonName,
+    setTitle,
+    buttonName,
+    setRelation,
+    collapseItems,
+  } = useContext(CardContext);
+
+  const { green, blue, pink } = collapseItems || {};
+
+  const items = [
+    {
+      id: 1,
+      name: green.name,
+      title: green.title,
+      className: "primary-background",
+    },
+    {
+      id: 2,
+      name: pink.name,
+      title: pink.title,
+      className: "pal-background",
+    },
+    {
+      id: 3,
+      name: blue.name,
+      title: blue.title,
+      className: "family-background",
+    },
+  ];
   return (
     <div
       className="card__item__info__second-column__buttons__change-status"
       data-testid="card-update-button"
       ref={collapseRef}
     >
-      <div
-        className={cx(
-          "card__item__info__second-column__buttons__change-status__circle  primary-background",
-          {
-            "brightness-reduce hover-brightness": greenName !== buttonName,
-          }
-        )}
-        onClick={() => {
-          if (buttonName !== greenName) {
-            setRelation({
-              id: idRef,
-              subId: id,
-              name: greenName,
-              setButtonName,
-              setTitle,
-            });
-          }
-        }}
-        data-testid="card-relation-button-green"
-      >
-        <span>{greenTitle}</span>
-      </div>
-      <div
-        className={cx(
-          "card__item__info__second-column__buttons__change-status__circle  pal-background ",
-          {
-            "brightness-reduce hover-brightness": pinkName !== buttonName,
-          }
-        )}
-        onClick={() => {
-          if (buttonName !== pinkName) {
-            setRelation({
-              id: idRef,
-              subId: id,
-              name: pinkName,
-              setButtonName,
-              setTitle,
-            });
-          }
-        }}
-        data-testid="card-relation-button-pink"
-      >
-        <span>{pinkTitle}</span>
-      </div>
-      <div
-        className={cx(
-          "card__item__info__second-column__buttons__change-status__circle  family-background ",
-          {
-            "brightness-reduce hover-brightness": blueName !== buttonName,
-          }
-        )}
-        onClick={() => {
-          if (buttonName !== blueName) {
-            setRelation({
-              id: idRef,
-              subId: id,
-              name: blueName,
-              setButtonName,
-              setTitle,
-            });
-          }
-        }}
-        data-testid="card-relation-button-blue"
-      >
-        <span>{blueTitle}</span>
-      </div>
+      {items.map(({ id, name, title, className }) => (
+        <div
+          className={cx(
+            `card__item__info__second-column__buttons__change-status__circle ${className}`,
+            {
+              "brightness-reduce hover-brightness": name !== buttonName,
+            }
+          )}
+          onClick={() => {
+            if (buttonName !== name) {
+              setRelation({
+                id: refId,
+                subId: id,
+                name,
+                setButtonName,
+                setTitle,
+              });
+            }
+          }}
+          key={id}
+        >
+          <span>{title}</span>
+        </div>
+      ))}
     </div>
   );
 };
+
+Collapse.propTypes = {
+  collapseRef:PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({current:PropTypes.elementType})
+  ])
+}
 
 export default Collapse;

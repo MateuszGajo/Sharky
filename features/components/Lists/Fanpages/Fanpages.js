@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import PropTypes from "prop-types";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { AiOutlineSearch } from "react-icons/ai";
@@ -16,8 +17,8 @@ const Fanpages = ({
 }) => {
   const { t } = useTranslation(["component"]);
   const description = t("component:lists.fanpages.description");
-  const buttonSubscribe = t("component:lists.fanpages.button-subscribe");
-  const buttonUnsubscribe = t("component:lists.fanpages.button-unsubscribe");
+  const subscribeText = t("component:lists.fanpages.subscribe");
+  const unsubscribeText = t("component:lists.fanpages.unsubscribe");
   const emptyContent = t("component:lists.fanpages.empty-content");
   const noResult = t("component:lists.fanpages.no-result");
 
@@ -42,18 +43,19 @@ const Fanpages = ({
   }, []);
 
   useEffect(() => {
-    const { setNumber, number, idRef, setIdRef, id } = fanpage;
-    if (idRef)
+    const { setNumber, number, refId, setRefId, id, setTitle } = fanpage;
+    if (refId)
       axios
-        .post("/fanpage/user/delete", { subId: fanpage.idRef })
+        .post("/fanpage/user/delete", { subId: fanpage.refId })
         .then(() => {
-          if (userId == owner.id) {
+          if (userId == owner.id && !keyWords) {
             const newFanpages = fanpages.filter(
               (fanpage) => fanpage.fanpageId != id
             );
             setFanpages(newFanpages);
           } else {
-            setIdRef(null);
+            setTitle(subscribeText);
+            setRefId(null);
             setNumber(Number(number) - 1);
           }
         })
@@ -62,8 +64,9 @@ const Fanpages = ({
       axios
         .post("/fanpage/user/add", { fanpageId: fanpage.id })
         .then(({ data: { id } }) => {
+          setTitle(unsubscribeText);
           setNumber(Number(number) + 1);
-          setIdRef(id);
+          setRefId(id);
         })
         .catch(({ response: { data: message } }) => setError(message));
   }, [fanpage]);
@@ -89,19 +92,18 @@ const Fanpages = ({
     >
       <div className="list">
         {fanpages.map((fanpage) => {
-          const { fanpageId, name, photo, numberOfSubscribes } = fanpage;
+          const { fanpageId, subId, name, photo, numberOfSubscribes } = fanpage;
           const data = {
-            refType: "fanpage",
             id: fanpageId,
-            idRef: fanpage.subId || null,
+            refId: subId || null,
+            refType: "fanpage",
             photo,
             radiusPhoto: true,
             name,
             description,
             number: numberOfSubscribes,
-            button: "join",
-            subTitle: buttonSubscribe,
-            unsubTitle: buttonUnsubscribe,
+            buttonType: "join",
+            title: subId ? unsubscribeText : subscribeText,
             collapse: false,
           };
           return <Card data={data} key={fanpageId} handleClick={setFanpage} />;
@@ -122,5 +124,12 @@ const Fanpages = ({
     </InfiniteScroll>
   );
 };
+
+Fanpages.propTypes = {
+  userId: PropTypes.number.isRequired,
+  keyWords: PropTypes.string,
+  onlySubscribed: PropTypes.bool,
+  helpInformation: PropTypes.bool,
+}
 
 export default Fanpages;
