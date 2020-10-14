@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import cx from "classnames";
 import i18next from "@i18n";
 import Home from "./components/Home/Home";
@@ -37,5 +38,11 @@ const Content = ({ section, fanpageId, role }) => {
     </div>
   );
 };
+
+Content.propTypes = {
+  section: PropTypes.string,
+  fanpageId: PropTypes.number.isRequired,
+  role: PropTypes.string
+}
 
 export default Content;

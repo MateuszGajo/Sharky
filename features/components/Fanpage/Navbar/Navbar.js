@@ -1,4 +1,5 @@
 import React, { useContext, useRef, useEffect } from "react";
+import PropTypes from "prop-types";
 import axios from "axios";
 import cx from "classnames";
 import { useRouter } from "next/router";
@@ -181,5 +182,13 @@ const Navbar = ({ setIdSub, setSection, subId, role, fanpageId }) => {
     </div>
   );
 };
+
+Navbar.propTypes = {
+  setIdSub: PropTypes.func,
+  setSection: PropTypes.func,
+  subId: PropTypes.number,
+  role: PropTypes.string,
+  fanpageId: PropTypes.number.isRequired
+}
 
 export default Navbar;

@@ -64,8 +64,6 @@
     padding:0;
 }
 
-
-
 .fanpage__navbar__admin-panel__item__label{
     display:flex;
     justify-content: center;
@@ -119,6 +117,7 @@
         box-shadow: 0 0 2px 1px $shadowColor;
         z-index:2;
     }
+    
     .fanpage__navbar__subscribe--mobile__icon{
         display:flex;
         align-items: center;

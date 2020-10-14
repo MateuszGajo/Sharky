@@ -73,9 +73,9 @@ const Members = ({ fanpageId, role: permission }) => {
           {members.map((member) => {
             const { userId, subId, role, firstName, lastName, photo } = member;
             const data = {
-              refType: "profile",
               id: subId,
-              idRef: userId,
+              refId: userId,
+              refType: "profile",
               photo,
               radiusPhoto: false,
               name: `${firstName} ${lastName} ${
