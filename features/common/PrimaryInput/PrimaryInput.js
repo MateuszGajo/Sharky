@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import PropTypes from "prop-types";
 import cx from "classnames";
 
 const PrimaryInput = ({
@@ -38,8 +39,8 @@ const PrimaryInput = ({
 
   const hideList = (e) => {
     if (
-      e.target.className != "primary-input-container__autocomplete__item" &&
-      document.activeElement.className != "primary-input-container__input"
+      e.target.className != "primary-input__autocomplete__item" &&
+      document.activeElement.className != "primary-input__input"
     ) {
       setStatusOfFocus(false);
       removeEventListener("click", hideList);
@@ -68,7 +69,7 @@ const PrimaryInput = ({
   }, [autocompleteData]);
   return (
     <div
-      data-testid="primary-input"
+      data-testid="container"
       className={cx("primary-input", {
         "reset-margin": withOutMargin === true,
         "primary-input--x-large": size === "x-large",
@@ -80,30 +81,27 @@ const PrimaryInput = ({
       <input
         type={type}
         name={name}
-        className="primary-input-container__input"
+        className="primary-input__input"
         value={value}
         onChange={handleChange}
-        data-testid="primary-input"
+        data-testid="field"
         ref={inputRef}
         onClick={(e) => e.stopPropagation()}
         required={require}
       />
 
-      <h4 className="primary-input__title" data-testid="primary-input-title">
+      <h4 className="primary-input__title" data-testid="title">
         {title}
       </h4>
       <div
-        data-testid="input-primary-autocomplete"
-        className={cx(
-          "primary-input-container__autocomplete  primary-scroll--active",
-          {
-            "is-close": !isFocus,
-          }
-        )}
+        data-testid="autocomplete"
+        className={cx("primary-input__autocomplete  primary-scroll--active", {
+          "is-close": !isFocus,
+        })}
       >
         {autocompleteDataFiltered.map((item, index) => (
           <div
-            className="primary-input-container__autocomplete__item"
+            className="primary-input__autocomplete__item"
             key={index}
             onClick={() => {
               onChange(item.value);
@@ -111,7 +109,7 @@ const PrimaryInput = ({
               setStatusOfFocus(false);
             }}
           >
-            <span className="primary-input-container__autocomplete__item__span">
+            <span className="primary-input__autocomplete__item__span">
               {item.value}
             </span>
           </div>
@@ -120,5 +118,20 @@ const PrimaryInput = ({
     </div>
   );
 };
+
+PrimaryInput.propTypes = {
+  type: PropTypes.string,
+  onChange: PropTypes.func,
+  value: PropTypes.string,
+  name: PropTypes.string,
+  title: PropTypes.string,
+  autocompleteData: PropTypes.arrayOf(PropTypes.shape({
+    value:PropTypes.string,
+    name: PropTypes.string,
+  })),
+  withOutMargin: PropTypes.bool,
+  size: PropTypes.string,
+  require: PropTypes.bool
+}
 
 export default PrimaryInput;

@@ -35,8 +35,8 @@ from(
             b."numberOfShares",
             c."numberOfComments",
             d."numberOfLikes",
-            null as "shareId",
-            null as "postSharedUserId"
+            null::integer as "shareId",
+            null::integer as "postSharedUserId"
         from posts as a
             inner join numberOfShares as b on a.id = b."postId"
             inner join numberOfComments as c on a.id = c."postId"

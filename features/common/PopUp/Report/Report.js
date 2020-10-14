@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import PrimaryButton from "@common/PrimaryButton/PrimaryButton";
 import i18next from "@i18n";
 const { useTranslation } = i18next;
@@ -87,5 +88,10 @@ const Report = ({ type = "post", setStatusOfReport }) => {
     </section>
   );
 };
+
+Report.propTypes ={
+  type: PropTypes.string,
+  setStatusOfReport: PropTypes.func
+}
 
 export default Report;
