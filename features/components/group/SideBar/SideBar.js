@@ -49,7 +49,7 @@ const SideBar = ({
 
   const leaveGroup = () => {
     axios
-      .post("/group/leave", { memberId, groupId, role })
+      .post("/group/leave", { groupId })
       .then(() => {
         setIdMember(null);
       })

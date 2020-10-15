@@ -54,7 +54,11 @@ router.post("/about", async (req, res) => {
 });
 
 router.post("/leave", async (req, res) => {
-  const { memberId, groupId, role } = req.body;
+  const { groupId } = req.body;
+
+  if (!req.cookies.token) return res.status(401).json("unauthorized request");
+  const { error, id: ownerId } = decodeToken(req);
+  if (error) return res.status(401).json("unauthorized request");
 
   const getAdminsQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/admins.sql"))
@@ -62,22 +66,17 @@ router.post("/leave", async (req, res) => {
   const deleteMemberQuery = fs
     .readFileSync(path.join(__dirname, "./query/delete/user.sql"))
     .toString();
-  let admins;
 
-  if (role == "admin") {
-    admins = await client.query(getAdminsQuery, [groupId]);
-  }
+  try {
+    const { rowCount, rows } = await client.query(getAdminsQuery, [groupId]);
 
-  if (role != "admin" || admins.rowCount > 1) {
-    try {
-      await client.query(deleteMemberQuery, [memberId]);
-
+    if (rowCount > 1 || rows[0].userId != ownerId) {
+      await client.query(deleteMemberQuery, [groupId, ownerId]);
       res.status(200).json({ success: true });
-    } catch {
-      res.status(400).json("bad-request");
-    }
-  } else {
-    res.status(403).json("last-group-admin");
+    } else if (rowCount == 1) res.status(403).json("last-group-admin");
+    else res.status(400).json("bad-request");
+  } catch {
+    res.status(400).json("bad-request");
   }
 });
 
