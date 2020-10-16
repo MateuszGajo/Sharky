@@ -68,12 +68,12 @@ const Collapse = ({ collapseRef }) => {
     </div>
   );
 };
-
-Collapse.propTypes = {
-  collapseRef:PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({current:PropTypes.elementType})
-  ])
-}
+// const element = typeof Element === "undefined" ? function () {} : Element;
+// Collapse.propTypes = {
+//   collapseRef: PropTypes.oneOfType([
+//     PropTypes.func,
+//     PropTypes.shape({ current: PropTypes.instanceOf(element) }),
+//   ]),
+// };
 
 export default Collapse;

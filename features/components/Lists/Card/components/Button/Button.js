@@ -157,13 +157,13 @@ const Button = ({ collapseRef, title: primaryTitle, invitationType }) => {
   );
 };
 
-Button.propTypes = {
-  collapseRef:PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({current:PropTypes.elementType})
-  ]),
-  title:PropTypes.string,
-  invitationType:PropTypes.string
-}
+// Button.propTypes = {
+//   collapseRef:PropTypes.oneOfType([
+//     PropTypes.func,
+//     PropTypes.shape({current:PropTypes.elementType})
+//   ]),
+//   title:PropTypes.string,
+//   invitationType:PropTypes.string
+// }
 
 export default Button;

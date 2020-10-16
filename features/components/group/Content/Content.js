@@ -6,7 +6,7 @@ import Members from "./components/Members/Members";
 import Home from "./components/Home/Home";
 import i18next from "@i18n";
 
-const {useTranslation} = i18next;
+const { useTranslation } = i18next;
 
 const Content = ({
   section,
@@ -18,7 +18,7 @@ const Content = ({
   groupName,
   startingDate,
 }) => {
-  const {t} = useTranslation(["group"]);
+  const { t } = useTranslation(["group"]);
 
   const noPermission = t("group:content.no-permission");
   const renderComponent = (name) => {
@@ -32,7 +32,6 @@ const Content = ({
             role={role}
             memberId={memberId}
             setNumberOfMembers={setNumberOfMembers}
-            numberOfMembers={numberOfMembers}
           />
         );
       case "about":
@@ -63,7 +62,7 @@ const Content = ({
   );
 };
 
-Content.propTypes= {
+Content.propTypes = {
   section: PropTypes.string,
   groupId: PropTypes.number,
   role: PropTypes.string,
@@ -71,7 +70,7 @@ Content.propTypes= {
   setNumberOfMembers: PropTypes.func,
   numberOfMembers: PropTypes.number,
   groupName: PropTypes.string,
-  startingDate: PropTypes.string
-}
+  startingDate: PropTypes.string,
+};
 
 export default Content;

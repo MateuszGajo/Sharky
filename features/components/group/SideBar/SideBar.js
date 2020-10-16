@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import PropTypes from "prop-types";
-import {AiOutlineMinus, AiOutlineDelete } from "react-icons/ai";
-import {GoPlus} from "react-icons/go"
+import { AiOutlineMinus, AiOutlineDelete } from "react-icons/ai";
+import { GoPlus } from "react-icons/go";
 import cx from "classnames";
 import { useRouter } from "next/router";
 import axios from "axios";
@@ -50,18 +50,14 @@ const SideBar = ({
   const leaveGroup = () => {
     axios
       .post("/group/leave", { groupId })
-      .then(() => {
-        setIdMember(null);
-      })
+      .then(() => setIdMember(null))
       .catch(({ response: { data: message } }) => setError(message));
   };
 
   const deleteGroup = () => {
     axios
       .post("/group/delete", { groupId })
-      .then(() => {
-        router.push("/");
-      })
+      .then(() => router.push("/"))
       .catch(({ response: { data: message } }) => setError(message));
   };
 
@@ -91,20 +87,20 @@ const SideBar = ({
       <div className="group__container__side-bar--fixed">
         <div className="group__container__side-bar__group-info">
           <div className="group__container__side-bar__group-info__photo">
-            {role== 'admin' && (
+            {role == "admin" && (
               <div className="group__container__side-bar__group-info__photo__overlay">
-              <label htmlFor="group-photo-change">
-                <div className="group__container__side-bar__group-info__photo--overlay__button">
-                  {changePhotoText}
-                </div>
-              </label>
-              <input
-                type="file"
-                name="file"
-                id="group-photo-change"
-                onChange={handlePhotoChange}
-              />
-            </div>
+                <label htmlFor="group-photo-change">
+                  <div className="group__container__side-bar__group-info__photo--overlay__button">
+                    {changePhotoText}
+                  </div>
+                </label>
+                <input
+                  type="file"
+                  name="file"
+                  id="group-photo-change"
+                  onChange={handlePhotoChange}
+                />
+              </div>
             )}
             <img
               src={`/static/images/${photo}`}
@@ -212,7 +208,7 @@ const SideBar = ({
   );
 };
 
-SideBar.propTypes= {
+SideBar.propTypes = {
   setSection: PropTypes.func,
   setStatusOfPopUp: PropTypes.func,
   groupName: PropTypes.string,
@@ -223,7 +219,7 @@ SideBar.propTypes= {
   role: PropTypes.string,
   groupId: PropTypes.number.isRequired,
   photo: PropTypes.string,
-  setPhoto: PropTypes.func
-}
+  setPhoto: PropTypes.func,
+};
 
 export default SideBar;

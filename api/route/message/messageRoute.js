@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post("/get", async (req, res) => {
   const { chatId } = req.body;
-  const { id, firstName, lastName, photo } = decodeToken(req);
+  const { id, firstName, lastName, photo } = decodeToken(req.cookies.token);
 
   const getMessagesQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/messages.sql"))

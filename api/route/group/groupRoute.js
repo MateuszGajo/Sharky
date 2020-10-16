@@ -1,13 +1,14 @@
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
+const multer = require("multer");
 const { client } = require("../../../config/pgAdaptor");
 const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
 
 router.post("/enter", async (req, res) => {
   const { groupId } = req.body;
-  const { id: ownerId } = decodeToken(req);
+  const { id: ownerId } = decodeToken(req.cookies.token);
 
   const getPrimaryInfoQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/primaryInfo.sql"))
@@ -55,10 +56,10 @@ router.post("/about", async (req, res) => {
 
 router.post("/leave", async (req, res) => {
   const { groupId } = req.body;
+  if (!/^[0-9]*$/.test(groupId)) return res.status(400).json("invalid-data");
 
-  if (!req.cookies.token) return res.status(401).json("unauthorized request");
-  const { error, id: ownerId } = decodeToken(req);
-  if (error) return res.status(401).json("unauthorized request");
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const getAdminsQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/admins.sql"))
@@ -72,6 +73,7 @@ router.post("/leave", async (req, res) => {
 
     if (rowCount > 1 || rows[0].userId != ownerId) {
       await client.query(deleteMemberQuery, [groupId, ownerId]);
+
       res.status(200).json({ success: true });
     } else if (rowCount == 1) res.status(403).json("last-group-admin");
     else res.status(400).json("bad-request");
@@ -82,7 +84,14 @@ router.post("/leave", async (req, res) => {
 
 router.post("/delete", async (req, res) => {
   const { groupId } = req.body;
+  if (!/^[0-9]*$/.test(groupId)) return res.status(400).json("invalid-data");
 
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
+
+  const getAdminQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/admin.sql"))
+    .toString();
   const deleteGroupQuery = fs
     .readFileSync(path.join(__dirname, "./query/delete/group.sql"))
     .toString();
@@ -91,6 +100,8 @@ router.post("/delete", async (req, res) => {
     .toString();
 
   try {
+    const { rowCount } = await client.query(getAdminQuery, [ownerId, groupId]);
+    if (rowCount == 0) res.status(403).json("no-permission");
     await client.query(deleteGroupQuery, [groupId]);
     await client.query(deleteUsersQuery, [groupId]);
 
@@ -118,7 +129,7 @@ router.post("/member/get", async (req, res) => {
 
 router.post("/get", async (req, res) => {
   const { from, userId, keyWords, onlySubscribed } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req.cookies.token);
 
   const getGroupsQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/groups.sql"))
@@ -173,7 +184,8 @@ router.post("/get", async (req, res) => {
 
 router.post("/create", async (req, res) => {
   const { name, description } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const date = new Date();
   const createGroupQuery = fs
@@ -189,7 +201,7 @@ router.post("/create", async (req, res) => {
       description,
       date,
     ]);
-    await client.query(addAdminQuery, [rows[0].id, onwerId, date]);
+    await client.query(addAdminQuery, [rows[0].id, ownerId, date]);
 
     res.status(200).json({ id: rows[0].id });
   } catch {
@@ -199,7 +211,8 @@ router.post("/create", async (req, res) => {
 
 router.post("/user/add", async (req, res) => {
   const { groupId } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const role = "member";
   const date = new Date();
@@ -213,14 +226,14 @@ router.post("/user/add", async (req, res) => {
   try {
     const { rows: addUser } = await client.query(addUserQuery, [
       groupId,
-      onwerId,
+      ownerId,
       role,
       date,
     ]);
 
     let id;
     if (!addUser[0]) {
-      const { rows } = await client.query(getUserIdQuery, [groupId, onwerId]);
+      const { rows } = await client.query(getUserIdQuery, [groupId, ownerId]);
       id = rows[0].id;
     } else {
       id = addUser[0].id;
@@ -233,14 +246,22 @@ router.post("/user/add", async (req, res) => {
 });
 
 router.post("/user/delete", async (req, res) => {
-  const { subId } = req.body;
+  const { groupId, userId } = req.body;
 
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
+
+  const getAdminQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/admin.sql"))
+    .toString();
   const deleteUserQuery = fs
     .readFileSync(path.join(__dirname, "./query/delete/user.sql"))
     .toString();
 
   try {
-    await client.query(deleteUserQuery, [subId]);
+    const { rowCount } = await client.query(getAdminQuery, [ownerId, groupId]);
+    if (rowCount == 0) res.status(403).json("no-permission");
+    await client.query(deleteUserQuery, [groupId, userId]);
 
     res.status(200).json({ success: true });
   } catch {
@@ -265,6 +286,9 @@ router.post("/user/invite", async (req, res) => {
 });
 
 router.post("/change/photo", async (req, res) => {
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
+
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
       cb(null, "./public/static/images");
@@ -297,8 +321,16 @@ router.post("/change/photo", async (req, res) => {
     const changeGroupPhotoQuery = fs
       .readFileSync(path.join(__dirname, "./query/update/groupPhoto.sql"))
       .toString();
+    const getAdminQuery = fs
+      .readFileSync(path.join(__dirname, "./query/get/admin.sql"))
+      .toString();
 
     try {
+      const { rowCount } = await client.query(getAdminQuery, [
+        ownerId,
+        groupId,
+      ]);
+      if (rowCount == 0) return res.status(403).json("no-permission");
       await client.query(changeGroupPhotoQuery, [fileName, groupId]);
       res.status(200).json({ fileName });
     } catch {

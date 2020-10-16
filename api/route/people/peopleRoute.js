@@ -14,7 +14,7 @@ router.post("/get", async (req, res) => {
       return res.status(200).json({ friends: [], isMore: false });
   }
 
-  const { id: onwerId } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req.cookies.token);
 
   const getFriendsQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/friends.sql"))

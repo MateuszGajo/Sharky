@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post("/add", async (req, res) => {
   const { postId, content, date } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req.cookies.token);
 
   const addCommentQuery = fs
     .readFileSync(path.join(__dirname, "./query/add/comment.sql"))
@@ -30,7 +30,7 @@ router.post("/add", async (req, res) => {
 
 router.post("/get", async (req, res) => {
   const { from, postId } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req.cookies.token);
 
   const getCommentsQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/comments/sql"))
@@ -58,7 +58,7 @@ router.post("/get", async (req, res) => {
 
 router.post("/like", async (req, res) => {
   const { commnetId } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req.cookies.token);
 
   const likeCommentQuery = fs
     .readFileSync(path.join(__dirname, "./query/add/like.sql"))

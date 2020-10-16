@@ -67,7 +67,7 @@ router.post("/get/language", async (req, res) => {
 
 router.post("/mute", async (req, res) => {
   const { idMuteUser } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req.cookies.token);
 
   const muteUserQuery = fs
     .readFileSync(path.join(__dirname, "./query/add/muteUser.sql"))
@@ -85,7 +85,7 @@ router.post("/mute", async (req, res) => {
 
 router.post("/block", async (req, res) => {
   const { userId } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req.cookies.token);
 
   const deleteFriendQuery = fs
     .readFileSync(path.join(__dirname, "./query/delete/friend.sql"))
@@ -110,7 +110,7 @@ router.post("/block", async (req, res) => {
 });
 
 router.get("/logout", async (req, res) => {
-  const { id: onwerId } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req.cookies.token);
   res.clearCookie("token");
   res.status(200).json({ userId: onwerId });
 });
@@ -127,7 +127,7 @@ router.get("/me", (req, res) => {
 
 router.post("/check/password", async (req, res) => {
   const { password } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req.cookies.token);
 
   const getPasswordQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/password.sql"))

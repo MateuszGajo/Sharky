@@ -8,7 +8,7 @@ const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
 
 router.post("/add", async (req, res) => {
-  const { id: onwerId } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req.cookies.token);
 
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -97,7 +97,7 @@ router.post("/add", async (req, res) => {
 
 router.post("/get", async (req, res) => {
   const { from, fanpageId, groupId, news, userId, authorPost } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req.cookies.token);
 
   const getFanpagePostsQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/fanpagePosts.sql"))
@@ -170,7 +170,7 @@ router.post("/get", async (req, res) => {
 
 router.post("/get/single", async (req, res) => {
   const { postId } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req.cookies.token);
 
   const getPostQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/post.sql"))
@@ -222,7 +222,7 @@ router.post("/get/single", async (req, res) => {
 
 router.post("/like", async (req, res) => {
   const { postId } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req.cookies.token);
 
   const likePostQuery = fs
     .readFileSync(path.join(__dirname, "./query/add/like.sql"))
@@ -266,7 +266,7 @@ router.post("/unlike", async (req, res) => {
 
 router.post("/share", async (req, res) => {
   const { postId, date } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req.cookies.token);
 
   const postShareQuery = fs
     .readFileSync(path.join(__dirname, "./query/add/sharePost.sql"))

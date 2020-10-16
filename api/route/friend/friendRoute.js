@@ -6,7 +6,7 @@ const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
 
 router.get("/get", async (req, res) => {
-  const { id: onwerId } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req.cookies.token);
 
   const getChatsQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/chats.sql"))
@@ -22,7 +22,7 @@ router.get("/get", async (req, res) => {
 
 router.post("/add", async (req, res) => {
   const { userId } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req.cookies.token);
 
   const getFriendshipIdQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/friendshipId.sql"))
@@ -128,7 +128,7 @@ router.post("/get/people", async (req, res) => {
       return res.status(200).json({ friends: [], isMore: false });
   }
 
-  const { id: onwerId } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req.cookies.token);
 
   const getFriendsQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/friends.sql"))

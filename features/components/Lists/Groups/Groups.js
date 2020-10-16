@@ -58,7 +58,7 @@ const Groups = ({
     const { number, setNumber, refId, setRefId, id, setTitle } = group;
     if (refId)
       axios
-        .post("/group/user/delete", { subId: group.refId })
+        .post("/group/leave", { groupId: id })
         .then(() => {
           if (userId == owner.id && !keyWords) {
             const newGroups = groups.filter((group) => group.groupId != id);

@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post("/get", async (req, res) => {
   const { from, userId, keyWords, onlySubscribed } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req.cookies.token);
 
   const getFanpagesQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/fanpages.sql"))
@@ -66,7 +66,7 @@ router.post("/get", async (req, res) => {
 
 router.post("/create", async (req, res) => {
   const { name, description } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req.cookies.token);
 
   const date = new Date();
   const createFanpageQuery = fs
@@ -93,7 +93,7 @@ router.post("/create", async (req, res) => {
 
 router.post("/user/add", async (req, res) => {
   const { fanpageId } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  const { id: onwerId } = decodeToken(req.cookies.token);
 
   const role = "user";
   const addUserQuery = fs
