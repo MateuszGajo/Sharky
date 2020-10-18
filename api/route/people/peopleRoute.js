@@ -14,7 +14,7 @@ router.post("/get", async (req, res) => {
       return res.status(200).json({ friends: [], isMore: false });
   }
 
-  const { id: onwerId } = decodeToken(req);
+  const { id: ownerId } = decodeToken(req.cookies.token);
 
   const getFriendsQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/friends.sql"))
@@ -27,7 +27,7 @@ router.post("/get", async (req, res) => {
   if (!keyWords) {
     try {
       if (type == "group")
-        result = await client.query(getFriendsQuery, [onwerId, targetId, from]);
+        result = await client.query(getFriendsQuery, [ownerId, targetId, from]);
     } catch {
       return res.status(400).json("bad-request");
     }

@@ -46,7 +46,7 @@ const Fanpages = ({
     const { setNumber, number, refId, setRefId, id, setTitle } = fanpage;
     if (refId)
       axios
-        .post("/fanpage/user/delete", { subId: fanpage.refId })
+        .post("/fanpage/unsubscribe", { fanpageId: id })
         .then(() => {
           if (userId == owner.id && !keyWords) {
             const newFanpages = fanpages.filter(
@@ -62,7 +62,7 @@ const Fanpages = ({
         .catch(({ response: { data: message } }) => setError(message));
     else if (id)
       axios
-        .post("/fanpage/user/add", { fanpageId: fanpage.id })
+        .post("/fanpage/subscribe", { fanpageId: fanpage.id })
         .then(({ data: { id } }) => {
           setTitle(unsubscribeText);
           setNumber(Number(number) + 1);
@@ -130,6 +130,6 @@ Fanpages.propTypes = {
   keyWords: PropTypes.string,
   onlySubscribed: PropTypes.bool,
   helpInformation: PropTypes.bool,
-}
+};
 
 export default Fanpages;

@@ -67,7 +67,7 @@ router.post("/get/language", async (req, res) => {
 
 router.post("/mute", async (req, res) => {
   const { idMuteUser } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  const { id: ownerId } = decodeToken(req.cookies.token);
 
   const muteUserQuery = fs
     .readFileSync(path.join(__dirname, "./query/add/muteUser.sql"))
@@ -75,7 +75,7 @@ router.post("/mute", async (req, res) => {
   const date = new Date();
 
   try {
-    await client.query(muteUserQuery, [onwerId, idMuteUser, date]);
+    await client.query(muteUserQuery, [ownerId, idMuteUser, date]);
 
     res.status(200).json({ success: true });
   } catch {
@@ -85,7 +85,7 @@ router.post("/mute", async (req, res) => {
 
 router.post("/block", async (req, res) => {
   const { userId } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  const { id: ownerId } = decodeToken(req.cookies.token);
 
   const deleteFriendQuery = fs
     .readFileSync(path.join(__dirname, "./query/delete/friend.sql"))
@@ -99,9 +99,9 @@ router.post("/block", async (req, res) => {
   const date = new Date();
 
   try {
-    await client.query(deleteFriendQuery, [onwerId, userId]);
-    await client.query(muteUserQuery, [onwerId, userId, date]);
-    await client.query(blockUserQuery, [onwerId, userId, date]);
+    await client.query(deleteFriendQuery, [ownerId, userId]);
+    await client.query(muteUserQuery, [ownerId, userId, date]);
+    await client.query(blockUserQuery, [ownerId, userId, date]);
 
     res.status(200).json({ success: true });
   } catch {
@@ -110,9 +110,9 @@ router.post("/block", async (req, res) => {
 });
 
 router.get("/logout", async (req, res) => {
-  const { id: onwerId } = decodeToken(req);
+  const { id: ownerId } = decodeToken(req.cookies.token);
   res.clearCookie("token");
-  res.status(200).json({ userId: onwerId });
+  res.status(200).json({ userId: ownerId });
 });
 
 router.get("/me", (req, res) => {
@@ -127,14 +127,14 @@ router.get("/me", (req, res) => {
 
 router.post("/check/password", async (req, res) => {
   const { password } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  const { id: ownerId } = decodeToken(req.cookies.token);
 
   const getPasswordQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/password.sql"))
     .toString();
 
   try {
-    const { rows } = await client.query(getPasswordQuery, [onwerId]);
+    const { rows } = await client.query(getPasswordQuery, [ownerId]);
 
     await bcrypt.compare(password, rows[0].password, function (err, result) {
       if (result) {

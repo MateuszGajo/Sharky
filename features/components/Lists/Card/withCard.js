@@ -4,7 +4,13 @@ import CardContext from "./context/CardContext";
 
 const withCard = (Component) => {
   const Wrapped = (props) => {
-    const { data, setRelation, handleClick, setInvite } = props;
+    const {
+      data,
+      setRelation,
+      handleClick,
+      handleCollapseClick,
+      setInvite,
+    } = props;
     const {
       refType,
       refId: initialRefId,
@@ -64,18 +70,19 @@ const withCard = (Component) => {
           deleteText,
           setStatusOfInvited,
           secondTitle,
+          handleCollapseClick,
         }}
       >
         <Component {...props} />
       </CardContext.Provider>
     );
   };
- 
+
   Wrapped.propTypes = {
-    data:PropTypes.shape({
-      id:PropTypes.number,
-      refId:PropTypes.number.isRequired,
-      refType:PropTypes.string.isRequired,
+    data: PropTypes.shape({
+      id: PropTypes.number,
+      refId: PropTypes.number.isRequired,
+      refType: PropTypes.string.isRequired,
       photo: PropTypes.string.isRequired,
       isInvited: PropTypes.bool,
       isInvitationSent: PropTypes.bool,
@@ -88,27 +95,26 @@ const withCard = (Component) => {
       secondTitle: PropTypes.string,
       deleteText: PropTypes.string,
       buttonName: PropTypes.string,
-      collapse:PropTypes.bool,
-      collapseItems:PropTypes.shape({
-        pink:PropTypes.shape({
+      collapse: PropTypes.bool,
+      collapseItems: PropTypes.shape({
+        pink: PropTypes.shape({
           name: PropTypes.string,
-          title: PropTypes.string
+          title: PropTypes.string,
         }),
-        blue:PropTypes.shape({
+        blue: PropTypes.shape({
           name: PropTypes.string,
-          title: PropTypes.string
+          title: PropTypes.string,
         }),
-        green:PropTypes.shape({
+        green: PropTypes.shape({
           name: PropTypes.string,
-          title: PropTypes.string
-        })
-      })
-
+          title: PropTypes.string,
+        }),
+      }),
     }),
     setRelation: PropTypes.func,
     handleClick: PropTypes.func,
-    setInvite: PropTypes.func
-  }
+    setInvite: PropTypes.func,
+  };
 
   return Wrapped;
 };

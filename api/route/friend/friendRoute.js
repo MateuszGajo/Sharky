@@ -1,19 +1,20 @@
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
+const { composeInitialProps } = require("react-i18next");
 const { client } = require("../../../config/pgAdaptor");
 const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
 
 router.get("/get", async (req, res) => {
-  const { id: onwerId } = decodeToken(req);
+  const { id: ownerId } = decodeToken(req.cookies.token);
 
   const getChatsQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/chats.sql"))
     .toString();
 
   try {
-    const friends = await client.query(getChatsQuery, [onwerId]);
+    const friends = await client.query(getChatsQuery, [ownerId]);
     res.status(200).json({ friends: friends.rows });
   } catch {
     res.status(400).json("bad-request");
@@ -22,7 +23,7 @@ router.get("/get", async (req, res) => {
 
 router.post("/add", async (req, res) => {
   const { userId } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  const { id: ownerId } = decodeToken(req.cookies.token);
 
   const getFriendshipIdQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/friendshipId.sql"))
@@ -33,14 +34,14 @@ router.post("/add", async (req, res) => {
 
   try {
     const { rows } = await client.query(getFriendshipIdQuery, [
-      onwerId,
+      ownerId,
       userId,
     ]);
     if (rows[0]) {
       return res.status(200).json({ friendshipId: rows[0].id });
     }
     const { rows: addUser } = await client.query(addUserQuery, [
-      onwerId,
+      ownerId,
       userId,
     ]);
 
@@ -128,7 +129,7 @@ router.post("/get/people", async (req, res) => {
       return res.status(200).json({ friends: [], isMore: false });
   }
 
-  const { id: onwerId } = decodeToken(req);
+  const { id: ownerId } = decodeToken(req.cookies.token);
 
   const getFriendsQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/friends.sql"))
@@ -145,7 +146,7 @@ router.post("/get/people", async (req, res) => {
     try {
       result = await client.query(getFriendsQuery, [
         userId,
-        onwerId,
+        ownerId,
         from,
         onlyFriends,
       ]);
@@ -158,14 +159,14 @@ router.post("/get/people", async (req, res) => {
         result = await client.query(getFriendsSortedQuery, [
           keyWords[0] + "%",
           (keyWords[1] ? keyWords[1] : "") + "%",
-          onwerId,
+          ownerId,
           from,
         ]);
       else
         result = await client.query(getUserSortedQuery, [
           keyWords[0] + "%",
           (keyWords[1] ? keyWords[1] : "") + "%",
-          onwerId,
+          ownerId,
           from,
         ]);
     } catch {

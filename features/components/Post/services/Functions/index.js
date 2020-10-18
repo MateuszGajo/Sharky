@@ -86,6 +86,7 @@ export const getPosts = ({
   axios
     .post("/post/get", { from, groupId, fanpageId, news, authorPost, userId })
     .then(async ({ data: { posts: p, comments, isMorePosts } }) => {
+      console.log(typeof p[0].date);
       await getUsers(users, setUsers, [...p, ...comments]);
       const commentsKey = {};
       for (let i = 0; i < comments.length; i++) {
@@ -316,7 +317,6 @@ export const getComments = ({
 export const addComent = ({
   postId,
   content,
-  date,
   clearText,
   setNewComment,
   setError,
@@ -325,13 +325,12 @@ export const addComent = ({
     .post("/comment/add", {
       postId,
       content,
-      date,
     })
-    .then(({ data: { commnetId } }) => {
+    .then(({ data: { commentId, date } }) => {
       setNewComment({
         content,
         idElement: postId,
-        commnetId,
+        commentId,
         type: "post",
         date,
       });
@@ -345,13 +344,13 @@ export const addComent = ({
     });
 };
 
-export const likeComment = ({ commnetId, setNewLike, setError }) => {
+export const likeComment = ({ commentId, setNewLike, setError }) => {
   axios
-    .post("/comment/like", { commnetId })
+    .post("/comment/like", { commentId })
     .then(({ data: { likeId } }) => {
       setNewLike({
         likeId,
-        idElement: commnetId,
+        idElement: commentId,
         type: "comment",
       });
     })
@@ -363,11 +362,11 @@ export const likeComment = ({ commnetId, setNewLike, setError }) => {
     });
 };
 
-export const unlikeComment = ({ likeId, commnetId, setNewLike, setError }) => {
+export const unlikeComment = ({ likeId, commentId, setNewLike, setError }) => {
   axios
-    .post("/comment/unlike", { likeId })
+    .post("/comment/unlike", { commentId })
     .then((resp) =>
-      setNewLike({ likeId: null, idElement: commnetId, type: "comment" })
+      setNewLike({ likeId: null, idElement: commentId, type: "comment" })
     )
     .catch((err) => {
       const {
@@ -378,7 +377,7 @@ export const unlikeComment = ({ likeId, commnetId, setNewLike, setError }) => {
 };
 
 export const getReplies = async ({
-  commnetId,
+  commentId,
   from,
   replies,
   setReplies,
@@ -388,7 +387,7 @@ export const getReplies = async ({
 }) => {
   axios
     .post("/reply/get", {
-      commnetId,
+      commentId,
       from,
     })
     .then(async ({ data: { replies: r, isMore } }) => {
@@ -399,7 +398,7 @@ export const getReplies = async ({
 };
 
 export const addReply = ({
-  commnetId,
+  commentId,
   content,
   date,
   clearText,
@@ -408,14 +407,14 @@ export const addReply = ({
 }) => {
   axios
     .post("/reply/add", {
-      commnetId,
+      commentId,
       content,
       date,
     })
     .then(({ data: { replyId } }) => {
       setNewComment({
         content,
-        idElement: commnetId,
+        idElement: commentId,
         replyId,
         type: "comment",
         date,

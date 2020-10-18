@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import PropTypes from "prop-types"
+import PropTypes from "prop-types";
 import Card from "../Card/Card";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -36,6 +36,7 @@ const People = ({
   const [relation, setRelation] = useState({ id: null, name: "" });
   const [friends, setFriends] = useState([]);
   const [friend, setFriend] = useState({ id: null, name: "", refId: null });
+  const [removeFriends, setRemoveFriend] = useState({});
   const [isMore, setStatusOfMore] = useState(false);
   const [invite, setInvite] = useState({ inviteType: "", idRelation: null });
 
@@ -122,37 +123,32 @@ const People = ({
   }, [keyWords]);
 
   useEffect(() => {
-    const {
-      setNumber,
-      number,
-      refId,
-      setRefId,
-      id,
-      setStatusOfInvitation,
-    } = friend;
+    const { id, setStatusOfInvitation } = friend;
+    if (id)
+      axios
+        .post("/friend/add", { userId: id })
+        .then(() => setStatusOfInvitation(true))
+        .catch(({ response: { data: message } }) => setError(message));
+  }, [friend]);
+
+  useEffect(() => {
+    const { setNumber, refId, setRefId } = removeFriends;
     if (refId)
       axios
-        .post("/friend/delete", { friendshipId: friend.refId })
+        .post("/friend/delete", { friendshipId: refId })
         .then(() => {
           if (userId == owner.id) {
             const newFriends = friends.filter((item) => {
-              return item.friendshipId != friend.refId;
+              return item.friendshipId != refId;
             });
             setFriends(newFriends);
           } else {
             setRefId(null);
-            setNumber(prev=>prev - 1);
+            setNumber((prev) => prev - 1);
           }
         })
         .catch(({ response: { data: message } }) => setError(message));
-    else if (id)
-      axios
-        .post("/friend/add", { userId: id })
-        .then(() => {
-          setStatusOfInvitation(true);
-        })
-        .catch(({ response: { data: message } }) => setError(message));
-  }, [friend]);
+  }, [removeFriends]);
 
   useEffect(() => {
     fetchData(0);
@@ -186,7 +182,7 @@ const People = ({
             : !relation
             ? addText
             : t(`component:lists.people.${relation}`);
-            
+
           const data = {
             id,
             refId: friendshipId,
@@ -225,6 +221,7 @@ const People = ({
               key={id}
               setRelation={setRelation}
               handleClick={setFriend}
+              handleCollapseClick={setRemoveFriend}
               setInvite={setInvite}
             />
           );
@@ -251,6 +248,6 @@ People.propTypes = {
   keyWords: PropTypes.string,
   onlySubscribed: PropTypes.bool,
   helpInformation: PropTypes.bool,
-}
+};
 
 export default People;

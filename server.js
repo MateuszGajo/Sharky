@@ -38,9 +38,9 @@ socketIO.sockets.on("connection", (socket) => {
     const token = cookie.parse(socket.handshake.headers.cookie).token;
 
     const {
-      data: { id: onwerId },
+      data: { id: ownerId },
     } = jwt.verify(token, jwtSecret);
-    userJoin(onwerId, socket.id);
+    userJoin(ownerId, socket.id);
   });
 
   socket.on(
@@ -112,7 +112,7 @@ socketIO.sockets.on("connection", (socket) => {
     const token = cookie.parse(socket.handshake.headers.cookie).token;
 
     const {
-      data: { id: onwerId },
+      data: { id: ownerId },
     } = jwt.verify(token, jwtSecret);
 
     const getChatsQuery = fs
@@ -121,7 +121,7 @@ socketIO.sockets.on("connection", (socket) => {
       )
       .toString();
 
-    const { rows: chats } = await client.query(getChatsQuery, [onwerId]);
+    const { rows: chats } = await client.query(getChatsQuery, [ownerId]);
     for (let i = 0; i < chats.length; i++) {
       socket.join("chat" + chats[i].chatId);
     }
@@ -136,10 +136,10 @@ socketIO.sockets.on("connection", (socket) => {
 
     if (token) {
       const {
-        data: { id: onwerId },
+        data: { id: ownerId },
       } = jwt.verify(token, jwtSecret);
 
-      userLeave(onwerId, socket.id);
+      userLeave(ownerId, socket.id);
     }
   });
 });

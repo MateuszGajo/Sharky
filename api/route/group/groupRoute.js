@@ -7,7 +7,9 @@ const router = express.Router();
 
 router.post("/get", async (req, res) => {
   const { from, userId, keyWords, onlySubscribed } = req.body;
-  const { id: onwerId } = decodeToken(req);
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const getGroupsQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/groups.sql"))
@@ -24,7 +26,7 @@ router.post("/get", async (req, res) => {
 
   if (!keyWords) {
     try {
-      getGroups = await client.query(getGroupsQuery, [userId, onwerId, from]);
+      getGroups = await client.query(getGroupsQuery, [userId, ownerId, from]);
     } catch {
       return res.status(400).json("bad-request");
     }
@@ -34,13 +36,13 @@ router.post("/get", async (req, res) => {
         getGroups = await client.query(getGroupsSortedSubscirbedQuery, [
           userId,
           `%${keyWords}%`,
-          onwerId,
+          ownerId,
           from,
         ]);
       else
         getGroups = await client.query(getGroupsSortedQuery, [
           `%${keyWords}%`,
-          onwerId,
+          ownerId,
           from,
         ]);
     } catch {
@@ -62,7 +64,8 @@ router.post("/get", async (req, res) => {
 
 router.post("/create", async (req, res) => {
   const { name, description } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const date = new Date();
   const createGroupQuery = fs
@@ -78,7 +81,7 @@ router.post("/create", async (req, res) => {
       description,
       date,
     ]);
-    await client.query(addAdminQuery, [rows[0].id, onwerId, date]);
+    await client.query(addAdminQuery, [rows[0].id, ownerId, date]);
 
     res.status(200).json({ id: rows[0].id });
   } catch {
@@ -88,7 +91,8 @@ router.post("/create", async (req, res) => {
 
 router.post("/user/add", async (req, res) => {
   const { groupId } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const role = "member";
   const date = new Date();
@@ -102,36 +106,20 @@ router.post("/user/add", async (req, res) => {
   try {
     const { rows: addUser } = await client.query(addUserQuery, [
       groupId,
-      onwerId,
+      ownerId,
       role,
       date,
     ]);
 
     let id;
     if (!addUser[0]) {
-      const { rows } = await client.query(getUserIdQuery, [groupId, onwerId]);
+      const { rows } = await client.query(getUserIdQuery, [groupId, ownerId]);
       id = rows[0].id;
     } else {
       id = addUser[0].id;
     }
 
     res.status(200).json({ id });
-  } catch {
-    res.status(400).json("bad-request");
-  }
-});
-
-router.post("/user/delete", async (req, res) => {
-  const { subId } = req.body;
-
-  const deleteUserQuery = fs
-    .readFileSync(path.join(__dirname, "./query/delete/user.sql"))
-    .toString();
-
-  try {
-    await client.query(deleteUserQuery, [subId]);
-
-    res.status(200).json({ success: true });
   } catch {
     res.status(400).json("bad-request");
   }

@@ -8,7 +8,7 @@ const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
 
 router.post("/add", async (req, res) => {
-  const { id: onwerId } = decodeToken(req);
+  const { id: ownerId } = decodeToken(req.cookies.token);
 
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -57,7 +57,7 @@ router.post("/add", async (req, res) => {
     try {
       if (groupId)
         newPost = await client.query(addGroupPostQuery, [
-          onwerId,
+          ownerId,
           groupId,
           content,
           date,
@@ -65,7 +65,7 @@ router.post("/add", async (req, res) => {
         ]);
       else if (fanpageId)
         newPost = await client.query(addFanpagePostQuery, [
-          onwerId,
+          ownerId,
           fanpageId,
           content,
           date,
@@ -73,14 +73,14 @@ router.post("/add", async (req, res) => {
         ]);
       else if (news)
         newPost = await client.query(addNewsQuery, [
-          onwerId,
+          ownerId,
           content,
           date,
           fileName,
         ]);
       else
         newPost = await client.query(addPostQuery, [
-          onwerId,
+          ownerId,
           content,
           date,
           fileName,
@@ -97,7 +97,7 @@ router.post("/add", async (req, res) => {
 
 router.post("/get", async (req, res) => {
   const { from, fanpageId, groupId, news, userId, authorPost } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  const { id: ownerId } = decodeToken(req.cookies.token);
 
   const getFanpagePostsQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/fanpagePosts.sql"))
@@ -123,30 +123,30 @@ router.post("/get", async (req, res) => {
     if (fanpageId)
       postsResult = await client.query(getFanpagePostsQuery, [
         fanpageId,
-        onwerId,
+        ownerId,
         from,
       ]);
     else if (groupId)
       postsResult = await client.query(getGroupPostsQuery, [
         groupId,
-        onwerId,
+        ownerId,
         from,
       ]);
     else if (authorPost)
       postsResult = await client.query(getUserPostsQuery, [
         userId,
-        onwerId,
+        ownerId,
         from,
       ]);
     else if (news)
-      postsResult = await client.query(getNewsQuery, [onwerId, from]);
-    else postsResult = await client.query(getPostsQuery, [onwerId, from]);
+      postsResult = await client.query(getNewsQuery, [ownerId, from]);
+    else postsResult = await client.query(getPostsQuery, [ownerId, from]);
 
     const postIds = [];
     for (let i = 0; i < postsResult.rows.length; i++) {
       postIds.push(postsResult.rows[i].postId);
     }
-    commentsResult = await client.query(getCommentsQuery, [postIds, onwerId]);
+    commentsResult = await client.query(getCommentsQuery, [postIds, ownerId]);
   } catch {
     res.status(400).json("bad-request");
   }
@@ -161,7 +161,7 @@ router.post("/get", async (req, res) => {
     posts = posts.slice(0, -1);
   }
 
-  return res.status(200).json({
+  return res.status(200).send({
     posts,
     comments,
     isMorePosts,
@@ -170,7 +170,7 @@ router.post("/get", async (req, res) => {
 
 router.post("/get/single", async (req, res) => {
   const { postId } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  const { id: ownerId } = decodeToken(req.cookies.token);
 
   const getPostQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/post.sql"))
@@ -186,7 +186,7 @@ router.post("/get/single", async (req, res) => {
     .toString();
 
   try {
-    const { rows: post } = await client.query(getPostQuery, [postId, onwerId]);
+    const { rows: post } = await client.query(getPostQuery, [postId, ownerId]);
     if (!post[0]) return res.status(404).json("post-does-not-exist");
 
     if (post[0].fanpageId) {
@@ -203,7 +203,7 @@ router.post("/get/single", async (req, res) => {
 
     let { rows: comments } = await client.query(getCommentsQuery, [
       [post[0].postId],
-      onwerId,
+      ownerId,
     ]);
 
     let isMoreComments = true;
@@ -222,7 +222,7 @@ router.post("/get/single", async (req, res) => {
 
 router.post("/like", async (req, res) => {
   const { postId } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  const { id: ownerId } = decodeToken(req.cookies.token);
 
   const likePostQuery = fs
     .readFileSync(path.join(__dirname, "./query/add/like.sql"))
@@ -233,13 +233,13 @@ router.post("/like", async (req, res) => {
 
   try {
     const { rows: newLike } = await client.query(likePostQuery, [
-      onwerId,
+      ownerId,
       postId,
     ]);
     let likeId;
 
     if (!newLike[0]) {
-      const { rows } = await client.query(getPostIdQuery, [onwerId, postId]);
+      const { rows } = await client.query(getPostIdQuery, [ownerId, postId]);
       likeId = rows[0].id;
     } else likeId = newLike[0].id;
 
@@ -266,7 +266,7 @@ router.post("/unlike", async (req, res) => {
 
 router.post("/share", async (req, res) => {
   const { postId, date } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  const { id: ownerId } = decodeToken(req.cookies.token);
 
   const postShareQuery = fs
     .readFileSync(path.join(__dirname, "./query/add/sharePost.sql"))
@@ -275,10 +275,10 @@ router.post("/share", async (req, res) => {
   try {
     const postShare = await client.query(postShareQuery, [
       postId,
-      onwerId,
+      ownerId,
       date,
     ]);
-    res.status(200).json({ shareId: postShare.rows[0].id, userId: onwerId });
+    res.status(200).json({ shareId: postShare.rows[0].id, userId: ownerId });
   } catch {
     res.status(400).json("bad-request");
   }

@@ -7,8 +7,8 @@ const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
 
 router.post("/add", async (req, res) => {
-  const { commnetId, content, date } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  const { commentId, content, date } = req.body;
+  const { id: ownerId } = decodeToken(req.cookies.token);
 
   const addReplyQuery = fs
     .readFileSync(path.join(__dirname, "./query/add/reply.sql"))
@@ -16,8 +16,8 @@ router.post("/add", async (req, res) => {
 
   try {
     const reply = await client.query(addReplyQuery, [
-      commnetId,
-      onwerId,
+      commentId,
+      ownerId,
       content,
       date,
     ]);
@@ -29,8 +29,8 @@ router.post("/add", async (req, res) => {
 });
 
 router.post("/get", async (req, res) => {
-  const { commnetId, from } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  const { commentId, from } = req.body;
+  const { id: ownerId } = decodeToken(req.cookies.token);
 
   const getRepliesQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/replies.sql"))
@@ -38,7 +38,7 @@ router.post("/get", async (req, res) => {
   let result;
 
   try {
-    result = await client.query(getRepliesQuery, [commnetId, onwerId, from]);
+    result = await client.query(getRepliesQuery, [commentId, ownerId, from]);
   } catch {
     return res.status(400).json("bad-request");
   }
@@ -59,7 +59,7 @@ router.post("/get", async (req, res) => {
 
 router.post("/like", async (req, res) => {
   const { replyId } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  const { id: ownerId } = decodeToken(req.cookies.token);
 
   const likeReplyQuery = fs
     .readFileSync(path.join(__dirname, "./query/add/like.sql"))
@@ -71,12 +71,12 @@ router.post("/like", async (req, res) => {
   try {
     const { rows: newLike } = await client.query(likeReplyQuery, [
       replyId,
-      onwerId,
+      ownerId,
     ]);
 
     let likeId;
     if (!newLike[0]) {
-      const { rows } = await client.query(getLikeIdQuery, [replyId, onwerId]);
+      const { rows } = await client.query(getLikeIdQuery, [replyId, ownerId]);
 
       likeId = rows[0].id;
     } else likeId = newLike[0].id;
