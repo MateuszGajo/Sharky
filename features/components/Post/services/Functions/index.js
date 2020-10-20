@@ -86,7 +86,6 @@ export const getPosts = ({
   axios
     .post("/post/get", { from, groupId, fanpageId, news, authorPost, userId })
     .then(async ({ data: { posts: p, comments, isMorePosts } }) => {
-      console.log(typeof p[0].date);
       await getUsers(users, setUsers, [...p, ...comments]);
       const commentsKey = {};
       for (let i = 0; i < comments.length; i++) {

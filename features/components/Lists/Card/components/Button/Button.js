@@ -126,6 +126,7 @@ const Button = ({ collapseRef, title: primaryTitle, invitationType }) => {
               number,
               setNumber,
               friendshipId: refId,
+              id,
               setStatusOfInvited,
             });
           } else if (!isOpen) {

@@ -11,9 +11,11 @@ router.post("/get", async (req, res) => {
   if (
     !/^[\d]*$/.test(from) ||
     (!userId && !/^[\d]*$/.test(userId)) ||
-    !(onlySubscribed == true || onlySubscribed == false)
-  )
+    !(onlySubscribed == true || onlySubscribed == false) ||
+    !(typeof keyWords === "string" || keyWords === null)
+  ) {
     return res.status(400).json("invalid-data");
+  }
 
   const { error, id: ownerId } = decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
@@ -75,6 +77,8 @@ router.post("/get", async (req, res) => {
 
 router.post("/create", async (req, res) => {
   const { name, description } = req.body;
+  if (!name) return res.status(400).json("invalid-data");
+
   const { error, id: ownerId } = decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
@@ -103,6 +107,7 @@ router.post("/create", async (req, res) => {
 
 router.post("/subscribe", async (req, res) => {
   const { fanpageId } = req.body;
+  if (!/^[\d]*$/.test(fanpageId)) return res.status(400).json("invalid-data");
 
   const { error, id: ownerId } = decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
@@ -137,6 +142,7 @@ router.post("/subscribe", async (req, res) => {
 
 router.post("/unsubscribe", async (req, res) => {
   const { fanpageId } = req.body;
+  if (!/^[\d]*$/.test(fanpageId)) return res.status(400).json("invalid-data");
 
   const { error, id: ownerId } = decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);

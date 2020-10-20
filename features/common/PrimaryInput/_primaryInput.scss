@@ -1,26 +1,26 @@
-primary-input {
+.primary-input {
   position: relative;
   display: flex;
   height: 50px;
 }
 
-primary-input--x-large {
+.primary-input--x-large {
   width: 100%;
 }
 
-primary-input--large {
+.primary-input--large {
   width: 90%;
 }
 
-primary-input--medium {
+.primary-input--medium {
   width: 80%;
 }
 
-primary-input--small {
+.primary-input--small {
   width: 70%;
 }
 
-primary-input__title {
+.primary-input__title {
   color: #c1c1c1;
   font-weight: bold;
   font-size: 1.1rem;
@@ -48,7 +48,7 @@ primary-input__title {
   position: absolute;
   top: 100%;
   width: 100%;
-  max-height:300px;
+  max-height: 300px;
   overflow-x: hidden;
   border: 1px solid $shadowColor;
 }
@@ -67,21 +67,20 @@ primary-input__title {
   border-bottom: 1px solid $shadowColor;
 }
 
-@media(max-width:767px) {
-  primary-input{
-    height:35px;
+@media (max-width: 767px) {
+  primary-input {
+    height: 35px;
   }
-  primary-input__title {
+  .primary-input__title {
     font-size: 1rem;
   }
 }
 
-@media(max-width:767px) and (orientation:landscape) {
-  primary-input__title {
+@media (max-width: 767px) and (orientation: landscape) {
+  .primary-input__title {
     font-size: 0.8rem;
   }
-  primary-input{
-    height:40px;
+  .primary-input {
+    height: 40px;
   }
 }
-

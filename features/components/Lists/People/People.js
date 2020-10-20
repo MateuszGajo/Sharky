@@ -50,13 +50,12 @@ const People = ({
   };
 
   useEffect(() => {
-    const { id, subId } = relation;
+    const { id } = relation;
     if (id != null) {
       setPrompt(changeRelationText);
       axios
         .post("/friend/update/relation", {
-          friendshipId: id,
-          userId: subId,
+          userId: id,
           relation: relation.name,
         })
         .catch(({ response: { data: message } }) => setError(message));
@@ -69,6 +68,7 @@ const People = ({
       setButtonType,
       setTitle,
       friendshipId,
+      id,
       setCollapse,
       setButtonName,
       number,
@@ -77,7 +77,7 @@ const People = ({
     } = invite;
     if (invitationType == "accept")
       axios
-        .post("/friend/accept", { friendshipId })
+        .post("/friend/accept", { userId: id })
         .then(({ data: { chatId, relation, success } }) => {
           if (success) {
             setButtonType("relation");
@@ -101,7 +101,7 @@ const People = ({
 
     if (invitationType == "decline") {
       axios
-        .post("/friend/decline", { friendshipId })
+        .post("/friend/decline", { userId: id })
         .then(() => {
           const newFriends = friends.filter((friend) => {
             return friend.friendshipId != friendshipId;
@@ -132,10 +132,10 @@ const People = ({
   }, [friend]);
 
   useEffect(() => {
-    const { setNumber, refId, setRefId } = removeFriends;
+    const { setNumber, refId, setRefId, id } = removeFriends;
     if (refId)
       axios
-        .post("/friend/delete", { friendshipId: refId })
+        .post("/friend/delete", { userId: id })
         .then(() => {
           if (userId == owner.id) {
             const newFriends = friends.filter((item) => {

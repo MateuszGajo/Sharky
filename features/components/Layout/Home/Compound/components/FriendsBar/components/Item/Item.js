@@ -41,7 +41,7 @@ const Item = ({ user }) => {
         });
         setStatusOfMessenger(false);
         setStatusOfNewMessage(false);
-        if (user.messageTo) axios.post("/friend/message/read", { chatId });
+        if (user.messageTo) axios.post("/friend/message/read", { userId });
       }}
     >
       <div className="home_friends__list__item__user">
