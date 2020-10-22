@@ -7,7 +7,10 @@ import People from "@components/Lists/People/People";
 import Posts from "@components/Lists/Posts/Posts";
 import Search from "@common/Search/Search";
 import Fanpages from "@components/Lists/Fanpages/Fanpages";
+import Groups from "@components/Lists/Groups/Groups";
 import Creator from "@common/PopUp/Creator/Creator";
+import HomeLayout from "@components/Layout/Home/HomeLayout";
+import InvitePerson from "@common/PopUp/InvitePerson/InvitePerson";
 import "../styles/main.scss";
 
 const Index = () => {
@@ -34,16 +37,20 @@ const Index = () => {
 
   return (
     <>
-      <form
-        className="groups__container__content__search__form"
-        onSubmit={handleSubmit}
-      >
-        <Search value={text} onChange={setText} />
-      </form>
+      <HomeLayout>
+        <form
+          className="groups__container__content__search__form"
+          onSubmit={handleSubmit}
+        >
+          <Search value={text} onChange={setText} />
+        </form>
+        <Groups userId={1} keyWords={keyWords} />
+        <InvitePerson type="group" targetId={8} />
+      </HomeLayout>
       {/* <Posts userId={1} /> */}
-      {/* {isOpen && <Creator type="group" setStatusOfOpen={setStatusOfOpen} />} */}
-      <People userId={1} />
-      {/* <Fanpages userId={1} /> */}
+      {/* {isOpen && <Creator type="fanpage" setStatusOfOpen={setStatusOfOpen} />} */}
+      {/* <People userId={1} keyWords={keyWords} /> */}
+      {/* <Fanpages userId={1} keyWords={keyWords} /> */}
     </>
   );
 };

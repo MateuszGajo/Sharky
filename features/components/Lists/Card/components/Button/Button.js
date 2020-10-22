@@ -135,7 +135,6 @@ const Button = ({ collapseRef, title: primaryTitle, invitationType }) => {
               refId,
               setRefId,
               id,
-              number,
               setNumber,
               setStatusOfInvitation,
               setTitle,

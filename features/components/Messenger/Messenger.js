@@ -38,10 +38,13 @@ const Messenger = ({
   }, [newMessage]);
 
   useEffect(() => {
-    const { chatId } = chat;
+    const {
+      user: { id },
+    } = chat;
+    console.log(chat);
     if (user.id !== chat.user.id) {
       getMesseges({
-        chatId: chatId,
+        userId: id,
         messages: [],
         setMessages,
         setStatusOfLoading,
@@ -87,10 +90,10 @@ Messenger.propTypes = {
       id: PropTypes.number,
       firstName: PropTypes.string,
       lastName: PropTypes.string,
-      photo: PropTypes.string
-    })
+      photo: PropTypes.string,
+    }),
   }),
   setChat: PropTypes.func,
-}
+};
 
 export default Messenger;

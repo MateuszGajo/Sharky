@@ -8,6 +8,14 @@ const router = express.Router();
 router.post("/get", async (req, res) => {
   const { from, userId, keyWords, onlySubscribed } = req.body;
 
+  if (
+    !/^[\d]*$/.test(from) ||
+    (!userId && !/^[\d]*$/.test(userId)) ||
+    !(onlySubscribed == true || onlySubscribed == false) ||
+    !(typeof keyWords === "string" || keyWords === null)
+  )
+    return res.status(400).json("invalid-data");
+
   const { error, id: ownerId } = decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
@@ -64,6 +72,8 @@ router.post("/get", async (req, res) => {
 
 router.post("/create", async (req, res) => {
   const { name, description } = req.body;
+  if (!name) return res.status(400).json("invalid-data");
+
   const { error, id: ownerId } = decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
@@ -89,8 +99,10 @@ router.post("/create", async (req, res) => {
   }
 });
 
-router.post("/user/add", async (req, res) => {
+router.post("/join", async (req, res) => {
   const { groupId } = req.body;
+  if (!/^[\d]*$/.test(groupId)) return res.status(400).json("invalid-data");
+
   const { error, id: ownerId } = decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
@@ -125,15 +137,47 @@ router.post("/user/add", async (req, res) => {
   }
 });
 
+router.post("/leave", async (req, res) => {
+  const { groupId } = req.body;
+  if (!/^[\d]*$/.test(groupId)) return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
+
+  const getAdminsQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/admins.sql"))
+    .toString();
+  const deleteMemberQuery = fs
+    .readFileSync(path.join(__dirname, "./query/delete/user.sql"))
+    .toString();
+
+  try {
+    const { rowCount, rows } = await client.query(getAdminsQuery, [groupId]);
+    if (rowCount > 1 || rows[0].userId != ownerId) {
+      await client.query(deleteMemberQuery, [groupId, ownerId]);
+
+      res.status(200).json({ success: true });
+    } else if (rowCount == 1) res.status(403).json("last-group-admin");
+    else res.status(400).json("bad-request");
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
 router.post("/user/invite", async (req, res) => {
   const { userId, targetId } = req.body;
+  if (!/^[\d]*$/.test(userId) || !/^[\d]*$/.test(targetId))
+    return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const inviteUserQuery = fs
     .readFileSync(path.join(__dirname, "./query/add/inviteUser.sql"))
     .toString();
 
   try {
-    await client.query(inviteUserQuery, [targetId, userId]);
+    await client.query(inviteUserQuery, [targetId, userId, ownerId]);
 
     res.status(200).json({ success: true });
   } catch {

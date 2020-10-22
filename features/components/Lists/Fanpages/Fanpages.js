@@ -11,7 +11,7 @@ const { useTranslation } = i18next;
 
 const Fanpages = ({
   userId,
-  keyWords,
+  keyWords = "",
   onlySubscribed = false,
   helpInformation = true,
 }) => {
@@ -43,7 +43,7 @@ const Fanpages = ({
   }, []);
 
   useEffect(() => {
-    const { setNumber, number, refId, setRefId, id, setTitle } = fanpage;
+    const { setNumber, refId, setRefId, id, setTitle } = fanpage;
     if (refId)
       axios
         .post("/fanpage/unsubscribe", { fanpageId: id })
@@ -56,7 +56,7 @@ const Fanpages = ({
           } else {
             setTitle(subscribeText);
             setRefId(null);
-            setNumber(Number(number) - 1);
+            setNumber((prev) => prev - 1);
           }
         })
         .catch(({ response: { data: message } }) => setError(message));
@@ -65,7 +65,7 @@ const Fanpages = ({
         .post("/fanpage/subscribe", { fanpageId: fanpage.id })
         .then(({ data: { id } }) => {
           setTitle(unsubscribeText);
-          setNumber(Number(number) + 1);
+          setNumber((prev) => prev + 1);
           setRefId(id);
         })
         .catch(({ response: { data: message } }) => setError(message));

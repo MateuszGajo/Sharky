@@ -58,7 +58,7 @@ const Groups = ({
     const { setNumber, refId, setRefId, id, setTitle } = group;
     if (refId)
       axios
-        .post("/group/leave", { groupId: group.refId })
+        .post("/group/leave", { groupId: id })
         .then(() => {
           if (userId == owner.id && !keyWords) {
             const newGroups = groups.filter((group) => group.groupId != id);
@@ -72,7 +72,7 @@ const Groups = ({
         .catch(({ response: { data: message } }) => setError(message));
     else if (id)
       axios
-        .post("/group/user/add", { groupId: group.id })
+        .post("/group/join", { groupId: group.id })
         .then(({ data: { id } }) => {
           setTitle(joinText);
           setRefId(id);
