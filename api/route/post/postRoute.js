@@ -4,11 +4,13 @@ const fs = require("fs");
 const path = require("path");
 const { client } = require("../../../config/pgAdaptor");
 const decodeToken = require("../../../utils/decodeToken");
+const { ClientBase } = require("pg");
 
 const router = express.Router();
 
 router.post("/add", async (req, res) => {
-  const { id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -19,27 +21,41 @@ router.post("/add", async (req, res) => {
     },
   });
 
-  const upload = multer({ storage }).single("file");
-
+  const upload = multer({
+    storage,
+    fileFilter: (req, file, cb) => {
+      if (file.mimetype !== "image/jpeg" && file.mimetype !== "image/png") {
+        return cb(new Error("wrong file type"));
+      }
+      cb(null, true);
+    },
+    limits: { fileSize: 200000 },
+  }).single("file");
   await upload(req, res, async (err) => {
     if (err) {
-      return res.status(400).json("bad-request");
-    }
-    let fileName = null;
-    if (req.file) {
-      const {
-        file: { mimetype, filename, size },
-      } = req;
-      fileName = filename;
-      if (mimetype !== "image/jpeg" && mimetype !== "image/png") {
-        return res.status(415).json("wrong-file-type");
-      }
-      if (size > 200000) {
-        return res.status(413).json("file-too-large");
-      }
+      return err.message == "File too large"
+        ? res.status(413).json("file-too-large")
+        : err.message === "wrong file type"
+        ? res.status(415).json("wrong-file-type")
+        : res.status(400).json("bad-request");
     }
 
-    const { content, date, groupId, fanpageId, news } = req.body;
+    let fileName = null;
+    if (req.file) {
+      fileName = req.file.filename;
+    }
+
+    const { content, date, groupId, fanpageId, news } = JSON.parse(
+      req.body.data
+    );
+
+    if (
+      typeof content !== "string" ||
+      !(groupId == null || /^[\d]*$/.test(groupId)) ||
+      !(fanpageId == null || /^[\d]*$/.test(fanpageId)) ||
+      typeof news !== "boolean"
+    )
+      return res.status(400).json("invalid-data");
 
     const addGroupPostQuery = fs
       .readFileSync(path.join(__dirname, "./query/add/groupPost.sql"))
@@ -53,9 +69,20 @@ router.post("/add", async (req, res) => {
     const addPostQuery = fs
       .readFileSync(path.join(__dirname, "./query/add/post.sql"))
       .toString();
+    const getMemberQuery = fs
+      .readFileSync(path.join(__dirname, "./query/get/member.sql"))
+      .toString();
+    const getFanpageAdminQuery = fs
+      .readFileSync(path.join(__dirname, "./query/get/fanpageAdmin.sql"))
+      .toString();
+    const getJournalistQuery = fs
+      .readFileSync(path.join(__dirname, "./query/get/journalist.sql"))
+      .toString();
     let newPost;
     try {
-      if (groupId)
+      if (groupId) {
+        const { rows } = await client.query(getMemberQuery, [ownerId, groupId]);
+        if (rows[0].id) return res.status(403).json("no-permission");
         newPost = await client.query(addGroupPostQuery, [
           ownerId,
           groupId,
@@ -63,7 +90,12 @@ router.post("/add", async (req, res) => {
           date,
           fileName,
         ]);
-      else if (fanpageId)
+      } else if (fanpageId) {
+        const { rows } = await client.query(getFanpageAdminQuery, [
+          ownerId,
+          fanpageId,
+        ]);
+        if (!rows[0].id) return res.status(403).json("no-permission");
         newPost = await client.query(addFanpagePostQuery, [
           ownerId,
           fanpageId,
@@ -71,20 +103,23 @@ router.post("/add", async (req, res) => {
           date,
           fileName,
         ]);
-      else if (news)
+      } else if (news) {
+        const { rows } = await client.query(getJournalistQuery, [ownerId]);
+        if (!rows[0].id) return res.status(403).json("no-permission");
         newPost = await client.query(addNewsQuery, [
           ownerId,
           content,
           date,
           fileName,
         ]);
-      else
+      } else
         newPost = await client.query(addPostQuery, [
           ownerId,
           content,
           date,
           fileName,
         ]);
+
       return res.status(200).json({
         postId: newPost.rows[0].id,
         fileName,
@@ -97,7 +132,17 @@ router.post("/add", async (req, res) => {
 
 router.post("/get", async (req, res) => {
   const { from, fanpageId, groupId, news, userId, authorPost } = req.body;
-  const { id: ownerId } = decodeToken(req.cookies.token);
+  if (
+    typeof content !== "string" ||
+    !(groupId == null || /^[\d]*$/.test(groupId)) ||
+    !(fanpageId == null || /^[\d]*$/.test(fanpageId)) ||
+    typeof news !== "boolean" ||
+    !/^[\d]*$/.test(from)
+  )
+    return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const getFanpagePostsQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/fanpagePosts.sql"))
@@ -117,22 +162,35 @@ router.post("/get", async (req, res) => {
   const getCommentsQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/comments.sql"))
     .toString();
+  const getMemberQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/member.sql"))
+    .toString();
+  const getSubscriberQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/subscriber.sql"))
+    .toString();
   let postsResult, commentsResult;
 
   try {
-    if (fanpageId)
+    if (fanpageId) {
+      const { rows } = await client.query(getSubscriberQuery, [
+        ownerId,
+        fanpageId,
+      ]);
+      if (!rows[0].id) return res.status(403).json("no-permission");
       postsResult = await client.query(getFanpagePostsQuery, [
         fanpageId,
         ownerId,
         from,
       ]);
-    else if (groupId)
+    } else if (groupId) {
+      const { rows } = await client.query(getMemberQuery, [ownerId, groupId]);
+      if (!rows[0].id) return res.status(403).json("no-permission");
       postsResult = await client.query(getGroupPostsQuery, [
         groupId,
         ownerId,
         from,
       ]);
-    else if (authorPost)
+    } else if (authorPost)
       postsResult = await client.query(getUserPostsQuery, [
         userId,
         ownerId,
@@ -170,16 +228,19 @@ router.post("/get", async (req, res) => {
 
 router.post("/get/single", async (req, res) => {
   const { postId } = req.body;
-  const { id: ownerId } = decodeToken(req.cookies.token);
+  if (!/^[\d]*$/.test(postId)) return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const getPostQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/post.sql"))
     .toString();
-  const getFanpageMemberIdQuery = fs
-    .readFileSync(path.join(__dirname, "./query/get/fanpageMemberId.sql"))
+  const getSubscriberQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/subscriber.sql"))
     .toString();
-  const getGroupMemberIdQuery = fs
-    .readFileSync(path.join(__dirname, "./query/get/groupMemberId.sql"))
+  const getMemberIdQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/member.sql"))
     .toString();
   const getCommentsQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/comments.sql"))
@@ -190,13 +251,13 @@ router.post("/get/single", async (req, res) => {
     if (!post[0]) return res.status(404).json("post-does-not-exist");
 
     if (post[0].fanpageId) {
-      const { rows } = await client.query(getFanpageMemberIdQuery, [userId]);
+      const { rows } = await client.query(getSubscriberQuery, [userId]);
       if (!rows[0])
         return res.status(403).json("user-does-not-have-permission");
     }
 
     if (post[0].groupId) {
-      const { rows } = await client.query(getGroupMemberIdQuery, [userId]);
+      const { rows } = await client.query(getMemberIdQuery, [userId]);
       if (!rows[0])
         return res.status(403).json("user-does-not-have-permission");
     }
@@ -221,8 +282,10 @@ router.post("/get/single", async (req, res) => {
 });
 
 router.post("/like", async (req, res) => {
-  const { postId } = req.body;
-  const { id: ownerId } = decodeToken(req.cookies.token);
+  if (!/^[\d]*$/.test(postId)) return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const likePostQuery = fs
     .readFileSync(path.join(__dirname, "./query/add/like.sql"))
@@ -230,8 +293,21 @@ router.post("/like", async (req, res) => {
   const getPostIdQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/postId.sql"))
     .toString();
+  const getGroupIdInPostQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/groupIdInPost.sql"))
+    .toString();
+  const getMemberQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/member.sql"))
+    .toString();
 
   try {
+    const { rows: groupId } = await client.query(getGroupIdInPostQuery, [
+      postId,
+    ]);
+    if (groupId[0]) {
+      const { rows } = await client.query(getMemberQuery, [groupId[0]]);
+      if (!rows[0]) return res.status(403).json("no-permission");
+    }
     const { rows: newLike } = await client.query(likePostQuery, [
       ownerId,
       postId,
@@ -251,13 +327,17 @@ router.post("/like", async (req, res) => {
 
 router.post("/unlike", async (req, res) => {
   const { likeId } = req.body;
+  if (!/^[\d]*$/.test(likeId)) return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const unlikePostQuery = fs
     .readFileSync(path.join(__dirname, "./query/delete/like"))
     .toString();
 
   try {
-    await client.query(unlikePostQuery, [likeId]);
+    await client.query(unlikePostQuery, [likeId, ownerId]);
     res.status(200).json({ success: true });
   } catch {
     res.status(400).json("bad-request");
