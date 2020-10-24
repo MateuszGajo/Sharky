@@ -42,7 +42,6 @@ const MessageBox = ({ value, onChange, btnSize = "medium", file, setFile }) => {
     <div data-testid="message-box" className="message-box">
       <div className="message-box__navbar">{title}</div>
       <div className="message-box__content">
-        {console.log(file)}
         <textarea
           placeholder={description}
           className="message-box__content--textarea"

@@ -42,7 +42,7 @@ router.post("/add", async (req, res) => {
     .readFileSync(path.join(__dirname, "./query/add/message.sql"))
     .toString();
   const date = new Date();
-  console.log(userId, ownerId);
+
   const { rows } = await client.query(addMessageQuery, [
     message,
     date,

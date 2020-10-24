@@ -176,9 +176,9 @@ export const likePost = ({ postId, setNewLike, setError }) => {
     });
 };
 
-export const unlikePost = ({ likeId, postId, setNewLike, setError }) => {
+export const unlikePost = ({ postId, setNewLike, setError }) => {
   axios
-    .post("/post/unlike", { likeId })
+    .post("/post/unlike", { postId })
     .then((resp) =>
       setNewLike({ likeId: null, idElement: postId, type: "post" })
     )
@@ -202,13 +202,11 @@ export const sharePost = ({
   setError,
   isSingle,
 }) => {
-  const date = new Date();
   axios
     .post("/post/share", {
       postId: post.postId,
-      date,
     })
-    .then(({ data: { shareId, userId } }) => {
+    .then(({ data: { shareId, userId, date } }) => {
       if (!isSingle) {
         setNewComment({});
         setPosts([

@@ -133,13 +133,15 @@ router.post("/add", async (req, res) => {
 router.post("/get", async (req, res) => {
   const { from, fanpageId, groupId, news, userId, authorPost } = req.body;
   if (
-    typeof content !== "string" ||
     !(groupId == null || /^[\d]*$/.test(groupId)) ||
+    !(userId == null || /^[\d]*$/.test(userId)) ||
     !(fanpageId == null || /^[\d]*$/.test(fanpageId)) ||
     typeof news !== "boolean" ||
+    typeof authorPost !== "boolean" ||
     !/^[\d]*$/.test(from)
-  )
+  ) {
     return res.status(400).json("invalid-data");
+  }
 
   const { error, id: ownerId } = decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
@@ -171,18 +173,13 @@ router.post("/get", async (req, res) => {
   let postsResult, commentsResult;
 
   try {
-    if (fanpageId) {
-      const { rows } = await client.query(getSubscriberQuery, [
-        ownerId,
-        fanpageId,
-      ]);
-      if (!rows[0].id) return res.status(403).json("no-permission");
+    if (fanpageId)
       postsResult = await client.query(getFanpagePostsQuery, [
         fanpageId,
         ownerId,
         from,
       ]);
-    } else if (groupId) {
+    else if (groupId) {
       const { rows } = await client.query(getMemberQuery, [ownerId, groupId]);
       if (!rows[0].id) return res.status(403).json("no-permission");
       postsResult = await client.query(getGroupPostsQuery, [
@@ -206,7 +203,7 @@ router.post("/get", async (req, res) => {
     }
     commentsResult = await client.query(getCommentsQuery, [postIds, ownerId]);
   } catch {
-    res.status(400).json("bad-request");
+    return res.status(400).json("bad-request");
   }
 
   let isMorePosts = true;
@@ -282,6 +279,7 @@ router.post("/get/single", async (req, res) => {
 });
 
 router.post("/like", async (req, res) => {
+  const { postId } = req.body;
   if (!/^[\d]*$/.test(postId)) return res.status(400).json("invalid-data");
 
   const { error, id: ownerId } = decodeToken(req.cookies.token);
@@ -304,14 +302,18 @@ router.post("/like", async (req, res) => {
     const { rows: groupId } = await client.query(getGroupIdInPostQuery, [
       postId,
     ]);
-    if (groupId[0]) {
-      const { rows } = await client.query(getMemberQuery, [groupId[0]]);
+    if (groupId[0].groupId) {
+      const { rows } = await client.query(getMemberQuery, [
+        ownerId,
+        groupId[0].groupId,
+      ]);
       if (!rows[0]) return res.status(403).json("no-permission");
     }
     const { rows: newLike } = await client.query(likePostQuery, [
       ownerId,
       postId,
     ]);
+
     let likeId;
 
     if (!newLike[0]) {
@@ -326,18 +328,34 @@ router.post("/like", async (req, res) => {
 });
 
 router.post("/unlike", async (req, res) => {
-  const { likeId } = req.body;
-  if (!/^[\d]*$/.test(likeId)) return res.status(400).json("invalid-data");
+  const { postId } = req.body;
+  if (!/^[\d]*$/.test(postId)) return res.status(400).json("invalid-data");
 
   const { error, id: ownerId } = decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const unlikePostQuery = fs
-    .readFileSync(path.join(__dirname, "./query/delete/like"))
+    .readFileSync(path.join(__dirname, "./query/delete/like.sql"))
+    .toString();
+  const getGroupIdInPostQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/groupIdInPost.sql"))
+    .toString();
+  const getMemberQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/member.sql"))
     .toString();
 
   try {
-    await client.query(unlikePostQuery, [likeId, ownerId]);
+    const { rows: groupId } = await client.query(getGroupIdInPostQuery, [
+      postId,
+    ]);
+    if (groupId[0].groupId) {
+      const { rows } = await client.query(getMemberQuery, [
+        ownerId,
+        groupId[0].groupId,
+      ]);
+      if (!rows[0]) return res.status(403).json("no-permission");
+    }
+    await client.query(unlikePostQuery, [postId, ownerId]);
     res.status(200).json({ success: true });
   } catch {
     res.status(400).json("bad-request");
@@ -345,20 +363,42 @@ router.post("/unlike", async (req, res) => {
 });
 
 router.post("/share", async (req, res) => {
-  const { postId, date } = req.body;
-  const { id: ownerId } = decodeToken(req.cookies.token);
+  const { postId } = req.body;
+  const date = new Date();
+  if (!/^[\d]*$/.test(postId)) return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const postShareQuery = fs
     .readFileSync(path.join(__dirname, "./query/add/sharePost.sql"))
     .toString();
+  const getGroupIdInPostQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/groupIdInPost.sql"))
+    .toString();
+  const getMemberQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/member.sql"))
+    .toString();
 
   try {
+    const { rows: groupId } = await client.query(getGroupIdInPostQuery, [
+      postId,
+    ]);
+    if (groupId[0].groupId) {
+      const { rows } = await client.query(getMemberQuery, [
+        ownerId,
+        groupId[0],
+      ]);
+      if (!rows[0].groupId) return res.status(403).json("no-permission");
+    }
     const postShare = await client.query(postShareQuery, [
       postId,
       ownerId,
       date,
     ]);
-    res.status(200).json({ shareId: postShare.rows[0].id, userId: ownerId });
+    res
+      .status(200)
+      .json({ shareId: postShare.rows[0].id, userId: ownerId, date });
   } catch {
     res.status(400).json("bad-request");
   }
@@ -366,13 +406,34 @@ router.post("/share", async (req, res) => {
 
 router.post("/edit", async (req, res) => {
   const { postId, content } = req.body;
+  if (!/^[\d]*$/.test(postId) || typeof content !== "string")
+    return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const updatePostContentQuery = fs
     .readFileSync(path.join(__dirname, "./query/update/postContent.sql"))
     .toString();
+  const getGroupIdInPostQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/groupIdInPost.sql"))
+    .toString();
+  const getMemberQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/member.sql"))
+    .toString();
 
   try {
-    await client.query(updatePostContentQuery, [content, postId]);
+    const { rows: groupId } = await client.query(getGroupIdInPostQuery, [
+      postId,
+    ]);
+    if (groupId[0].groupId) {
+      const { rows } = await client.query(getMemberQuery, [
+        ownerId,
+        groupId[0].groupId,
+      ]);
+      if (!rows[0]) return res.status(403).json("no-permission");
+    }
+    await client.query(updatePostContentQuery, [content, postId, ownerId]);
 
     res.status(200).json({ success: true });
   } catch {
@@ -382,6 +443,10 @@ router.post("/edit", async (req, res) => {
 
 router.post("/delete", async (req, res) => {
   const { postId } = req.body;
+  if (!/^[\d]*$/.test(postId)) return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const deletePostQuery = fs
     .readFileSync(path.join(__dirname, "./query/delete/post.sql"))
@@ -392,12 +457,32 @@ router.post("/delete", async (req, res) => {
   const deleteCommentsQuery = fs
     .readFileSync(path.join(__dirname, "./query/delete/comments.sql"))
     .toString();
+  const getGroupIdInPostQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/groupIdInPost.sql"))
+    .toString();
+  const getMemberQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/member.sql"))
+    .toString();
 
   try {
-    await client.query(deletePostQuery, [postId]);
-    await client.query(deleteRepliesQuery, [postId]);
-    await client.query(deleteCommentsQuery, [postId]);
-
+    const { rows: groupId } = await client.query(getGroupIdInPostQuery, [
+      postId,
+    ]);
+    if (groupId[0].groupId) {
+      const { rows } = await client.query(getMemberQuery, [
+        ownerId,
+        groupId[0].groupId,
+      ]);
+      if (!rows[0]) return res.status(403).json("no-permission");
+    }
+    const { rows: post } = await client.query(deletePostQuery, [
+      postId,
+      ownerId,
+    ]);
+    if (post[0].id) {
+      await client.query(deleteRepliesQuery, [postId]);
+      await client.query(deleteCommentsQuery, [postId]);
+    } else return res.status(403).json("no-permission");
     res.status(200).json({ success: true });
   } catch {
     res.status(400).json("bad-request");
@@ -406,13 +491,21 @@ router.post("/delete", async (req, res) => {
 
 router.post("/share/delete", async (req, res) => {
   const { shareId } = req.body;
+  if (!/^[\d]*$/.test(shareId)) return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const deleteSharePostQuery = fs
     .readFileSync(path.join(__dirname, "./query/delete/postShared.sql"))
     .toString();
 
   try {
-    await client.query(deleteSharePostQuery, [shareId]);
+    const { rows: post } = await client.query(deleteSharePostQuery, [
+      shareId,
+      ownerId,
+    ]);
+    if (!post[0].id) return res.status(403).json("no-permission");
 
     res.status(200).json({ success: true });
   } catch {

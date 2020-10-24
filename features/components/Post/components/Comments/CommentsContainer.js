@@ -132,11 +132,11 @@ const withContainer = (WrappedComponent) => {
       </>
     );
   };
-
+  const element = typeof Element === "undefined" ? function () {} : Element;
   withContainer.propTypes = {
     focusIcon: PropTypes.oneOfType([
       PropTypes.func,
-      PropTypes.shape({ current: PropTypes.elementType }),
+      PropTypes.shape({ current: PropTypes.instanceOf(element) }),
     ]),
   };
 

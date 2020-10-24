@@ -21,7 +21,7 @@ const Index = () => {
   const [keyWords, setKeyWords] = useState(null);
   const [isOpen, setStatusOfOpen] = useState(true);
   const [content, setContent] = useState("");
-  const [file, setFile] = useState("");
+  const [file, setFile] = useState(null);
   const [newPost, setNewPost] = useState();
 
   const handleSubmit = (e) => {

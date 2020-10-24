@@ -143,11 +143,12 @@ const Post = ({ post, focusElement }) => {
     </div>
   );
 };
+const element = typeof Element === "undefined" ? function () {} : Element;
 
 Post.propTypes = {
   focusElement: PropTypes.oneOfType([
     PropTypes.func,
-    PropTypes.shape({ current: PropTypes.elementType }),
+    PropTypes.shape({ current: PropTypes.instanceOf(element) }),
   ]),
 };
 

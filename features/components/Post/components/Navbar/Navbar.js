@@ -147,16 +147,17 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
     </div>
   );
 };
+const element = typeof Element === "undefined" ? function () {} : Element;
 
-NavBar.propTypes ={
+NavBar.propTypes = {
   focusCollapse: PropTypes.oneOfType([
     PropTypes.func,
-    PropTypes.shape({current: PropTypes.elementType})
+    PropTypes.shape({ current: PropTypes.instanceOf(element) }),
   ]),
   focusIcon: PropTypes.oneOfType([
     PropTypes.func,
-    PropTypes.shape({current: PropTypes.elementType})
-  ])
-}
+    PropTypes.shape({ current: PropTypes.instanceOf(element) }),
+  ]),
+};
 
 export default NavBar;

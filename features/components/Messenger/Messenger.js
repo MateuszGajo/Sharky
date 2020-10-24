@@ -41,7 +41,7 @@ const Messenger = ({
     const {
       user: { id },
     } = chat;
-    console.log(chat);
+
     if (user.id !== chat.user.id) {
       getMesseges({
         userId: id,
