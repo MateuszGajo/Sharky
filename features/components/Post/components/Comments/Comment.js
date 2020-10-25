@@ -66,7 +66,6 @@ const Commnet = ({
             setError,
           })
         : unlikeReply({
-            likeId,
             replyId: comment.replyId,
             setNewLike,
             setError,

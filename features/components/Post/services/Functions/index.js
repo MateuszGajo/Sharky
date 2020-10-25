@@ -397,7 +397,6 @@ export const getReplies = async ({
 export const addReply = ({
   commentId,
   content,
-  date,
   clearText,
   setNewComment,
   setError,
@@ -406,9 +405,8 @@ export const addReply = ({
     .post("/reply/add", {
       commentId,
       content,
-      date,
     })
-    .then(({ data: { replyId } }) => {
+    .then(({ data: { replyId, date } }) => {
       setNewComment({
         content,
         idElement: commentId,
@@ -440,14 +438,9 @@ export const likeReply = async ({ replyId, setNewLike, setError }) => {
     });
 };
 
-export const unlikeReply = async ({
-  likeId,
-  replyId,
-  setNewLike,
-  setError,
-}) => {
+export const unlikeReply = async ({ replyId, setNewLike, setError }) => {
   axios
-    .post("/reply/unlike", { likeId })
+    .post("/reply/unlike", { replyId })
     .then((resp) =>
       setNewLike({ likeId: null, idElement: replyId, type: "reply" })
     )

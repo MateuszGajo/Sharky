@@ -35,7 +35,6 @@ const withContainer = (WrappedComponent) => {
       addReply({
         commentId: comment.commentId,
         content: reply,
-        date: new Date(),
         clearText: setReply,
         setNewComment,
         setError,
