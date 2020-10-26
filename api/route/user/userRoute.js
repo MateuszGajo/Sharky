@@ -128,7 +128,7 @@ router.get("/logout", async (req, res) => {
 
 router.get("/me", (req, res) => {
   const data = decodeToken(req.cookies.token);
-  if (data.error) return res.status(401).json(error);
+  if (data.error) return res.status(401).json(data.error);
 
   return res.status(200).json({ user: data });
 });
