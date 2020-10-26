@@ -63,13 +63,11 @@ export const signIn = ({
     });
 };
 
-export const checkLanguage = ({ userId }) => {
-  axios
-    .post("/user/get/language", { userId })
-    .then(({ data: { language } }) => {
-      const code = countryCode(language);
-      if (i18n.language != code) {
-        i18n.changeLanguage(code);
-      }
-    });
+export const checkLanguage = () => {
+  axios.get("/user/get/language").then(({ data: { language } }) => {
+    const code = countryCode(language);
+    if (i18n.language != code) {
+      i18n.changeLanguage(code);
+    }
+  });
 };

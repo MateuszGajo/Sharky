@@ -7,7 +7,7 @@ import i18next from "@i18n";
 import { addMessage } from "../../services/Functions";
 const { useTranslation } = i18next;
 
-const Downbar = ({ chatId, setMessages, converser }) => {
+const Downbar = ({ setMessages, converser }) => {
   const { t } = useTranslation(["component"]);
 
   const placeholder = t("component:messenger.placeholder");
@@ -23,17 +23,14 @@ const Downbar = ({ chatId, setMessages, converser }) => {
     e.preventDefault();
 
     if (message) {
-      const date = new Date();
-      setMessages(prev =>[...prev, { userId: owner.id, message, date }]);
       addMessage({
-        chatId,
         message,
-        date,
-        userId: owner.id,
+        userId: converser,
         socket,
-        messageTo: converser,
+        messageFrom: owner.id,
         setError,
         setMessage,
+        setMessages,
       });
     }
   };
@@ -88,7 +85,5 @@ const Downbar = ({ chatId, setMessages, converser }) => {
     </div>
   );
 };
-
-
 
 export default Downbar;

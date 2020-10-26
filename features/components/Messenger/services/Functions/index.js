@@ -1,37 +1,38 @@
 import axios from "axios";
 
 export const getMesseges = ({
-  chatId,
+  userId,
   messages: m,
   setMessages,
   setStatusOfLoading,
 }) => {
-  axios.post("/message/get", { chatId }).then(({ data: { messages } }) => {
+  axios.post("/message/get", { userId }).then(({ data: { messages } }) => {
     setMessages([...messages, ...m]);
     setStatusOfLoading(false);
   });
 };
 
 export const addMessage = ({
-  chatId,
   message,
   userId,
-  date,
-  messageTo,
+  messageFrom,
   socket,
   setError,
   setMessage,
+  setMessages,
 }) => {
   axios
-    .post("/message/add", { chatId, message, userId, date })
-    .then(({ data: { messageId } }) => {
+    .post("/message/add", { message, userId })
+    .then(({ data: { messageId, date } }) => {
+      setMessages((prev) => [
+        ...prev,
+        { id: messageId, userId: messageFrom, message, date },
+      ]);
       socket.emit("sendChatMessage", {
         messageId,
-        chatId,
         userId,
         message,
         date,
-        messageTo,
       });
       setMessage("");
     })
