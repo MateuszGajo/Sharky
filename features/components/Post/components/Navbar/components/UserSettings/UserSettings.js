@@ -56,7 +56,7 @@ const UserSettings = () => {
         className="post__item__navbar__column-end__setting__collapse__item"
         onClick={() =>
           muteUser({
-            idMuteUser: postOwnerID,
+            userId: postOwnerID,
             setMuteUser,
             isSingle,
             setError,

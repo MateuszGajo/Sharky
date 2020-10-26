@@ -19,8 +19,13 @@ router.post("/add", async (req, res) => {
   const addCommentQuery = fs
     .readFileSync(path.join(__dirname, "./query/add/comment.sql"))
     .toString();
+  const getPostIdQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/postId.sql"))
+    .toString();
 
   try {
+    const { rows } = await client.query(getPostIdQuery, [postId]);
+    if (!rows[0].id) return res.status(400).json("post-does-not-exist");
     const comment = await client.query(addCommentQuery, [
       postId,
       ownerId,

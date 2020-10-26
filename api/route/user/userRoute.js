@@ -12,6 +12,9 @@ const router = express.Router();
 router.post("/get", async (req, res) => {
   const { userIds } = req.body;
 
+  const { error } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
+
   const getUserQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/user.sql"))
     .toString();
@@ -27,6 +30,9 @@ router.post("/get", async (req, res) => {
 
 router.post("/get/photo", async (req, res) => {
   const { userId, from } = req.body;
+
+  const { error } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const getPhotosQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/photos.sql"))
@@ -50,15 +56,16 @@ router.post("/get/photo", async (req, res) => {
   res.status(200).json({ photos, isMore });
 });
 
-router.post("/get/language", async (req, res) => {
-  const { userId } = req.body;
+router.get("/get/language", async (req, res) => {
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const getLanguageQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/language.sql"))
     .toString();
 
   try {
-    const { rows } = await client.query(getLanguageQuery, [userId]);
+    const { rows } = await client.query(getLanguageQuery, [ownerId]);
     res.status(200).json({ language: rows[0].language });
   } catch {
     res.status(400).json("bad-request");
@@ -66,8 +73,10 @@ router.post("/get/language", async (req, res) => {
 });
 
 router.post("/mute", async (req, res) => {
-  const { idMuteUser } = req.body;
-  const { id: ownerId } = decodeToken(req.cookies.token);
+  const { userId } = req.body;
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const muteUserQuery = fs
     .readFileSync(path.join(__dirname, "./query/add/muteUser.sql"))
@@ -75,7 +84,7 @@ router.post("/mute", async (req, res) => {
   const date = new Date();
 
   try {
-    await client.query(muteUserQuery, [ownerId, idMuteUser, date]);
+    await client.query(muteUserQuery, [ownerId, userId, date]);
 
     res.status(200).json({ success: true });
   } catch {
@@ -85,7 +94,9 @@ router.post("/mute", async (req, res) => {
 
 router.post("/block", async (req, res) => {
   const { userId } = req.body;
-  const { id: ownerId } = decodeToken(req.cookies.token);
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const deleteFriendQuery = fs
     .readFileSync(path.join(__dirname, "./query/delete/friend.sql"))
@@ -116,18 +127,18 @@ router.get("/logout", async (req, res) => {
 });
 
 router.get("/me", (req, res) => {
-  if (!req.cookies.token) return res.status(401).json("un-authorized");
-  jwt.verify(req.cookies.token, jwtSecret, function (err, decoded) {
-    if (decoded) {
-      return res.json({ user: decoded.data });
-    }
-    return res.status(401).json("un-authorized");
-  });
+  const data = decodeToken(req.cookies.token);
+  if (data.error) return res.status(401).json(error);
+
+  return res.status(200).json({ user: data });
 });
 
 router.post("/check/password", async (req, res) => {
   const { password } = req.body;
-  const { id: ownerId } = decodeToken(req.cookies.token);
+  if (typeof password !== "string") return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const getPasswordQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/password.sql"))

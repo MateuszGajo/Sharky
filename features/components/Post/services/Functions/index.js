@@ -33,10 +33,10 @@ export const getUsers = async (users, setUsers, elements) => {
       });
 };
 
-export const muteUser = ({ idMuteUser, setMuteUser, isSingle, setError }) => {
+export const muteUser = ({ userId, setMuteUser, isSingle, setError }) => {
   axios
     .post("/user/mute", {
-      idMuteUser,
+      userId,
     })
     .then((resp) => {
       isSingle && Router.push("/");
