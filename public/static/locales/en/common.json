@@ -35,7 +35,15 @@
         "error":{
             "bad-request":"Request failed",
             "wrong-file-type":"Wrong file type",
-            "file-too-large":"File is too large"
+            "file-too-large":"File is too large",
+            "invalid-email":"Invalid email",
+            "password-too-short":"Password is too short",
+            "empty-password":"Password is empty",
+            "empty-confirm-password":"Confirm password is empty",
+            "passwords-not-equal":"Passwords are diffrent",
+            "empty-first-name":"First name is empty",
+            "empty-last-name":"Last name is empty",
+            "invalid-phone-number":"Invalid phone number"
         },
         "invite-person":{
             "empty-content":"You have no friends to invite",

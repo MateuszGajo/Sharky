@@ -35,7 +35,15 @@
         "error":{
             "bad-request":"Żądanie nie powiodło się",
             "wrong-file-type":"Niewłaściwe rozserzenie pliku",
-            "file-too-large":"Plik jest za duży"
+            "file-too-large":"Plik jest za duży",
+            "invalid-email":"Nieprawidłowy email",
+            "password-too-short":"Hasło jest za krótkie",
+            "empty-password":"Hasło jest puste",
+            "empty-confirm-password":"Pole powtórz hasło jest puste",
+            "passwords-not-equal":"Hasła są różne",
+            "empty-first-name":"Pole imię jest puste",
+            "empty-last-name":"Pole nazwisko jest puste",
+            "invalid-phone-number":"Nieprawidłowy numer telefonu"
         },
         "invite-person":{
             "empty-content":"Nie masz żadnych znajomych do zaproszenia",
