@@ -26,7 +26,7 @@ const Checkbox = ({ value, onChange }) => {
 };
 
 Checkbox.propTypes = {
-  value: PropTypes.string,
+  value: PropTypes.boolean,
   onChange: PropTypes.func,
 };
 
