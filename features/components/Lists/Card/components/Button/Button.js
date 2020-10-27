@@ -11,6 +11,7 @@ const Button = ({ collapseRef, title: primaryTitle, invitationType }) => {
     setButtonName,
     collapseItems,
     handleClick,
+    handleCollapseClick,
     refId,
     setRefId,
     id,
@@ -38,7 +39,7 @@ const Button = ({ collapseRef, title: primaryTitle, invitationType }) => {
   const [isOpen, setStatusOfOpen] = useState(false);
 
   const removeFriend = () => {
-    handleClick({
+    handleCollapseClick({
       name: refType,
       refId,
       setRefId,
@@ -125,15 +126,15 @@ const Button = ({ collapseRef, title: primaryTitle, invitationType }) => {
               number,
               setNumber,
               friendshipId: refId,
+              id,
               setStatusOfInvited,
             });
-          } else {
+          } else if (!isOpen) {
             handleClick({
               name: refType,
               refId,
               setRefId,
               id,
-              number,
               setNumber,
               setStatusOfInvitation,
               setTitle,
@@ -156,14 +157,14 @@ const Button = ({ collapseRef, title: primaryTitle, invitationType }) => {
     </div>
   );
 };
-
+const element = typeof Element === "undefined" ? function () {} : Element;
 Button.propTypes = {
-  collapseRef:PropTypes.oneOfType([
+  collapseRef: PropTypes.oneOfType([
     PropTypes.func,
-    PropTypes.shape({current:PropTypes.elementType})
+    PropTypes.shape({ current: PropTypes.instanceOf(element) }),
   ]),
-  title:PropTypes.string,
-  invitationType:PropTypes.string
-}
+  title: PropTypes.string,
+  invitationType: PropTypes.string,
+};
 
 export default Button;

@@ -11,7 +11,7 @@ const { useTranslation } = i18next;
 
 const Fanpages = ({
   userId,
-  keyWords,
+  keyWords = "",
   onlySubscribed = false,
   helpInformation = true,
 }) => {
@@ -43,10 +43,10 @@ const Fanpages = ({
   }, []);
 
   useEffect(() => {
-    const { setNumber, number, refId, setRefId, id, setTitle } = fanpage;
+    const { setNumber, refId, setRefId, id, setTitle } = fanpage;
     if (refId)
       axios
-        .post("/fanpage/user/delete", { subId: fanpage.refId })
+        .post("/fanpage/unsubscribe", { fanpageId: id })
         .then(() => {
           if (userId == owner.id && !keyWords) {
             const newFanpages = fanpages.filter(
@@ -56,16 +56,16 @@ const Fanpages = ({
           } else {
             setTitle(subscribeText);
             setRefId(null);
-            setNumber(Number(number) - 1);
+            setNumber((prev) => prev - 1);
           }
         })
         .catch(({ response: { data: message } }) => setError(message));
     else if (id)
       axios
-        .post("/fanpage/user/add", { fanpageId: fanpage.id })
+        .post("/fanpage/subscribe", { fanpageId: fanpage.id })
         .then(({ data: { id } }) => {
           setTitle(unsubscribeText);
-          setNumber(Number(number) + 1);
+          setNumber((prev) => prev + 1);
           setRefId(id);
         })
         .catch(({ response: { data: message } }) => setError(message));
@@ -130,6 +130,6 @@ Fanpages.propTypes = {
   keyWords: PropTypes.string,
   onlySubscribed: PropTypes.bool,
   helpInformation: PropTypes.bool,
-}
+};
 
 export default Fanpages;

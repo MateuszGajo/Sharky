@@ -70,7 +70,7 @@ const Navbar = ({ setIdSub, setSection, subId, role, fanpageId }) => {
 
   const subscribeFanpage = () => {
     axios
-      .post("/fanpage/user/add", { fanpageId })
+      .post("/fanpage/subscribe", { fanpageId })
       .then(({ data: { id } }) => {
         setIdSub(id);
       })
@@ -79,7 +79,7 @@ const Navbar = ({ setIdSub, setSection, subId, role, fanpageId }) => {
 
   const unSubscribeFanpage = () => {
     axios
-      .post("/fanpage/user/delete", { subId, role, fanpageId })
+      .post("/fanpage/unsubscribe", { fanpageId })
       .then(() => {
         setIdSub(null);
       })
@@ -188,7 +188,7 @@ Navbar.propTypes = {
   setSection: PropTypes.func,
   subId: PropTypes.number,
   role: PropTypes.string,
-  fanpageId: PropTypes.number.isRequired
-}
+  fanpageId: PropTypes.number.isRequired,
+};
 
 export default Navbar;

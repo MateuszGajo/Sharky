@@ -131,10 +131,13 @@ const InvitePerson = ({ isOpen = true, setStatusOfOpen, type, targetId }) => {
                   title: inviteText,
                   description,
                   number: numberOfFriends,
-                  button: "join",
+                  buttonType: "join",
                 };
                 return (
-                  <div className="invite-person__container__people__item">
+                  <div
+                    className="invite-person__container__people__item"
+                    key={userId}
+                  >
                     <Card data={data} handleClick={setInvite} />
                   </div>
                 );
@@ -157,7 +160,7 @@ InvitePerson.propTypes = {
   isOpen: PropTypes.bool,
   setStatusOfOpen: PropTypes.func,
   type: PropTypes.string,
-  targetId: PropTypes.number
-}
+  targetId: PropTypes.number,
+};
 
 export default InvitePerson;

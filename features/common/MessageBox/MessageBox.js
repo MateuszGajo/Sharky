@@ -10,7 +10,7 @@ const { useTranslation } = i18next;
 
 const MessageBox = ({ value, onChange, btnSize = "medium", file, setFile }) => {
   const { t } = useTranslation();
-  
+
   const { setError } = useContext(AppContext);
 
   const title = t("common:message-box.title");
@@ -46,7 +46,7 @@ const MessageBox = ({ value, onChange, btnSize = "medium", file, setFile }) => {
           placeholder={description}
           className="message-box__content--textarea"
           data-testid="message-box-textarea"
-          required
+          required={!file}
           value={value}
           onChange={(e) => onChange(e.target.value)}
         />
@@ -114,11 +114,11 @@ const MessageBox = ({ value, onChange, btnSize = "medium", file, setFile }) => {
 };
 
 MessageBox.propTypes = {
-  value: PropTypes.string, 
-  onChange: PropTypes.func, 
-  btnSize: PropTypes.string, 
-  file: PropTypes.object, 
-  setFile: PropTypes.func
-}
+  value: PropTypes.string,
+  onChange: PropTypes.func,
+  btnSize: PropTypes.string,
+  file: PropTypes.object,
+  setFile: PropTypes.func,
+};
 
 export default MessageBox;

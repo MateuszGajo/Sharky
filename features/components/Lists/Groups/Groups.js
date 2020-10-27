@@ -55,28 +55,28 @@ const Groups = ({
   }, [keyWords]);
 
   useEffect(() => {
-    const { number, setNumber, refId, setRefId, id, setTitle } = group;
+    const { setNumber, refId, setRefId, id, setTitle } = group;
     if (refId)
       axios
-        .post("/group/user/delete", { subId: group.refId })
+        .post("/group/leave", { groupId: id })
         .then(() => {
           if (userId == owner.id && !keyWords) {
             const newGroups = groups.filter((group) => group.groupId != id);
             setGroups(newGroups);
           } else {
             setTitle(leaveText);
-            setNumber(Number(number) - 1);
+            setNumber((prev) => prev - 1);
             setRefId(null);
           }
         })
         .catch(({ response: { data: message } }) => setError(message));
     else if (id)
       axios
-        .post("/group/user/add", { groupId: group.id })
+        .post("/group/join", { groupId: group.id })
         .then(({ data: { id } }) => {
           setTitle(joinText);
           setRefId(id);
-          setNumber(Number(number) + 1);
+          setNumber((prev) => prev - 1);
         })
         .catch(({ response: { data: message } }) => setError(message));
   }, [group]);
