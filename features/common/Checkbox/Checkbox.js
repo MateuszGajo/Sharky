@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types"
+import PropTypes from "prop-types";
 import i18next from "@i18n";
 const { useTranslation } = i18next;
 
@@ -26,8 +26,8 @@ const Checkbox = ({ value, onChange }) => {
 };
 
 Checkbox.propTypes = {
-  value: PropTypes.string,
-  onChange: PropTypes.func
-}
+  value: PropTypes.boolean,
+  onChange: PropTypes.func,
+};
 
 export default Checkbox;
