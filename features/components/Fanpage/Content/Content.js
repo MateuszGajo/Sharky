@@ -18,13 +18,13 @@ const Content = ({ section, fanpageId, role }) => {
   const renderComponent = (name) => {
     switch (name) {
       case homeName:
-        return <Home fanpageId={fanpageId} />;
+        return <Home fanpageId={fanpageId} role={role} />;
       case membersName:
         return <Members fanpageId={fanpageId} role={role} />;
       case aboutName:
         return <About fanpageId={fanpageId} />;
       default:
-        return <Home fanpageId={fanpageId} />;
+        return <Home fanpageId={fanpageId} role={role} />;
     }
   };
   return (
@@ -42,7 +42,7 @@ const Content = ({ section, fanpageId, role }) => {
 Content.propTypes = {
   section: PropTypes.string,
   fanpageId: PropTypes.number.isRequired,
-  role: PropTypes.string
-}
+  role: PropTypes.string,
+};
 
 export default Content;
