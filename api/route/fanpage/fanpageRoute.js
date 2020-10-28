@@ -7,7 +7,17 @@ const router = express.Router();
 
 router.post("/get", async (req, res) => {
   const { from, userId, keyWords, onlySubscribed } = req.body;
-  const { id: onwerId } = decodeToken(req.cookies.token);
+
+  if (
+    !/^[\d]*$/.test(from) ||
+    (!userId && !/^[\d]*$/.test(userId)) ||
+    !(onlySubscribed == true || onlySubscribed == false) ||
+    !(typeof keyWords === "string" || keyWords === null)
+  )
+    return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const getFanpagesQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/fanpages.sql"))
@@ -26,7 +36,7 @@ router.post("/get", async (req, res) => {
     try {
       getFanpages = await client.query(getFanpagesQuery, [
         userId,
-        onwerId,
+        ownerId,
         from,
       ]);
     } catch {
@@ -38,13 +48,13 @@ router.post("/get", async (req, res) => {
         getFanpages = await client.query(getFanpagesSortedSubscribed, [
           userId,
           `%${keyWords}%`,
-          onwerId,
+          ownerId,
           from,
         ]);
       else
         getFanpages = await client.query(getFanpagesSorted, [
           `%${keyWords}%`,
-          onwerId,
+          ownerId,
           from,
         ]);
     } catch {
@@ -66,7 +76,10 @@ router.post("/get", async (req, res) => {
 
 router.post("/create", async (req, res) => {
   const { name, description } = req.body;
-  const { id: onwerId } = decodeToken(req.cookies.token);
+  if (!name) return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const date = new Date();
   const createFanpageQuery = fs
@@ -83,7 +96,7 @@ router.post("/create", async (req, res) => {
       date,
     ]);
 
-    await client.query(addAdminQuery, [rows[0].id, onwerId]);
+    await client.query(addAdminQuery, [rows[0].id, ownerId]);
 
     res.status(200).json({ id: rows[0].id });
   } catch {
@@ -91,9 +104,12 @@ router.post("/create", async (req, res) => {
   }
 });
 
-router.post("/user/add", async (req, res) => {
+router.post("/subscribe", async (req, res) => {
   const { fanpageId } = req.body;
-  const { id: onwerId } = decodeToken(req.cookies.token);
+  if (!/^[\d]*$/.test(fanpageId)) return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const role = "user";
   const addUserQuery = fs
@@ -106,14 +122,14 @@ router.post("/user/add", async (req, res) => {
   try {
     const { rows: addUser } = await client.query(addUserQuery, [
       fanpageId,
-      onwerId,
+      ownerId,
       role,
     ]);
 
     let id;
 
     if (!addUser[0]) {
-      const { rows } = await client.query(getUserIdQuery, [fanpageId, onwerId]);
+      const { rows } = await client.query(getUserIdQuery, [fanpageId, ownerId]);
       id = rows[0].id;
     } else id = addUser[0].id;
 
@@ -123,15 +139,19 @@ router.post("/user/add", async (req, res) => {
   }
 });
 
-router.post("/user/delete", async (req, res) => {
-  const { subId } = req.body;
+router.post("/unsubscribe", async (req, res) => {
+  const { fanpageId } = req.body;
+  if (!/^[\d]*$/.test(fanpageId)) return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const deleteUserQuery = fs
     .readFileSync(path.join(__dirname, "./query/delete/user.sql"))
     .toString();
 
   try {
-    await client.query(deleteUserQuery, [subId]);
+    await client.query(deleteUserQuery, [fanpageId, ownerId]);
 
     res.status(200).json({ success: true });
   } catch {

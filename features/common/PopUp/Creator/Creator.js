@@ -64,7 +64,6 @@ const Creator = ({ type, setStatusOfOpen }) => {
                 title={inputDescription}
                 value={description}
                 onChange={setDescription}
-                require={true}
               />
             </div>
 
@@ -85,7 +84,7 @@ const Creator = ({ type, setStatusOfOpen }) => {
 
 Creator.propTypes = {
   type: PropTypes.string,
-  setStatusOfOpen: PropTypes.func
-}
+  setStatusOfOpen: PropTypes.func,
+};
 
 export default Creator;

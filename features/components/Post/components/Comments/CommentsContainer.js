@@ -33,9 +33,8 @@ const withContainer = (WrappedComponent) => {
       e.preventDefault();
 
       addReply({
-        commnetId: comment.commnetId,
+        commentId: comment.commentId,
         content: reply,
-        date: new Date(),
         clearText: setReply,
         setNewComment,
         setError,
@@ -44,7 +43,7 @@ const withContainer = (WrappedComponent) => {
 
     const gReplies = () => {
       getReplies({
-        commnetId: comment.commnetId,
+        commentId: comment.commentId,
         from: replies.length,
         replies,
         setReplies,
@@ -57,13 +56,13 @@ const withContainer = (WrappedComponent) => {
     useEffect(() => {
       if (
         newComment.type == "comment" &&
-        newComment.idElement == comment.commnetId
+        newComment.idElement == comment.commentId
       ) {
         if (!isRepliesOpen) setStatusOfOpenReplies(true);
         setReplies([
           {
             replyId: newComment.replyId,
-            commnetId: newComment.commnetId,
+            commentId: newComment.commentId,
             userId: owner.id,
             content: newComment.content,
             date: newComment.date,
@@ -132,13 +131,13 @@ const withContainer = (WrappedComponent) => {
       </>
     );
   };
-
+  const element = typeof Element === "undefined" ? function () {} : Element;
   withContainer.propTypes = {
     focusIcon: PropTypes.oneOfType([
       PropTypes.func,
-      PropTypes.shape({current: PropTypes.elementType})
+      PropTypes.shape({ current: PropTypes.instanceOf(element) }),
     ]),
-  }
+  };
 
   return WithContainer;
 };

@@ -47,7 +47,6 @@ const Post = ({ post, focusElement }) => {
     addComent({
       postId: post.postId,
       content: commentText,
-      date: new Date(),
       clearText: setCommentText,
       setNewComment,
       setError,
@@ -58,7 +57,7 @@ const Post = ({ post, focusElement }) => {
     if (newComment.type == "post" && newComment.idElement == post.postId) {
       setComments([
         {
-          commnetId: newComment.commnetId,
+          commentId: newComment.commentId,
           userId: owner.id,
           likeId: null,
           numberOfLikes: 0,
@@ -112,7 +111,7 @@ const Post = ({ post, focusElement }) => {
         {comments?.map((comment) => (
           <div
             className="post__item__comments__container"
-            key={comment.commnetId}
+            key={comment.commentId}
             data-test="comments"
           >
             <Comment
@@ -144,12 +143,13 @@ const Post = ({ post, focusElement }) => {
     </div>
   );
 };
+const element = typeof Element === "undefined" ? function () {} : Element;
 
 Post.propTypes = {
   focusElement: PropTypes.oneOfType([
     PropTypes.func,
-    PropTypes.shape({current: PropTypes.elementType})
-  ])
-}
+    PropTypes.shape({ current: PropTypes.instanceOf(element) }),
+  ]),
+};
 
 export default withPost(Post);

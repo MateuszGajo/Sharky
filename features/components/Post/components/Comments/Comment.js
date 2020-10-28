@@ -38,7 +38,7 @@ const Commnet = ({
   const settingRef = useRef(null);
   const reportComment = t("component:post.comments.settings.report");
   const muteUser = t("component:post.comments.settings.mute");
-  
+
   const [likeId, setIdLike] = useState(comment?.likeId);
   const [numberOfLikes, setNumberOfLikes] = useState(
     Number(comment.numberOfLikes)
@@ -61,19 +61,18 @@ const Commnet = ({
       "numberOfReplies" in comment
         ? unlikeComment({
             likeId,
-            commnetId: comment.commnetId,
+            commentId: comment.commentId,
             setNewLike,
             setError,
           })
         : unlikeReply({
-            likeId,
             replyId: comment.replyId,
             setNewLike,
             setError,
           });
     } else {
       "numberOfReplies" in comment
-        ? likeComment({ commnetId: comment.commnetId, setNewLike, setError })
+        ? likeComment({ commentId: comment.commentId, setNewLike, setError })
         : likeReply({ replyId: comment.replyId, setNewLike, setError });
     }
   };
@@ -113,7 +112,7 @@ const Commnet = ({
   useEffect(() => {
     if (
       newLike.type == "comment" &&
-      newLike.idElement == comment.commnetId &&
+      newLike.idElement == comment.commentId &&
       numberOfReplies != undefined
     ) {
       setIdLike(newLike.likeId);
@@ -249,11 +248,11 @@ const Commnet = ({
   );
 };
 
-Commnet.propTypes ={
+Commnet.propTypes = {
   setStatusOfOpenReplies: PropTypes.func,
   numberOfReplies: PropTypes.number,
   isRepliesOpen: PropTypes.bool,
   getReplies: PropTypes.func,
-}
+};
 
 export default Commnet;

@@ -6,22 +6,35 @@ const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
 
 router.post("/add", async (req, res) => {
-  const { postId, content, date } = req.body;
-  const { id: onwerId } = decodeToken(req.cookies.token);
+  const { postId, content } = req.body;
+
+  if (!/^[0-9]*$/.test(postId) || !content)
+    return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
+
+  const date = new Date();
 
   const addCommentQuery = fs
     .readFileSync(path.join(__dirname, "./query/add/comment.sql"))
     .toString();
+  const getPostIdQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/postId.sql"))
+    .toString();
 
   try {
+    const { rows } = await client.query(getPostIdQuery, [postId]);
+    if (!rows[0].id) return res.status(400).json("post-does-not-exist");
     const comment = await client.query(addCommentQuery, [
       postId,
-      onwerId,
+      ownerId,
       content,
       date,
     ]);
     return res.status(200).json({
-      commnetId: comment.rows[0].id,
+      commentId: comment.rows[0].id,
+      date,
     });
   } catch {
     return res.status(400).json("bad-request");
@@ -30,15 +43,32 @@ router.post("/add", async (req, res) => {
 
 router.post("/get", async (req, res) => {
   const { from, postId } = req.body;
-  const { id: onwerId } = decodeToken(req.cookies.token);
+
+  if (!/^[0-9]*$/.test(postId) || !/^[0-9]*$/.test(from))
+    return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
+
+  const getGroupPermissionQuery = fs
+    .readFileSync(
+      path.join(__dirname, "./query/get/groupPermissionByPostId.sql")
+    )
+    .toString();
 
   const getCommentsQuery = fs
-    .readFileSync(path.join(__dirname, "./query/get/comments/sql"))
+    .readFileSync(path.join(__dirname, "./query/get/comments.sql"))
     .toString();
 
   let result;
   try {
-    result = await client.query(getCommentsQuery, [postId, onwerId, from]);
+    const { rows } = await client.query(getGroupPermissionQuery, [
+      postId,
+      ownerId,
+    ]);
+    if (rows[0].groupId && !rows[0].id)
+      return res.status(403).json("no-permission");
+    result = await client.query(getCommentsQuery, [postId, ownerId, from]);
   } catch {
     return res.status(400).json("bad-request");
   }
@@ -57,29 +87,45 @@ router.post("/get", async (req, res) => {
 });
 
 router.post("/like", async (req, res) => {
-  const { commnetId } = req.body;
-  const { id: onwerId } = decodeToken(req.cookies.token);
+  const { commentId } = req.body;
 
+  if (!/^[0-9]*$/.test(commentId)) return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
+
+  const getGroupPermissionQuery = fs
+    .readFileSync(
+      path.join(__dirname, "./query/get/groupPermissionByCommentId.sql")
+    )
+    .toString();
   const likeCommentQuery = fs
     .readFileSync(path.join(__dirname, "./query/add/like.sql"))
     .toString();
-
   const getLikeIdQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/likeId.sql"))
     .toString();
 
   try {
+    const { rows } = await client.query(getGroupPermissionQuery, [
+      commentId,
+      ownerId,
+    ]);
+
+    if (rows[0].groupId && !rows[0].id)
+      return res.status(403).json("no-permission");
+
     const { rows: newLike } = await client.query(likeCommentQuery, [
-      commnetId,
-      onwerId,
+      commentId,
+      ownerId,
     ]);
 
     let likeId;
     if (!newLike[0]) {
-      const { rows } = await client.query(getLikeIdQuery, [commnetId, onwerId]);
-
+      const { rows } = await client.query(getLikeIdQuery, [commentId, ownerId]);
       likeId = rows[0].id;
     } else likeId = newLike[0].id;
+
     return res.status(200).json({ likeId });
   } catch {
     return res.status(400).json("bad-request");
@@ -87,14 +133,31 @@ router.post("/like", async (req, res) => {
 });
 
 router.post("/unlike", async (req, res) => {
-  const { likeId } = req.body;
+  const { commentId } = req.body;
 
+  if (!/^[0-9]*$/.test(commentId)) return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
+
+  const getGroupPermissionQuery = fs
+    .readFileSync(
+      path.join(__dirname, "./query/get/groupPermissionByCommentId.sql")
+    )
+    .toString();
   const unlikeCommentQuery = fs
     .readFileSync(path.join(__dirname, "./query/delete/like.sql"))
     .toString();
 
   try {
-    await client.query(unlikeCommentQuery, [likeId]);
+    const { rows } = await client.query(getGroupPermissionQuery, [
+      commentId,
+      ownerId,
+    ]);
+    if (rows[0].groupId && !rows[0].id)
+      return res.status(403).json("no-permission");
+
+    await client.query(unlikeCommentQuery, [commentId, ownerId]);
 
     return res.status(200).json({ success: true });
   } catch {

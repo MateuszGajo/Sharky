@@ -6,12 +6,7 @@ import AppContext from "@features/context/AppContext";
 
 const { useTranslation } = i18next;
 
-const Members = ({
-  groupId,
-  role: permission,
-  setNumberOfMembers,
-  numberOfMembers,
-}) => {
+const Members = ({ groupId, role: permission, setNumberOfMembers }) => {
   const { t } = useTranslation(["group", "component"]);
 
   const { owner, setError } = useContext(AppContext);
@@ -29,7 +24,7 @@ const Members = ({
     const { id, refId } = removeMember;
     if (id) {
       axios
-        .post("/group/user/delete", { groupId: id, userId: refId })
+        .post("/group/user/delete", { subId: id, groupId })
         .then(() => {
           const newArrayOfMembers = members.filter(
             (member) => member.userId != refId
@@ -50,10 +45,10 @@ const Members = ({
   return (
     <div className="list">
       {members.map((member) => {
-        const { userId, firstName, lastName, photo, role } = member;
+        const { subId, userId, firstName, lastName, photo, role } = member;
         const data = {
           refType: "profile",
-          id: groupId,
+          id: subId,
           refId: userId,
           photo,
           deleteText,
@@ -80,7 +75,13 @@ const Members = ({
             },
           },
         };
-        return <Card data={data} key={userId} handleClick={setRemoveMember} />;
+        return (
+          <Card
+            data={data}
+            key={userId}
+            handleCollapseClick={setRemoveMember}
+          />
+        );
       })}
     </div>
   );
