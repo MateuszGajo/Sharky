@@ -40,7 +40,6 @@ const withWizzard = (Component) => {
     useEffect(() => {
       if (newPost?.content || newPost?.file) {
         const { content, file, setContent, setFile } = newPost;
-        const date = new Date();
         const formData = new FormData();
         const data = {
           content,
@@ -53,7 +52,7 @@ const withWizzard = (Component) => {
 
         axios
           .post(`/post/add`, formData)
-          .then(({ data: { postId, fileName } }) => {
+          .then(({ data: { postId, fileName, date } }) => {
             setPosts([
               {
                 id: uuid(),
@@ -72,7 +71,7 @@ const withWizzard = (Component) => {
               ...posts,
             ]);
             setContent("");
-            setFile("");
+            setFile(null);
           })
           .catch(({ response: { data: message } }) => setError(message));
       }
