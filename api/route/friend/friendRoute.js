@@ -1,19 +1,21 @@
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
+const { composeInitialProps } = require("react-i18next");
 const { client } = require("../../../config/pgAdaptor");
 const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
 
 router.get("/get", async (req, res) => {
-  const { id: onwerId } = decodeToken(req);
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const getChatsQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/chats.sql"))
     .toString();
 
   try {
-    const friends = await client.query(getChatsQuery, [onwerId]);
+    const friends = await client.query(getChatsQuery, [ownerId]);
     res.status(200).json({ friends: friends.rows });
   } catch {
     res.status(400).json("bad-request");
@@ -22,7 +24,10 @@ router.get("/get", async (req, res) => {
 
 router.post("/add", async (req, res) => {
   const { userId } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  if (!/^[\d]*$/.test(userId)) return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const getFriendshipIdQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/friendshipId.sql"))
@@ -33,14 +38,14 @@ router.post("/add", async (req, res) => {
 
   try {
     const { rows } = await client.query(getFriendshipIdQuery, [
-      onwerId,
+      ownerId,
       userId,
     ]);
     if (rows[0]) {
       return res.status(200).json({ friendshipId: rows[0].id });
     }
     const { rows: addUser } = await client.query(addUserQuery, [
-      onwerId,
+      ownerId,
       userId,
     ]);
 
@@ -51,7 +56,11 @@ router.post("/add", async (req, res) => {
 });
 
 router.post("/delete", async (req, res) => {
-  const { friendshipId } = req.body;
+  const { userId } = req.body;
+  if (!/^[\d]*$/.test(userId)) return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const deleteUserQuery = fs
     .readFileSync(path.join(__dirname, "./query/delete/user.sql"))
@@ -64,7 +73,8 @@ router.post("/delete", async (req, res) => {
     .toString();
 
   try {
-    await client.query(deleteUserQuery, [friendshipId]);
+    const { rows } = await client.query(deleteUserQuery, [userId, ownerId]);
+    const friendshipId = rows[0].id;
     await client.query(deleteFriendRelationQuery, [friendshipId]);
     await client.query(deleteChatQuery, [friendshipId]);
 
@@ -75,7 +85,11 @@ router.post("/delete", async (req, res) => {
 });
 
 router.post("/accept", async (req, res) => {
-  const { friendshipId } = req.body;
+  const { userId } = req.body;
+  if (!/^[\d]*$/.test(userId)) return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const relation = "friend";
   const acceptRequestQuery = fs
@@ -89,11 +103,14 @@ router.post("/accept", async (req, res) => {
     .toString();
 
   try {
-    const { rows } = await client.query(acceptRequestQuery, [friendshipId]);
+    const { rows } = await client.query(acceptRequestQuery, [userId, ownerId]);
     let chatId;
     if (rows[0]) {
+      const friendshipId = rows[0].id;
+
       await client.query(addRelationQuery, [friendshipId, relation]);
       const { rows: chat } = await client.query(addChatQuery, [friendshipId]);
+
       chatId = chat[0].id;
     }
 
@@ -104,14 +121,18 @@ router.post("/accept", async (req, res) => {
 });
 
 router.post("/decline", async (req, res) => {
-  const { friendshipId } = req.body;
+  const { userId } = req.body;
+  if (!/^[\d]*$/.test(userId)) return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const deleteFriendRequestQuery = fs
     .readFileSync(path.join(__dirname, "./query/delete/friendRequest.sql"))
     .toString();
 
   try {
-    await client.query(deleteFriendRequestQuery, [friendshipId]);
+    await client.query(deleteFriendRequestQuery, [userId, ownerId]);
     res.status(200).json({ success: true });
   } catch {
     res.status(400).json("bad-request");
@@ -121,6 +142,13 @@ router.post("/decline", async (req, res) => {
 router.post("/get/people", async (req, res) => {
   const { userId, from, onlyFriends } = req.body;
   let { keyWords } = req.body;
+  if (
+    !/^[\d]*$/.test(userId) ||
+    !/^[\d]*$/.test(from) ||
+    !(typeof keyWords === "string" || keyWords === null) ||
+    !(onlyFriends == true || onlyFriends == false)
+  )
+    return res.status(400).json("invalid-data");
 
   if (keyWords) {
     keyWords = keyWords.split(/\s+/);
@@ -128,7 +156,8 @@ router.post("/get/people", async (req, res) => {
       return res.status(200).json({ friends: [], isMore: false });
   }
 
-  const { id: onwerId } = decodeToken(req);
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const getFriendsQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/friends.sql"))
@@ -145,7 +174,7 @@ router.post("/get/people", async (req, res) => {
     try {
       result = await client.query(getFriendsQuery, [
         userId,
-        onwerId,
+        ownerId,
         from,
         onlyFriends,
       ]);
@@ -158,14 +187,14 @@ router.post("/get/people", async (req, res) => {
         result = await client.query(getFriendsSortedQuery, [
           keyWords[0] + "%",
           (keyWords[1] ? keyWords[1] : "") + "%",
-          onwerId,
+          ownerId,
           from,
         ]);
       else
         result = await client.query(getUserSortedQuery, [
           keyWords[0] + "%",
           (keyWords[1] ? keyWords[1] : "") + "%",
-          onwerId,
+          ownerId,
           from,
         ]);
     } catch {
@@ -186,24 +215,37 @@ router.post("/get/people", async (req, res) => {
 });
 
 router.post("/message/read", (req, res) => {
-  const { chatId } = req.body;
+  const { userId } = req.body;
+  if (!/^[\d]*$/.test(userId)) return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const readMessageQuery = fs
     .readFileSync(path.join(__dirname, "./query/update/message.sql"))
     .toString();
 
-  client.query(readMessageQuery, [chatId]);
+  client.query(readMessageQuery, [userId, ownerId]);
 });
 
 router.post("/update/relation", async (req, res) => {
-  const { friendshipId, userId, relation } = req.body;
+  const { userId, relation } = req.body;
+  if (
+    !/^[\d]*$/.test(userId) ||
+    !(relation === "friend" || relation === "family" || relation === "pal")
+  )
+    return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const updateRelationQuery = fs
     .readFileSync(path.join(__dirname, "./query/update/relation.sql"))
     .toString();
 
   try {
-    await client.query(updateRelationQuery, [relation, userId, friendshipId]);
+    await client.query(updateRelationQuery, [relation, userId, ownerId]);
+
     res.status(200);
   } catch {
     res.status(400).json("bad-request");

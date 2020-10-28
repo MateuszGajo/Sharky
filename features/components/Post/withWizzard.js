@@ -6,8 +6,8 @@ import WizzardContext from "./context/WizzardContext";
 import AppContext from "@features/context/AppContext";
 
 const withWizzard = (Component) => {
-  const Wrapped =(props) => {
-    const { newPost, fanpageId = "", groupId = "", news = "" } = props;
+  const Wrapped = (props) => {
+    const { newPost, fanpageId = null, groupId = null, news = false } = props;
 
     const { setError, owner } = useContext(AppContext);
     const [isMoreComment, setStatusOfMoreComments] = useState(false);
@@ -38,19 +38,21 @@ const withWizzard = (Component) => {
 
     const [posts, setPosts] = useState([]);
     useEffect(() => {
-      if (newPost?.content) {
+      if (newPost?.content || newPost?.file) {
         const { content, file, setContent, setFile } = newPost;
         const date = new Date();
-        const data = new FormData();
-        data.append("file", file);
-        data.set("content", content);
-        data.set("date", date.toUTCString());
-        data.set("groupId", groupId);
-        data.set("fanpageId", fanpageId);
-        data.set("news", news);
+        const formData = new FormData();
+        const data = {
+          content,
+          groupId,
+          fanpageId,
+          news,
+        };
+        formData.append("file", file);
+        formData.set("data", JSON.stringify(data));
 
         axios
-          .post(`/post/add`, data)
+          .post(`/post/add`, formData)
           .then(({ data: { postId, fileName } }) => {
             setPosts([
               {
@@ -104,16 +106,16 @@ const withWizzard = (Component) => {
 
   Wrapped.propTypes = {
     newPost: PropTypes.shape({
-      content: PropTypes.string, 
+      content: PropTypes.string,
       setContent: PropTypes.func,
-      file:PropTypes.object, 
-      setFile: PropTypes.func
-    }), 
-    fanpageId: PropTypes.number, 
-    groupId: PropTypes.number, 
-    news: PropTypes.bool
-  }
-  return Wrapped
+      file: PropTypes.object,
+      setFile: PropTypes.func,
+    }),
+    fanpageId: PropTypes.number,
+    groupId: PropTypes.number,
+    news: PropTypes.bool,
+  };
+  return Wrapped;
 };
 
 export default withWizzard;

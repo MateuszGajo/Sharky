@@ -12,7 +12,7 @@ with usersSorted as (
 ),
 usersSortedCounted as(
     select a."userId",
-        sum(a.count) as "numberOfFriends"
+        sum(a.count)::int as "numberOfFriends"
     from(
             select user_id_1 as "userId",
                 count(user_id_1)
@@ -39,7 +39,7 @@ usersInvited as (
         id::text as "subId",
         status::text,
         CASE
-            WHEN status = '0' THEN true::text
+            WHEN status = '0' THEN true
             else null
         end as "isInvitationSent"
     from group_users
@@ -53,7 +53,7 @@ usersNotInvited as(
     select id as "userId",
         null as "subId",
         null as status,
-        null as "isInvitationSent"
+        null::boolean as "isInvitationSent"
     from usersSorted
     where id not in (
             select "userId"

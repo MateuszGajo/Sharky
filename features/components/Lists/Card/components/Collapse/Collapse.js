@@ -5,7 +5,7 @@ import CardContext from "../../context/CardContext";
 
 const Collapse = ({ collapseRef }) => {
   const {
-    refId,
+    id: idUser,
     setButtonName,
     setTitle,
     buttonName,
@@ -52,8 +52,7 @@ const Collapse = ({ collapseRef }) => {
           onClick={() => {
             if (buttonName !== name) {
               setRelation({
-                id: refId,
-                subId: id,
+                id: idUser,
                 name,
                 setButtonName,
                 setTitle,
@@ -69,11 +68,12 @@ const Collapse = ({ collapseRef }) => {
   );
 };
 
+const element = typeof Element === "undefined" ? function () {} : Element;
 Collapse.propTypes = {
-  collapseRef:PropTypes.oneOfType([
+  collapseRef: PropTypes.oneOfType([
     PropTypes.func,
-    PropTypes.shape({current:PropTypes.elementType})
-  ])
-}
+    PropTypes.shape({ current: PropTypes.instanceOf(element) }),
+  ]),
+};
 
 export default Collapse;
