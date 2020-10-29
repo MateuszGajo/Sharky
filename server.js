@@ -22,6 +22,7 @@ const { client } = require("./config/pgAdaptor");
 const { jwtSecret } = require("./config/keys");
 const bodyParser = require("body-parser");
 const { userJoin, userLeave, getSocket, existUser } = require("./utils/users");
+const decodeToken = require("./utils/decodeToken");
 
 const nextI18Next = require("./i18n/server");
 
@@ -35,35 +36,40 @@ server.use(cookieParser());
 server.use(bodyParser.json());
 
 socketIO.sockets.on("connection", (socket) => {
+  const addUnreadMessageQuery = fs
+    .readFileSync(path.join(__dirname, "./utils/query/add/unreadMessage.sql"))
+    .toString();
   socket.on("connectUser", () => {
     const token = cookie.parse(socket.handshake.headers.cookie).token;
 
     const {
-      data: { id: onwerId },
+      data: { id: ownerId },
     } = jwt.verify(token, jwtSecret);
-    userJoin(onwerId, socket.id);
+    userJoin(ownerId, socket.id);
   });
 
-  socket.on(
-    "sendChatMessage",
-    ({ messageId, chatId, userId, message, date, messageTo }) => {
-      const unReadMessageQuery = `update chats set message_to=$1 where id=$2;`;
-      if (!existUser(messageTo))
-        client.query(unReadMessageQuery, [messageTo, chatId]);
-      socket.broadcast.to("chat" + chatId).emit("message", {
-        messageId,
-        chatId,
-        userId,
-        message,
-        date,
-        messageTo,
-      });
-    }
-  );
+  socket.on("sendChatMessage", ({ messageId, userId, message, date }) => {
+    const { error, id: ownerId } = decodeToken(
+      cookie.parse(socket.handshake.headers.cookie).token
+    );
+    if (error) return;
 
-  socket.on("isMessageUnRead", ({ chatId, messageTo }) => {
-    const unReadMessageQuery = `update chats set message_to=$1 where id=$2;`;
-    client.query(unReadMessageQuery, [messageTo, chatId]);
+    if (!existUser(messageTo))
+      client.query(addUnreadMessageQuery, [userId, ownerId]);
+    socket.broadcast.to("chat" + chatId).emit("message", {
+      messageId,
+      userId: ownerId,
+      message,
+      date,
+    });
+  });
+
+  socket.on("isMessageUnRead", ({ userId }) => {
+    const { error, id: ownerId } = decodeToken(
+      cookie.parse(socket.handshake.headers.cookie).token
+    );
+    if (error) return;
+    client.query(addUnreadMessageQuery, [userId, ownerId]);
   });
 
   socket.on("joinNewChat", async ({ friendshipId, chatId }) => {
@@ -113,7 +119,7 @@ socketIO.sockets.on("connection", (socket) => {
     const token = cookie.parse(socket.handshake.headers.cookie).token;
 
     const {
-      data: { id: onwerId },
+      data: { id: ownerId },
     } = jwt.verify(token, jwtSecret);
 
     const getChatsQuery = fs
@@ -122,7 +128,7 @@ socketIO.sockets.on("connection", (socket) => {
       )
       .toString();
 
-    const { rows: chats } = await client.query(getChatsQuery, [onwerId]);
+    const { rows: chats } = await client.query(getChatsQuery, [ownerId]);
     for (let i = 0; i < chats.length; i++) {
       socket.join("chat" + chats[i].chatId);
     }
@@ -137,10 +143,10 @@ socketIO.sockets.on("connection", (socket) => {
 
     if (token) {
       const {
-        data: { id: onwerId },
+        data: { id: ownerId },
       } = jwt.verify(token, jwtSecret);
 
-      userLeave(onwerId, socket.id);
+      userLeave(ownerId, socket.id);
     }
   });
 });

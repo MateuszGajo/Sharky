@@ -1,2 +1,3 @@
 delete from reply_likes
-where id = $1;
+where reply_id = $1
+    and user_id = $2;

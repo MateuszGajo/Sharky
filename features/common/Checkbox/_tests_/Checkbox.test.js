@@ -2,7 +2,7 @@ import React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import Checkbox from "../Checkbox";
 
-it("does Checkbox works correct", () => {
+it("does Checkbox work correct", () => {
   const value = false;
   const onChange = jest.fn();
   const { getByTestId } = render(

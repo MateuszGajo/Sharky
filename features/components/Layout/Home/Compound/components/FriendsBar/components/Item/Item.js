@@ -15,14 +15,14 @@ const Item = ({ user }) => {
   );
 
   useEffect(() => {
-    const { chatId, messageTo } = newMessage;
+    const { chatId, userId } = newMessage;
     if (
       chatId == user.chatId &&
       chat.chatId != user.chatId &&
-      messageTo == owner.id
+      userId == owner.id
     ) {
       setStatusOfNewMessage(true);
-      socket.emit("isMessageUnRead", { chatId, messageTo });
+      socket.emit("isMessageUnRead", { userId });
     }
   }, [newMessage]);
 
@@ -41,7 +41,7 @@ const Item = ({ user }) => {
         });
         setStatusOfMessenger(false);
         setStatusOfNewMessage(false);
-        if (user.messageTo) axios.post("/friend/message/read", { chatId });
+        if (user.messageTo) axios.post("/friend/message/read", { userId });
       }}
     >
       <div className="home_friends__list__item__user">
