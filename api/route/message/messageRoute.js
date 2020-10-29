@@ -31,7 +31,8 @@ router.post("/get", async (req, res) => {
 });
 
 router.get("/conversation/get", async (req, res) => {
-  const { id: ownerId } = decodeToken(req);
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const getConversationsQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/conversations.sql"))
