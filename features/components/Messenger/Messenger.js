@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
+import PropTypes from "prop-types";
 import cx from "classnames";
 import Navbar from "./components/Navbar/Navbar";
 import Content from "./components/Content/Content";
@@ -37,10 +38,13 @@ const Messenger = ({
   }, [newMessage]);
 
   useEffect(() => {
-    const { chatId } = chat;
+    const {
+      user: { id },
+    } = chat;
+
     if (user.id !== chat.user.id) {
       getMesseges({
-        chatId: chatId,
+        userId: id,
         messages: [],
         setMessages,
         setStatusOfLoading,
@@ -60,7 +64,6 @@ const Messenger = ({
       <Navbar
         setStatusOfDisplayMobile={setStatusOfDisplayMobile}
         setStatusOfMessenger={setStatusOfMessenger}
-        messages={messages}
         user={user}
         windowMessenger={windowMessenger}
         setChat={setChat}
@@ -74,6 +77,23 @@ const Messenger = ({
       />
     </div>
   );
+};
+
+Messenger.propTypes = {
+  setStatusOfMessenger: PropTypes.func,
+  isMessengerClose: PropTypes.bool,
+  windowMessenger: PropTypes.bool,
+  setStatusOfDisplayMobile: PropTypes.func,
+  chat: PropTypes.shape({
+    chatId: PropTypes.number,
+    user: PropTypes.shape({
+      id: PropTypes.number,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      photo: PropTypes.string,
+    }),
+  }),
+  setChat: PropTypes.func,
 };
 
 export default Messenger;

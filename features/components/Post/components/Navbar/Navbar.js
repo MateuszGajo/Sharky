@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useContext } from "react";
+import PropTypes from "prop-types";
 import Router from "next/router";
 import { BsThreeDots } from "react-icons/bs";
 import { IoMdShareAlt } from "react-icons/io";
@@ -16,7 +17,7 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
 
   const settingRef = useRef(null);
 
-  const { user, userShare, post } = useContext(PostContext);
+  const { user, secondaryUser, post } = useContext(PostContext);
   const { owner } = useContext(AppContext);
   const dtf = new Intl.DateTimeFormat(language, {
     year: "numeric",
@@ -64,16 +65,16 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
 
   return (
     <div className="post__item__navbar">
-      {userShare && (
+      {secondaryUser && (
         <div
           className="post__item__navbar__user"
           onClick={() => {
-            Router.push(`/profile/${userShare.id}`);
+            Router.push(`/profile/${secondaryUser.id}`);
           }}
         >
           <div className="post__item__navbar__user__photo">
             <img
-              src={"/static/images/" + userShare.photo}
+              src={"/static/images/" + secondaryUser.photo}
               alt="Zdjęcie użytkownika"
               className="post__item__navbar__user__photo__img"
             />
@@ -83,7 +84,7 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
               className="post__item__navbar__user__name__span"
               data-testid="post-username"
             >
-              {userShare.firstName + " " + userShare.lastName}
+              {secondaryUser.firstName + " " + secondaryUser.lastName}
             </span>
           </div>
           <div className="post__item__navbar__user__share">
@@ -145,6 +146,18 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
       </div>
     </div>
   );
+};
+const element = typeof Element === "undefined" ? function () {} : Element;
+
+NavBar.propTypes = {
+  focusCollapse: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({ current: PropTypes.instanceOf(element) }),
+  ]),
+  focusIcon: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({ current: PropTypes.instanceOf(element) }),
+  ]),
 };
 
 export default NavBar;

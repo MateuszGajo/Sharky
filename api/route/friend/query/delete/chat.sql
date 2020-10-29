@@ -1,2 +1,2 @@
 delete from chats
-where id_frienship = $1
+where friendship_id = $1

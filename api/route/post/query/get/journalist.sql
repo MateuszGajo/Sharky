@@ -1,3 +1,3 @@
 select id
-from group_users
+from journalists
 where user_id = $1

@@ -84,8 +84,8 @@ postsShared as (
         b.content,
         b.photo,
         a.date,
-        a.id::text as "shareId",
-        a.user_id::text as "postSharedUserId"
+        a.id as "shareId",
+        a.user_id as "postSharedUserId"
     from post_shares as a
         inner join posts as b on a.post_id = b.id
         inner join numberOfShares as c on a.post_id = c."postId"
@@ -105,8 +105,8 @@ posts as (
         a.content,
         a.photo,
         a.date,
-        null as "shareId",
-        null as "postSharedUserId"
+        null::bigint as "shareId",
+        null::bigint as "postSharedUserId"
     from posts as a
         inner join numberOfShares as b on a.id = b."postId"
         inner join numberOfComments as c on a.id = c."postId"
