@@ -253,14 +253,32 @@ router.post("/update/relation", async (req, res) => {
 });
 
 router.post("/change/relation/accept", async (req, res) => {
-  const { relationId, newRelation } = req.body;
+  const { friendshipId, userId, newRelation } = req.body;
+  if (
+    !/^[\d]*$/.test(userId) ||
+    !(
+      newRelation === "friend" ||
+      newRelation === "family" ||
+      newRelation === "pal"
+    ) ||
+    !/^[\d]*$/.test(friendshipId)
+  )
+    return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const acceptNewRelationQuery = fs
     .readFileSync(path.join(__dirname, "./query/update/acceptNewRelation.sql"))
     .toString();
 
   try {
-    await client.query(acceptNewRelationQuery, [newRelation, relationId]);
+    await client.query(acceptNewRelationQuery, [
+      newRelation,
+      friendshipId,
+      ownerId,
+      userId,
+    ]);
 
     res.status(200).json({ sucess: true });
   } catch {
@@ -269,14 +287,23 @@ router.post("/change/relation/accept", async (req, res) => {
 });
 
 router.post("/change/relation/decline", async (req, res) => {
-  const { relationId } = req.body;
+  const { friendshipId, userId } = req.body;
+  if (!/^[\d]*$/.test(userId) || !/^[\d]*$/.test(friendshipId))
+    return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const declineNewRelationQuery = fs
     .readFileSync(path.join(__dirname, "./query/update/declineNewRelation.sql"))
     .toString();
 
   try {
-    await client.query(declineNewRelationQuery, [relationId]);
+    await client.query(declineNewRelationQuery, [
+      friendshipId,
+      ownerId,
+      userId,
+    ]);
 
     res.status(200).json({ sucess: true });
   } catch {
