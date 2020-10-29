@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from "react";
+import PropTypes from "prop-types"
 import AppContext from "@features/context/AppContext";
 
 const Prompt = ({ message }) => {
@@ -21,5 +22,9 @@ const Prompt = ({ message }) => {
     </section>
   );
 };
+
+Prompt.propTypes = {
+  message: PropTypes.string
+}
 
 export default Prompt;

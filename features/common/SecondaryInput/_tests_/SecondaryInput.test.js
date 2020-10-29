@@ -5,7 +5,7 @@ import SecondaryInput from "../SecondaryInput";
 
 expect.extend({ toHaveClass, toHaveValue });
 
-it("Does secondary input displays correct", () => {
+it("Does secondary input display correct", () => {
   const inputValue = "text";
   const onChange = jest.fn();
 

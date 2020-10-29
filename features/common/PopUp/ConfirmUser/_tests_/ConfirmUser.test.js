@@ -1,13 +1,15 @@
 import React from "react";
-import { render } from "@testing-library/react";
+import { render, fireEvent } from "@testing-library/react";
 import { toHaveClass } from "@testing-library/jest-dom/matchers";
 import ConfirmUser from "../ConfirmUser";
 
 expect.extend({ toHaveClass });
 
-it("does confirm user property works correct", () => {
-  const { getByTestId } = render(<ConfirmUser isOpen={false} />);
+it("does confirm user property work correct", () => {
+  const setOpen = jest.fn();
+  const { getByTestId } = render(<ConfirmUser setOpen={setOpen} />);
 
-  const confirmUserPopUp = getByTestId("confrim-user-container");
-  expect(confirmUserPopUp).toHaveClass("is-close");
+  const confirmUserPopUp = getByTestId("close-icon");
+  fireEvent.click(confirmUserPopUp);
+  expect(setOpen).toHaveBeenCalledWith(false);
 });
