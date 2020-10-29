@@ -45,9 +45,8 @@ router.post("/add", async (req, res) => {
       fileName = req.file.filename;
     }
 
-    const { content, date, groupId, fanpageId, news } = JSON.parse(
-      req.body.data
-    );
+    const { content, groupId, fanpageId, news } = JSON.parse(req.body.data);
+    const date = new Date();
 
     if (
       typeof content !== "string" ||
@@ -82,7 +81,7 @@ router.post("/add", async (req, res) => {
     try {
       if (groupId) {
         const { rows } = await client.query(getMemberQuery, [ownerId, groupId]);
-        if (rows[0].id) return res.status(403).json("no-permission");
+        if (!rows[0].id) return res.status(403).json("no-permission");
         newPost = await client.query(addGroupPostQuery, [
           ownerId,
           groupId,
@@ -123,6 +122,7 @@ router.post("/add", async (req, res) => {
       return res.status(200).json({
         postId: newPost.rows[0].id,
         fileName,
+        date,
       });
     } catch {
       return res.status(400).json("bad-request");
