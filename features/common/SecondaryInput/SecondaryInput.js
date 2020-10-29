@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import cx from "classnames";
 
 const SecondaryInput = ({
@@ -37,5 +38,12 @@ const SecondaryInput = ({
     </div>
   );
 };
+
+SecondaryInput.propTypes = {
+  photo: PropTypes.string,
+  size: PropTypes.string,
+  value: PropTypes.string,
+  onChange: PropTypes.func
+}
 
 export default SecondaryInput;
