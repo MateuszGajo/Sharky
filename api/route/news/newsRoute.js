@@ -6,7 +6,8 @@ const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
 
 router.get("/permission", async (req, res) => {
-  const { id: ownerId } = decodeToken(req);
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const getJournalistIdQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/journalistId.sql"))
