@@ -32,7 +32,6 @@ const News = () => {
   useEffect(() => {
     isAuth &&
       axios.get("/news/permission").then(({ data: { permission } }) => {
-        console.log(permission);
         setPermission(permission);
       });
   }, [isAuth]);
