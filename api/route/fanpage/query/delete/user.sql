@@ -1,2 +1,3 @@
 delete from fanpage_users
-where id = $1
+where fanpage_id = $1
+    and user_id = $2;

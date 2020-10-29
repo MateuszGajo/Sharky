@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types"
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-const PhotoList = ({ userId }) => {
+const Photos = ({ userId }) => {
   const [photos, setPhotos] = useState([]);
   const [isMore, setStatusOfMore] = useState(false);
 
@@ -40,4 +41,9 @@ const PhotoList = ({ userId }) => {
   );
 };
 
-export default PhotoList;
+Photos.propTypes ={
+  userId: PropTypes.number.isRequired
+}
+
+
+export default Photos;

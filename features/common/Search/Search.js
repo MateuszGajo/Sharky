@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes  from "prop-types";
 import { AiOutlineSearch } from "react-icons/ai";
 import cx from "classnames";
 
@@ -30,5 +31,11 @@ const Search = ({ value, onChange, size = "large" }) => {
     </div>
   );
 };
+
+Search.propTypes = {
+  value: PropTypes.string,
+  onChange: PropTypes.func,
+  size: PropTypes.string
+}
 
 export default Search;
