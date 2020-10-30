@@ -25,7 +25,7 @@ select a.*,
     coalesce(d.count, 0) as "numberOfShares",
     e.id as "likeId",
     null as "shareId",
-    null as "postSharedUserId"
+    null::integer as "postSharedUserId"
 from(
         select id as "postId",
             fanpage_id as "fanpageId",
