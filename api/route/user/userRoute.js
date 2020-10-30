@@ -11,7 +11,8 @@ const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
 
 router.post("/add/photo", async (req, res) => {
-  const { id: ownerId } = decodeToken(req);
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -22,37 +23,37 @@ router.post("/add/photo", async (req, res) => {
     },
   });
 
-  const upload = multer({ storage }).single("file");
+  const upload = multer({
+    storage,
+    limits: {
+      fileSize: 200000,
+    },
+    fileFilter: (req, file, cb) => {
+      if (file.mimetype !== "image/jpeg" && file.mimetype !== "image/png") {
+        return cb(new Error("wrong file type"));
+      }
+      cb(null, true);
+    },
+  }).single("file");
 
   await upload(req, res, async (err) => {
     if (err) {
-      return res.status(400).json("bad-request");
+      return err.message == "File too large"
+        ? res.status(413).json("file-too-large")
+        : err.message === "wrong file type"
+        ? res.status(415).json("wrong-file-type")
+        : res.status(400).json("bad-request");
     }
 
-    const {
-      file: { mimetype, filename, size },
-    } = req;
-
-    const fileName = filename;
-
-    if (mimetype !== "image/jpeg" && mimetype !== "image/png") {
-      return res.status(415).json("wrong-file-type");
-    }
-
-    if (size > 200000) {
-      return res.status(413).json("file-too-large");
-    }
+    if (!req.file) return res.status(404).json("no-photo");
+    fileName = req.file.filename;
 
     const addPhotoQuery = fs
       .readFileSync(path.join(__dirname, "./query/add/photo.sql"))
       .toString();
 
     try {
-      await client.query(addPhotoQuery, [
-        ownerId,
-        fileName,
-        new Date().toUTCString(),
-      ]);
+      await client.query(addPhotoQuery, [ownerId, fileName, new Date()]);
 
       res.status(200).json({ success: true });
     } catch {
@@ -62,7 +63,8 @@ router.post("/add/photo", async (req, res) => {
 });
 
 router.post("/change/photo", async (req, res) => {
-  const { id: ownerId } = decodeToken(req);
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -73,14 +75,30 @@ router.post("/change/photo", async (req, res) => {
     },
   });
 
-  const upload = multer({ storage }).single("file");
+  const upload = multer({
+    storage,
+    limits: {
+      fileSize: 200000,
+    },
+    fileFilter: (req, file, cb) => {
+      if (file.mimetype !== "image/jpeg" && file.mimetype !== "image/png") {
+        return cb(new Error("wrong file type"));
+      }
+      cb(null, true);
+    },
+  }).single("file");
 
   await upload(req, res, async (err) => {
-    if (err) return res.status(400).json("bad-request");
+    if (err) {
+      return err.message == "File too large"
+        ? res.status(413).json("file-too-large")
+        : err.message === "wrong file type"
+        ? res.status(415).json("wrong-file-type")
+        : res.status(400).json("bad-request");
+    }
 
-    const {
-      file: { mimetype, filename, size },
-    } = req;
+    if (!req.file) return res.status(404).json("no-photo");
+    fileName = req.file.filename;
 
     const changePhotoQuery = fs
       .readFileSync(path.join(__dirname, "./query/update/photo.sql"))
@@ -88,7 +106,6 @@ router.post("/change/photo", async (req, res) => {
     const addPhotoQuery = fs
       .readFileSync(path.join(__dirname, "./query/add/photo.sql"))
       .toString();
-    const fileName = filename;
 
     try {
       await client.query(changePhotoQuery, [fileName, ownerId]);
@@ -125,6 +142,10 @@ router.post("/get", async (req, res) => {
 
 router.post("/info", async (req, res) => {
   const { userId } = req.body;
+  if (!/^[\d]*$/.test(userId)) return res.status(400).json("invalid-data");
+
+  const { error } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const getUserInfoQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/userInfo.sql"))
@@ -142,6 +163,7 @@ router.post("/info", async (req, res) => {
 
 router.post("/get/photo", async (req, res) => {
   const { userId, from } = req.body;
+  if (!/^[\d]*$/.test(from)) return res.status(400).json("invalid-data");
 
   const { error } = decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
