@@ -5,7 +5,7 @@ import Search from "../Search";
 
 expect.extend({ toHaveClass, toHaveValue });
 
-it("does search property works correct", () => {
+it("does search property work correct", () => {
   const searchValue = "search";
   const searchOnChange = jest.fn();
   const { getByTestId } = render(

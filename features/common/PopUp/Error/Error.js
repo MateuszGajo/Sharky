@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import PropTypes from "prop-types";
 import { MdErrorOutline } from "react-icons/md";
 import AppContext from "@features/context/AppContext";
 import i18next from "@i18n";
@@ -34,5 +35,9 @@ const Error = ({ message }) => {
     </section>
   );
 };
+
+Error.propTypes = {
+  message: PropTypes.string
+}
 
 export default Error;

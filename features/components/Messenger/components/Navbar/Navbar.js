@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Router from "next/router";
 import { AiOutlineClose } from "react-icons/ai";
 import { IoMdArrowBack } from "react-icons/io";
@@ -54,5 +55,6 @@ const Navbar = ({
     </div>
   );
 };
+
 
 export default Navbar;
