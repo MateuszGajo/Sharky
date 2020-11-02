@@ -16,4 +16,5 @@ where friendship_id = (
                 and user_id_2 = $3
             )
     )
-returning id
+returning id,
+    chat_id as "chatId"
