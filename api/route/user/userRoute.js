@@ -126,11 +126,27 @@ router.get("/logout", async (req, res) => {
   res.status(200).json({ userId: ownerId });
 });
 
-router.get("/me", (req, res) => {
-  const data = decodeToken(req.cookies.token);
-  if (data.error) return res.status(401).json(data.error);
+router.get("/me", async (req, res) => {
+  const getPasswordQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/password.sql"))
+    .toString();
+  const getThirdIdQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/password.sql"))
+    .toString();
+  const user = decodeToken(req.cookies.token);
+  if (user.error) return res.status(401).json(user.error);
 
-  return res.status(200).json({ user: data });
+  try {
+    const { rowCount } = await client.query(getThirdIdQuery, [user.id]);
+    if (rowCount > 0) {
+      const { rows } = await client.query(getPasswordQuery, [user.id]);
+      if (user.password !== rows[0].password)
+        return res.status(401).json("password-changed");
+    }
+    return res.status(200).json({ user });
+  } catch {
+    return res.status(400).json("bad-request");
+  }
 });
 
 router.post("/check/password", async (req, res) => {
