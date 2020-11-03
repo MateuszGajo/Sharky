@@ -22,7 +22,7 @@ const MyApp = ({ Component, pageProps }) => {
   useEffect(() => {
     if (owner.id) {
       setSocket(socketIOClient(SERVER_URL));
-      checkLanguage({ userId: owner.id });
+      checkLanguage();
     }
   }, [owner]);
 

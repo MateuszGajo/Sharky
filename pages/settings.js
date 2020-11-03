@@ -10,17 +10,25 @@ import Prompt from "@common/PopUp/Prompt/Prompt";
 import Spinner from "@components/Spinner/Spinner";
 import AppContext from "@features/context/AppContext";
 import { getOwner } from "@features/service/Functions/index";
+import withSettings from "@components/Settings/withSettings";
+import SettingsContext from "@components/Settings/context/SettingsContext";
 import "@styles/settings.scss";
 
 const Settings = () => {
   const { isPrompt, isError, setOwner } = useContext(AppContext);
+  const {
+    isOpenConfirmPopUp,
+    setOpenConfirmPopUp,
+    setConfirmUser,
+    confirmUser,
+    setUserPassword,
+    confirmPopUpError,
+  } = useContext(SettingsContext);
 
   const [isAccountCollapsed, setStatusOfAccountCollapse] = useState(true);
   const [isGeneralCollapsed, setStatusOfGeneralCollapse] = useState(true);
   const [inputValue, setInputValue] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isOpenConfirmPopUp, setOpenConfirmPopUp] = useState(false);
-  const [confirmUser, setConfirmUser] = useState(false);
   const [isLoading, setStatusOfLoading] = useState(true);
   const [isAuth, setStatusOfAuth] = useState(null);
   const [settings, setSettings] = useState({
@@ -37,7 +45,6 @@ const Settings = () => {
       axios
         .get("/user/me/info")
         .then(({ data: { email, phone, language, country } }) => {
-          console.log(language);
           const userSettings = {
             account: [
               {
@@ -100,7 +107,12 @@ const Settings = () => {
       {isError && <Error message={isError} />}
       {isPrompt && <Prompt message={isPrompt} />}
       {isOpenConfirmPopUp && (
-        <ConfirmUser setOpen={setOpenConfirmPopUp} setVerify={setConfirmUser} />
+        <ConfirmUser
+          setOpen={setOpenConfirmPopUp}
+          setVerify={setConfirmUser}
+          setValue={setUserPassword}
+          popUpError={confirmPopUpError}
+        />
       )}
 
       <NavBar />
@@ -159,4 +171,4 @@ const Settings = () => {
   );
 };
 
-export default Settings;
+export default withSettings(Settings);

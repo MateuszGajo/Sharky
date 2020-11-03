@@ -15,7 +15,8 @@
         "confirm-user":{
             "title":"Wpisz swoje hasło",
             "button":"Dalej",
-            "bad-password":"Bad password"
+            "invalid-password":"Błędne hasło",
+            "password-too-short":"Hasło jest za krótkie"
         },
         "report":{
             "title-post":"Zgłoś post",

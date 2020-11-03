@@ -5,7 +5,6 @@ const express = require("express");
 const cookie = require("cookie");
 const cookieParser = require("cookie-parser");
 const nextI18NextMiddleware = require("next-i18next/middleware").default;
-const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const path = require("path");
 const commentRoute = require("./api/route/comment/commentRoute");
@@ -20,9 +19,9 @@ const fanpageRoute = require("./api/route/fanpage/fanpageRoute");
 const countryRoute = require("./api/route/country/countryRoute");
 const languageRoute = require("./api/route/language/languageRoute");
 const { client } = require("./config/pgAdaptor");
-const { jwtSecret } = require("./config/keys");
 const bodyParser = require("body-parser");
 const { userJoin, userLeave, getSocket, existUser } = require("./utils/users");
+const decodeToken = require("./utils/decodeToken");
 
 const nextI18Next = require("./i18n/server");
 
@@ -36,35 +35,54 @@ server.use(cookieParser());
 server.use(bodyParser.json());
 
 socketIO.sockets.on("connection", (socket) => {
+  const addUnreadMessageQuery = fs
+    .readFileSync(path.join(__dirname, "./utils/query/add/unreadMessage.sql"))
+    .toString();
   socket.on("connectUser", () => {
-    const token = cookie.parse(socket.handshake.headers.cookie).token;
-
-    const {
-      data: { id: onwerId },
-    } = jwt.verify(token, jwtSecret);
-    userJoin(onwerId, socket.id);
+    const { id: ownerId } = decodeToken(
+      cookie.parse(socket.handshake.headers.cookie).token
+    );
+    if (ownerId) userJoin(ownerId, socket.id);
   });
 
-  socket.on(
-    "sendChatMessage",
-    ({ messageId, chatId, userId, message, date, messageTo }) => {
-      const unReadMessageQuery = `update chats set message_to=$1 where id=$2;`;
-      if (!existUser(messageTo))
-        client.query(unReadMessageQuery, [messageTo, chatId]);
-      socket.broadcast.to("chat" + chatId).emit("message", {
-        messageId,
-        chatId,
-        userId,
+  socket.on("sendChatMessage", async ({ userId, message }) => {
+    const { id: ownerId } = decodeToken(
+      cookie.parse(socket.handshake.headers.cookie).token
+    );
+
+    if (/^[\d]*$/.test(userId) && message && ownerId) {
+      const addMessageQuery = fs
+        .readFileSync(
+          path.join(__dirname, "./api/route/message/query/add/message.sql")
+        )
+        .toString();
+      const date = new Date();
+
+      const { rows, rowCount } = await client.query(addMessageQuery, [
         message,
         date,
-        messageTo,
-      });
+        ownerId,
+        userId,
+      ]);
+      if (rowCount > 0) {
+        if (!existUser(userId))
+          client.query(addUnreadMessageQuery, [userId, ownerId]);
+        socketIO.in("chat" + rows[0].chatId).emit("message", {
+          chatId: rows[0].chatId,
+          messageId: rows[0].id,
+          userId: ownerId,
+          message,
+          date,
+        });
+      }
     }
-  );
+  });
 
-  socket.on("isMessageUnRead", ({ chatId, messageTo }) => {
-    const unReadMessageQuery = `update chats set message_to=$1 where id=$2;`;
-    client.query(unReadMessageQuery, [messageTo, chatId]);
+  socket.on("isMessageUnRead", ({ userId }) => {
+    const { id: ownerId } = decodeToken(
+      cookie.parse(socket.handshake.headers.cookie).token
+    );
+    if (ownerId) client.query(addUnreadMessageQuery, [ownerId, userId]);
   });
 
   socket.on("joinNewChat", async ({ friendshipId, chatId }) => {
@@ -118,37 +136,38 @@ socketIO.sockets.on("connection", (socket) => {
   });
 
   socket.on("joinChat", async () => {
-    const token = cookie.parse(socket.handshake.headers.cookie).token;
-
-    const {
-      data: { id: onwerId },
-    } = jwt.verify(token, jwtSecret);
+    const { id: ownerId } = decodeToken(
+      cookie.parse(socket.handshake.headers.cookie).token
+    );
 
     const getChatsQuery = fs
       .readFileSync(
         path.join(__dirname, "./api/route/friend/query/get/chats.sql")
       )
       .toString();
-
-    const { rows: chats } = await client.query(getChatsQuery, [onwerId]);
-    for (let i = 0; i < chats.length; i++) {
-      socket.join("chat" + chats[i].chatId);
+    if (ownerId) {
+      const { rows: chats } = await client.query(getChatsQuery, [ownerId]);
+      for (let i = 0; i < chats.length; i++) {
+        socket.join("chat" + chats[i].chatId);
+      }
     }
   });
 
-  socket.on("singleDisconnect", ({ userId }) => {
-    userLeave(userId, socket.id);
+  socket.on("singleDisconnect", () => {
+    const { id: ownerId } = decodeToken(
+      cookie.parse(socket.handshake.headers.cookie).token
+    );
+    if (ownerId) {
+      userLeave(ownerId, socket.id);
+    }
   });
 
   socket.on("disconnect", async () => {
-    const token = cookie.parse(socket.handshake.headers.cookie).token;
-
-    if (token) {
-      const {
-        data: { id: onwerId },
-      } = jwt.verify(token, jwtSecret);
-
-      userLeave(onwerId, socket.id);
+    const { id: ownerId } = decodeToken(
+      cookie.parse(socket.handshake.headers.cookie).token
+    );
+    if (ownerId) {
+      userLeave(ownerId, socket.id);
     }
   });
 });

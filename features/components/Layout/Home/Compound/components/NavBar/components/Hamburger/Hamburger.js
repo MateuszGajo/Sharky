@@ -1,4 +1,5 @@
-import React, { useRef, useContext, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
+import PropTypes from "prop-types";
 import { GiHamburgerMenu } from "react-icons/gi";
 
 const Hamburger = ({ setStatusOfNav }) => {
@@ -23,5 +24,9 @@ const Hamburger = ({ setStatusOfNav }) => {
     </div>
   );
 };
+
+Hamburger.propTypes= {
+  setStatusOfNav: PropTypes.func
+}
 
 export default Hamburger;

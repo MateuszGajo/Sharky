@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import PropTypes from "prop-types";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { AiOutlineSearch } from "react-icons/ai";
@@ -6,6 +7,7 @@ import Card from "../Card/Card";
 import i18next from "@i18n";
 import AppContext from "@features/context/AppContext";
 import Spinner from "@components/Spinner/Spinner";
+
 const { useTranslation } = i18next;
 
 const Groups = ({
@@ -16,8 +18,8 @@ const Groups = ({
 }) => {
   const { t } = useTranslation(["component"]);
   const description = t("component:lists.groups.description");
-  const buttonJoin = t("component:lists.groups.button-join");
-  const buttonLeave = t("component:lists.groups.button-leave");
+  const joinText = t("component:lists.groups.join");
+  const leaveText = t("component:lists.groups.leave");
   const emptyContent = t("component:lists.groups.empty-content");
   const noResult = t("component:lists.groups.no-result");
 
@@ -53,26 +55,28 @@ const Groups = ({
   }, [keyWords]);
 
   useEffect(() => {
-    const { number, setNumber, idRef, setIdRef, id } = group;
-    if (idRef)
+    const { setNumber, refId, setRefId, id, setTitle } = group;
+    if (refId)
       axios
-        .post("/group/user/delete", { subId: group.idRef })
+        .post("/group/leave", { groupId: id })
         .then(() => {
-          if (userId == owner.id) {
+          if (userId == owner.id && !keyWords) {
             const newGroups = groups.filter((group) => group.groupId != id);
             setGroups(newGroups);
           } else {
-            setNumber(Number(number) - 1);
-            setIdRef(null);
+            setTitle(leaveText);
+            setNumber((prev) => prev - 1);
+            setRefId(null);
           }
         })
         .catch(({ response: { data: message } }) => setError(message));
     else if (id)
       axios
-        .post("/group/user/add", { groupId: group.id })
+        .post("/group/join", { groupId: group.id })
         .then(({ data: { id } }) => {
-          setIdRef(id);
-          setNumber(Number(number) + 1);
+          setTitle(joinText);
+          setRefId(id);
+          setNumber((prev) => prev - 1);
         })
         .catch(({ response: { data: message } }) => setError(message));
   }, [group]);
@@ -89,17 +93,16 @@ const Groups = ({
         {groups.map((group) => {
           const { groupId, subId, name, photo, numberOfMembers } = group;
           const data = {
-            refType: "group",
             id: groupId,
-            idRef: group.subId || null,
+            refId: subId || null,
+            refType: "group",
             photo,
             radiusPhoto: true,
             name,
             description,
             number: numberOfMembers,
-            button: "join",
-            subTitle: buttonJoin,
-            unsubTitle: buttonLeave,
+            buttonType: "join",
+            title: subId ? leaveText : joinText,
             collapse: false,
           };
           return <Card data={data} key={groupId} handleClick={setGroup} />;
@@ -119,6 +122,13 @@ const Groups = ({
       )}
     </InfiniteScroll>
   );
+};
+
+Groups.propTypes = {
+  userId: PropTypes.number.isRequired,
+  keyWords: PropTypes.string,
+  onlySubscribed: PropTypes.bool,
+  helpInformation: PropTypes.bool,
 };
 
 export default Groups;

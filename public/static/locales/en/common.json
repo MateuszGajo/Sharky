@@ -15,7 +15,8 @@
         "confirm-user":{
             "title":"Re-enter you account password",
             "button":"Continue",
-            "bad-password":"Bad password"
+            "invalid-password":"Invalid password",
+            "password-too-short":"Password is too short"
         },
         "report":{
             "title-post":"Report post",

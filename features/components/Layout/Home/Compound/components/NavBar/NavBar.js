@@ -98,9 +98,9 @@ const NavBar = () => {
   ];
 
   const logOut = () => {
-    axios.get("/user/logout").then(({ data: { userId } }) => {
+    axios.get("/user/logout").then(() => {
       setOwner({ id: null });
-      socket.emit("singleDisconnect", { userId });
+      socket.emit("singleDisconnect");
       Router.push("/signin");
     });
   };

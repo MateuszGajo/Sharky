@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import i18next from "@i18n";
 const { useTranslation } = i18next;
 
@@ -22,6 +23,11 @@ const Checkbox = ({ value, onChange }) => {
       <span className="checkbox__text">{label}</span>
     </div>
   );
+};
+
+Checkbox.propTypes = {
+  value: PropTypes.boolean,
+  onChange: PropTypes.func,
 };
 
 export default Checkbox;

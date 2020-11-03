@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
+import PropTypes from "prop-types";
 import cx from "classnames";
 import { MdClose } from "react-icons/md";
-import { AiOutlineSearch } from "react-icons/ai";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Search from "@common/Search/Search";
@@ -20,7 +20,7 @@ const InvitePerson = ({ isOpen = true, setStatusOfOpen, type, targetId }) => {
   const [people, setPeople] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [isScrolling, setStatusOfScrolling] = useState(false);
-  const [invite, setInvite] = useState({ idRef: null });
+  const [invite, setInvite] = useState({ refId: null });
   const [isMore, setStatusOfMore] = useState(null);
 
   const emptyContent = t("common:pop-up.invite-person.empty-content");
@@ -57,10 +57,10 @@ const InvitePerson = ({ isOpen = true, setStatusOfOpen, type, targetId }) => {
   };
 
   useEffect(() => {
-    const { idRef, setStatusOfInvitation } = invite;
-    if (idRef) {
+    const { refId, setStatusOfInvitation } = invite;
+    if (refId) {
       axios
-        .post(`/${type}/user/invite`, { userId: idRef, targetId })
+        .post(`/${type}/user/invite`, { userId: refId, targetId })
         .then(() => setStatusOfInvitation(true))
         .catch(({ response: { message } }) => setError(message));
     }
@@ -123,7 +123,7 @@ const InvitePerson = ({ isOpen = true, setStatusOfOpen, type, targetId }) => {
 
                 const data = {
                   refType: "profile",
-                  idRef: userId,
+                  refId: userId,
                   photo: photo,
                   isInvitationSent,
                   inviteSent,
@@ -131,10 +131,13 @@ const InvitePerson = ({ isOpen = true, setStatusOfOpen, type, targetId }) => {
                   title: inviteText,
                   description,
                   number: numberOfFriends,
-                  button: "join",
+                  buttonType: "join",
                 };
                 return (
-                  <div className="invite-person__container__people__item">
+                  <div
+                    className="invite-person__container__people__item"
+                    key={userId}
+                  >
                     <Card data={data} handleClick={setInvite} />
                   </div>
                 );
@@ -151,6 +154,13 @@ const InvitePerson = ({ isOpen = true, setStatusOfOpen, type, targetId }) => {
       </div>
     </section>
   );
+};
+
+InvitePerson.propTypes = {
+  isOpen: PropTypes.bool,
+  setStatusOfOpen: PropTypes.func,
+  type: PropTypes.string,
+  targetId: PropTypes.number,
 };
 
 export default InvitePerson;
