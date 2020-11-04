@@ -5,7 +5,7 @@ import MessageBox from "../MessageBox";
 
 expect.extend({ toHaveValue });
 
-it("does message box property works correct", () => {
+it("does message box property work correct", () => {
   const messageBoxValue = "message";
   const messageBoxOnChange = jest.fn();
 

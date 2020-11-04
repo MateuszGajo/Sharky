@@ -16,6 +16,7 @@ export const getOwner = ({ setStatusOfAuth, setOwner }) => {
     });
 };
 
+<<<<<<< HEAD
 export const signUp = ({
   creds,
   dispatch,
@@ -72,4 +73,13 @@ export const checkLanguage = ({ userId }) => {
         i18n.changeLanguage(code);
       }
     });
+=======
+export const checkLanguage = () => {
+  axios.get("/user/get/language").then(({ data: { language } }) => {
+    const code = countryCode(language);
+    if (i18n.language != code) {
+      i18n.changeLanguage(code);
+    }
+  });
+>>>>>>> common-layout
 };

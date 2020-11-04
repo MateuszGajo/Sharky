@@ -37,15 +37,15 @@
     "lists":{
         "fanpages":{
             "description":"Liczba subskrypcji",
-            "button-subscribe":"Subskrybuj",
-            "button-unsubscribe":"Odsubskrybuj",
+            "subscribe":"Subskrybuj",
+            "unsubscribe":"Odsubskrybuj",
             "empty-content":"Użyj wyszukiwarka aby znaleść fanpage",
             "no-result":"Nie zanleźliśmy żadnego pasującego fanpage"
         },
         "groups":{
             "description":"Liczba członków",
-            "button-join":"Dołącz",
-            "button-leave":"Opuść",
+            "join":"Dołącz",
+            "leave":"Opuść",
             "empty-content":"Użyj wyszukiwarka aby znaleść grupę",
             "no-result":"Nie zanleźliśmy żadnej pasującej grupy"
         },
@@ -56,7 +56,7 @@
             "pal":"Przyjaciel",
             "relation-change":"Prośba zmiany relacji została wysłana",
             "add":"Dodaj",
-            "remove":"Usuń",
+            "delete":"Usuń",
             "accept":"Zaakceptuj",
             "decline":"Odrzuć",
             "sent":"Wysłano",

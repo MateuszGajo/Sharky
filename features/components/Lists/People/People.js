@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import PropTypes from "prop-types";
 import Card from "../Card/Card";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -23,7 +24,7 @@ const People = ({
   const familyName = t("component:lists.people.family");
   const palName = t("component:lists.people.pal");
   const addText = t("component:lists.people.add");
-  const removeText = t("component:lists.people.remove");
+  const deleteText = t("component:lists.people.delete");
   const acceptInvite = t("component:lists.people.accept");
   const declineInvite = t("component:lists.people.decline");
   const inviteSent = t("component:lists.people.sent");
@@ -34,7 +35,8 @@ const People = ({
 
   const [relation, setRelation] = useState({ id: null, name: "" });
   const [friends, setFriends] = useState([]);
-  const [friend, setFriend] = useState({ id: null, name: "", idRef: null });
+  const [friend, setFriend] = useState({ id: null, name: "", refId: null });
+  const [removeFriends, setRemoveFriend] = useState({});
   const [isMore, setStatusOfMore] = useState(false);
   const [invite, setInvite] = useState({ inviteType: "", relationId: null });
 
@@ -48,13 +50,12 @@ const People = ({
   };
 
   useEffect(() => {
-    const { id, subId } = relation;
+    const { id } = relation;
     if (id != null) {
       setPrompt(changeRelationText);
       axios
         .post("/friend/update/relation", {
-          friendshipId: id,
-          userId: subId,
+          userId: id,
           relation: relation.name,
         })
         .catch(({ response: { data: message } }) => setError(message));
@@ -63,32 +64,32 @@ const People = ({
 
   useEffect(() => {
     const {
-      inviteType,
-      setInviteType,
-      setButton,
+      invitationType,
+      setButtonType,
       setTitle,
       friendshipId,
+      id,
       setCollapse,
       setButtonName,
       number,
       setNumber,
+      setStatusOfInvited,
     } = invite;
-
-    if (inviteType == "accept")
+    if (invitationType == "accept")
       axios
-        .post("/friend/accept", { friendshipId })
+        .post("/friend/accept", { userId: id })
         .then(({ data: { chatId, relation, success } }) => {
           if (success) {
-            setInviteType("");
-            setButton("relation");
+            setButtonType("relation");
+            setStatusOfInvited(false);
             setTitle(t(`component:lists.people.${relation}`));
             setButtonName(relation);
             setCollapse(userId == owner.id && relation ? true : false);
             setNumber(Number(number) + 1);
             socket.emit("joinNewChat", { friendshipId, chatId });
           } else {
-            setInviteType("");
-            setButton("relation");
+            setButtonType("relation");
+            setStatusOfInvited(false);
             setTitle(t(`component:lists.people.${relation}`));
             setButtonName(relation);
             setCollapse(userId == owner.id && relation ? true : false);
@@ -98,9 +99,9 @@ const People = ({
         })
         .catch(({ response: { data: message } }) => setError(message));
 
-    if (inviteType == "decline") {
+    if (invitationType == "decline") {
       axios
-        .post("/friend/decline", { friendshipId })
+        .post("/friend/decline", { userId: id })
         .then(() => {
           const newFriends = friends.filter((friend) => {
             return friend.friendshipId != friendshipId;
@@ -122,37 +123,32 @@ const People = ({
   }, [keyWords]);
 
   useEffect(() => {
-    const {
-      setNumber,
-      number,
-      idRef,
-      setIdRef,
-      id,
-      setStatusOfInvitation,
-    } = friend;
-    if (idRef)
+    const { id, setStatusOfInvitation } = friend;
+    if (id)
       axios
-        .post("/friend/delete", { friendshipId: friend.idRef })
+        .post("/friend/add", { userId: id })
+        .then(() => setStatusOfInvitation(true))
+        .catch(({ response: { data: message } }) => setError(message));
+  }, [friend]);
+
+  useEffect(() => {
+    const { setNumber, refId, setRefId, id } = removeFriends;
+    if (refId)
+      axios
+        .post("/friend/delete", { userId: id })
         .then(() => {
           if (userId == owner.id) {
             const newFriends = friends.filter((item) => {
-              return item.friendshipId != friend.idRef;
+              return item.friendshipId != refId;
             });
             setFriends(newFriends);
           } else {
-            setIdRef(null);
-            setNumber(Number(number) - 1);
+            setRefId(null);
+            setNumber((prev) => prev - 1);
           }
         })
         .catch(({ response: { data: message } }) => setError(message));
-    else if (id)
-      axios
-        .post("/friend/add", { userId: id })
-        .then(({ data: { friendshipId: id } }) => {
-          setStatusOfInvitation(true);
-        })
-        .catch(({ response: { data: message } }) => setError(message));
-  }, [friend]);
+  }, [removeFriends]);
 
   useEffect(() => {
     fetchData(0);
@@ -179,12 +175,18 @@ const People = ({
             isInvitationSent,
           } = friend;
 
+          const title = isInvited
+            ? acceptInvite
+            : isInvitationSent
+            ? inviteSent
+            : !relation
+            ? addText
+            : t(`component:lists.people.${relation}`);
+
           const data = {
-            refType: "profile",
             id,
-            idRef: friendshipId,
-            subTitle: addText,
-            unsubTitle: removeText,
+            refId: friendshipId,
+            refType: "profile",
             photo,
             isInvited,
             isInvitationSent,
@@ -192,11 +194,10 @@ const People = ({
             name: `${firstName + " " + lastName}`,
             description: description,
             number: numberOfFriends,
-            acceptInvite,
-            declineInvite,
-            inviteSent,
-            button: relation ? "relation" : "join",
-            title: t(`component:lists.people.${relation}`),
+            buttonType: relation ? "relation" : "join",
+            title,
+            secondTitle: isInvited && declineInvite,
+            deleteText,
             buttonName: relation,
             collapse: relation && userId == owner.id ? true : false,
             collapseItems: {
@@ -220,6 +221,7 @@ const People = ({
               key={id}
               setRelation={setRelation}
               handleClick={setFriend}
+              handleCollapseClick={setRemoveFriend}
               setInvite={setInvite}
             />
           );
@@ -239,6 +241,13 @@ const People = ({
       )}
     </InfiniteScroll>
   );
+};
+
+People.propTypes = {
+  userId: PropTypes.number.isRequired,
+  keyWords: PropTypes.string,
+  onlySubscribed: PropTypes.bool,
+  helpInformation: PropTypes.bool,
 };
 
 export default People;

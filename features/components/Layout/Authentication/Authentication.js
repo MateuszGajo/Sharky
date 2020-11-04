@@ -1,9 +1,10 @@
 import React from "react";
+import PropTypes from "prop-types";
 import PrimaryButton from "@common/PrimaryButton/PrimaryButton";
 import i18next from "@i18n";
 const { useTranslation } = i18next;
 
-const authentication__container = ({ children, type }) => {
+const Authentication = ({ children, type }) => {
   const { t } = useTranslation(["component"]);
 
   const welcomeText = t("component:layout.authentication.welcome-text");
@@ -65,10 +66,10 @@ const authentication__container = ({ children, type }) => {
                 value={
                   type === "signin"
                     ? signInButtonText
-                    : type === "signup" && signUpButtonText
+                    : type === "signup" ? signUpButtonText : ""
                 }
                 link={
-                  type === "signin" ? "/signup" : type === "signup" && "/signin"
+                  type === "signin" ? "/signup" : type === "signup" ? "/signin" : ""
                 }
               />
             </div>
@@ -79,4 +80,9 @@ const authentication__container = ({ children, type }) => {
   );
 };
 
-export default authentication__container;
+Authentication.propTypes = {
+  children: PropTypes.element,
+  type: PropTypes.string
+}
+
+export default Authentication ;

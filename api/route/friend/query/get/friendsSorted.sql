@@ -29,7 +29,7 @@ userSorted as (
 ),
 userSortedCounted as(
     select a."userId",
-        sum(a.count) as "numberOfFriends"
+        sum(a.count)::integer as "numberOfFriends"
     from(
             select user_id_1 as "userId",
                 count(user_id_1)
@@ -75,7 +75,7 @@ userRelation as (
         status,
         date,
         null as "isInvited",
-CASE
+        CASE
             WHEN status = '0' THEN true
             else null
         end as "isInvitationSent"
