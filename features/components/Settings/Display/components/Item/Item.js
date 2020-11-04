@@ -9,14 +9,13 @@ import {
   getLanguages,
   getValue,
   changeValue,
-  changeValueWithConfirmPassword,
   validateField,
 } from "../../services/functions";
 import i18next from "@i18n";
 
 const { useTranslation, i18n } = i18next;
 
-const Item = () => {
+const Item = ({ show }) => {
   const {
     t,
     i18n: { language },
@@ -24,21 +23,20 @@ const Item = () => {
 
   const changeText = t("settings:change");
   const confirmPasswordText = t("settings:account.confirm-password");
+  const buttonText = t("settings:button");
 
-  const [value, setValue] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [countries, setCountries] = useState([{ name: null, value: null }]);
   const [languages, setLanguages] = useState([{ name: null, value: null }]);
   const [error, setError] = useState("");
   const {
-    buttonText,
+    value,
+    setValue,
     title,
     type,
     name,
     setName,
     setOpenConfirmPopUp,
-    userPassword,
-    setConfirmPopUpError,
   } = useContext(SettingsContext);
   const { setPrompt } = useContext(AppContext);
 
@@ -69,20 +67,6 @@ const Item = () => {
         i18n
       );
   };
-
-  useEffect(() => {
-    userPassword &&
-      changeValueWithConfirmPassword(
-        name,
-        value,
-        userPassword,
-        setOpenConfirmPopUp,
-        setConfirmPopUpError,
-        t,
-        setPrompt,
-        setName
-      );
-  }, [userPassword]);
 
   useEffect(() => {
     if (error) setError("");

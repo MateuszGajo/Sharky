@@ -5,7 +5,7 @@ import i18next from "@i18n";
 
 const { useTranslation } = i18next;
 
-const Display = ({}) => {
+const Display = () => {
   const { t } = useTranslation(["settings"]);
   const { name } = useContext(SettingsContext);
 

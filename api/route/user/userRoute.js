@@ -153,7 +153,6 @@ router.post("/change/phone", async (req, res) => {
     return res.status(400).json("invalid-phone-number");
   } else if (password.length < 6)
     return res.status(400).json("password-too-short");
-
   const { error, id: ownerId } = decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 

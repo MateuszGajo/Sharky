@@ -1,19 +1,11 @@
-import React, { useContext } from "react";
+import React, { useState, useContext } from "react";
 import cx from "classnames";
 import { IoIosArrowDown } from "react-icons/io";
 import i18next from "@i18n";
 import SettingsContext from "../context/SettingsContext";
 const { useTranslation } = i18next;
 
-const Items = ({
-  isAccountCollapsed,
-  setStatusOfAccountCollapse,
-  userSettings,
-  setSettings,
-  setInputValue,
-  isGeneralCollapsed,
-  setStatusOfGeneralCollapse,
-}) => {
+const Items = ({}) => {
   const { t } = useTranslation(["settings"]);
 
   const title = t("settings:title");
@@ -24,6 +16,9 @@ const Items = ({
   const general = ["country", "language"];
 
   const { setTitle, setName, setType } = useContext(SettingsContext);
+
+  const [isAccountCollapsed, setStatusOfAccountCollapse] = useState(true);
+  const [isGeneralCollapsed, setStatusOfGeneralCollapse] = useState(true);
 
   return (
     <div className="settings__container">

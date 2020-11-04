@@ -136,7 +136,7 @@ export const changeValue = (
 export const changeValueWithConfirmPassword = (
   name,
   value,
-  userPassword,
+  password,
   setOpenConfirmPopUp,
   setConfirmPopUpError,
   t,
@@ -144,7 +144,7 @@ export const changeValueWithConfirmPassword = (
   setName
 ) => {
   axios
-    .post(`/user/change/${name}`, { value, password: userPassword })
+    .post(`/user/change/${name}`, { value, password })
     .then(() => {
       setOpenConfirmPopUp(false);
       setPrompt(t(`settings:account.${name}-changed`));
