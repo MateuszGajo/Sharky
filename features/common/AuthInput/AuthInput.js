@@ -1,9 +1,5 @@
-<<<<<<< HEAD
 import React, { useRef } from "react";
-=======
-import React, {useRef} from "react";
 import PropTypes from "prop-types";
->>>>>>> common-layout
 import cx from "classnames";
 
 const InputAuth = ({
@@ -49,7 +45,7 @@ InputAuth.propTypes = {
   onChange: PropTypes.func,
   type: PropTypes.string,
   title: PropTypes.string,
-  size: PropTypes.string
-}
+  size: PropTypes.string,
+};
 
 export default InputAuth;
