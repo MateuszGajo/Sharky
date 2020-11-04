@@ -9,7 +9,7 @@
         "phone":"Telephone",
         "email-changed":"Email changed",
         "password-changed":"Password changed",
-        "phone-changed":"Telephone number changed"
+        "phone-changed":"phone number changed"
     },
     "general":{
         "title":"General",
@@ -31,6 +31,14 @@
     "languages":{
         "polish":"Polish",
         "english":"English"
+    },
+    "errors":{
+        "invalid-email":"Invalid email",
+        "different-passwords":"Passwords are difference",
+        "password-too-short":"Password is too short",
+        "invalid-phone":"Invalid phone number",
+        "invalid-country":"Country doesn't exist",
+        "invalid-language":"Language doesn't exist"
     }
 
 }

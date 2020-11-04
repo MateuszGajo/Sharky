@@ -1,57 +1,63 @@
 .settings__container__display {
-    width: 50%;
-  }
-  
-  .settings__container__display__title {
-    position: relative;
-    text-align: center;
-    padding: $smallMargin 0;
-    border-bottom: 1px solid $shadowColor;
-  }
-  
-  .settings__container__display__title__icon {
-    display: flex;
-    align-items: center;
-    position: absolute;
-    top: 50%;
-    left: 10px;
-    transform: translateY(-50%);
-    color: $primaryColor;
-    cursor: pointer;
-  }
-  
-  .settings__container__display__form {
-    display: flex;
-    flex-direction: column;
-    width: 90%;
-    margin: 0 auto;
-  }
-  .settings__container__display__form__input {
-    margin-top: $smallMargin;
-  }
-  
-  .settings__container__display__form__button {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: $smallMargin;
-  }
-  
-  .settings__container__reminder {
-    width: 50%;
-  }
-  
-  .settings__container__reminder {
-    margin-top: $mediumMargin;
-    text-align: center;
-  }
-  
-  .settings__container__reminder__p {
-    margin-top: $smallMargin;
-  }
-  
+  width: 50%;
+}
 
-  @media(max-width:1023px){
-      .settings__container__display{
-          width:100%;
-      }
+.settings__container__display__title {
+  position: relative;
+  text-align: center;
+  padding: $smallMargin 0;
+  border-bottom: 1px solid $shadowColor;
+}
+
+.settings__container__display__title__icon {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  color: $primaryColor;
+  cursor: pointer;
+}
+
+.settings__container__display__form {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  margin: 0 auto;
+}
+.settings__container__display__form__input {
+  margin-top: $smallMargin;
+}
+
+.settings__container__display__form__button {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: $smallMargin;
+}
+
+.settings__container__reminder {
+  width: 50%;
+}
+
+.settings__container__reminder {
+  margin-top: $mediumMargin;
+  text-align: center;
+}
+
+.settings__container__reminder__p {
+  margin-top: $smallMargin;
+}
+
+.settings__container__display__form__error {
+  margin-top: 10px;
+  text-align: center;
+  color: red;
+  font-weight: bold;
+}
+
+@media (max-width: 1023px) {
+  .settings__container__display {
+    width: 100%;
   }
+}

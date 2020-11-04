@@ -1,23 +1,24 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import cx from "classnames";
 import { IoIosArrowDown } from "react-icons/io";
 import i18next from "@i18n";
+import SettingsContext from "../context/SettingsContext";
 const { useTranslation } = i18next;
 
-const Items = ({
-  isAccountCollapsed,
-  setStatusOfAccountCollapse,
-  userSettings,
-  setSettings,
-  setInputValue,
-  isGeneralCollapsed,
-  setStatusOfGeneralCollapse,
-}) => {
+const Items = ({}) => {
   const { t } = useTranslation(["settings"]);
 
   const title = t("settings:title");
   const accountText = t("settings:account.title");
   const generalText = t("settings:general.title");
+
+  const account = ["email", "password", "phone"];
+  const general = ["country", "language"];
+
+  const { setTitle, setName, setType } = useContext(SettingsContext);
+
+  const [isAccountCollapsed, setStatusOfAccountCollapse] = useState(true);
+  const [isGeneralCollapsed, setStatusOfGeneralCollapse] = useState(true);
 
   return (
     <div className="settings__container">
@@ -43,18 +44,19 @@ const Items = ({
               }
             )}
           >
-            {userSettings.account.map((setting) => {
-              const { name, id, value } = setting;
+            {account.map((item, id) => {
+              const title = t(`settings:account.${item}`);
               return (
                 <div
                   className="settings__container__wrapper__account__item__item setting-item__container"
                   key={id}
                   onClick={() => {
-                    setSettings({ ...setting, title: name });
-                    setInputValue(value);
+                    setTitle(title);
+                    setType("account");
+                    setName(item);
                   }}
                 >
-                  {t(`settings:account.${name}`)}
+                  {title}
                 </div>
               );
             })}
@@ -80,22 +82,19 @@ const Items = ({
               }
             )}
           >
-            {userSettings.general.map((setting) => {
-              const { name, id, value } = setting;
+            {general.map((item, id) => {
+              const title = t(`settings:general.${item}`);
               return (
                 <div
                   className="settings__container__wrapper__general__item__item setting-item__container"
                   key={id}
                   onClick={() => {
-                    setSettings({ ...setting, title: name });
-                    if (!value) setInputValue("");
-                    else if (name == "country")
-                      setInputValue(t(`settings:countries.${value}`));
-                    else if (name === "language")
-                      setInputValue(t(`settings:languages.${value}`));
+                    setTitle(title);
+                    setType("general");
+                    setName(item);
                   }}
                 >
-                  {t(`settings:general.${name}`)}
+                  {title}
                 </div>
               );
             })}

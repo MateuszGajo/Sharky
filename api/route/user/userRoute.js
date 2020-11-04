@@ -166,7 +166,7 @@ router.post("/get/photo", async (req, res) => {
   const { userId, from } = req.body;
   if (!/^[\d]*$/.test(from)) return res.status(400).json("invalid-data");
 
-  const { error } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const getPhotosQuery = fs
@@ -191,10 +191,10 @@ router.post("/get/photo", async (req, res) => {
   res.status(200).json({ photos, isMore });
 });
 
-<<<<<<< HEAD
 router.post("/change/country", async (req, res) => {
   let { value } = req.body;
-  const { id: ownerId } = decodeToken(req);
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   value = value.toLowerCase();
 
@@ -207,7 +207,7 @@ router.post("/change/country", async (req, res) => {
 
   try {
     const country = await client.query(getCountryIdQuery, [value]);
-    if (!country.rows[0]) return res.status(406).json("country-does-not-exist");
+    if (!country.rows[0]) return res.status(400).json("country-does-not-exist");
 
     await client.query(changeCountryQuery, [value, ownerId]);
 
@@ -219,7 +219,8 @@ router.post("/change/country", async (req, res) => {
 
 router.post("/change/language", async (req, res) => {
   let { value } = req.body;
-  const { id: ownerId } = decodeToken(req);
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   value = value.toLowerCase();
 
@@ -233,7 +234,7 @@ router.post("/change/language", async (req, res) => {
   try {
     const language = await client.query(getLanguageIdQuery, [value]);
     if (!language.rows[0])
-      return res.status(406).json("language-does-not-exist");
+      return res.status(400).json("language-does-not-exist");
 
     await client.query(changeLanguageQuery, [value, ownerId]);
 
@@ -244,11 +245,30 @@ router.post("/change/language", async (req, res) => {
 });
 
 router.post("/change/email", async (req, res) => {
-  const { value } = req.body;
-  const { id: ownerId } = decodeToken(req);
+  const { value, password } = req.body;
+  if (
+    !/^([a-zA-Z\d\.-]+)@([a-z\d-]+)\.([a-z]{2,8})(\.[a-z]{2,8})?$/.test(value)
+  )
+    return res.status(400).json("invalid-email");
+  else if (password.length < 6)
+    return res.status(400).json("password-too-short");
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
+
+  const getPasswordQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/password.sql"))
+    .toString();
+
+  try {
+    const { rows } = await client.query(getPasswordQuery, [ownerId]);
+    const match = await bcrypt.compare(password, rows[0].password);
+    if (!match) return res.status(401).json("invalid-password");
+  } catch {
+    return res.status(400).json("bad-request");
+  }
 
   const changeEmailQuery = fs
-    .readFileSync(path.join(__dirname, "./query/change/email.sql"))
+    .readFileSync(path.join(__dirname, "./query/update/email.sql"))
     .toString();
 
   try {
@@ -261,13 +281,30 @@ router.post("/change/email", async (req, res) => {
 });
 
 router.post("/change/phone", async (req, res) => {
-  const { value } = req.body;
-  const { id: ownerId } = decodeToken(req);
+  const { value, password } = req.body;
+  const phone = value.replace(/[\s-]/gi, "");
+  if (!/[\d]{9}/.test(phone)) {
+    return res.status(400).json("invalid-phone-number");
+  } else if (password.length < 6)
+    return res.status(400).json("password-too-short");
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
+
+  const getPasswordQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/password.sql"))
+    .toString();
+
+  try {
+    const { rows } = await client.query(getPasswordQuery, [ownerId]);
+    const match = await bcrypt.compare(password, rows[0].password);
+    if (!match) return res.status(401).json("invalid-password");
+  } catch {
+    return res.status(400).json("bad-request");
+  }
 
   const changePhoneQuery = fs
-    .readFileSync(path.join(__dirname, "./query/change/phone.sql"))
+    .readFileSync(path.join(__dirname, "./query/update/phone.sql"))
     .toString();
-  const phone = value.replace(/[\s-]/gi, "");
 
   try {
     await client.query(changePhoneQuery, [phone, ownerId]);
@@ -278,14 +315,9 @@ router.post("/change/phone", async (req, res) => {
   }
 });
 
-router.post("/get/language", async (req, res) => {
-  const { userId } = req.body;
-=======
 router.get("/get/language", async (req, res) => {
   const { error, id: ownerId } = decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
->>>>>>> common-layout
-
   const getLanguageQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/language.sql"))
     .toString();
@@ -298,9 +330,59 @@ router.get("/get/language", async (req, res) => {
   }
 });
 
-router.post("/change/password", async (req, res) => {
+router.post("/get/item", async (req, res) => {
   const { value } = req.body;
-  const { id: ownerId } = decodeToken(req);
+  const values = [
+    "id",
+    "google_id",
+    "facebook_id",
+    "twitter_id",
+    "first_name",
+    "last_name",
+    "email",
+    "password",
+    "phone",
+    "country",
+    "language",
+    "photo",
+    "birthdate",
+    "city",
+  ];
+  if (!values.includes(value)) return res.status(400).json("invalid-value");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
+
+  const getItemQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/item.sql"))
+    .toString();
+
+  try {
+    const { rows } = await client.query(getItemQuery, [ownerId]);
+    res.status(200).json({ item: rows[0][value] });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
+router.post("/change/password", async (req, res) => {
+  const { value, password } = req.body;
+  if (value.length < 6) return res.status(400).json("new-password-too-short");
+  if (password.length < 6) return res.status(400).json("password-too-short");
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
+
+  const getPasswordQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/password.sql"))
+    .toString();
+
+  try {
+    const { rows } = await client.query(getPasswordQuery, [ownerId]);
+    const match = await bcrypt.compare(password, rows[0].password);
+    if (!match) return res.status(401).json("invalid-password");
+  } catch {
+    return res.status(400).json("bad-request");
+  }
 
   const changePasswordQuery = fs
     .readFileSync(path.join(__dirname, "./query/change/password.sql"))
@@ -373,15 +455,6 @@ router.get("/logout", async (req, res) => {
   res.status(200).json({ userId: ownerId });
 });
 
-<<<<<<< HEAD
-router.get("/me", (req, res) => {
-  if (!req.cookies.token) return res.status(401).json("un-authorized");
-  jwt.verify(req.cookies.token, jwtSecret, function (err, decoded) {
-    if (decoded) return res.json({ user: decoded.data });
-
-    return res.status(401).json("un-authorized");
-  });
-=======
 router.get("/me", async (req, res) => {
   const getPasswordQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/password.sql"))
@@ -403,7 +476,6 @@ router.get("/me", async (req, res) => {
   } catch {
     return res.status(400).json("bad-request");
   }
->>>>>>> common-layout
 });
 
 router.post("/check/password", async (req, res) => {
@@ -431,14 +503,15 @@ router.post("/check/password", async (req, res) => {
 });
 
 router.get("/me/info", async (req, res) => {
-  const { id } = decodeToken(req);
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const getUserSettingsQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/userSettings.sql"))
     .toString();
 
   try {
-    const { rows } = await client.query(getUserSettingsQuery, [id]);
+    const { rows } = await client.query(getUserSettingsQuery, [ownerId]);
 
     res.status(200).json({ ...rows[0] });
   } catch {

@@ -19,7 +19,8 @@
         "confirm-user":{
             "title":"Wpisz swoje hasło",
             "button":"Dalej",
-            "bad-password":"Bad password"
+            "invalid-password":"Błędne hasło",
+            "password-too-short":"Hasło jest za krótkie"
         },
         "report":{
             "title-post":"Zgłoś post",
@@ -38,10 +39,8 @@
             "last-group-admin":"Jesteś jedynym administratorem, przyznaj uprawnienia administratora innej osobie lub usuń grupe",
             "wrong-file-type":"Niewłaściwe rozserzenie pliku",
             "file-too-large":"Plik jest za duży",
-<<<<<<< HEAD
             "invalid-value":"Nieprawidłowa wartość",
-            "passwords-do-not-match":"Hasła są różne"
-=======
+            "passwords-do-not-match":"Hasła są różne",
             "invalid-email":"Nieprawidłowy email",
             "password-too-short":"Hasło jest za krótkie",
             "empty-password":"Hasło jest puste",
@@ -50,7 +49,6 @@
             "empty-first-name":"Pole imię jest puste",
             "empty-last-name":"Pole nazwisko jest puste",
             "invalid-phone-number":"Nieprawidłowy numer telefonu"
->>>>>>> features/authentication
         },
         "invite-person":{
             "empty-content":"Nie masz żadnych znajomych do zaproszenia",
