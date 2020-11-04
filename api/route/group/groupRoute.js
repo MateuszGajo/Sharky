@@ -347,12 +347,16 @@ router.post("/user/invite", async (req, res) => {
 
 router.post("/user/invitation/accept", async (req, res) => {
   const { subscribeId } = req.body;
+  if (!/^[\d]*$/.test(subscribeId)) return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const acceptInvitationQuery = fs
     .readFileSync(path.join(__dirname, "./query/update/memberStatus.sql"))
     .toString();
   try {
-    await client.query(acceptInvitationQuery, [subscribeId]);
+    await client.query(acceptInvitationQuery, [subscribeId, ownerId]);
 
     res.status(200).json({ success: true });
   } catch {
@@ -362,13 +366,17 @@ router.post("/user/invitation/accept", async (req, res) => {
 
 router.post("/user/invitation/decline", async (req, res) => {
   const { subscribeId } = req.body;
+  if (!/^[\d]*$/.test(subscribeId)) return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const declineInvitationQuery = fs
     .readFileSync(path.join(__dirname, "./query/delete/invitation.sql"))
     .toString();
 
   try {
-    await client.query(declineInvitationQuery, [subscribeId]);
+    await client.query(declineInvitationQuery, [subscribeId, ownerId]);
 
     res.status(200).json({ success: true });
   } catch {
