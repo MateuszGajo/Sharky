@@ -1,12 +1,17 @@
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
+const multer = require("multer");
 const { client } = require("../../../config/pgAdaptor");
 const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
 
 router.post("/about", async (req, res) => {
   const { fanpageId } = req.body;
+  if (!/^[\d]*$/.test(fanpageId)) return res.status(400).json("invalid-data");
+
+  const { error } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const getFanpageInfoQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/fanpageInfo.sql"))
@@ -25,7 +30,10 @@ router.post("/about", async (req, res) => {
 
 router.post("/enter", async (req, res) => {
   const { fanpageId } = req.body;
-  const { id: ownerId } = decodeToken(req);
+  if (!/^[\d]*$/.test(fanpageId)) return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const getPermissionQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/permissions.sql"))
@@ -49,6 +57,10 @@ router.post("/enter", async (req, res) => {
 
 router.post("/delete", async (req, res) => {
   const { fanpageId } = req.body;
+  if (!/^[\d]*$/.test(fanpageId)) return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const deleteFanpageQuery = fs
     .readFileSync(path.join(__dirname, "./query/delete/fanpage.sql"))
@@ -59,8 +71,13 @@ router.post("/delete", async (req, res) => {
   const deleteFanpageUsersQuery = fs
     .readFileSync(path.join(__dirname, "./query/delete/fanpageUsers.sql"))
     .toString();
+  const getAdminQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/admin.sql"))
+    .toString();
 
   try {
+    const { rows } = await client.query(getAdminQuery, [ownerId, fanpageId]);
+    if (!rows[0].id) return res.status(403).json("no-permission");
     await client.query(deleteFanpageQuery, [fanpageId]);
     await client.query(deleteFanpageUsersQuery, [fanpageId]);
     await client.query(deleteFanpagePostsQuery, [fanpageId]);
@@ -73,6 +90,11 @@ router.post("/delete", async (req, res) => {
 
 router.post("/member/get", async (req, res) => {
   const { fanpageId, from } = req.body;
+  if (!/^[\d]*$/.test(fanpageId) || !/^[\d]*$/.test(from))
+    return res.status(400).json("invalid-data");
+
+  const { error } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const getMembersQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/members.sql"))
@@ -96,14 +118,28 @@ router.post("/member/get", async (req, res) => {
 });
 
 router.post("/member/relation/change", async (req, res) => {
-  const { subId, relation } = req.body;
+  const { subId, relation, fanpageId } = req.body;
+
+  if (
+    !/^[\d]*$/.test(subId) ||
+    !(relation === "user" || relation === "admin" || relation === "moderator")
+  )
+    return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const updateMemberRealtionQuery = fs
     .readFileSync(path.join(__dirname, "./query/update/memberRelation.sql"))
     .toString();
+  const getAdminQuery = fs
+    .readFileSync(path.join(__dirname, "./query/update/memberRelation.sql"))
+    .toString();
 
   try {
-    await client.query(updateMemberRealtionQuery, [relation, subId]);
+    const { rows } = await client.query(getAdminQuery, [ownerId, fanpageId]);
+    if (!rows[0].id) return res.status(403).json("no-permission");
+    await client.query(updateMemberRealtionQuery, [relation, subId, fanpageId]);
 
     res.status(200).json({ success: true });
   } catch {
@@ -252,16 +288,55 @@ router.post("/unsubscribe", async (req, res) => {
   const { error, id: ownerId } = decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
-  const deleteUserQuery = fs
+  const deleteSubscriberQuery = fs
     .readFileSync(path.join(__dirname, "./query/delete/user.sql"))
     .toString();
-  let admins;
-  if (role == "admin") {
-    admins = await client.query(getFanpageAdminsQuery, [fanpageId]);
-  }
+  const getFanpageAdminsQuery = fs
+    .readFileSync(path.join(__dirname, "./query/delete/user.sql"))
+    .toString();
 
   try {
-    await client.query(deleteUserQuery, [fanpageId, ownerId]);
+    const { rowCount, rows } = await client.query(getFanpageAdminsQuery, [
+      fanpageId,
+    ]);
+    if (rowCount > 1 || rows[0].userId != ownerId) {
+      await client.query(deleteSubscriberQuery, [fanpageId, ownerId]);
+
+      res.status(200).json({ success: true });
+    } else if (rowCount == 1) res.status(403).json("last-group-admin");
+
+    res.status(200).json({ success: true });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
+router.post("/user/delete", async (req, res) => {
+  const { subId, fanpageId } = req.body;
+  if (!/^[\d]*$/.test(subId) || !/^[\d]*$/.test(fanpageId))
+    return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
+
+  const deleteSubscriberQuery = fs
+    .readFileSync(path.join(__dirname, "./query/delete/userByAdmin.sql"))
+    .toString();
+  const getAdminQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/admin.sql"))
+    .toString();
+
+  try {
+    let { rows: admin } = await client.query(getAdminQuery, [
+      ownerId,
+      fanpageId,
+    ]);
+    if (!admin[0].id) return res.status(403).json("no-permission");
+    const { rows } = await client.query(deleteSubscriberQuery, [
+      subId,
+      fanpageId,
+    ]);
+    if (!rows[0].id) return res.status(404).json("invalid-data");
 
     res.status(200).json({ success: true });
   } catch {
@@ -270,6 +345,9 @@ router.post("/unsubscribe", async (req, res) => {
 });
 
 router.post("/change/photo", async (req, res) => {
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
+
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
       cb(null, "./public/static/images");
@@ -279,31 +357,53 @@ router.post("/change/photo", async (req, res) => {
     },
   });
 
-  const upload = multer({ storage }).single("file");
+  const upload = multer({
+    storage,
+    fileFilter: (req, file, cb) => {
+      if (file.mimetype !== "image/jpeg" && file.mimetype !== "image/png") {
+        return cb(new Error("wrong file type"));
+      }
+      cb(null, true);
+    },
+    limits: { fileSize: 200000 },
+  }).single("file");
 
   await upload(req, res, async (err) => {
-    if (err) return res.status(400).json("bad-request");
+    if (err) {
+      return err.message == "File too large"
+        ? res.status(413).json("file-too-large")
+        : err.message === "wrong file type"
+        ? res.status(415).json("wrong-file-type")
+        : res.status(400).json("bad-request");
+    }
 
     let fileName = null;
     if (req.file) {
-      const {
-        file: { mimetype, filename, size },
-      } = req;
-      fileName = filename;
-      if (mimetype !== "image/jpeg" && mimetype !== "image/png") {
-        return res.status(415).json("wrong-file-type");
-      }
-      if (size > 200000) {
-        return res.status(413).json("file-too-large");
-      }
+      fileName = req.file.filename;
     }
     const { fanpageId } = req.body;
 
+    if (!/^[\d]*$/.test(fanpageId)) {
+      fs.unlinkSync(
+        path.join(__dirname, `../../../public/static/images/${fileName}`)
+      );
+      return res.status(400).json("invalid-data");
+    }
     const changeFanpagePhotoQuery = fs
       .readFileSync(path.join(__dirname, "./query/update/photo.sql"))
       .toString();
+    const getAdminQuery = fs
+      .readFileSync(path.join(__dirname, "./query/get/admin.sql"))
+      .toString();
 
     try {
+      const { rows } = await client.query(getAdminQuery, [ownerId, fanpageId]);
+      if (!rows[0].id) {
+        fs.unlinkSync(
+          path.join(__dirname, `../../../public/static/images/${fileName}`)
+        );
+        return res.status(403).json("no-permission");
+      }
       await client.query(changeFanpagePhotoQuery, [fileName, fanpageId]);
       res.status(200).json({ success: true });
     } catch {

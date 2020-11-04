@@ -13,7 +13,7 @@ const Members = ({ fanpageId, role: permission }) => {
   const moderatorName = t("fanpage:moderator");
   const userName = t("fanpage:user");
   const mySelf = t("fanpage:my-self");
-  const removeText = t("component:lists.people.remove");
+  const deleteText = t("component:lists.people.delete");
 
   const { owner, setError } = useContext(AppContext);
 
@@ -32,13 +32,13 @@ const Members = ({ fanpageId, role: permission }) => {
   };
 
   useEffect(() => {
-    const { id, idRef } = removeMember;
+    const { id, refId } = removeMember;
     if (id) {
       axios
-        .post("/fanpage/user/delete", { subId: id })
+        .post("/fanpage/user/delete", { subId: id, fanpageId })
         .then(() => {
           const newArrayOfMembers = members.filter(
-            (member) => member.userId != idRef
+            (member) => member.userId != refId
           );
           setMembers(newArrayOfMembers);
         })
@@ -47,10 +47,15 @@ const Members = ({ fanpageId, role: permission }) => {
   }, [removeMember]);
 
   useEffect(() => {
-    const { subId, name, setButtonName, setTitle } = relation;
-    if (subId)
+    const { id, name, setButtonName, setTitle } = relation;
+
+    if (id)
       axios
-        .post("/fanpage/member/relation/change", { subId, relation: name })
+        .post("/fanpage/member/relation/change", {
+          subId: id,
+          fanpageId,
+          relation: name,
+        })
         .then(() => {
           setButtonName(name);
           setTitle(t(`fanpage:${name}`));
@@ -73,16 +78,16 @@ const Members = ({ fanpageId, role: permission }) => {
           {members.map((member) => {
             const { userId, subId, role, firstName, lastName, photo } = member;
             const data = {
-              refType: "profile",
               id: subId,
-              idRef: userId,
+              refId: userId,
+              refType: "profile",
               photo,
               radiusPhoto: false,
               name: `${firstName} ${lastName} ${
                 owner.id == userId ? `(${mySelf})` : ""
               }`,
-              unsubTitle: removeText,
-              button: "relation",
+              deleteText,
+              buttonType: "relation",
               buttonName: role,
               title: t(`fanpage:${role}`),
               collapse:
@@ -105,7 +110,7 @@ const Members = ({ fanpageId, role: permission }) => {
             return (
               <Card
                 data={data}
-                handleClick={setRemoveMember}
+                handleCollapseClick={setRemoveMember}
                 setRelation={setRealation}
                 key={userId}
               />

@@ -17,7 +17,7 @@ const { useTranslation } = i18next;
 
 const Fanpage = () => {
   const router = useRouter();
-  const fanpageId = router.query.id;
+  const fanpageId = Number(router.query.id);
 
   const { t } = useTranslation(["fanpage"]);
 
@@ -62,8 +62,8 @@ const Fanpage = () => {
 
   return (
     <HomeLayout>
-      {isError && <Error message={isError} />}
-      {isPrompt && <Prompt message={isPrompt} />}
+      {isError ? <Error message={isError} />: null}
+      {isPrompt ? <Prompt message={isPrompt} />: null}
       <section className="fanpage">
         {!fanpageError ? (
           <>
