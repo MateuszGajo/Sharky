@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import PropTypes from "prop-types";
 import cx from "classnames";
 import axios from "axios";
 import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
@@ -135,6 +136,23 @@ const Item = ({ item, setDeleteNotification }) => {
       </div>
     </div>
   );
+};
+
+Item.propTypes = {
+  item: PropTypes.shape({
+    id: PropTypes.string,
+    subscribeId: PropTypes.number,
+    groupId: PropTypes.number,
+    userId: PropTypes.number,
+    friendshipId: PropTypes.number,
+    name: PropTypes.string,
+    photo: PropTypes.string,
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    relation: PropTypes.string,
+    newRelation: PropTypes.string,
+  }),
+  setDeleteNotification: PropTypes.func,
 };
 
 export default Item;
