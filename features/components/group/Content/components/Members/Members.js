@@ -6,12 +6,7 @@ import AppContext from "@features/context/AppContext";
 
 const { useTranslation } = i18next;
 
-const Members = ({
-  groupId,
-  role: permission,
-  setNumberOfMembers,
-  numberOfMembers,
-}) => {
+const Members = ({ groupId, role: permission, setNumberOfMembers }) => {
   const { t } = useTranslation(["group", "component"]);
 
   const { owner, setError } = useContext(AppContext);
@@ -23,19 +18,19 @@ const Members = ({
   const moderatorName = t("group:members.moderator");
   const memberName = t("group:members.member");
   const yourself = t("component:lists.people.yourself");
-  const removeText = t("component:lists.people.remove");
+  const deleteText = t("component:lists.people.delete");
 
   useEffect(() => {
-    const { id, idRef } = removeMember;
+    const { id, refId } = removeMember;
     if (id) {
       axios
-        .post("/group/user/delete", { subId: id })
+        .post("/group/user/delete", { subId: id, groupId })
         .then(() => {
           const newArrayOfMembers = members.filter(
-            (member) => member.userId != idRef
+            (member) => member.userId != refId
           );
           setMembers(newArrayOfMembers);
-          setNumberOfMembers(Number(numberOfMembers) - 1);
+          setNumberOfMembers((prev) => prev - 1);
         })
         .catch(({ response: { message } }) => setError(message));
     }
@@ -54,14 +49,14 @@ const Members = ({
         const data = {
           refType: "profile",
           id: subId,
-          idRef: userId,
+          refId: userId,
           photo,
-          unsubTitle: removeText,
+          deleteText,
           radiusPhoto: false,
           name: `${firstName} ${lastName} ${
             owner.id == userId ? `(${yourself})` : ""
           }`,
-          button: "relation",
+          buttonType: "relation",
           title: t(`group:members.${role}`),
           buttonName: role,
           collapse: permission == "admin" && owner.id != userId ? true : false,
@@ -80,7 +75,13 @@ const Members = ({
             },
           },
         };
-        return <Card data={data} key={userId} handleClick={setRemoveMember} />;
+        return (
+          <Card
+            data={data}
+            key={userId}
+            handleCollapseClick={setRemoveMember}
+          />
+        );
       })}
     </div>
   );

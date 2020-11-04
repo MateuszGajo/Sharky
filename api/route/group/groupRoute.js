@@ -1,13 +1,17 @@
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
+const multer = require("multer");
 const { client } = require("../../../config/pgAdaptor");
 const decodeToken = require("../../../utils/decodeToken");
 const router = express.Router();
 
 router.post("/enter", async (req, res) => {
   const { groupId } = req.body;
-  const { id: ownerId } = decodeToken(req);
+  if (!/^[0-9]*$/.test(groupId)) return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const getPrimaryInfoQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/primaryInfo.sql"))
@@ -39,6 +43,11 @@ router.post("/enter", async (req, res) => {
 router.post("/about", async (req, res) => {
   const { groupId } = req.body;
 
+  if (!/^[0-9]*$/.test(groupId)) return res.status(400).json("invalid-data");
+
+  const { error } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
+
   const getInfoQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/groupInfo.sql"))
     .toString();
@@ -54,7 +63,11 @@ router.post("/about", async (req, res) => {
 });
 
 router.post("/leave", async (req, res) => {
-  const { memberId, groupId, role } = req.body;
+  const { groupId } = req.body;
+  if (!/^[0-9]*$/.test(groupId)) return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const getAdminsQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/admins.sql"))
@@ -62,28 +75,31 @@ router.post("/leave", async (req, res) => {
   const deleteMemberQuery = fs
     .readFileSync(path.join(__dirname, "./query/delete/user.sql"))
     .toString();
-  let admins;
 
-  if (role == "admin") {
-    admins = await client.query(getAdminsQuery, [groupId]);
-  }
+  try {
+    const { rowCount, rows } = await client.query(getAdminsQuery, [groupId]);
 
-  if (role != "admin" || admins.rowCount > 1) {
-    try {
-      await client.query(deleteMemberQuery, [memberId]);
+    if (rowCount > 1 || rows[0].userId != ownerId) {
+      await client.query(deleteMemberQuery, [groupId, ownerId]);
 
       res.status(200).json({ success: true });
-    } catch {
-      res.status(400).json("bad-request");
-    }
-  } else {
-    res.status(403).json("last-group-admin");
+    } else if (rowCount == 1) res.status(403).json("last-group-admin");
+    else res.status(400).json("bad-request");
+  } catch {
+    res.status(400).json("bad-request");
   }
 });
 
 router.post("/delete", async (req, res) => {
   const { groupId } = req.body;
+  if (!/^[0-9]*$/.test(groupId)) return res.status(400).json("invalid-data");
 
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
+
+  const getAdminQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/admin.sql"))
+    .toString();
   const deleteGroupQuery = fs
     .readFileSync(path.join(__dirname, "./query/delete/group.sql"))
     .toString();
@@ -92,6 +108,8 @@ router.post("/delete", async (req, res) => {
     .toString();
 
   try {
+    const { rowCount } = await client.query(getAdminQuery, [ownerId, groupId]);
+    if (rowCount == 0) res.status(403).json("no-permission");
     await client.query(deleteGroupQuery, [groupId]);
     await client.query(deleteUsersQuery, [groupId]);
 
@@ -249,6 +267,36 @@ router.post("/join", async (req, res) => {
   }
 });
 
+router.post("/user/delete", async (req, res) => {
+  const { subId, groupId } = req.body;
+  if (!/^[\d]*$/.test(groupId) || !/^[\d]*$/.test(subId))
+    return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
+
+  const getAdminQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/admin.sql"))
+    .toString();
+  const deleteMemberQuery = fs
+    .readFileSync(path.join(__dirname, "./query/delete/userByAdmin.sql"))
+    .toString();
+
+  try {
+    const { rows: admin } = await client.query(getAdminQuery, [
+      ownerId,
+      groupId,
+    ]);
+    if (!admin[0].id) return res.status(403).json("no-permission");
+    const { rows } = await client.query(deleteMemberQuery, [subId, groupId]);
+    if (!rows[0].id) return res.status(404).json("member-does-not-exist");
+
+    res.status(200).json({ success: true });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
 router.post("/leave", async (req, res) => {
   const { groupId } = req.body;
   if (!/^[\d]*$/.test(groupId)) return res.status(400).json("invalid-data");
@@ -329,6 +377,9 @@ router.post("/user/invitation/decline", async (req, res) => {
 });
 
 router.post("/change/photo", async (req, res) => {
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
+
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
       cb(null, "./public/static/images");
@@ -338,31 +389,58 @@ router.post("/change/photo", async (req, res) => {
     },
   });
 
-  const upload = multer({ storage }).single("file");
+  const upload = multer({
+    storage,
+    limits: {
+      fileSize: 200000,
+    },
+    fileFilter: (req, file, cb) => {
+      if (file.mimetype !== "image/jpeg" && file.mimetype !== "image/png") {
+        return cb(new Error("wrong file type"));
+      }
+      cb(null, true);
+    },
+  }).single("file");
 
   await upload(req, res, async (err) => {
-    if (err) return res.status(400).json("bad-request");
+    if (err) {
+      return err.message == "File too large"
+        ? res.status(413).json("file-too-large")
+        : err.message === "wrong file type"
+        ? res.status(415).json("wrong-file-type")
+        : res.status(400).json("bad-request");
+    }
 
     let fileName = null;
     if (req.file) {
-      const {
-        file: { mimetype, filename, size },
-      } = req;
       fileName = filename;
-      if (mimetype !== "image/jpeg" && mimetype !== "image/png") {
-        return res.status(415).json("wrong-file-type");
-      }
-      if (size > 200000) {
-        return res.status(413).json("file-too-large");
-      }
     }
     const { groupId } = req.body;
+    if (!/^[\d]*$/.test(groupId)) {
+      fs.unlinkSync(
+        path.join(__dirname, `../../../public/static/images/${fileName}`)
+      );
+      return res.status(400).json("invalid-data");
+    }
 
     const changeGroupPhotoQuery = fs
       .readFileSync(path.join(__dirname, "./query/update/groupPhoto.sql"))
       .toString();
+    const getAdminQuery = fs
+      .readFileSync(path.join(__dirname, "./query/get/admin.sql"))
+      .toString();
 
     try {
+      const { rowCount } = await client.query(getAdminQuery, [
+        ownerId,
+        groupId,
+      ]);
+      if (rowCount == 0) {
+        fs.unlinkSync(
+          path.join(__dirname, `../../../public/static/images/${fileName}`)
+        );
+        return res.status(403).json("no-permission");
+      }
       await client.query(changeGroupPhotoQuery, [fileName, groupId]);
       res.status(200).json({ fileName });
     } catch {

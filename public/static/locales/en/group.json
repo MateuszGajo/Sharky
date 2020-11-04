@@ -1,4 +1,7 @@
 {
+    "content":{
+        "no-permission":"You're not belong to the group"
+    },
     "members":{
         "admin":"Admin",
         "moderator":"Moderator",
