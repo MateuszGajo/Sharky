@@ -1,6 +1,5 @@
-import React, { useState} from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import axios from "axios";
 import { IoMdClose } from "react-icons/io";
 import PrimaryInput from "@common/PrimaryInput/PrimaryInput";
 import PrimaryButton from "@common/PrimaryButton/PrimaryButton";
@@ -8,7 +7,7 @@ import i18next from "@i18n";
 
 const { useTranslation } = i18next;
 
-const ConfirmUser = ({ setOpen, setVerify }) => {
+const ConfirmUser = ({ setOpen, setValue, popUpError }) => {
   const { t } = useTranslation();
 
   const title = t("common:pop-up.confirm-user.title");
@@ -18,18 +17,13 @@ const ConfirmUser = ({ setOpen, setVerify }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  useEffect(() => {
+    setError(popUpError);
+  }, [popUpError]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios
-      .post("/user/check/password", { password })
-      .then(() => {
-        setError("");
-        setVerify(true);
-        setOpen(false);
-      })
-      .catch(({ response: { data: message } }) => {
-        setError(message);
-      });
+    setValue(password);
   };
   return (
     <div className="confrim-user-container">
@@ -77,7 +71,8 @@ const ConfirmUser = ({ setOpen, setVerify }) => {
 
 ConfirmUser.propTypes = {
   setOpen: PropTypes.func,
-  setVerify: PropTypes.func
-}
+  setValue: PropTypes.func,
+  popUpError: PropTypes.string,
+};
 
 export default ConfirmUser;
