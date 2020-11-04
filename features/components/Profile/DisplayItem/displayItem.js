@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { IoMdArrowBack } from "react-icons/io";
 import cx from "classnames";
 import Fanpages from "@components/Lists/Fanpages/Fanpages";
@@ -10,7 +11,7 @@ import About from "../About/About";
 import i18next from "@i18n";
 const { useTranslation } = i18next;
 
-const ProfileDisplayItems = ({ setChooseItem, chooseItem, info, userId }) => {
+const DisplayItem = ({ setChooseItem, chooseItem, info, userId }) => {
   const { t } = useTranslation(["profile"]);
 
   const aboutText = t("profile:about-me");
@@ -78,4 +79,17 @@ const ProfileDisplayItems = ({ setChooseItem, chooseItem, info, userId }) => {
   );
 };
 
-export default ProfileDisplayItems;
+DisplayItem.propTypes = {
+  setChooseItem: PropTypes.func,
+  chooseItem: PropTypes.string,
+  info: PropTypes.shape({
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    city: PropTypes.string,
+    country: PropTypes.string,
+    birthDate: PropTypes.string,
+  }),
+  userId: PropTypes.number,
+};
+
+export default DisplayItem;

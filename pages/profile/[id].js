@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import NavBar from "@components/Layout/Home/Compound/components/NavBar/NavBar";
-import AboutMe from "@components/Profile/AboutMe/AboutMe";
+import ProfileInfo from "@components/Profile/ProfileInfo/ProfileInfo";
 import DisplayItem from "@components/Profile/DisplayItem/DisplayItem";
 import Spinner from "@components/Spinner/Spinner";
 import Error from "@common/PopUp/Error/Error";
@@ -14,7 +14,7 @@ const { useTranslation } = i18next;
 
 const profile = () => {
   const router = useRouter();
-  const userId = router.query.id;
+  const userId = Number(router.query.id);
 
   const { t } = useTranslation(["profile"]);
 
@@ -67,7 +67,7 @@ const profile = () => {
               userId={userId}
             />
           ) : (
-            <AboutMe
+            <ProfileInfo
               setChooseItem={setChooseItem}
               info={info}
               userId={userId}

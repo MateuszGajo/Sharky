@@ -14,7 +14,7 @@ numberOfFanpages as(
 ),
 numberOfFriends as(
     select a."userId",
-        sum(a.count)
+        sum(a.count)::int
     from(
             select user_id_1 as "userId",
                 count(id)
