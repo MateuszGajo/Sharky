@@ -31,7 +31,8 @@ router.post("/get", async (req, res) => {
 });
 
 router.get("/conversation/get", async (req, res) => {
-  const { id: ownerId } = decodeToken(req);
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const getConversationsQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/conversations.sql"))
@@ -47,20 +48,26 @@ router.get("/conversation/get", async (req, res) => {
 });
 
 router.post("/add", async (req, res) => {
-  const { chatId, message, userId, date } = req.body;
+  const { message, userId } = req.body;
+  if (!/^[\d]*$/.test(userId) || !message)
+    return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const addMessageQuery = fs
     .readFileSync(path.join(__dirname, "./query/add/message.sql"))
     .toString();
+  const date = new Date();
 
+  const { rows } = await client.query(addMessageQuery, [
+    message,
+    date,
+    ownerId,
+    userId,
+  ]);
+  res.status(200).json({ messageId: rows[0].id, date });
   try {
-    const { rows } = await client.query(addMessageQuery, [
-      chatId,
-      userId,
-      message,
-      date,
-    ]);
-    res.status(200).json({ messageId: rows[0].id });
   } catch {
     res.status(400).json("bad-request");
   }
