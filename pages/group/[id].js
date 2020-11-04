@@ -16,7 +16,7 @@ const { useTranslation } = i18next;
 
 const Group = () => {
   const router = useRouter();
-  const groupId = router.query.id;
+  const groupId = Number(router.query.id);
 
   const { t } = useTranslation(["group"]);
 

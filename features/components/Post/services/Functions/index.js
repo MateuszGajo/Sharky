@@ -33,10 +33,10 @@ export const getUsers = async (users, setUsers, elements) => {
       });
 };
 
-export const muteUser = ({ idMuteUser, setMuteUser, isSingle, setError }) => {
+export const muteUser = ({ userId, setMuteUser, isSingle, setError }) => {
   axios
     .post("/user/mute", {
-      idMuteUser,
+      userId,
     })
     .then((resp) => {
       isSingle && Router.push("/");
@@ -176,9 +176,9 @@ export const likePost = ({ postId, setNewLike, setError }) => {
     });
 };
 
-export const unlikePost = ({ likeId, postId, setNewLike, setError }) => {
+export const unlikePost = ({ postId, setNewLike, setError }) => {
   axios
-    .post("/post/unlike", { likeId })
+    .post("/post/unlike", { postId })
     .then((resp) =>
       setNewLike({ likeId: null, idElement: postId, type: "post" })
     )
@@ -202,13 +202,11 @@ export const sharePost = ({
   setError,
   isSingle,
 }) => {
-  const date = new Date();
   axios
     .post("/post/share", {
       postId: post.postId,
-      date,
     })
-    .then(({ data: { shareId, userId } }) => {
+    .then(({ data: { shareId, userId, date } }) => {
       if (!isSingle) {
         setNewComment({});
         setPosts([
@@ -260,7 +258,7 @@ export const editPost = ({
 export const deletePost = ({ postId, posts, setPosts, isSingle, setError }) => {
   axios
     .post("/post/delete", { postId })
-    .then((resp) => {
+    .then(() => {
       isSingle && Router.push("/");
       const newPosts = posts.filter((post) => post.postId != postId);
       setPosts(newPosts);
@@ -316,7 +314,6 @@ export const getComments = ({
 export const addComent = ({
   postId,
   content,
-  date,
   clearText,
   setNewComment,
   setError,
@@ -325,13 +322,12 @@ export const addComent = ({
     .post("/comment/add", {
       postId,
       content,
-      date,
     })
-    .then(({ data: { commnetId } }) => {
+    .then(({ data: { commentId, date } }) => {
       setNewComment({
         content,
         idElement: postId,
-        commnetId,
+        commentId,
         type: "post",
         date,
       });
@@ -345,13 +341,13 @@ export const addComent = ({
     });
 };
 
-export const likeComment = ({ commnetId, setNewLike, setError }) => {
+export const likeComment = ({ commentId, setNewLike, setError }) => {
   axios
-    .post("/comment/like", { commnetId })
+    .post("/comment/like", { commentId })
     .then(({ data: { likeId } }) => {
       setNewLike({
         likeId,
-        idElement: commnetId,
+        idElement: commentId,
         type: "comment",
       });
     })
@@ -363,11 +359,11 @@ export const likeComment = ({ commnetId, setNewLike, setError }) => {
     });
 };
 
-export const unlikeComment = ({ likeId, commnetId, setNewLike, setError }) => {
+export const unlikeComment = ({ likeId, commentId, setNewLike, setError }) => {
   axios
-    .post("/comment/unlike", { likeId })
+    .post("/comment/unlike", { commentId })
     .then((resp) =>
-      setNewLike({ likeId: null, idElement: commnetId, type: "comment" })
+      setNewLike({ likeId: null, idElement: commentId, type: "comment" })
     )
     .catch((err) => {
       const {
@@ -378,7 +374,7 @@ export const unlikeComment = ({ likeId, commnetId, setNewLike, setError }) => {
 };
 
 export const getReplies = async ({
-  commnetId,
+  commentId,
   from,
   replies,
   setReplies,
@@ -388,7 +384,7 @@ export const getReplies = async ({
 }) => {
   axios
     .post("/reply/get", {
-      commnetId,
+      commentId,
       from,
     })
     .then(async ({ data: { replies: r, isMore } }) => {
@@ -399,23 +395,21 @@ export const getReplies = async ({
 };
 
 export const addReply = ({
-  commnetId,
+  commentId,
   content,
-  date,
   clearText,
   setNewComment,
   setError,
 }) => {
   axios
     .post("/reply/add", {
-      commnetId,
+      commentId,
       content,
-      date,
     })
-    .then(({ data: { replyId } }) => {
+    .then(({ data: { replyId, date } }) => {
       setNewComment({
         content,
-        idElement: commnetId,
+        idElement: commentId,
         replyId,
         type: "comment",
         date,
@@ -444,14 +438,9 @@ export const likeReply = async ({ replyId, setNewLike, setError }) => {
     });
 };
 
-export const unlikeReply = async ({
-  likeId,
-  replyId,
-  setNewLike,
-  setError,
-}) => {
+export const unlikeReply = async ({ replyId, setNewLike, setError }) => {
   axios
-    .post("/reply/unlike", { likeId })
+    .post("/reply/unlike", { replyId })
     .then((resp) =>
       setNewLike({ likeId: null, idElement: replyId, type: "reply" })
     )

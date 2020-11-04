@@ -26,8 +26,8 @@ export const signUpValidation = (creds, dispatch) => {
     isValid = false;
   }
 
-  if (!password) {
-    passwordErrorMessage = "empty-field";
+  if (password.length < 6) {
+    passwordErrorMessage = "password-too-short";
     isValid = false;
   }
 
@@ -37,7 +37,7 @@ export const signUpValidation = (creds, dispatch) => {
   }
 
   if (password != confirmPassword) {
-    confirmPasswordErrorMessage = "passwords-not-equal-error";
+    confirmPasswordErrorMessage = "passwords-not-equal";
     isValid = false;
   }
 

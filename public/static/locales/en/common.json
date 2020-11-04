@@ -19,7 +19,8 @@
         "confirm-user":{
             "title":"Re-enter you account password",
             "button":"Continue",
-            "bad-password":"Bad password"
+            "invalid-password":"Invalid password",
+            "password-too-short":"Password is too short"
         },
         "report":{
             "title-post":"Report post",
@@ -39,7 +40,15 @@
             "wrong-file-type":"Wrong file type",
             "file-too-large":"File is too large",
             "invalid-value":"Invalid Value",
-            "passwords-do-not-match":"Passwords don't match"
+            "passwords-do-not-match":"Passwords don't match",
+            "invalid-email":"Invalid email",
+            "password-too-short":"Password is too short",
+            "empty-password":"Password is empty",
+            "empty-confirm-password":"Confirm password is empty",
+            "passwords-not-equal":"Passwords are diffrent",
+            "empty-first-name":"First name is empty",
+            "empty-last-name":"Last name is empty",
+            "invalid-phone-number":"Invalid phone number"
         },
         "invite-person":{
             "empty-content":"You have no friends to invite",

@@ -12,7 +12,8 @@ const router = express.Router();
 const saltRounds = 10;
 
 router.post("/add/photo", async (req, res) => {
-  const { id: ownerId } = decodeToken(req);
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -23,37 +24,37 @@ router.post("/add/photo", async (req, res) => {
     },
   });
 
-  const upload = multer({ storage }).single("file");
+  const upload = multer({
+    storage,
+    limits: {
+      fileSize: 200000,
+    },
+    fileFilter: (req, file, cb) => {
+      if (file.mimetype !== "image/jpeg" && file.mimetype !== "image/png") {
+        return cb(new Error("wrong file type"));
+      }
+      cb(null, true);
+    },
+  }).single("file");
 
   await upload(req, res, async (err) => {
     if (err) {
-      return res.status(400).json("bad-request");
+      return err.message == "File too large"
+        ? res.status(413).json("file-too-large")
+        : err.message === "wrong file type"
+        ? res.status(415).json("wrong-file-type")
+        : res.status(400).json("bad-request");
     }
 
-    const {
-      file: { mimetype, filename, size },
-    } = req;
-
-    const fileName = filename;
-
-    if (mimetype !== "image/jpeg" && mimetype !== "image/png") {
-      return res.status(415).json("wrong-file-type");
-    }
-
-    if (size > 200000) {
-      return res.status(413).json("file-too-large");
-    }
+    if (!req.file) return res.status(404).json("no-photo");
+    fileName = req.file.filename;
 
     const addPhotoQuery = fs
       .readFileSync(path.join(__dirname, "./query/add/photo.sql"))
       .toString();
 
     try {
-      await client.query(addPhotoQuery, [
-        ownerId,
-        fileName,
-        new Date().toUTCString(),
-      ]);
+      await client.query(addPhotoQuery, [ownerId, fileName, new Date()]);
 
       res.status(200).json({ success: true });
     } catch {
@@ -63,7 +64,8 @@ router.post("/add/photo", async (req, res) => {
 });
 
 router.post("/change/photo", async (req, res) => {
-  const { id: ownerId } = decodeToken(req);
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -74,14 +76,30 @@ router.post("/change/photo", async (req, res) => {
     },
   });
 
-  const upload = multer({ storage }).single("file");
+  const upload = multer({
+    storage,
+    limits: {
+      fileSize: 200000,
+    },
+    fileFilter: (req, file, cb) => {
+      if (file.mimetype !== "image/jpeg" && file.mimetype !== "image/png") {
+        return cb(new Error("wrong file type"));
+      }
+      cb(null, true);
+    },
+  }).single("file");
 
   await upload(req, res, async (err) => {
-    if (err) return res.status(400).json("bad-request");
+    if (err) {
+      return err.message == "File too large"
+        ? res.status(413).json("file-too-large")
+        : err.message === "wrong file type"
+        ? res.status(415).json("wrong-file-type")
+        : res.status(400).json("bad-request");
+    }
 
-    const {
-      file: { mimetype, filename, size },
-    } = req;
+    if (!req.file) return res.status(404).json("no-photo");
+    fileName = req.file.filename;
 
     const changePhotoQuery = fs
       .readFileSync(path.join(__dirname, "./query/update/photo.sql"))
@@ -89,7 +107,6 @@ router.post("/change/photo", async (req, res) => {
     const addPhotoQuery = fs
       .readFileSync(path.join(__dirname, "./query/add/photo.sql"))
       .toString();
-    const fileName = filename;
 
     try {
       await client.query(changePhotoQuery, [fileName, ownerId]);
@@ -108,6 +125,9 @@ router.post("/change/photo", async (req, res) => {
 router.post("/get", async (req, res) => {
   const { userIds } = req.body;
 
+  const { error } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
+
   const getUserQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/user.sql"))
     .toString();
@@ -123,6 +143,10 @@ router.post("/get", async (req, res) => {
 
 router.post("/info", async (req, res) => {
   const { userId } = req.body;
+  if (!/^[\d]*$/.test(userId)) return res.status(400).json("invalid-data");
+
+  const { error } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const getUserInfoQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/userInfo.sql"))
@@ -140,6 +164,10 @@ router.post("/info", async (req, res) => {
 
 router.post("/get/photo", async (req, res) => {
   const { userId, from } = req.body;
+  if (!/^[\d]*$/.test(from)) return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const getPhotosQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/photos.sql"))
@@ -165,7 +193,8 @@ router.post("/get/photo", async (req, res) => {
 
 router.post("/change/country", async (req, res) => {
   let { value } = req.body;
-  const { id: ownerId } = decodeToken(req);
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   value = value.toLowerCase();
 
@@ -178,7 +207,7 @@ router.post("/change/country", async (req, res) => {
 
   try {
     const country = await client.query(getCountryIdQuery, [value]);
-    if (!country.rows[0]) return res.status(406).json("country-does-not-exist");
+    if (!country.rows[0]) return res.status(400).json("country-does-not-exist");
 
     await client.query(changeCountryQuery, [value, ownerId]);
 
@@ -190,7 +219,8 @@ router.post("/change/country", async (req, res) => {
 
 router.post("/change/language", async (req, res) => {
   let { value } = req.body;
-  const { id: ownerId } = decodeToken(req);
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   value = value.toLowerCase();
 
@@ -204,7 +234,7 @@ router.post("/change/language", async (req, res) => {
   try {
     const language = await client.query(getLanguageIdQuery, [value]);
     if (!language.rows[0])
-      return res.status(406).json("language-does-not-exist");
+      return res.status(400).json("language-does-not-exist");
 
     await client.query(changeLanguageQuery, [value, ownerId]);
 
@@ -215,11 +245,30 @@ router.post("/change/language", async (req, res) => {
 });
 
 router.post("/change/email", async (req, res) => {
-  const { value } = req.body;
-  const { id: ownerId } = decodeToken(req);
+  const { value, password } = req.body;
+  if (
+    !/^([a-zA-Z\d\.-]+)@([a-z\d-]+)\.([a-z]{2,8})(\.[a-z]{2,8})?$/.test(value)
+  )
+    return res.status(400).json("invalid-email");
+  else if (password.length < 6)
+    return res.status(400).json("password-too-short");
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
+
+  const getPasswordQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/password.sql"))
+    .toString();
+
+  try {
+    const { rows } = await client.query(getPasswordQuery, [ownerId]);
+    const match = await bcrypt.compare(password, rows[0].password);
+    if (!match) return res.status(401).json("invalid-password");
+  } catch {
+    return res.status(400).json("bad-request");
+  }
 
   const changeEmailQuery = fs
-    .readFileSync(path.join(__dirname, "./query/change/email.sql"))
+    .readFileSync(path.join(__dirname, "./query/update/email.sql"))
     .toString();
 
   try {
@@ -232,13 +281,30 @@ router.post("/change/email", async (req, res) => {
 });
 
 router.post("/change/phone", async (req, res) => {
-  const { value } = req.body;
-  const { id: ownerId } = decodeToken(req);
+  const { value, password } = req.body;
+  const phone = value.replace(/[\s-]/gi, "");
+  if (!/[\d]{9}/.test(phone)) {
+    return res.status(400).json("invalid-phone-number");
+  } else if (password.length < 6)
+    return res.status(400).json("password-too-short");
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
+
+  const getPasswordQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/password.sql"))
+    .toString();
+
+  try {
+    const { rows } = await client.query(getPasswordQuery, [ownerId]);
+    const match = await bcrypt.compare(password, rows[0].password);
+    if (!match) return res.status(401).json("invalid-password");
+  } catch {
+    return res.status(400).json("bad-request");
+  }
 
   const changePhoneQuery = fs
-    .readFileSync(path.join(__dirname, "./query/change/phone.sql"))
+    .readFileSync(path.join(__dirname, "./query/update/phone.sql"))
     .toString();
-  const phone = value.replace(/[\s-]/gi, "");
 
   try {
     await client.query(changePhoneQuery, [phone, ownerId]);
@@ -249,24 +315,74 @@ router.post("/change/phone", async (req, res) => {
   }
 });
 
-router.post("/get/language", async (req, res) => {
-  const { userId } = req.body;
-
+router.get("/get/language", async (req, res) => {
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
   const getLanguageQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/language.sql"))
     .toString();
 
   try {
-    const { rows } = await client.query(getLanguageQuery, [userId]);
+    const { rows } = await client.query(getLanguageQuery, [ownerId]);
     res.status(200).json({ language: rows[0].language });
   } catch {
     res.status(400).json("bad-request");
   }
 });
 
-router.post("/change/password", async (req, res) => {
+router.post("/get/item", async (req, res) => {
   const { value } = req.body;
-  const { id: ownerId } = decodeToken(req);
+  const values = [
+    "id",
+    "google_id",
+    "facebook_id",
+    "twitter_id",
+    "first_name",
+    "last_name",
+    "email",
+    "password",
+    "phone",
+    "country",
+    "language",
+    "photo",
+    "birthdate",
+    "city",
+  ];
+  if (!values.includes(value)) return res.status(400).json("invalid-value");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
+
+  const getItemQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/item.sql"))
+    .toString();
+
+  try {
+    const { rows } = await client.query(getItemQuery, [ownerId]);
+    res.status(200).json({ item: rows[0][value] });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
+router.post("/change/password", async (req, res) => {
+  const { value, password } = req.body;
+  if (value.length < 6) return res.status(400).json("new-password-too-short");
+  if (password.length < 6) return res.status(400).json("password-too-short");
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
+
+  const getPasswordQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/password.sql"))
+    .toString();
+
+  try {
+    const { rows } = await client.query(getPasswordQuery, [ownerId]);
+    const match = await bcrypt.compare(password, rows[0].password);
+    if (!match) return res.status(401).json("invalid-password");
+  } catch {
+    return res.status(400).json("bad-request");
+  }
 
   const changePasswordQuery = fs
     .readFileSync(path.join(__dirname, "./query/change/password.sql"))
@@ -286,8 +402,10 @@ router.post("/change/password", async (req, res) => {
 });
 
 router.post("/mute", async (req, res) => {
-  const { idMuteUser } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  const { userId } = req.body;
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const muteUserQuery = fs
     .readFileSync(path.join(__dirname, "./query/add/muteUser.sql"))
@@ -295,7 +413,7 @@ router.post("/mute", async (req, res) => {
   const date = new Date();
 
   try {
-    await client.query(muteUserQuery, [onwerId, idMuteUser, date]);
+    await client.query(muteUserQuery, [ownerId, userId, date]);
 
     res.status(200).json({ success: true });
   } catch {
@@ -305,7 +423,9 @@ router.post("/mute", async (req, res) => {
 
 router.post("/block", async (req, res) => {
   const { userId } = req.body;
-  const { id: onwerId } = decodeToken(req);
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const deleteFriendQuery = fs
     .readFileSync(path.join(__dirname, "./query/delete/friend.sql"))
@@ -319,9 +439,9 @@ router.post("/block", async (req, res) => {
   const date = new Date();
 
   try {
-    await client.query(deleteFriendQuery, [onwerId, userId]);
-    await client.query(muteUserQuery, [onwerId, userId, date]);
-    await client.query(blockUserQuery, [onwerId, userId, date]);
+    await client.query(deleteFriendQuery, [ownerId, userId]);
+    await client.query(muteUserQuery, [ownerId, userId, date]);
+    await client.query(blockUserQuery, [ownerId, userId, date]);
 
     res.status(200).json({ success: true });
   } catch {
@@ -330,30 +450,47 @@ router.post("/block", async (req, res) => {
 });
 
 router.get("/logout", async (req, res) => {
-  const { id: onwerId } = decodeToken(req);
+  const { id: ownerId } = decodeToken(req.cookies.token);
   res.clearCookie("token");
-  res.status(200).json({ userId: onwerId });
+  res.status(200).json({ userId: ownerId });
 });
 
-router.get("/me", (req, res) => {
-  if (!req.cookies.token) return res.status(401).json("un-authorized");
-  jwt.verify(req.cookies.token, jwtSecret, function (err, decoded) {
-    if (decoded) return res.json({ user: decoded.data });
+router.get("/me", async (req, res) => {
+  const getPasswordQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/password.sql"))
+    .toString();
+  const getThirdIdQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/password.sql"))
+    .toString();
+  const user = decodeToken(req.cookies.token);
+  if (user.error) return res.status(401).json(user.error);
 
-    return res.status(401).json("un-authorized");
-  });
+  try {
+    const { rowCount } = await client.query(getThirdIdQuery, [user.id]);
+    if (rowCount > 0) {
+      const { rows } = await client.query(getPasswordQuery, [user.id]);
+      if (user.password !== rows[0].password)
+        return res.status(401).json("password-changed");
+    }
+    return res.status(200).json({ user });
+  } catch {
+    return res.status(400).json("bad-request");
+  }
 });
 
 router.post("/check/password", async (req, res) => {
   const { password } = req.body;
-  const { id: onwerId } = decodeToken(req);
+  if (typeof password !== "string") return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const getPasswordQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/password.sql"))
     .toString();
 
   try {
-    const { rows } = await client.query(getPasswordQuery, [onwerId]);
+    const { rows } = await client.query(getPasswordQuery, [ownerId]);
 
     await bcrypt.compare(password, rows[0].password, function (err, result) {
       if (result) return res.status(200).json({ success: true });
@@ -366,14 +503,15 @@ router.post("/check/password", async (req, res) => {
 });
 
 router.get("/me/info", async (req, res) => {
-  const { id } = decodeToken(req);
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
 
   const getUserSettingsQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/userSettings.sql"))
     .toString();
 
   try {
-    const { rows } = await client.query(getUserSettingsQuery, [id]);
+    const { rows } = await client.query(getUserSettingsQuery, [ownerId]);
 
     res.status(200).json({ ...rows[0] });
   } catch {

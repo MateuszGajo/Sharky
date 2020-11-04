@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import PropTypes from "prop-types";
 import cx from "classnames";
 import axios from "axios";
 import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
@@ -13,15 +14,14 @@ const Item = ({ item, setDeleteNotification }) => {
     subscribeId,
     groupId,
     userId,
+    friendshipId,
     name,
     photo,
     firstName,
     lastName,
     relation,
-    relationId,
     newRelation,
   } = item;
-
   const { t } = useTranslation(["notifications"]);
   const router = useRouter();
 
@@ -32,13 +32,17 @@ const Item = ({ item, setDeleteNotification }) => {
 
   const acceptNewRelation = () => {
     axios
-      .post("/friend/change/relation/accept", { newRelation, relationId })
+      .post("/friend/change/relation/accept", {
+        newRelation,
+        friendshipId,
+        userId,
+      })
       .then(() => setDeleteNotification({ id }))
       .catch(({ response: { data: message } }) => setError(message));
   };
   const declineNewRelation = () => {
     axios
-      .post("/friend/change/relation/decline", { relationId })
+      .post("/friend/change/relation/decline", { friendshipId, userId })
       .then(() => setDeleteNotification({ id }))
       .catch(({ response: { data: message } }) => setError(message));
   };
@@ -132,6 +136,23 @@ const Item = ({ item, setDeleteNotification }) => {
       </div>
     </div>
   );
+};
+
+Item.propTypes = {
+  item: PropTypes.shape({
+    id: PropTypes.string,
+    subscribeId: PropTypes.number,
+    groupId: PropTypes.number,
+    userId: PropTypes.number,
+    friendshipId: PropTypes.number,
+    name: PropTypes.string,
+    photo: PropTypes.string,
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    relation: PropTypes.string,
+    newRelation: PropTypes.string,
+  }),
+  setDeleteNotification: PropTypes.func,
 };
 
 export default Item;

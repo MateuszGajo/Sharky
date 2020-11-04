@@ -80,6 +80,11 @@ router.get(
 
 router.post("/signin", async (req, res) => {
   const { email, password } = req.body;
+  if (
+    !/^([a-zA-Z\d\.-]+)@([a-z\d-]+)\.([a-z]{2,8})(\.[a-z]{2,8})?$/.test(email)
+  )
+    return res.status(400).json("invalid-email");
+  else if (!password) return res.status(400).json("empty-password");
 
   const findUserQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/user.sql"))
@@ -96,6 +101,7 @@ router.post("/signin", async (req, res) => {
         firstName,
         lastName,
         email,
+        password,
         phone,
         country,
         language,
@@ -111,6 +117,7 @@ router.post("/signin", async (req, res) => {
             lastName,
             photo: "profile.png",
             email,
+            password,
             phone,
             country,
             language,
@@ -131,7 +138,27 @@ router.post("/signin", async (req, res) => {
 
 router.post("/signup", async (req, res) => {
   const { creds } = req.body;
-  const { email, password, firstName, lastName, phone } = creds;
+  const {
+    email,
+    password,
+    confirmPassword,
+    firstName,
+    lastName,
+    phone,
+  } = creds;
+  if (
+    !/^([a-zA-Z\d\.-]+)@([a-z\d-]+)\.([a-z]{2,8})(\.[a-z]{2,8})?$/.test(email)
+  )
+    return res.status(400).json("invalid-email");
+  if (password.length < 6) return res.status(400).json("password-too-short");
+  else if (!confirmPassword)
+    return res.status(400).json("empty-confirm-password");
+  else if (password !== confirmPassword)
+    return res.status(400).json("passwords-not-equal");
+  else if (!firstName) return res.status(400).json("empty-first-name");
+  else if (!lastName) return res.status(400).json("empty-last-name");
+  else if (!/[\d]{9}/.test(phone))
+    return res.status(400).json("invalid-phone-number");
 
   const getUserIdQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/userId.sql"))
@@ -164,6 +191,7 @@ router.post("/signup", async (req, res) => {
               lastName,
               photo: "profile.png",
               email,
+              password: pwHash,
               phone,
               country: null,
               language: null,
@@ -183,16 +211,6 @@ router.post("/signup", async (req, res) => {
     }
   } catch {
     return res.status(400).json("bad-request");
-  }
-});
-
-router.get("/me", async (req, res) => {
-  const token = req.cookies.token || null;
-  try {
-    await jwt.verify(token, jwtSecret);
-    return res.json({ verify: true });
-  } catch {
-    return res.json({ verify: false });
   }
 });
 

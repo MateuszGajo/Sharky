@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import PropTypes from "prop-types";
 import cx from "classnames";
 
 const InputAuth = ({
@@ -11,7 +12,7 @@ const InputAuth = ({
   const input = useRef(null);
   return (
     <div
-      data-testid="auth-input"
+      data-testid="container"
       className={cx("auth-input", {
         "auth-input--x-large": size === "x-large",
         "auth-input--large": size === "large",
@@ -22,7 +23,7 @@ const InputAuth = ({
       <input
         className="auth-input__input"
         type={type}
-        data-testid="auth-input"
+        data-testid="field"
         value={value}
         ref={input}
         onChange={(e) => onChange(e.target.value)}
@@ -37,6 +38,14 @@ const InputAuth = ({
       </h2>
     </div>
   );
+};
+
+InputAuth.propTypes = {
+  value: PropTypes.string,
+  onChange: PropTypes.func,
+  type: PropTypes.string,
+  title: PropTypes.string,
+  size: PropTypes.string,
 };
 
 export default InputAuth;

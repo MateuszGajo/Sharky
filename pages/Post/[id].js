@@ -25,7 +25,6 @@ const Post = () => {
   const [isLoading, setStutusOfLoading] = useState(true);
 
   const getUsers = async (userIds) => {
-    console.log(userIds);
     await axios
       .post("/user/get", { userIds })
       .then(({ data: { users: u } }) => {

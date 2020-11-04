@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import DisplayItem from "../DisplayItem/DisplayItem";
 import Header from "./components/Header/Header";
 import Content from "./components/Content/Content";
@@ -11,9 +12,7 @@ const ProfileInfo = ({ setChooseItem, info, userId }) => {
 
   const [isDisplayAbout, setStatusOfDisplayAbout] = useState(false);
 
-  const [numberOfPhotos, setNumberOfPhotos] = useState(
-    Number(initialNumberOfPhotos)
-  );
+  const [numberOfPhotos, setNumberOfPhotos] = useState(initialNumberOfPhotos);
 
   const { t } = useTranslation(["profile"]);
 
@@ -44,6 +43,18 @@ const ProfileInfo = ({ setChooseItem, info, userId }) => {
       )}
     </div>
   );
+};
+
+ProfileInfo.propTypes = {
+  setChooseItem: PropTypes.func,
+  info: PropTypes.shape({
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    city: PropTypes.string,
+    country: PropTypes.string,
+    birthDate: PropTypes.string,
+  }),
+  userId: PropTypes.number,
 };
 
 export default ProfileInfo;

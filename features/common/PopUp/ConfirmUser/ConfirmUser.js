@@ -1,14 +1,13 @@
-import React, { useState, useContext } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import { IoMdClose } from "react-icons/io";
-import cx from "classnames";
 import PrimaryInput from "@common/PrimaryInput/PrimaryInput";
 import PrimaryButton from "@common/PrimaryButton/PrimaryButton";
 import i18next from "@i18n";
 
 const { useTranslation } = i18next;
 
-const ConfirmUser = ({ setOpen, setVerify }) => {
+const ConfirmUser = ({ setOpen, setValue, popUpError }) => {
   const { t } = useTranslation();
 
   const title = t("common:pop-up.confirm-user.title");
@@ -18,27 +17,20 @@ const ConfirmUser = ({ setOpen, setVerify }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  useEffect(() => {
+    setError(popUpError);
+  }, [popUpError]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios
-      .post("/user/check/password", { password })
-      .then(() => {
-        setError("");
-        setVerify(true);
-        setOpen(false);
-      })
-      .catch(({ response: { data: message } }) => {
-        setError(message);
-      });
+    setValue(password);
   };
   return (
-    <div
-      data-testid="confrim-user-container"
-      className="confrim-user-container"
-    >
+    <div className="confrim-user-container">
       <div className="confrim-user-container__content">
         <div
           className="confrim-user-container__content__icon"
+          data-testid="close-icon"
           onClick={() => setOpen(false)}
         >
           <IoMdClose />
@@ -75,6 +67,12 @@ const ConfirmUser = ({ setOpen, setVerify }) => {
       </div>
     </div>
   );
+};
+
+ConfirmUser.propTypes = {
+  setOpen: PropTypes.func,
+  setValue: PropTypes.func,
+  popUpError: PropTypes.string,
 };
 
 export default ConfirmUser;

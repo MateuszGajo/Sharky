@@ -37,15 +37,15 @@
     "lists":{
         "fanpages":{
             "description":"Subscribers",
-            "button-subscribe":"Subscribe",
-            "button-unsubscribe":"Unsubscribe",
+            "subscribe":"Subscribe",
+            "unsubscribe":"Unsubscribe",
             "empty-content":"Use search to find fanpage",
             "no-result":"We didn't find any fanpage"
         },
         "groups":{
             "description":"Number of members",
-            "button-join":"Join",
-            "button-leave":"Leave",
+            "join":"Join",
+            "leave":"Leave",
             "empty-content":"Use search to find group",
             "no-result":"We didn't find any group"
         },
@@ -54,9 +54,9 @@
             "friend":"Friend",
             "family":"Family",
             "pal":"Pal",
-            "relation-change":"Change relationship request has been sent",
+            "relation-change":"Request for change realtionship has been sent",
             "add":"Add",
-            "remove":"Remove",
+            "delete":"Delete",
             "accept":"Accept",
             "decline":"Decline",
             "sent":"Sent",

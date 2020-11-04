@@ -1,4 +1,5 @@
 import React, { useContext, useRef, useEffect } from "react";
+import PropTypes from "prop-types";
 import axios from "axios";
 import cx from "classnames";
 import { useRouter } from "next/router";
@@ -69,7 +70,7 @@ const Navbar = ({ setIdSub, setSection, subId, role, fanpageId }) => {
 
   const subscribeFanpage = () => {
     axios
-      .post("/fanpage/user/add", { fanpageId })
+      .post("/fanpage/subscribe", { fanpageId })
       .then(({ data: { id } }) => {
         setIdSub(id);
       })
@@ -78,7 +79,7 @@ const Navbar = ({ setIdSub, setSection, subId, role, fanpageId }) => {
 
   const unSubscribeFanpage = () => {
     axios
-      .post("/fanpage/user/delete", { subId, role, fanpageId })
+      .post("/fanpage/unsubscribe", { fanpageId })
       .then(() => {
         setIdSub(null);
       })
@@ -180,6 +181,14 @@ const Navbar = ({ setIdSub, setSection, subId, role, fanpageId }) => {
       </div>
     </div>
   );
+};
+
+Navbar.propTypes = {
+  setIdSub: PropTypes.func,
+  setSection: PropTypes.func,
+  subId: PropTypes.number,
+  role: PropTypes.string,
+  fanpageId: PropTypes.number.isRequired,
 };
 
 export default Navbar;

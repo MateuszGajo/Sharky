@@ -1,5 +1,5 @@
 import React, { useRef, useContext, useEffect } from "react";
-import Router from "next/router";
+import PropTypes from "prop-types";
 import AppContext from "@features/context/AppContext";
 
 const Content = ({ messages, user }) => {
@@ -63,5 +63,15 @@ const Content = ({ messages, user }) => {
     </div>
   );
 };
+
+Content.propTypes = {
+  messages: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number,
+    chatId: PropTypes.number,
+    userId: PropTypes.number,
+    message: PropTypes.string,
+    date: PropTypes.string
+  }))
+}
 
 export default Content;

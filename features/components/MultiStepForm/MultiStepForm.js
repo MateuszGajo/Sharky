@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import PropTypes from "prop-types";
 import Router from "next/router";
 import { WizzardContext } from "./context/WizzardContext";
 import Controls from "./components/Controls/Controls";
@@ -87,5 +88,9 @@ const Wizzard = ({ children }) => {
     </WizzardContext.Provider>
   );
 };
+
+Wizzard.propTypes = {
+  children: PropTypes.arrayOf(PropTypes.element)
+}
 
 export { Wizzard, Controls, StepWrapper, Step, Credentials, PersonalData };
