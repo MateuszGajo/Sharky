@@ -2,7 +2,6 @@ import React, { useState, useContext } from "react";
 import axios from "axios";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import cx from "classnames";
-import Spinner from "@components/Spinner/Spinner";
 import AppContex from "@features/context/AppContext";
 import i18next from "@i18n";
 const { useTranslation } = i18next;
