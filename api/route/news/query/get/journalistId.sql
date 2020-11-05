@@ -1,3 +1,3 @@
 select id
 from journalists
-where id_user = $1
+where user_id = $1

@@ -11,7 +11,7 @@ import "../styles/home.scss";
 const Home = () => {
   const { setOwner } = useContext(AppContext);
   const [content, setContent] = useState("");
-  const [file, setFile] = useState("");
+  const [file, setFile] = useState(null);
   const [newPost, setNewPost] = useState();
   const [isAuth, setStatusOfAuth] = useState(null);
 

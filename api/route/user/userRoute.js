@@ -460,14 +460,14 @@ router.get("/me", async (req, res) => {
     .readFileSync(path.join(__dirname, "./query/get/password.sql"))
     .toString();
   const getThirdIdQuery = fs
-    .readFileSync(path.join(__dirname, "./query/get/password.sql"))
+    .readFileSync(path.join(__dirname, "./query/get/thirdId.sql"))
     .toString();
   const user = decodeToken(req.cookies.token);
   if (user.error) return res.status(401).json(user.error);
 
   try {
     const { rowCount } = await client.query(getThirdIdQuery, [user.id]);
-    if (rowCount > 0) {
+    if (rowCount === 0) {
       const { rows } = await client.query(getPasswordQuery, [user.id]);
       if (user.password !== rows[0].password)
         return res.status(401).json("password-changed");
