@@ -62,34 +62,6 @@ router.post("/about", async (req, res) => {
   }
 });
 
-router.post("/leave", async (req, res) => {
-  const { groupId } = req.body;
-  if (!/^[0-9]*$/.test(groupId)) return res.status(400).json("invalid-data");
-
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
-  if (error) return res.status(401).json(error);
-
-  const getAdminsQuery = fs
-    .readFileSync(path.join(__dirname, "./query/get/admins.sql"))
-    .toString();
-  const deleteMemberQuery = fs
-    .readFileSync(path.join(__dirname, "./query/delete/user.sql"))
-    .toString();
-
-  try {
-    const { rowCount, rows } = await client.query(getAdminsQuery, [groupId]);
-
-    if (rowCount > 1 || rows[0].userId != ownerId) {
-      await client.query(deleteMemberQuery, [groupId, ownerId]);
-
-      res.status(200).json({ success: true });
-    } else if (rowCount == 1) res.status(403).json("last-group-admin");
-    else res.status(400).json("bad-request");
-  } catch {
-    res.status(400).json("bad-request");
-  }
-});
-
 router.post("/delete", async (req, res) => {
   const { groupId } = req.body;
   if (!/^[0-9]*$/.test(groupId)) return res.status(400).json("invalid-data");
