@@ -291,20 +291,21 @@ router.post("/unsubscribe", async (req, res) => {
   const deleteSubscriberQuery = fs
     .readFileSync(path.join(__dirname, "./query/delete/user.sql"))
     .toString();
+
   const getFanpageAdminsQuery = fs
-    .readFileSync(path.join(__dirname, "./query/delete/user.sql"))
+    .readFileSync(path.join(__dirname, "./query/get/fanpageAdmins.sql"))
     .toString();
 
+  const { rowCount, rows } = await client.query(getFanpageAdminsQuery, [
+    fanpageId,
+  ]);
+
   try {
-    const { rowCount, rows } = await client.query(getFanpageAdminsQuery, [
-      fanpageId,
-    ]);
     if (rowCount > 1 || rows[0].userId != ownerId) {
       await client.query(deleteSubscriberQuery, [fanpageId, ownerId]);
 
       res.status(200).json({ success: true });
     } else if (rowCount == 1) res.status(403).json("last-group-admin");
-
     res.status(200).json({ success: true });
   } catch {
     res.status(400).json("bad-request");
