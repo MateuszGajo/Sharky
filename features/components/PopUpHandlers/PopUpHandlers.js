@@ -13,4 +13,4 @@ const PopUpHandlers = () => {
   );
 };
 
-return PopUpHandlers;
+export default PopUpHandlers;
