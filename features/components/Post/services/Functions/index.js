@@ -40,7 +40,7 @@ export const muteUser = ({ userId, setMuteUser, isSingle, setError }) => {
     })
     .then((resp) => {
       isSingle && Router.push("/");
-      setMuteUser({ userId: idMuteUser });
+      setMuteUser({ userId: userId });
     })
     .catch((err) => {
       const {
