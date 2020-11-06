@@ -65,13 +65,15 @@ const Content = ({ messages, user }) => {
 };
 
 Content.propTypes = {
-  messages: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number,
-    chatId: PropTypes.number,
-    userId: PropTypes.number,
-    message: PropTypes.string,
-    date: PropTypes.string
-  }))
-}
+  messages: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      chatId: PropTypes.number,
+      userId: PropTypes.number,
+      message: PropTypes.string,
+      date: PropTypes.string,
+    })
+  ),
+};
 
 export default Content;
