@@ -4,12 +4,12 @@
             "welcome-text":"Witaj",
             "sign-in":{
                 "title":"Zaloguj się",
-                "description":"Jeżeli posiadasz już konto",
+                "description":"Jeżeli nie posiadasz konta",
                 "button":"Zaloguj się"
             },
             "sign-up":{
                 "title":"Wypełnij formularz",
-                "description":"Wypełnij formularz i dołącz do naszej społeczności",
+                "description":"Jeżeli posiadasz już konto",
                 "button":"Rejstracja"
             }
          },
