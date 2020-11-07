@@ -3,6 +3,7 @@ const FacebookStrategy = require("passport-facebook").Strategy;
 const TwitterStrategy = require("passport-twitter").Strategy;
 const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 const { client } = require("./pgAdaptor");
+const defaultCountryAndLanguage = require("../utils/defaultCountryAndLanguage");
 
 passport.use(
   new FacebookStrategy(
@@ -10,67 +11,49 @@ passport.use(
       clientID: process.env.FACEBOOK_APPID,
       clientSecret: process.env.FACEBOOK_APPSECRET,
       callbackURL: "/auth/facebook/callback",
+      passReqToCallback: true,
     },
-    function (accessToken, refreshToken, profile, done) {
+    function (req, accessToken, refreshToken, profile, done) {
       const { displayName, id } = profile;
+      const defaultValues = defaultCountryAndLanguage(
+        req.cookies["next-i18next"]
+      );
+      const [defaultLanguage, defaultCountry] = defaultValues;
 
       const firstName = displayName.match(/^([\w\-]+)/g)[0];
       const lastName = displayName.match(/\b(\w+)\W*$/g)[0];
-      const query = `select id, email, first_name as "firstName", last_name as "lastName", photo, phone, country, language, city, birthdate as "birthDate" from users where facebook_id=$1`;
+      const query = `select id, email, first_name as "firstName", last_name as "lastName", photo, phone, country, language, city, birthdate from users where facebook_id=$1`;
 
       client.query(query, [id], (err, res) => {
         if (err) return done(null, false);
         if (res.rowCount == 0) {
-          const createNewUser =
-            "INSERT INTO users(facebook_id, first_name, last_name, photo) VALUES($1, $2, $3, 'profile.png') RETURNING id";
-          client.query(createNewUser, [id, firstName, lastName], (err, res) => {
-            if (err) return done(null, false);
-
-            if (res.rowCount == 0);
-
-            if (res.rowCount == 1) {
-              const user = {
-                id: res.rows[0].id,
-                email: null,
-                firstName,
-                lastName,
-                photo: "profile.png",
-                phone: null,
-                country: null,
-                language: null,
-                city: null,
-                birthDate: null,
-              };
-              return done(null, user);
+          const createUser =
+            "INSERT INTO users(facebook_id, first_name, last_name, photo, country, language) VALUES($1, $2, $3, 'profile.png', $4, $5) RETURNING id";
+          client.query(
+            createUser,
+            [id, firstName, lastName, defaultCountry, defaultLanguage],
+            (err, res) => {
+              if (err || res.rowCount == 0) return done(null, false);
+              if (res.rowCount == 1) {
+                console.log(res.rows[0]);
+                const user = {
+                  id: res.rows[0].id,
+                  email: null,
+                  firstName,
+                  lastName,
+                  photo: "profile.png",
+                  phone: null,
+                  country: defaultCountry,
+                  language: defaultLanguage,
+                  city: null,
+                  birthdate: null,
+                };
+                return done(null, user);
+              }
             }
-          });
+          );
         } else {
-          const {
-            id,
-            email,
-            firstName,
-            lastName,
-            photo,
-            phone,
-            country,
-            language,
-            city,
-            birthDate,
-          } = res.rows[0];
-
-          const user = {
-            id,
-            email,
-            firstName,
-            lastName,
-            photo,
-            phone,
-            country,
-            language,
-            city,
-            birthDate,
-          };
-          return done(null, user);
+          return done(null, res.rows[0]);
         }
       });
     }
@@ -83,67 +66,50 @@ passport.use(
       clientID: process.env.GOOGLE_APPID,
       clientSecret: process.env.GOOGLE_APPSECRET,
       callbackURL: "/auth/google/callback",
+      passReqToCallback: true,
     },
-    function (token, tokenSecret, profile, done) {
+    function (req, token, tokenSecret, profile, done) {
       const { displayName, id } = profile;
+      const defaultValues = defaultCountryAndLanguage(
+        req.cookies["next-i18next"]
+      );
+      const [defaultLanguage, defaultCountry] = defaultValues;
+
       const firstName = displayName.match(/^([\w\-]+)/g)[0];
       const lastName = displayName.match(/\b(\w+)\W*$/g)[0];
-      const query = `select id, email, first_name as "firstName", last_name as "lastName", phone, country, language, photo, birthdate as "birthDate", city from users where google_id=$1`;
+      const query = `select id, email, first_name as "firstName", last_name as "lastName", phone, country, language, photo, birthdate, city from users where google_id=$1`;
 
       client.query(query, [id], (err, res) => {
         if (err) return done(null, false);
 
         if (res.rowCount == 0) {
-          const createNewUser =
-            "INSERT INTO users(google_id, first_name, last_name, photo) VALUES($1, $2, $3, 'profile.png') RETURNING id";
-          client.query(createNewUser, [id, firstName, lastName], (err, res) => {
-            if (err) return done(null, false);
+          const createUser =
+            "INSERT INTO users(google_id, first_name, last_name, photo, country, language) VALUES($1, $2, $3, 'profile.png', $4, $5) RETURNING id";
+          client.query(
+            createUser,
+            [id, firstName, lastName, defaultCountry, defaultLanguage],
+            (err, res) => {
+              if (err || res.rowCount == 0) return done(null, false);
 
-            if (res.rowCount == 0) return done(null, false);
-
-            if (res.rowCount == 1) {
-              const user = {
-                id: res.rows[0].id,
-                email: null,
-                firstName,
-                lastName,
-                photo: "profile.png",
-                phone: null,
-                country: null,
-                language: null,
-                city: null,
-                birthDate: null,
-              };
-              return done(null, user);
+              if (res.rowCount == 1) {
+                const user = {
+                  id: res.rows[0].id,
+                  email: null,
+                  firstName,
+                  lastName,
+                  photo: "profile.png",
+                  phone: null,
+                  country: defaultCountry,
+                  language: defaultLanguage,
+                  city: null,
+                  birthdate: null,
+                };
+                return done(null, user);
+              }
             }
-          });
+          );
         } else {
-          const {
-            id,
-            email,
-            firstName,
-            lastName,
-            photo,
-            phone,
-            country,
-            language,
-            city,
-            birthDate,
-          } = res.rows[0];
-
-          const user = {
-            id,
-            email,
-            firstName,
-            lastName,
-            photo,
-            phone,
-            country,
-            language,
-            city,
-            birthDate,
-          };
-          return done(null, user);
+          return done(null, res.rows[0]);
         }
       });
     }
@@ -156,67 +122,51 @@ passport.use(
       consumerKey: process.env.TWITTER_APPID,
       consumerSecret: process.env.TWITTER_APPSECRET,
       callbackURL: "/auth/twitter/callback",
+      passReqToCallback: true,
     },
-    function (token, tokenSecret, profile, done) {
+    function (req, token, tokenSecret, profile, done) {
       const { displayName, id } = profile;
+      const defaultValues = defaultCountryAndLanguage(
+        req.cookies["next-i18next"]
+      );
+      const [defaultLanguage, defaultCountry] = defaultValues;
       const firstName = displayName.match(/^([\w\-]+)/g)[0];
       const lastName = displayName.match(/\b(\w+)\W*$/g)[0];
-      const query = `select id, email, first_name as "firstName", last_name as "lastName", photo, phone, country, language, city, birthdate as "birthDate" from users where twitter_id=$1`;
+      const query = `select id, email, first_name as "firstName", last_name as "lastName", photo, phone, country, language, city, birthdate from users where twitter_id=$1`;
 
       client.query(query, [id], (err, res) => {
         if (err) return done(null, false);
 
         if (res.rowCount == 0) {
-          const createNewUser =
-            "INSERT INTO users(twitter_id, first_name, last_name, photo) VALUES($1, $2, $3, 'profile.png') RETURNING id";
-          client.query(createNewUser, [id, firstName, lastName], (err, res) => {
-            if (err) return done(null, false);
+          const createUser =
+            "INSERT INTO users(twitter_id, first_name, last_name, photo, country, language) VALUES($1, $2, $3, 'profile.png', $4, $5) RETURNING id";
+          client.query(
+            createUser,
+            [id, firstName, lastName, defaultCountry, defaultLanguage],
+            (err, res) => {
+              if (err) return done(null, false);
 
-            if (res.rowCount == 0) return done(null, false);
+              if (res.rowCount == 0) return done(null, false);
 
-            if (res.rowCount == 1) {
-              const user = {
-                id: res.rows[0].id,
-                email: null,
-                firstName,
-                lastName,
-                photo: "profile.png",
-                phone: null,
-                country: null,
-                language: null,
-                city: null,
-                birthDate: null,
-              };
-              return done(null, user);
+              if (res.rowCount == 1) {
+                const user = {
+                  id: res.rows[0].id,
+                  email: null,
+                  firstName,
+                  lastName,
+                  photo: "profile.png",
+                  phone: null,
+                  country: defaultCountry,
+                  language: defaultLanguage,
+                  city: null,
+                  birthdate: null,
+                };
+                return done(null, user);
+              }
             }
-          });
+          );
         } else {
-          const {
-            id,
-            email,
-            firstName,
-            lastName,
-            photo,
-            phone,
-            country,
-            language,
-            city,
-            birthDate,
-          } = res.rows[0];
-
-          const user = {
-            id,
-            email,
-            firstName,
-            lastName,
-            photo,
-            phone,
-            country,
-            language,
-            city,
-            birthDate,
-          };
-          return done(null, user);
+          return done(null, res.rows[0]);
         }
       });
     }

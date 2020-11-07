@@ -7,6 +7,7 @@ const path = require("path");
 const { client } = require("../../../config/pgAdaptor");
 const { jwtSecret } = require("../../../config/keys");
 const router = express.Router();
+const defaultCountryAndLanguage = require("../../../utils/defaultCountryAndLanguage");
 
 const saltRounds = 10;
 
@@ -45,6 +46,7 @@ router.get(
     session: false,
   }),
   (req, res) => {
+    console.log(req.cookies);
     const token = jwt.sign(
       {
         exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
@@ -137,6 +139,8 @@ router.post("/signin", async (req, res) => {
 });
 
 router.post("/signup", async (req, res) => {
+  const defaultValues = defaultCountryAndLanguage(req.cookies["next-i18next"]);
+  const [defaultLanguage, defaultCountry] = defaultValues;
   const { creds } = req.body;
   const {
     email,
@@ -180,6 +184,8 @@ router.post("/signup", async (req, res) => {
           firstName,
           lastName,
           phone,
+          defaultCountry,
+          defaultLanguage,
         ]);
 
         const token = jwt.sign(
