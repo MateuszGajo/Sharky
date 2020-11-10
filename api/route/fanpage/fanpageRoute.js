@@ -292,7 +292,7 @@ router.post("/unsubscribe", async (req, res) => {
     .readFileSync(path.join(__dirname, "./query/delete/user.sql"))
     .toString();
   const getFanpageAdminsQuery = fs
-    .readFileSync(path.join(__dirname, "./query/delete/user.sql"))
+    .readFileSync(path.join(__dirname, "./query/get/fanpageAdmins.sql"))
     .toString();
 
   try {

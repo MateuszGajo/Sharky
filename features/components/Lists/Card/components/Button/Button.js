@@ -19,6 +19,8 @@ const Button = ({ collapseRef, title: primaryTitle, invitationType }) => {
     number,
     setNumber,
     title,
+    subTitle,
+    unsubTitle,
     setTitle,
     collapse,
     setCollapse,
@@ -137,7 +139,6 @@ const Button = ({ collapseRef, title: primaryTitle, invitationType }) => {
               id,
               setNumber,
               setStatusOfInvitation,
-              setTitle,
             });
           }
         }
@@ -152,7 +153,15 @@ const Button = ({ collapseRef, title: primaryTitle, invitationType }) => {
         className="card__item__info__second-column__buttons__main-button__span"
         data-testid="card-button-text"
       >
-        {primaryTitle ? primaryTitle : isOpen ? deleteText : title}
+        {primaryTitle
+          ? primaryTitle
+          : isOpen
+          ? deleteText
+          : title
+          ? title
+          : refId
+          ? unsubTitle
+          : subTitle}
       </span>
     </div>
   );

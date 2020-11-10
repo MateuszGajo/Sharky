@@ -29,6 +29,8 @@ const withCard = (Component) => {
       radiusPhoto,
       deleteText,
       secondTitle,
+      subTitle,
+      unsubTitle,
     } = data;
 
     const [refId, setRefId] = useState(initialRefId);
@@ -70,6 +72,8 @@ const withCard = (Component) => {
           deleteText,
           setStatusOfInvited,
           secondTitle,
+          subTitle,
+          unsubTitle,
           handleCollapseClick,
         }}
       >
@@ -91,8 +95,10 @@ const withCard = (Component) => {
       description: PropTypes.string,
       number: PropTypes.number,
       buttonType: PropTypes.string,
-      title: PropTypes.string.isRequired,
+      title: PropTypes.string,
       secondTitle: PropTypes.string,
+      subTitle: PropTypes.string,
+      unsubTitle: PropTypes.string,
       deleteText: PropTypes.string,
       buttonName: PropTypes.string,
       collapse: PropTypes.bool,

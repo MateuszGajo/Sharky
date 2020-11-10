@@ -2,9 +2,9 @@ import React, { useRef, useContext, useEffect } from "react";
 import PropTypes from "prop-types";
 import AppContext from "@features/context/AppContext";
 
-const Content = ({ messages, user }) => {
+const Content = ({ messages, user, scrollDown }) => {
   const { firstName, lastName, photo } = user;
-  const { owner } = useContext(AppContext);
+  const { owner, newMessage } = useContext(AppContext);
 
   const contentRef = useRef(null);
 
@@ -12,6 +12,11 @@ const Content = ({ messages, user }) => {
     const { current: content } = contentRef;
     content.scrollTop = content.scrollHeight;
   }, []);
+
+  useEffect(() => {
+    const { current: content } = contentRef;
+    content.scrollTop = content.scrollHeight;
+  }, [scrollDown]);
 
   return (
     <div
@@ -65,13 +70,15 @@ const Content = ({ messages, user }) => {
 };
 
 Content.propTypes = {
-  messages: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number,
-    chatId: PropTypes.number,
-    userId: PropTypes.number,
-    message: PropTypes.string,
-    date: PropTypes.string
-  }))
-}
+  messages: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      chatId: PropTypes.number,
+      userId: PropTypes.number,
+      message: PropTypes.string,
+      date: PropTypes.string,
+    })
+  ),
+};
 
 export default Content;

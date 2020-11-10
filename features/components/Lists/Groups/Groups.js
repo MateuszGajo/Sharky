@@ -55,7 +55,7 @@ const Groups = ({
   }, [keyWords]);
 
   useEffect(() => {
-    const { setNumber, refId, setRefId, id, setTitle } = group;
+    const { setNumber, refId, setRefId, id } = group;
     if (refId)
       axios
         .post("/group/leave", { groupId: id })
@@ -64,7 +64,6 @@ const Groups = ({
             const newGroups = groups.filter((group) => group.groupId != id);
             setGroups(newGroups);
           } else {
-            setTitle(leaveText);
             setNumber((prev) => prev - 1);
             setRefId(null);
           }
@@ -74,9 +73,8 @@ const Groups = ({
       axios
         .post("/group/join", { groupId: group.id })
         .then(({ data: { id } }) => {
-          setTitle(joinText);
           setRefId(id);
-          setNumber((prev) => prev - 1);
+          setNumber((prev) => prev + 1);
         })
         .catch(({ response: { data: message } }) => setError(message));
   }, [group]);
@@ -102,7 +100,8 @@ const Groups = ({
             description,
             number: numberOfMembers,
             buttonType: "join",
-            title: subId ? leaveText : joinText,
+            subTitle: joinText,
+            unsubTitle: leaveText,
             collapse: false,
           };
           return <Card data={data} key={groupId} handleClick={setGroup} />;
