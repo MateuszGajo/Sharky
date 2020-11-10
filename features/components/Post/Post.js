@@ -32,14 +32,12 @@ const Post = ({ post, focusElement }) => {
 
   const {
     isHidenPost,
-    isReport,
     isMoreComments,
     comments,
     setComments,
     numberOfComments,
     setNumberOfComments,
     setStatusOfMoreComments,
-    setStatusOfReport,
   } = useContext(PostContext);
 
   const handleSubmit = (e) => {
@@ -86,13 +84,6 @@ const Post = ({ post, focusElement }) => {
         "is-close": isHidenPost,
       })}
     >
-      {isReport && (
-        <Report
-          type="post"
-          id={post.postId}
-          setStatusOfReport={setStatusOfReport}
-        />
-      )}
       <Navbar focusCollapse={focusElement} focusIcon={focusIcon} />
       <Content />
       <div className="post__item__downbar">

@@ -61,7 +61,6 @@ const Groups = ({
         .post("/group/leave", { groupId: id })
         .then(() => {
           if (userId == owner.id && !keyWords) {
-            console.log("here");
             const newGroups = groups.filter((group) => group.groupId != id);
             setGroups(newGroups);
           } else {

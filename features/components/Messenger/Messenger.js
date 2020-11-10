@@ -21,6 +21,7 @@ const Messenger = ({
   const [isLoading, setStatusOfLoading] = useState(true);
   const [messages, setMessages] = useState([]);
   const [user, setUser] = useState({ id: null });
+  const [scrollDown, setScrollDown] = useState(0);
 
   useEffect(() => {
     if (newMessage.chatId == chat.chatId) {
@@ -34,6 +35,7 @@ const Messenger = ({
           userId: newMessage.userId,
         },
       ]);
+      setScrollDown((prev) => prev + 1);
     }
   }, [newMessage]);
 
@@ -68,7 +70,16 @@ const Messenger = ({
         windowMessenger={windowMessenger}
         setChat={setChat}
       />
-      {isLoading ? <Spinner /> : <Content messages={messages} user={user} />}
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <Content
+          messages={messages}
+          user={user}
+          chat={chat}
+          scrollDown={scrollDown}
+        />
+      )}
       <Downbar
         chatId={chat.chatId}
         messages={messages}
