@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import PropTypes from "prop-types";
 import PrimaryButton from "@common/PrimaryButton/PrimaryButton";
 import i18next from "@i18n";
+import AppContext from "@features/context/AppContext";
 const { useTranslation } = i18next;
 
-const Report = ({ type = "post", setStatusOfReport }) => {
+const Report = ({ type = "post", id }) => {
   const { t } = useTranslation();
 
   const title = t(`common:pop-up.report.title-${type}`);
@@ -12,6 +13,8 @@ const Report = ({ type = "post", setStatusOfReport }) => {
   const offensiveContent = t("common:pop-up.report.select.offensive-content");
   const spam = t("common:pop-up.report.select.spam");
   const buttonText = t("common:pop-up.report.button");
+
+  const { setReport } = useContext(AppContext);
 
   const [reportsList, setReportsLists] = useState([]);
 
@@ -79,7 +82,7 @@ const Report = ({ type = "post", setStatusOfReport }) => {
         <div
           className="report-user__container__button"
           onClick={() => {
-            setStatusOfReport(false);
+            setReport({ type: "", id: "" });
           }}
         >
           <PrimaryButton value={buttonText} size="medium" />
@@ -89,9 +92,9 @@ const Report = ({ type = "post", setStatusOfReport }) => {
   );
 };
 
-Report.propTypes ={
+Report.propTypes = {
   type: PropTypes.string,
-  setStatusOfReport: PropTypes.func
-}
+  id: PropTypes.number,
+};
 
 export default Report;
