@@ -5,6 +5,7 @@ import HomeLayout from "@components/Layout/Home/HomeLayout";
 import SinglePost from "@components/Post/Post";
 import withWizzard from "@components/Post/withWizzard";
 import Spinner from "@components/Spinner/Spinner";
+import PopUpHandlers from "@components/PopUpHandlers/PopUpHandlers";
 import WizzardContext from "@components/Post/context/WizzardContext";
 import AppContext from "@features/context/AppContext";
 import { getOwner } from "@features/service/Functions/index";
@@ -80,6 +81,7 @@ const Post = () => {
 
   return (
     <HomeLayout>
+      <PopUpHandlers />
       <section className="post">
         {postError && (
           <div className="post_error">{t(`post:error.${postError}`)}</div>
