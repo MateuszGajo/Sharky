@@ -1,12 +1,9 @@
-import React, { useRef, useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import PropTypes from "prop-types";
 import { IoIosHeartEmpty } from "react-icons/io";
-import { FiMessageCircle, FiVolumeX, FiFlag } from "react-icons/fi";
-import { BsThreeDots } from "react-icons/bs";
-import { IconContext } from "react-icons";
+import { FiMessageCircle } from "react-icons/fi";
 import cx from "classnames";
 import Router from "next/router";
-import i18next from "@i18n";
 import {
   likeComment,
   unlikeComment,
@@ -15,8 +12,7 @@ import {
 } from "../../services/Functions";
 import WizzardContext from "../../context/WizzardContext";
 import AppContext from "@features/context/AppContext";
-
-const { useTranslation } = i18next;
+import Menu from "./components/Menu/Menu";
 
 const Commnet = ({
   comment,
@@ -27,34 +23,18 @@ const Commnet = ({
   focusIcon,
   getReplies,
   user,
+  replies,
+  setReplies,
 }) => {
-  const { t } = useTranslation(["component"]);
-
   const { id, firstName, lastName, photo } = user;
 
   const { setError } = useContext(AppContext);
   const { newLike, setNewLike } = useContext(WizzardContext);
 
-  const settingRef = useRef(null);
-  const reportComment = t("component:post.comments.settings.report");
-  const muteUser = t("component:post.comments.settings.mute");
-
   const [likeId, setIdLike] = useState(comment?.likeId);
   const [numberOfLikes, setNumberOfLikes] = useState(
     Number(comment.numberOfLikes)
   );
-
-  const handleClick = () => {
-    const { current: fCollapse } = focusCollapse;
-    const { current: fIcon } = focusIcon;
-    if (!fCollapse.classList.contains("is-close"))
-      fCollapse.classList.add("is-close");
-
-    if (fIcon.classList.contains("is-visible"))
-      fIcon.classList.remove("is-visible");
-
-    window.removeEventListener("click", handleClick);
-  };
 
   const setlikeComment = () => {
     if (likeId) {
@@ -76,38 +56,6 @@ const Commnet = ({
         : likeReply({ replyId: comment.replyId, setNewLike, setError });
     }
   };
-
-  const openSetting = () => {
-    const { current } = settingRef;
-    const collapseItem = current.querySelector(
-      ".post__item__comments__container__item__content__item__top-bar__icon__collapse "
-    );
-    const { current: fCollapse } = focusCollapse;
-    const { current: fItem } = focusIcon;
-    if (fCollapse !== collapseItem && fCollapse !== null) {
-      fCollapse.classList.add("is-close");
-    }
-
-    if (fItem !== null && !fItem.classList.contains("is-visible"))
-      fItem.classList.remove("is-visible");
-
-    window.addEventListener("click", handleClick);
-
-    current.classList.toggle("is-visible");
-    focusIcon.current = current;
-
-    collapseItem.classList.toggle("is-close");
-    focusCollapse.current = collapseItem;
-  };
-
-  useEffect(() => {
-    settingRef.current.addEventListener("click", openSetting);
-
-    return () => {
-      removeEventListener("click", openSetting);
-      removeEventListener("click", handleClick);
-    };
-  }, []);
 
   useEffect(() => {
     if (
@@ -158,52 +106,14 @@ const Commnet = ({
                 {firstName + " " + lastName}
               </span>
             </div>
-            <div
-              className="post__item__comments__container__item__content__item__top-bar__icon"
-              ref={settingRef}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <BsThreeDots />
-              <div className="post__item__comments__container__item__content__item__top-bar__icon__collapse is-close">
-                <div
-                  className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item"
-                  onClick={() => muteUser({ idMuteUser: id, posts })}
-                >
-                  <div className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item__icon">
-                    <IconContext.Provider
-                      value={{
-                        className:
-                          "post__item__comments__container__item__content__item__top-bar__icon__collapse__item__icon__customize",
-                      }}
-                    >
-                      <FiVolumeX />
-                    </IconContext.Provider>
-                  </div>
-                  <div className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item__name">
-                    <span className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item__name__span">
-                      {muteUser}
-                    </span>
-                  </div>
-                </div>
-                <div className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item">
-                  <div className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item__icon">
-                    <IconContext.Provider
-                      value={{
-                        className:
-                          "post__item__comments__container__item__content__item__top-bar__icon__collapse__item__icon__customize",
-                      }}
-                    >
-                      <FiFlag />
-                    </IconContext.Provider>
-                  </div>
-                  <div className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item__name">
-                    <span className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item__name__span">
-                      {reportComment}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <Menu
+              focusCollapse={focusCollapse}
+              focusIcon={focusIcon}
+              id={id}
+              comment={comment}
+              replies={replies}
+              setReplies={setReplies}
+            />
           </div>
           <div className="post__item__comments__container__item__content__item__text">
             {comment.content}
