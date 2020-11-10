@@ -3,6 +3,7 @@ import Router from "next/router";
 import HomeLayout from "@components/Layout/Home/HomeLayout";
 import People from "@components/Lists/People/People";
 import Spinner from "@components/Spinner/Spinner";
+import PopUpHandlers from "@components/PopUpHandlers/PopUpHandlers";
 import AppContext from "@features/context/AppContext";
 import { getOwner } from "@features/service/Functions/index";
 import Search from "@common/Search/Search";
@@ -32,6 +33,7 @@ const Friends = () => {
 
   return (
     <HomeLayout>
+      <PopUpHandlers />
       <section className="friends">
         <div className="friends__search">
           <form onSubmit={handleSubmit} className="friends__search__form">
