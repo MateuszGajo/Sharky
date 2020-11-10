@@ -5,10 +5,9 @@ import HomeLayout from "@components/Layout/Home/HomeLayout";
 import Navbar from "@components/Fanpage/NavBar/NavBar";
 import Content from "@components/Fanpage/Content/Content";
 import Spinner from "@components/Spinner/Spinner";
+import PopUpHandlers from "@components/PopUpHandlers/PopUpHandlers";
 import i18next from "@i18n";
 import AppContext from "@features/context/AppContext";
-import Error from "@common/PopUp/Error/Error";
-import Prompt from "@common/PopUp/Prompt/Prompt";
 import { getOwner } from "@features/service/Functions/index";
 
 import "../../styles/fanpage.scss";
@@ -62,8 +61,7 @@ const Fanpage = () => {
 
   return (
     <HomeLayout>
-      {isError ? <Error message={isError} />: null}
-      {isPrompt ? <Prompt message={isPrompt} />: null}
+      <PopUpHandlers />
       <section className="fanpage">
         {!fanpageError ? (
           <>
