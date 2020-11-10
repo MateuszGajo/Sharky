@@ -41,6 +41,28 @@ router.post("/add", async (req, res) => {
   }
 });
 
+router.post("/delete", async (req, res) => {
+  const { commentId } = req.body;
+
+  if (!/^[0-9]*$/.test(commentId)) return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
+
+  const deleteCommentQuery = fs
+    .readFileSync(path.join(__dirname, "./query/delete/comment.sql"))
+    .toString();
+
+  try {
+    await client.query(deleteCommentQuery, [commentId, ownerId]);
+    return res.status(200).json({
+      success: true,
+    });
+  } catch {
+    return res.status(400).json("bad-request");
+  }
+});
+
 router.post("/get", async (req, res) => {
   const { from, postId } = req.body;
 

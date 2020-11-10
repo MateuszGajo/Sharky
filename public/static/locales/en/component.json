@@ -83,7 +83,8 @@
         "comments":{
             "settings":{
                 "report":"Report comment",
-                "mute":"Mute user"
+                "mute":"Mute user",
+                "delete":"Delete comment"
             },
             "load-more-comments":"View more comments...",
             "load-comments":"View comments" 

@@ -265,7 +265,6 @@ router.post("/get/single", async (req, res) => {
 
     res.status(200).json({ post: post[0], comments, isMoreComments });
   } catch {
-    console.log("catch");
     res.status(400).json("bad-request");
   }
 });
