@@ -341,6 +341,30 @@ export const addComent = ({
     });
 };
 
+export const deleteComment = ({
+  commentId,
+  comments,
+  setComments,
+  setError,
+}) => {
+  axios
+    .post("/comment/delete", {
+      commentId,
+    })
+    .then(() => {
+      const filteredComments = comments.filter(
+        (comment) => comment.commentId != commentId
+      );
+      setComments(filteredComments);
+    })
+    .catch((err) => {
+      const {
+        response: { data: message },
+      } = err;
+      setError(message);
+    });
+};
+
 export const likeComment = ({ commentId, setNewLike, setError }) => {
   axios
     .post("/comment/like", { commentId })
@@ -415,6 +439,25 @@ export const addReply = ({
         date,
       });
       clearText("");
+    })
+    .catch((err) => {
+      const {
+        response: { data: message },
+      } = err;
+      setError(message);
+    });
+};
+
+export const deleteReply = ({ replyId, replies, setReplies, setError }) => {
+  axios
+    .post("/reply/delete", {
+      replyId,
+    })
+    .then(() => {
+      const filteredReplies = replies.filter((reply) => {
+        return reply.replyId != replyId;
+      });
+      setReplies(filteredReplies);
     })
     .catch((err) => {
       const {

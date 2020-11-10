@@ -77,7 +77,8 @@
         "comments":{
             "settings":{
                 "report":"Zgłoś komentarz",
-                "mute":"Wycisz użytkownika"
+                "mute":"Wycisz użytkownika",
+                "delete":"Usuń komentarz"
             },
             "load-more-comments":"Pokaż więcej komentarzy..." ,
             "load-comments":"Pokaże komentarze" 
