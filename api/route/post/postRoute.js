@@ -167,9 +167,6 @@ router.post("/get", async (req, res) => {
   const getMemberQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/member.sql"))
     .toString();
-  const getSubscriberQuery = fs
-    .readFileSync(path.join(__dirname, "./query/get/subscriber.sql"))
-    .toString();
   let postsResult, commentsResult;
 
   try {
@@ -233,9 +230,6 @@ router.post("/get/single", async (req, res) => {
   const getPostQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/post.sql"))
     .toString();
-  const getSubscriberQuery = fs
-    .readFileSync(path.join(__dirname, "./query/get/subscriber.sql"))
-    .toString();
   const getMemberIdQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/member.sql"))
     .toString();
@@ -247,14 +241,11 @@ router.post("/get/single", async (req, res) => {
     const { rows: post } = await client.query(getPostQuery, [postId, ownerId]);
     if (!post[0]) return res.status(404).json("post-does-not-exist");
 
-    if (post[0].fanpageId) {
-      const { rows } = await client.query(getSubscriberQuery, [userId]);
-      if (!rows[0])
-        return res.status(403).json("user-does-not-have-permission");
-    }
-
     if (post[0].groupId) {
-      const { rows } = await client.query(getMemberIdQuery, [userId]);
+      const { rows } = await client.query(getMemberIdQuery, [
+        ownerId,
+        post[0].groupId,
+      ]);
       if (!rows[0])
         return res.status(403).json("user-does-not-have-permission");
     }

@@ -115,6 +115,8 @@ const withContainer = (WrappedComponent) => {
                   focusCollapse={focusCollapse}
                   focusIcon={focusIcon}
                   user={user}
+                  replies={replies}
+                  setReplies={setReplies}
                 />
               );
             })}
