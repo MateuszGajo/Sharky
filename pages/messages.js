@@ -6,6 +6,7 @@ import Messenger from "@components/Messenger/Messenger";
 import Conversations from "@components/Messages/Conversations/Conversations";
 import Spinner from "@components/Spinner/Spinner";
 import AppContext from "@features/context/AppContext";
+import PopUpHandlers from "@components/PopUpHandlers/PopUpHandlers";
 import { getOwner } from "@features/service/Functions/index";
 import i18next from "@i18n";
 import "../styles/messages.scss";
@@ -67,6 +68,7 @@ const Messages = () => {
   } else if (isLoading) return <Spinner />;
   return (
     <section className="messages">
+      <PopUpHandlers />
       <NavBar />
       {chat.chatId ? (
         <>
