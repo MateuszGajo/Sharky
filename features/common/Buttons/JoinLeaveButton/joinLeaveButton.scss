@@ -1,0 +1,17 @@
+.join-leave-button__button {
+  border: 1px solid $shadowColor;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.join-leave-button__button--small {
+  padding: 5px 10px;
+}
+.join-leave-button__button--medium {
+  padding: 7px 14px;
+  font-size: 1.05rem;
+}
+
+.join-leave-button__button--large {
+  padding: 9px 18px;
+  font-size: 1.1rem;
+}
