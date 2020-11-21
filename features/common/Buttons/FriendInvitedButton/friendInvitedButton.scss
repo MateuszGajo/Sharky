@@ -1,0 +1,47 @@
+.friend-invited-button {
+  display: flex;
+}
+.friend-invited-button--border {
+  border: 1px solid $shadowColor;
+}
+
+.friend-invited-button--border--small {
+  padding: 5px 10px;
+}
+.friend-invited-button--border--medium {
+  padding: 7px 14px;
+}
+.friend-invited-button--border--large {
+  padding: 9px 18px;
+}
+
+.friend-invited-button__icon {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.friend-invited-button__icon--small {
+  font-size: 1.2rem;
+}
+.friend-invited-button__icon--medium {
+  font-size: 1.5rem;
+}
+.friend-invited-button__icon--large {
+  font-size: 2rem;
+}
+
+.friend-invited-button__text {
+  display: flex;
+  align-items: center;
+}
+
+.friend-invited-button__text--small {
+  font-size: 1.1rem;
+}
+.friend-invited-button__text--medium {
+  font-size: 1.4rem;
+}
+.friend-invited-button__text--large {
+  font-size: 1.8rem;
+}
