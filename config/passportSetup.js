@@ -35,7 +35,6 @@ passport.use(
             (err, res) => {
               if (err || res.rowCount == 0) return done(null, false);
               if (res.rowCount == 1) {
-                console.log(res.rows[0]);
                 const user = {
                   id: res.rows[0].id,
                   email: null,
