@@ -13,7 +13,7 @@ const Members = ({ groupId, role: permission, setNumberOfMembers }) => {
 
   const [members, setMembers] = useState([]);
   const [removeMember, setRemoveMember] = useState({ id: null, idRef: null });
-
+  const [relation, setRelation] = useState({});
   const adminName = t("group:members.admin");
   const moderatorName = t("group:members.moderator");
   const memberName = t("group:members.member");
@@ -37,6 +37,22 @@ const Members = ({ groupId, role: permission, setNumberOfMembers }) => {
   }, [removeMember]);
 
   useEffect(() => {
+    const { id, name, setTitle } = relation;
+
+    if (id)
+      axios
+        .post("/group/member/relation/change", {
+          subId: id,
+          groupId,
+          relation: name,
+        })
+        .then(() => {
+          setTitle(name);
+        })
+        .catch(({ response: { message } }) => setError(message));
+  }, [relation]);
+
+  useEffect(() => {
     axios
       .post("/group/member/get", { groupId })
       .then(({ data: { members } }) => setMembers(members));
@@ -47,32 +63,40 @@ const Members = ({ groupId, role: permission, setNumberOfMembers }) => {
       {members.map((member) => {
         const { subId, userId, firstName, lastName, photo, role } = member;
         const data = {
-          refType: "profile",
-          id: subId,
-          refId: userId,
-          photo,
-          deleteText,
-          radiusPhoto: false,
-          name: `${firstName} ${lastName} ${
-            owner.id == userId ? `(${yourself})` : ""
-          }`,
-          buttonType: "relation",
-          title: t(`group:members.${role}`),
-          buttonName: role,
-          collapse: permission == "admin" && owner.id != userId ? true : false,
-          collapseItems: {
-            pink: {
-              name: "admin",
-              title: adminName,
+          cardInfo: {
+            refType: "profile",
+            id: subId,
+            refId: userId,
+            photo,
+            deleteText,
+            radiusPhoto: false,
+            name: `${firstName} ${lastName} ${
+              owner.id == userId ? `(${yourself})` : ""
+            }`,
+          },
+          userStatus: {
+            relation: role,
+          },
+          collapse: {
+            isCollapse:
+              permission == "admin" && owner.id != userId ? true : false,
+            collapseItems: {
+              pink: {
+                name: "admin",
+                title: adminName,
+              },
+              blue: {
+                name: "moderator",
+                title: moderatorName,
+              },
+              green: {
+                name: "member",
+                title: memberName,
+              },
             },
-            blue: {
-              name: "moderator",
-              title: moderatorName,
-            },
-            green: {
-              name: "member",
-              title: memberName,
-            },
+          },
+          texts: {
+            deleteText,
           },
         };
         return (
@@ -80,6 +104,7 @@ const Members = ({ groupId, role: permission, setNumberOfMembers }) => {
             data={data}
             key={userId}
             handleCollapseClick={setRemoveMember}
+            setRelation={setRelation}
           />
         );
       })}

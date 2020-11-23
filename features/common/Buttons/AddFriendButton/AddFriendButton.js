@@ -12,17 +12,27 @@ const AddFriendButton = ({
   border = false,
   userId,
   setButtonName,
+  invitePerson,
 }) => {
   const { t } = useTranslation();
   const addText = t("component:lists.people.add");
 
   const handleClick = () => {
-    axios
-      .post("/friend/add", { userId })
-      .then(() => {
-        setButtonName("invitation");
-      })
-      .catch(() => {});
+    if (invitePerson) {
+      axios
+        .post(`/${invitePerson.type}/user/invite`, {
+          userId,
+          targetId: invitePerson.targetId,
+        })
+        .then(() => setButtonName("invitation"))
+        .catch(() => {});
+    } else
+      axios
+        .post("/friend/add", { userId })
+        .then(() => {
+          setButtonName("invitation");
+        })
+        .catch(() => {});
   };
   return (
     <div
@@ -51,7 +61,7 @@ const AddFriendButton = ({
           "add-friend-button__text--x-large": size === "x-large",
         })}
       >
-        {addText}
+        {invitePerson ? invitePerson.title : addText}
       </div>
     </div>
   );
