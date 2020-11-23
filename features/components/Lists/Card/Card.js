@@ -1,7 +1,6 @@
-import React, { useRef, useContext } from "react";
+import React, { useContext } from "react";
 import cx from "classnames";
 import { useRouter } from "next/router";
-import Collapse from "./components/Collapse/Collapse";
 import Button from "./components/Button/Button";
 import Description from "./components/Description/Description";
 import AppContext from "@features/context/AppContext";
@@ -12,23 +11,13 @@ const { useTranslation } = i18next;
 
 const Card = () => {
   const { owner } = useContext(AppContext);
-  const {
-    radiusPhoto,
-    refType,
-    id,
-    photo,
-    isInvited,
-    collapse,
-    buttonType,
-    secondTitle,
-  } = useContext(CardContext);
+  const { cardInfo } = useContext(CardContext);
+  const { radiusPhoto, refType, id, photo, isNotButton } = cardInfo;
   const { t } = useTranslation();
 
   const yourself = t("component:lists.people.yourself");
 
   const router = useRouter();
-
-  const collapseRef = useRef(null);
 
   return (
     <div className="card">
@@ -47,7 +36,7 @@ const Card = () => {
           <Description />
 
           <div className="card__item__info__second-column">
-            {buttonType ? (
+            {!isNotButton ? (
               <div
                 className="card__item__info__second-column__buttons"
                 data-testid="card-buttons"
@@ -57,12 +46,8 @@ const Card = () => {
                     ({yourself})
                   </span>
                 ) : (
-                  <Button collapseRef={collapseRef} invitationType="accept" />
+                  <Button invitationType="accept" />
                 )}
-                {isInvited && (
-                  <Button invitationType="decline" title={secondTitle} />
-                )}
-                {collapse ? <Collapse collapseRef={collapseRef} /> : null}
               </div>
             ) : null}
           </div>
