@@ -1,168 +1,101 @@
-import React, { useRef, useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import PropTypes from "prop-types";
-import cx from "classnames";
-import { BsEnvelope } from "react-icons/bs";
+import AddFriendButton from "@common/Buttons/AddFriendButton/AddFriendButton";
+import FriendInvitedButton from "@common/Buttons/FriendInvitedButton/FriendInvitedButton";
+import FriendsInvitationButtons from "@common/Buttons/FriendsInvitationButtons/FriendsInvitationButtons";
+import RelationButtons from "@common/Buttons/RelationButtons/RelationButtons";
+import JoinLeaveButton from "@common/Buttons/JoinLeaveButton/JoinLeaveButton";
 import CardContext from "../../context/CardContext";
+import getInitialButtonName from "./getInitialButtonName";
 
-const Button = ({ collapseRef, title: primaryTitle, invitationType }) => {
+const Button = () => {
   const {
-    buttonType,
-    buttonName,
-    setButtonName,
-    collapseItems,
-    handleClick,
+    cardInfo,
+    userStatus,
+    collapse,
+    texts,
+    setRelation,
+    setDeclineInvitation,
     handleCollapseClick,
+    handleClick,
+    setNumber,
     refId,
     setRefId,
-    id,
-    refType,
-    number,
-    setNumber,
-    title,
-    subTitle,
-    unsubTitle,
-    setTitle,
-    collapse,
-    setCollapse,
-    setInvite,
-    setButtonType,
-    isInvitationSent: statusOfSendInvitation,
-    deleteText,
-    isInvited,
-    setStatusOfInvited,
   } = useContext(CardContext);
 
-  const { green, blue, pink } = collapseItems || {};
-  const buttonRef = useRef(null);
+  const { collapseItems } = collapse;
+  const { id } = cardInfo;
+  const { subTitle, unsubTitle } = texts;
 
-  const [isInvitationSent, setStatusOfInvitation] = useState(
-    statusOfSendInvitation
-  );
-  const [isOpen, setStatusOfOpen] = useState(false);
+  const initialButtonName = getInitialButtonName({
+    ...userStatus,
+    subTitle,
+  });
 
-  const removeFriend = () => {
-    handleCollapseClick({
-      name: refType,
-      refId,
-      setRefId,
-      id,
-    });
-  };
+  const [currentRelation, setCurrentRelation] = useState(userStatus?.relation);
+  const [buttonName, setButtonName] = useState(initialButtonName);
 
-  const changeFriendButton = () => {
-    setButtonType("join");
-
-    buttonRef.current.addEventListener("click", removeFriend);
-
-    setStatusOfOpen(true);
-  };
-
-  const resetFriendButton = () => {
-    setButtonType("relation");
-    removeEventListener("click", removeFriend);
-
-    setStatusOfOpen(false);
-  };
-
-  useEffect(() => {
-    if (collapse) {
-      buttonRef.current.addEventListener("mouseover", changeFriendButton);
-      buttonRef.current.addEventListener("mouseout", resetFriendButton);
+  const renderComponent = (name) => {
+    switch (name) {
+      case "add":
+        return (
+          <AddFriendButton
+            userId={id}
+            setButtonName={setButtonName}
+            icon={false}
+            border={true}
+            size="small"
+          />
+        );
+      case "invitation":
+        return <FriendInvitedButton size="small" border={true} />;
+      case "friendRequest":
+        return (
+          <FriendsInvitationButtons
+            userId={id}
+            setButtonName={setButtonName}
+            setCurrentRelation={setCurrentRelation}
+            size="small"
+            darkerBorder={false}
+            setDeclineInvitation={setDeclineInvitation}
+          />
+        );
+      case "relation":
+        return (
+          <RelationButtons
+            buttons={collapseItems}
+            userId={id}
+            refId={refId}
+            title={currentRelation}
+            blockCollapse={!collapse.isCollapse}
+            setButtonName={setButtonName}
+            setRelation={setRelation}
+            handleCollapseClick={handleCollapseClick}
+            setNumber={setNumber}
+            setRefId={setRefId}
+            deleteTitle={texts.deleteText}
+            size="small"
+          />
+        );
+      case "joinLeave":
+        return (
+          <JoinLeaveButton
+            id={id}
+            refId={refId}
+            joinText={subTitle}
+            leaveText={unsubTitle}
+            size="small"
+            onClick={handleClick}
+            setNumber={setNumber}
+            setRefId={setRefId}
+          />
+        );
     }
-    () => {
-      removeEventListener("mouseover", changeFriendButton);
-      removeEventListener("mouseout", resetFriendButton);
-    };
-  }, [collapse]);
-
-  useEffect(() => {
-    if (collapseRef?.current) {
-      collapseRef.current.addEventListener("mouseover", changeFriendButton);
-      collapseRef.current.addEventListener("mouseout", resetFriendButton);
-    }
-
-    return () => {
-      removeEventListener("mouseover", changeFriendButton);
-      removeEventListener("mouseout", resetFriendButton);
-    };
-  }, [collapseRef]);
-
-  useEffect(() => {
-    return () => {
-      removeEventListener("click", removeFriend);
-    };
-  }, []);
+  };
 
   return (
-    <div
-      className={cx("card__item__info__second-column__buttons__main-button ", {
-        "card__item__info__second-column__buttons--relation":
-          buttonType === "relation",
-        "card__item__info__second-column__buttons--join": buttonType === "join",
-        "card__item__info__second-column__buttons--join--no-cursor":
-          buttonType === "join" && isInvitationSent,
-        "primary-background":
-          green?.name === buttonName &&
-          collapseItems &&
-          buttonType == "relation",
-        "family-background":
-          blue?.name === buttonName &&
-          collapseItems &&
-          buttonType == "relation",
-        "pal-background":
-          pink?.name === buttonName &&
-          collapseItems &&
-          buttonType == "relation",
-      })}
-      ref={buttonRef}
-      data-testid="card-button"
-      onClick={() => {
-        if (buttonType == "join" && !isInvitationSent) {
-          if (isInvited) {
-            setInvite({
-              invitationType,
-              setButtonType,
-              setTitle,
-              setCollapse,
-              setButtonName,
-              number,
-              setNumber,
-              friendshipId: refId,
-              id,
-              setStatusOfInvited,
-            });
-          } else if (!isOpen) {
-            handleClick({
-              name: refType,
-              refId,
-              setRefId,
-              id,
-              setNumber,
-              setStatusOfInvitation,
-            });
-          }
-        }
-      }}
-    >
-      {isInvitationSent && (
-        <span className="card__item__info__second-column__buttons__main-button__icon">
-          <BsEnvelope />
-        </span>
-      )}
-      <span
-        className="card__item__info__second-column__buttons__main-button__span"
-        data-testid="card-button-text"
-      >
-        {primaryTitle
-          ? primaryTitle
-          : isOpen
-          ? deleteText
-          : title
-          ? title
-          : refId
-          ? unsubTitle
-          : subTitle}
-      </span>
+    <div className="card__item__info__second-column__buttons__main-button">
+      {renderComponent(buttonName)}
     </div>
   );
 };
