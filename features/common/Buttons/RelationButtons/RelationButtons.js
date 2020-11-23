@@ -10,7 +10,7 @@ const RelationButton = ({
   handleCollapseClick,
   deleteTitle = "delete",
   size = "large",
-  title,
+  title: initialTitle,
   blockCollapse = true,
   setNumber,
   setRefId,
@@ -44,6 +44,7 @@ const RelationButton = ({
   const buttonRef = useRef();
 
   const [isCollapse, setStatusOfCollapse] = useState(true);
+  const [title, setTitle] = useState(initialTitle);
 
   const removeFriend = () => {
     handleCollapseClick({ id: userId, refId, setNumber, setRefId });
@@ -109,6 +110,7 @@ const RelationButton = ({
                       id: userId,
                       name,
                       setButtonName,
+                      setTitle,
                     });
                   }
                 }}
