@@ -25,8 +25,7 @@ const Button = () => {
 
   const { collapseItems } = collapse;
   const { id } = cardInfo;
-  const { subTitle, unsubTitle } = texts;
-
+  const { subTitle, unsubTitle } = texts || {};
   const initialButtonName = getInitialButtonName({
     ...userStatus,
     subTitle,
@@ -45,6 +44,7 @@ const Button = () => {
             icon={false}
             border={true}
             size="small"
+            invitePerson={userStatus.invitePerson}
           />
         );
       case "invitation":
