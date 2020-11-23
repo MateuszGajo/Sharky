@@ -105,7 +105,6 @@ router.post("/member/get", async (req, res) => {
   } catch {
     res.status(400).json("bad-request");
   }
-
   let { rows: members } = result;
   let isMore = true;
   if (members.length < 21) {
@@ -133,14 +132,12 @@ router.post("/member/relation/change", async (req, res) => {
     .readFileSync(path.join(__dirname, "./query/update/memberRelation.sql"))
     .toString();
   const getAdminQuery = fs
-    .readFileSync(path.join(__dirname, "./query/update/memberRelation.sql"))
+    .readFileSync(path.join(__dirname, "./query/get/admin.sql"))
     .toString();
-
+  const { rows } = await client.query(getAdminQuery, [ownerId, fanpageId]);
+  if (!rows[0].id) return res.status(403).json("no-permission");
+  await client.query(updateMemberRealtionQuery, [relation, subId, fanpageId]);
   try {
-    const { rows } = await client.query(getAdminQuery, [ownerId, fanpageId]);
-    if (!rows[0].id) return res.status(403).json("no-permission");
-    await client.query(updateMemberRealtionQuery, [relation, subId, fanpageId]);
-
     res.status(200).json({ success: true });
   } catch {
     res.status(400).json("bad-request");
