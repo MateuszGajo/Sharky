@@ -18,7 +18,7 @@ const ConfirmUser = ({ setOpen, setValue, popUpError }) => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    setError(popUpError);
+    error & setError(popUpError);
   }, [popUpError]);
 
   const handleSubmit = (e) => {
