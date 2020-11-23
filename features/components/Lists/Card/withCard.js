@@ -55,6 +55,7 @@ const withCard = (Component) => {
         isInvited: PropTypes.bool,
         isInvitationSent: PropTypes.bool,
         relation: PropTypes.string,
+        invitePerson: PropTypes.string,
       }),
       collapse: PropTypes.shape({
         isCollapse: PropTypes.bool,
