@@ -26,7 +26,10 @@ const FriendInvitationButtons = ({
   const handleDeclineButton = () => {
     axios.post("/friend/decline", { userId }).then(() => {
       if (setDeclineInvitation) setDeclineInvitation({ userId });
-      else setButtonName("add");
+      else {
+        console.log("ustaw przycisl");
+        setButtonName("add");
+      }
     });
   };
   return (

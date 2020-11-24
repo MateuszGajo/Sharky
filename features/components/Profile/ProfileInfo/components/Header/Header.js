@@ -4,20 +4,33 @@ import { IoIosAddCircleOutline } from "react-icons/io";
 import cx from "classnames";
 import AppContex from "@features/context/AppContext";
 import i18next from "@i18n";
+import AddFriendButton from "@common/Buttons/AddFriendButton/AddFriendButton";
+import FriendInvitedButton from "@common/Buttons/FriendInvitedButton/FriendInvitedButton";
+import FriendsInvitationButtons from "@common/Buttons/FriendsInvitationButtons/FriendsInvitationButtons";
+import RelationButtons from "@common/Buttons/RelationButtons/RelationButtons";
+import getInitialButtonName from "./getInitialButtonName";
 const { useTranslation } = i18next;
 
 const Header = ({ info, setNumberOfPhotos, userId }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["component", "profile"]);
 
-  const { firstName, lastName, photo: initialPhoto } = info;
+  const {
+    firstName,
+    lastName,
+    photo: initialPhoto,
+    relation: initialRelation,
+  } = info;
   const { setError, owner } = useContext(AppContex);
 
+  const initialButtonName = getInitialButtonName(info, userId);
+  const [relation, setRelation] = useState(initialRelation);
+  const [buttonName, setButtonName] = useState(initialButtonName);
   const [photo, setPhoto] = useState(initialPhoto);
   const [prompt, setPrompt] = useState();
 
-  const addPhoto = t("profile:add-photo");
-  const photoAddedSuccessfully = t("profile:photo-added-successfully");
-  const changePhoto = t("profile:change-photo");
+  const addPhotoText = t("profile:add-photo");
+  const photoAddedSuccessfullyText = t("profile:photo-added-successfully");
+  const changePhotoText = t("profile:change-photo");
 
   const clearPrompt = () => {
     setTimeout(() => setPrompt(""), 1500);
@@ -38,7 +51,7 @@ const Header = ({ info, setNumberOfPhotos, userId }) => {
     axios
       .post("/user/add/photo", data)
       .then(() => {
-        setPrompt(photoAddedSuccessfully);
+        setPrompt(photoAddedSuccessfullyText);
         clearPrompt();
         setNumberOfPhotos((prev) => prev + 1);
       })
@@ -67,6 +80,49 @@ const Header = ({ info, setNumberOfPhotos, userId }) => {
       .catch(({ response: { data: message } }) => setError(message));
   };
 
+  const buttons = {
+    green: {
+      name: "friend",
+      title: t("component:lists.people.friend"),
+    },
+    pink: {
+      name: "pal",
+      title: t("component:lists.people.pal"),
+    },
+    blue: {
+      name: "family",
+      title: t("component:lists.people.family"),
+    },
+  };
+
+  const renderComponent = (name) => {
+    switch (name) {
+      case "add":
+        return (
+          <AddFriendButton userId={userId} setButtonName={setButtonName} />
+        );
+      case "invitation":
+        return <FriendInvitedButton />;
+      case "friendRequest":
+        return (
+          <FriendsInvitationButtons
+            userId={userId}
+            setButtonName={setButtonName}
+            setCurrentRelation={setRelation}
+          />
+        );
+      case "relation":
+        return (
+          <RelationButtons
+            buttons={buttons}
+            userId={userId}
+            setButtonName={setButtonName}
+            title={relation}
+          />
+        );
+    }
+  };
+  console.log(buttonName);
   return (
     <div className="profile__container__person">
       <div className="profile__container__person__name">
@@ -76,19 +132,20 @@ const Header = ({ info, setNumberOfPhotos, userId }) => {
       </div>
       <div className="profile__container__person__photo">
         <div
-          className={cx({
-            "profile__container__person__photo--owner": owner.id == userId,
+          className={cx("profile__container__person__photo__container", {
+            "profile__container__person__photo__container--owner":
+              owner.id == userId,
           })}
         >
           <img
             src={`/static/images/${photo}`}
             alt=""
-            className="profile__container__person__photo__img"
+            className="profile__container__person__photo__container__img"
           />
           <div className="profile__container__person__photo__overlay">
             <label htmlFor="profile-change">
               <div className="profile__container__person__photo__overlay__button">
-                {changePhoto}
+                {changePhotoText}
               </div>
             </label>
             <input
@@ -100,7 +157,7 @@ const Header = ({ info, setNumberOfPhotos, userId }) => {
           </div>
         </div>
 
-        {owner.id == userId && (
+        {owner.id == userId ? (
           <div className="profile__container__person__add-photo">
             {prompt ? (
               <div className="profile__container__person__add-photo__text">
@@ -110,7 +167,7 @@ const Header = ({ info, setNumberOfPhotos, userId }) => {
               <>
                 <div className="profile__container__person__add-photo__title">
                   <span className="profile__container__person__add-photo__title__text">
-                    {addPhoto}
+                    {addPhotoText}
                   </span>
                 </div>
                 <div className="profile__container__person__add-photo__icon">
@@ -131,6 +188,10 @@ const Header = ({ info, setNumberOfPhotos, userId }) => {
                 </div>
               </>
             )}
+          </div>
+        ) : (
+          <div className="profile__container__person__friend">
+            {renderComponent(buttonName)}
           </div>
         )}
       </div>
