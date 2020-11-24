@@ -5,9 +5,8 @@ import NavBar from "@components/Layout/Home/Compound/components/NavBar/NavBar";
 import ConfirmUser from "@common/PopUp/ConfirmUser/ConfirmUser";
 import Items from "@components/Settings/Items/Items";
 import Display from "@components/Settings/Display/Display";
-import Error from "@common/PopUp/Error/Error";
-import Prompt from "@common/PopUp/Prompt/Prompt";
 import Spinner from "@components/Spinner/Spinner";
+import PopUpHandlers from "@components/PopUpHandlers/PopUpHandlers";
 import AppContext from "@features/context/AppContext";
 import { getOwner } from "@features/service/Functions/index";
 import withSettings from "@components/Settings/withSettings";
@@ -60,8 +59,7 @@ const Settings = () => {
 
   return (
     <div className="settings">
-      {isError && <Error message={isError} />}
-      {isPrompt && <Prompt message={isPrompt} />}
+      <PopUpHandlers />
       {isOpenConfirmPopUp && (
         <ConfirmUser
           setOpen={setOpenConfirmPopUp}
