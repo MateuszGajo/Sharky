@@ -1,0 +1,67 @@
+.add-friend-button {
+  display: flex;
+  cursor: pointer;
+}
+
+.add-friend-button:hover .add-friend-button__icon {
+  transition: color 0.2s, transform 0.2s;
+  color: $primaryHoverColor;
+  transform: scale(1.1);
+}
+
+.add-friend-button:hover .add-friend-button__text {
+  transition: color 0.2s;
+  color: #383838;
+}
+
+.add-friend-button--border {
+  padding: 6px 12px;
+  border: 1px solid $shadowColor;
+  transition: border-color 0.2s;
+  &:hover {
+    border-color: #cbcbc8;
+  }
+}
+
+.add-friend-button__icon {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+  color: $primaryColor;
+}
+
+.add-friend-button__icon--small {
+  font-size: 1.2rem;
+}
+
+.add-friend-button__icon--medium {
+  font-size: 1.5rem;
+}
+
+.add-friend-button__icon--large {
+  font-size: 2rem;
+}
+
+.add-friend-button__icon--x-large {
+  font-size: 2.5rem;
+}
+.add-friend-button__text {
+  display: flex;
+  align-items: center;
+}
+
+.add-friend-button__text--small {
+  font-size: 1rem;
+}
+
+.add-friend-button__text--medium {
+  font-size: 1.3rem;
+}
+
+.add-friend-button__text--large {
+  font-size: 1.8rem;
+}
+
+.add-friend-button__text--x-large {
+  font-size: 2.3rem;
+}

@@ -9,72 +9,28 @@ const withCard = (Component) => {
       setRelation,
       handleClick,
       handleCollapseClick,
-      setInvite,
+      setDeclineInvitation,
     } = props;
-    const {
-      refType,
-      refId: initialRefId,
-      id,
-      photo,
-      name,
-      description,
-      number: initialNumber,
-      buttonType: initialButtonType,
-      isInvited: initialIsInvited,
-      isInvitationSent,
-      title: initialTitle,
-      buttonName: btnName,
-      collapse: initialCollapse,
-      collapseItems = null,
-      radiusPhoto,
-      deleteText,
-      secondTitle,
-      subTitle,
-      unsubTitle,
-    } = data;
+    const { cardInfo, userStatus, collapse, texts } = data;
 
-    const [refId, setRefId] = useState(initialRefId);
-
-    const [buttonType, setButtonType] = useState(initialButtonType);
-    const [buttonName, setButtonName] = useState(btnName);
-    const [collapse, setCollapse] = useState(initialCollapse);
-    const [number, setNumber] = useState(initialNumber);
-    const [title, setTitle] = useState(initialTitle);
-    const [isInvited, setStatusOfInvited] = useState(initialIsInvited);
+    const [refId, setRefId] = useState(cardInfo.refId);
+    const [number, setNumber] = useState(cardInfo.number);
 
     return (
       <CardContext.Provider
         value={{
-          id,
-          photo,
-          name,
-          description,
-          isInvitationSent,
-          collapseItems,
-          radiusPhoto,
-          refType,
-          refId,
-          setRefId,
-          buttonType,
-          setButtonType,
-          buttonName,
-          setButtonName,
-          title,
-          setTitle,
+          cardInfo,
+          userStatus,
           collapse,
-          setCollapse,
+          texts,
+          refId,
           number,
+          setRefId,
           setNumber,
           setRelation,
           handleClick,
-          setInvite,
-          isInvited,
-          deleteText,
-          setStatusOfInvited,
-          secondTitle,
-          subTitle,
-          unsubTitle,
           handleCollapseClick,
+          setDeclineInvitation,
         }}
       >
         <Component {...props} />
@@ -84,42 +40,50 @@ const withCard = (Component) => {
 
   Wrapped.propTypes = {
     data: PropTypes.shape({
-      id: PropTypes.number,
-      refId: PropTypes.number,
-      refType: PropTypes.string.isRequired,
-      photo: PropTypes.string.isRequired,
-      isInvited: PropTypes.bool,
-      isInvitationSent: PropTypes.bool,
-      radiusPhoto: PropTypes.bool,
-      name: PropTypes.string.isRequired,
-      description: PropTypes.string,
-      number: PropTypes.number,
-      buttonType: PropTypes.string,
-      title: PropTypes.string,
-      secondTitle: PropTypes.string,
+      cardInfo: PropTypes.shape({
+        id: PropTypes.number,
+        refId: PropTypes.number,
+        refType: PropTypes.string.isRequired,
+        photo: PropTypes.string.isRequired,
+        radiusPhoto: PropTypes.bool,
+        name: PropTypes.string.isRequired,
+        description: PropTypes.string,
+        number: PropTypes.number,
+        isNotButton: PropTypes.bool,
+      }),
+      userStatus: PropTypes.shape({
+        isInvited: PropTypes.bool,
+        isInvitationSent: PropTypes.bool,
+        relation: PropTypes.string,
+        invitePerson: PropTypes.string,
+      }),
+      collapse: PropTypes.shape({
+        isCollapse: PropTypes.bool,
+        collapseItems: PropTypes.shape({
+          pink: PropTypes.shape({
+            name: PropTypes.string,
+            title: PropTypes.string,
+          }),
+          blue: PropTypes.shape({
+            name: PropTypes.string,
+            title: PropTypes.string,
+          }),
+          green: PropTypes.shape({
+            name: PropTypes.string,
+            title: PropTypes.string,
+          }),
+        }),
+      }),
+    }),
+    texts: PropTypes.shape({
       subTitle: PropTypes.string,
       unsubTitle: PropTypes.string,
       deleteText: PropTypes.string,
-      buttonName: PropTypes.string,
-      collapse: PropTypes.bool,
-      collapseItems: PropTypes.shape({
-        pink: PropTypes.shape({
-          name: PropTypes.string,
-          title: PropTypes.string,
-        }),
-        blue: PropTypes.shape({
-          name: PropTypes.string,
-          title: PropTypes.string,
-        }),
-        green: PropTypes.shape({
-          name: PropTypes.string,
-          title: PropTypes.string,
-        }),
-      }),
     }),
     setRelation: PropTypes.func,
     handleClick: PropTypes.func,
     setInvite: PropTypes.func,
+    setDeclineInvitation: PropTypes.func,
   };
 
   return Wrapped;

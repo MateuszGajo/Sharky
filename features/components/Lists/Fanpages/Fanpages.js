@@ -92,18 +92,23 @@ const Fanpages = ({
         {fanpages.map((fanpage) => {
           const { fanpageId, subId, name, photo, numberOfSubscribes } = fanpage;
           const data = {
-            id: fanpageId,
-            refId: subId || null,
-            refType: "fanpage",
-            photo,
-            radiusPhoto: true,
-            name,
-            description,
-            number: numberOfSubscribes,
-            buttonType: "join",
-            subTitle: subscribeText,
-            unsubTitle: unsubscribeText,
-            collapse: false,
+            cardInfo: {
+              id: fanpageId,
+              refId: subId || null,
+              refType: "fanpage",
+              photo,
+              radiusPhoto: true,
+              name,
+              description,
+              number: numberOfSubscribes,
+            },
+            texts: {
+              subTitle: subscribeText,
+              unsubTitle: unsubscribeText,
+            },
+            collapse: {
+              isCollapse: false,
+            },
           };
           return <Card data={data} key={fanpageId} handleClick={setFanpage} />;
         })}
