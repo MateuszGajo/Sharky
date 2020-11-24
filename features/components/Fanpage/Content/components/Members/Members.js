@@ -20,7 +20,7 @@ const Members = ({ fanpageId, role: permission }) => {
   const [members, setMembers] = useState([]);
   const [isMore, setStatusOfMore] = useState(null);
   const [removeMember, setRemoveMember] = useState({ id: null, idRef: null });
-  const [relation, setRealation] = useState({});
+  const [relation, setRelation] = useState({});
 
   const fetchData = (from) => {
     axios
@@ -47,7 +47,7 @@ const Members = ({ fanpageId, role: permission }) => {
   }, [removeMember]);
 
   useEffect(() => {
-    const { id, name, setButtonName, setTitle } = relation;
+    const { id, name, setTitle } = relation;
 
     if (id)
       axios
@@ -116,7 +116,7 @@ const Members = ({ fanpageId, role: permission }) => {
               <Card
                 data={data}
                 handleCollapseClick={setRemoveMember}
-                setRelation={setRealation}
+                setRelation={setRelation}
                 key={userId}
               />
             );

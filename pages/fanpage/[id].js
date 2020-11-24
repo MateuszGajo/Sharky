@@ -22,7 +22,7 @@ const Fanpage = () => {
 
   const homeName = t("fanpage:home");
 
-  const { isError, isPrompt, setOwner } = useContext(AppContext);
+  const { setOwner } = useContext(AppContext);
 
   const [section, setSection] = useState(homeName);
   const [subId, setIdSub] = useState(null);

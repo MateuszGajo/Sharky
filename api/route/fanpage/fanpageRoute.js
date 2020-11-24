@@ -134,10 +134,11 @@ router.post("/member/relation/change", async (req, res) => {
   const getAdminQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/admin.sql"))
     .toString();
-  const { rows } = await client.query(getAdminQuery, [ownerId, fanpageId]);
-  if (!rows[0].id) return res.status(403).json("no-permission");
-  await client.query(updateMemberRealtionQuery, [relation, subId, fanpageId]);
+
   try {
+    const { rows } = await client.query(getAdminQuery, [ownerId, fanpageId]);
+    if (!rows[0].id) return res.status(403).json("no-permission");
+    await client.query(updateMemberRealtionQuery, [relation, subId, fanpageId]);
     res.status(200).json({ success: true });
   } catch {
     res.status(400).json("bad-request");
