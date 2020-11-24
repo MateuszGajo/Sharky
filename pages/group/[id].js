@@ -7,9 +7,9 @@ import Content from "@components/group/Content/Content";
 import InvitePerson from "@common/PopUp/InvitePerson/InvitePerson";
 import Spinner from "@components/Spinner/Spinner";
 import i18next from "@i18n";
-import PopUpError from "@common/PopUp/Error/Error";
 import AppContext from "@features/context/AppContext";
 import { getOwner } from "@features/service/Functions/index";
+import PopUpHandlers from "@components/PopUpHandlers/PopUpHandlers";
 
 import "../../styles/group.scss";
 const { useTranslation } = i18next;
@@ -20,7 +20,7 @@ const Group = () => {
 
   const { t } = useTranslation(["group"]);
 
-  const { isError, setOwner } = useContext(AppContext);
+  const { setOwner } = useContext(AppContext);
 
   const groupDoesNotExist = t("group:error.does-not-exist");
 
@@ -76,7 +76,7 @@ const Group = () => {
 
   return (
     <section className="group">
-      {isError && <PopUpError message={isError} />}
+      <PopUpHandlers />
       <Navbar />
       {isGroupExist ? (
         <>

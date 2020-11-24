@@ -4,6 +4,7 @@ const path = require("path");
 const multer = require("multer");
 const { client } = require("../../../config/pgAdaptor");
 const decodeToken = require("../../../utils/decodeToken");
+const { group } = require("console");
 const router = express.Router();
 
 router.post("/enter", async (req, res) => {
@@ -102,6 +103,35 @@ router.post("/member/get", async (req, res) => {
     const { rows: members } = await client.query(getMembersQuery, [groupId]);
 
     res.status(200).json({ members });
+  } catch {
+    res.status(400).json("bad-request");
+  }
+});
+
+router.post("/member/relation/change", async (req, res) => {
+  const { subId, relation, groupId } = req.body;
+
+  if (
+    !/^[\d]*$/.test(subId) ||
+    !(relation === "member" || relation === "admin" || relation === "moderator")
+  )
+    return res.status(400).json("invalid-data");
+
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  if (error) return res.status(401).json(error);
+
+  const updateMemberRealtionQuery = fs
+    .readFileSync(path.join(__dirname, "./query/update/memberRelation.sql"))
+    .toString();
+  const getAdminQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/admin.sql"))
+    .toString();
+  try {
+    const { rows } = await client.query(getAdminQuery, [ownerId, groupId]);
+    if (!rows[0].id) return res.status(403).json("no-permission");
+    await client.query(updateMemberRealtionQuery, [relation, subId, groupId]);
+
+    res.status(200).json({ success: true });
   } catch {
     res.status(400).json("bad-request");
   }
@@ -304,14 +334,12 @@ router.post("/user/invite", async (req, res) => {
   const { error, id: ownerId } = decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
-  const inviteUserQuery = fs
-    .readFileSync(path.join(__dirname, "./query/add/inviteUser.sql"))
-    .toString();
-
+  res.status(200).json({ success: true });
   try {
+    const inviteUserQuery = fs
+      .readFileSync(path.join(__dirname, "./query/add/inviteUser.sql"))
+      .toString();
     await client.query(inviteUserQuery, [targetId, userId, ownerId]);
-
-    res.status(200).json({ success: true });
   } catch {
     res.status(400).json("bad-request");
   }
