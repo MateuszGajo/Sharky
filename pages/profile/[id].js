@@ -5,7 +5,7 @@ import NavBar from "@components/Layout/Home/Compound/components/NavBar/NavBar";
 import ProfileInfo from "@components/Profile/ProfileInfo/ProfileInfo";
 import DisplayItem from "@components/Profile/DisplayItem/DisplayItem";
 import Spinner from "@components/Spinner/Spinner";
-import Error from "@common/PopUp/Error/Error";
+import PopUpHandlers from "@components/PopUpHandlers/PopUpHandlers";
 import AppContext from "@features/context/AppContext";
 import i18next from "@i18n";
 import { getOwner } from "@features/service/Functions/index";
@@ -18,7 +18,7 @@ const profile = () => {
 
   const { t } = useTranslation(["profile"]);
 
-  const { isError, setOwner } = useContext(AppContext);
+  const { setOwner } = useContext(AppContext);
 
   const [chooseItem, setChooseItem] = useState("");
   const [isLoading, setStatusOfLoading] = useState(true);
@@ -55,7 +55,7 @@ const profile = () => {
 
   return (
     <section className="profile">
-      {isError && <Error message={isError} />}
+      <PopUpHandlers />
       <NavBar />
       {!userError ? (
         <>

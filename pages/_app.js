@@ -17,6 +17,11 @@ const MyApp = ({ Component, pageProps }) => {
     lastName: "",
     photo: "",
   });
+  const [report, setReport] = useState({
+    type: "",
+    id: null,
+  });
+
   const [isError, setError] = useState("");
   const [isPrompt, setPrompt] = useState("");
   const [authError, setAuthError] = useState("");
@@ -67,6 +72,8 @@ const MyApp = ({ Component, pageProps }) => {
         isPrompt,
         setPrompt,
         setError,
+        report,
+        setReport,
         newChat,
         setNewChat,
         authError,

@@ -47,8 +47,30 @@ numberOfPhotos as(
     from user_photos
     where user_id = $1
     group by user_id
+),
+userRelationship as(
+    select a.*,
+        b.relation
+    from(
+            select id,
+                $1 as "userId",
+                user_id_1 as "inviter"
+            from friends
+            where (
+                    (
+                        user_id_1 = $1
+                        and user_id_2 = $2
+                    )
+                    or (
+                        user_id_2 = $1
+                        and user_id_1 = $2
+                    )
+                )
+        ) as a
+        left join friend_relations as b on a.id = b.friendship_id
 )
 select a.*,
+    g.*,
     coalesce(b.count, 0) as "numberOfGroups",
     coalesce(c.count, 0) as "numberOfFanpages",
     coalesce(d.sum, 0) as "numberOfFriends",
@@ -69,3 +91,4 @@ from (
     left join numberOfFriends as d on a.id = d."userId"
     left join numberOfPosts as e on a.id = e."userId"
     left join numberOfPhotos as f on a.id = f."userId"
+    left join userRelationship as g on a.id = g."userId"

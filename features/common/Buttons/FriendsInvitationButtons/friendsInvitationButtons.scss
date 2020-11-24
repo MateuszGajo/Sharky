@@ -1,0 +1,35 @@
+.friend-invitation-buttons {
+  display: flex;
+}
+
+.friend-invitation-buttons__handle {
+  border: 1px solid $shadowColor;
+  cursor: pointer;
+  &:hover {
+    border-color: #cbcbc8;
+  }
+}
+
+.friend-invitation-buttons__handle--darker-border {
+  border: 1px solid #afafae;
+  &:hover {
+    border-color: #999998;
+  }
+}
+
+.friend-invitation-buttons__handle--small {
+  font-size: 1rem;
+  padding: 5px 10px;
+}
+.friend-invitation-buttons__handle--medium {
+  font-size: 1.5rem;
+  padding: 6px 12px;
+}
+.friend-invitation-buttons__handle--large {
+  font-size: 2rem;
+  padding: 7px 14px;
+}
+
+.friend-invitation-buttons__accept {
+  margin-right: 15px;
+}

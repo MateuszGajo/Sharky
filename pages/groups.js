@@ -6,6 +6,7 @@ import Search from "@common/Search/Search";
 import Spinner from "@components/Spinner/Spinner";
 import NavBar from "@components/Layout/Home/Compound/components/NavBar/NavBar";
 import Creator from "@common/PopUp/Creator/Creator";
+import PopUpHandlers from "@components/PopUpHandlers/PopUpHandlers";
 import AppContext from "@features/context/AppContext";
 import { getOwner } from "@features/service/Functions/index";
 import i18next from "@i18n";
@@ -41,6 +42,7 @@ const Groups = () => {
   }
   return (
     <>
+      <PopUpHandlers />
       {isOpenCreator && (
         <Creator setStatusOfOpen={setStatusOfOpenCreator} type="group" />
       )}

@@ -4,7 +4,9 @@ INSERT INTO users(
         first_name,
         last_name,
         phone,
-        photo
+        photo,
+        country,
+        language
     )
-values($1, $2, $3, $4, $5, 'profile.png')
+values($1, $2, $3, $4, $5, 'profile.png', $6, $7)
 returning id

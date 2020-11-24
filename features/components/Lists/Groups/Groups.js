@@ -61,7 +61,6 @@ const Groups = ({
         .post("/group/leave", { groupId: id })
         .then(() => {
           if (userId == owner.id && !keyWords) {
-            console.log("here");
             const newGroups = groups.filter((group) => group.groupId != id);
             setGroups(newGroups);
           } else {
@@ -92,18 +91,23 @@ const Groups = ({
         {groups.map((group) => {
           const { groupId, subId, name, photo, numberOfMembers } = group;
           const data = {
-            id: groupId,
-            refId: subId || null,
-            refType: "group",
-            photo,
-            radiusPhoto: true,
-            name,
-            description,
-            number: numberOfMembers,
-            buttonType: "join",
-            subTitle: joinText,
-            unsubTitle: leaveText,
-            collapse: false,
+            cardInfo: {
+              id: groupId,
+              refId: subId || null,
+              refType: "group",
+              photo,
+              radiusPhoto: true,
+              name,
+              description,
+              number: numberOfMembers,
+            },
+            texts: {
+              subTitle: joinText,
+              unsubTitle: leaveText,
+            },
+            collapse: {
+              isCollapse: false,
+            },
           };
           return <Card data={data} key={groupId} handleClick={setGroup} />;
         })}

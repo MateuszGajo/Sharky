@@ -105,7 +105,6 @@ router.post("/member/get", async (req, res) => {
   } catch {
     res.status(400).json("bad-request");
   }
-
   let { rows: members } = result;
   let isMore = true;
   if (members.length < 21) {
@@ -133,14 +132,13 @@ router.post("/member/relation/change", async (req, res) => {
     .readFileSync(path.join(__dirname, "./query/update/memberRelation.sql"))
     .toString();
   const getAdminQuery = fs
-    .readFileSync(path.join(__dirname, "./query/update/memberRelation.sql"))
+    .readFileSync(path.join(__dirname, "./query/get/admin.sql"))
     .toString();
 
   try {
     const { rows } = await client.query(getAdminQuery, [ownerId, fanpageId]);
     if (!rows[0].id) return res.status(403).json("no-permission");
     await client.query(updateMemberRealtionQuery, [relation, subId, fanpageId]);
-
     res.status(200).json({ success: true });
   } catch {
     res.status(400).json("bad-request");
@@ -295,18 +293,14 @@ router.post("/unsubscribe", async (req, res) => {
   const getFanpageAdminsQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/fanpageAdmins.sql"))
     .toString();
-
-  const { rowCount, rows } = await client.query(getFanpageAdminsQuery, [
-    fanpageId,
-  ]);
-
   try {
+    const { rowCount, rows } = await client.query(getFanpageAdminsQuery, [
+      fanpageId,
+    ]);
     if (rowCount > 1 || rows[0].userId != ownerId) {
       await client.query(deleteSubscriberQuery, [fanpageId, ownerId]);
-
-      res.status(200).json({ success: true });
+      return res.status(200).json({ success: true });
     } else if (rowCount == 1) res.status(403).json("last-group-admin");
-    res.status(200).json({ success: true });
   } catch {
     res.status(400).json("bad-request");
   }

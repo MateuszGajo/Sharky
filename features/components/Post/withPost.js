@@ -16,7 +16,6 @@ const withPost = (Component) => {
       Number(p.numberOfComments)
     );
     const [isHidenPost, setStatusOfHiddenPost] = useState(false);
-    const [isReport, setStatusOfReport] = useState(false);
     const [isEdit, setStatusOfEdit] = useState(false);
     const [isSingle, setStatusOfSingle] = useState(single);
 
@@ -37,8 +36,6 @@ const withPost = (Component) => {
           setNumberOfComments,
           isHidenPost,
           setStatusOfHiddenPost,
-          isReport,
-          setStatusOfReport,
           isEdit,
           setStatusOfEdit,
           isSingle,
@@ -49,34 +46,35 @@ const withPost = (Component) => {
       </PostContext.Provider>
     );
   };
-  Wrapped.propTypes ={
+  Wrapped.propTypes = {
     user: PropTypes.shape({
-      id:PropTypes.id,
+      id: PropTypes.id,
       firstName: PropTypes.string,
       lastName: PropTypes.string,
-      photo: PropTypes.string
-      }),
+      photo: PropTypes.string,
+    }),
     secondaryUser: PropTypes.shape({
       id: PropTypes.id,
       firstName: PropTypes.string,
       lastName: PropTypes.string,
-      photo: PropTypes.stirng
-      }),
-      single: PropTypes.bool,
-      post: PropTypes.shape({
-        id: PropTypes.string,
-        postId: PropTypes.number,
-        userId: PropTypes.number,
-        likeId: PropTypes.number,
-        postSharedUserId: PropTypes.number,
-        shareId: PropTypes.number,
-        numberOfComments: PropTypes.number,
-        numberOfLikes: PropTypes.number,
-        numberOfShares: PropTypes.number,
-        content: PropTypes.string,
-        date: PropTypes.string,
-        isMoreComments: PropTypes.bool,
-        comments: PropTypes.arrayOf(PropTypes.shape({
+      photo: PropTypes.stirng,
+    }),
+    single: PropTypes.bool,
+    post: PropTypes.shape({
+      id: PropTypes.string,
+      postId: PropTypes.number,
+      userId: PropTypes.number,
+      likeId: PropTypes.number,
+      postSharedUserId: PropTypes.number,
+      shareId: PropTypes.number,
+      numberOfComments: PropTypes.number,
+      numberOfLikes: PropTypes.number,
+      numberOfShares: PropTypes.number,
+      content: PropTypes.string,
+      date: PropTypes.string,
+      isMoreComments: PropTypes.bool,
+      comments: PropTypes.arrayOf(
+        PropTypes.shape({
           commentId: PropTypes.number,
           postId: PropTypes.number,
           userId: PropTypes.number,
@@ -84,11 +82,12 @@ const withPost = (Component) => {
           numberOfLikes: PropTypes.number,
           numberOfReplies: PropTypes.number,
           content: PropTypes.string,
-          date: PropTypes.string
-        }))
-      })
-  }
-  return Wrapped
+          date: PropTypes.string,
+        })
+      ),
+    }),
+  };
+  return Wrapped;
 };
 
 export default withPost;

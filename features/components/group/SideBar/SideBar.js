@@ -39,7 +39,7 @@ const SideBar = ({
 
   const joinGroup = () => {
     axios
-      .post("/group/user/add", { groupId })
+      .post("/group/join", { groupId })
       .then(({ data: { id } }) => {
         setIdMember(id);
         setRole("member");

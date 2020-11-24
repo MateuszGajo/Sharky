@@ -145,7 +145,7 @@ router.post("/info", async (req, res) => {
   const { userId } = req.body;
   if (!/^[\d]*$/.test(userId)) return res.status(400).json("invalid-data");
 
-  const { error } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const getUserInfoQuery = fs
@@ -153,7 +153,7 @@ router.post("/info", async (req, res) => {
     .toString();
 
   try {
-    const { rows } = await client.query(getUserInfoQuery, [userId]);
+    const { rows } = await client.query(getUserInfoQuery, [userId, ownerId]);
     if (!rows[0]) return res.status(404).json("user-does-not-exist");
 
     res.status(200).json({ info: rows[0] });

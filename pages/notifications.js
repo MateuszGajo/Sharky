@@ -6,6 +6,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import HomeLayout from "@components/Layout/Home/HomeLayout";
 import Item from "@components/Notifications/Item/Item";
 import Spinner from "@components/Spinner/Spinner";
+import PopUpHandlers from "@components/PopUpHandlers/PopUpHandlers";
 import AppContext from "@features/context/AppContext";
 import { getOwner } from "@features/service/Functions/index";
 import "@styles/notifications.scss";
@@ -71,6 +72,7 @@ const notifications = () => {
   }
   return (
     <HomeLayout>
+      <PopUpHandlers />
       <InfiniteScroll
         dataLength={notifications.length}
         next={fetchData}
