@@ -26,7 +26,6 @@ const InvitePerson = ({ isOpen = true, setStatusOfOpen, type, targetId }) => {
   const emptyContent = t("common:pop-up.invite-person.empty-content");
   const description = t("component:lists.people.description");
   const inviteText = t("common:pop-up.invite-person.invite");
-  const inviteSent = t("component:lists.people.sent");
 
   let navTimeout = null;
 
@@ -55,16 +54,6 @@ const InvitePerson = ({ isOpen = true, setStatusOfOpen, type, targetId }) => {
     e.preventDefault();
     fetchData(0, searchText, []);
   };
-
-  useEffect(() => {
-    const { refId, setStatusOfInvitation } = invite;
-    if (refId) {
-      axios
-        .post(`/${type}/user/invite`, { userId: refId, targetId })
-        .then(() => setStatusOfInvitation(true))
-        .catch(({ response: { message } }) => setError(message));
-    }
-  }, [invite]);
 
   useEffect(() => {
     scrollBar.current.addEventListener("wheel", showScroll);
@@ -122,23 +111,33 @@ const InvitePerson = ({ isOpen = true, setStatusOfOpen, type, targetId }) => {
                 } = person;
 
                 const data = {
-                  refType: "profile",
-                  refId: userId,
-                  photo: photo,
-                  isInvitationSent,
-                  inviteSent,
-                  name: `${firstName} ${lastName}`,
-                  title: inviteText,
-                  description,
-                  number: numberOfFriends,
-                  buttonType: "join",
+                  cardInfo: {
+                    id: userId,
+                    refType: "profile",
+                    refId: userId,
+                    photo: photo,
+                    name: `${firstName} ${lastName}`,
+                    description,
+                    number: numberOfFriends,
+                  },
+                  userStatus: {
+                    isInvitationSent,
+                    invitePerson: {
+                      type,
+                      targetId,
+                      title: inviteText,
+                    },
+                  },
+                  collapse: {
+                    isCollapse: false,
+                  },
                 };
                 return (
                   <div
                     className="invite-person__container__people__item"
                     key={userId}
                   >
-                    <Card data={data} handleClick={setInvite} />
+                    <Card data={data} />
                   </div>
                 );
               })}
