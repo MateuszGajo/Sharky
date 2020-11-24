@@ -6,6 +6,7 @@ import HomeLayout from "@components/Layout/Home/HomeLayout";
 import MessageBox from "@common/MessageBox/MessageBox";
 import Posts from "@components/Lists/Posts/Posts";
 import Spinner from "@components/Spinner/Spinner";
+import PopUpHandlers from "@components/PopUpHandlers/PopUpHandlers";
 import i18next from "@i18n";
 import { getOwner } from "@features/service/Functions/index";
 import AppContext from "@features/context/AppContext";
@@ -47,6 +48,7 @@ const News = () => {
   }
   return (
     <HomeLayout>
+      <PopUpHandlers />
       <section className="news">
         {permission ? (
           <form class="news__form" onSubmit={handleSubmit}>
