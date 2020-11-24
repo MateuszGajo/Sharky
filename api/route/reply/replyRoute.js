@@ -28,12 +28,15 @@ router.post("/add", async (req, res) => {
     .toString();
 
   try {
-    const { rows } = await client.query(getGroupIdInPostsQuery, [commentId]);
-    if (!rows[0].postId) return res.status(400).json("comment-does-not-exist");
-    if (rows[0].groupId) {
+    const { rows: result } = await client.query(getGroupIdInPostsQuery, [
+      commentId,
+    ]);
+    if (!result[0].postId)
+      return res.status(400).json("comment-does-not-exist");
+    if (result[0].groupId) {
       const { rows } = await client.query(getMemberQuery, [
         ownerId,
-        rows[0].groupId,
+        result[0].groupId,
       ]);
       if (!rows[0].id) return res.status(403).json("no-permission");
     }
@@ -86,15 +89,20 @@ router.post("/get", async (req, res) => {
       path.join(__dirname, "./query/get/groupIdInPostsByCommentId.sql")
     )
     .toString();
+  const getMemberQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/member.sql"))
+    .toString();
   let result;
 
   try {
-    const { rows } = await client.query(getGroupIdInPostsQuery, [commentId]);
-    if (!rows[0].postId) return res.status(400).json("comment-does-not-exist");
-    if (rows[0].groupId) {
+    const { rows: ids } = await client.query(getGroupIdInPostsQuery, [
+      commentId,
+    ]);
+    if (!ids[0].postId) return res.status(400).json("comment-does-not-exist");
+    if (ids[0].groupId) {
       const { rows } = await client.query(getMemberQuery, [
         ownerId,
-        rows[0].groupId,
+        ids[0].groupId,
       ]);
       if (!rows[0].id) return res.status(403).json("no-permission");
     }
