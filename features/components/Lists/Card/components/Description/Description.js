@@ -3,7 +3,8 @@ import { useRouter } from "next/router";
 import CardContext from "../../context/CardContext";
 
 const Description = () => {
-  const { refType, id, name, description, number } = useContext(CardContext);
+  const { cardInfo, number } = useContext(CardContext);
+  const { refType, id, name, description } = cardInfo;
 
   const router = useRouter();
   return (
