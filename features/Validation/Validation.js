@@ -5,8 +5,9 @@ export const signUpValidation = (creds, dispatch) => {
     confirmPassword,
     firstName,
     lastName,
-    phone: phoneNumber,
+    phone,
   } = creds;
+  const phoneNumber = phone.replace(/[\s-]/gi, "");
 
   let isValid = true;
   let emailErrorMessage = "";

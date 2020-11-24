@@ -10,6 +10,7 @@ import Spinner from "@components/Spinner/Spinner";
 import AppContext from "@features/context/AppContext";
 import { signIn as sIn, getOwner } from "@features/service/Functions/index";
 import i18next from "@i18n";
+import PopUpHandlers from "@components/PopUpHandlers/PopUpHandlers";
 import "../styles/signin.scss";
 
 const { useTranslation } = i18next;
@@ -59,87 +60,84 @@ const SignIn = () => {
   }
   return (
     <Authentication type="signin">
-      <>
-        <div className="authentication__form__wrapper__icons">
-          <div className="authentication__form__wrapper__icons__icon">
-            <a
-              href="/auth/google"
-              className="authentication__form__wrapper__icons__icon__link"
-            >
-              <FaGooglePlusG />
-            </a>
-          </div>
-          <div className="authentication__form__wrapper__icons__icon">
-            <a
-              href="/auth/twitter"
-              className="authentication__form__wrapper__icons__icon__link"
-            >
-              <FiTwitter />
-            </a>
-          </div>
-          <div className="authentication__form__wrapper__icons__icon">
-            <a
-              href="/auth/facebook"
-              className="authentication__form__wrapper__icons__icon__link"
-            >
-              <FaFacebookF />
-            </a>
-          </div>
-        </div>
-        <p className="authentication__form__wrapper__text">{description}</p>
-        <div className="authentication__form__wrapper__inputs">
-          <form
-            className="authentication__form__wrapper__inputs__wrapper"
-            onSubmit={handleSubmit}
+      <PopUpHandlers />
+      <div className="authentication__form__wrapper__icons">
+        <div className="authentication__form__wrapper__icons__icon">
+          <a
+            href="/auth/google"
+            className="authentication__form__wrapper__icons__icon__link"
           >
-            {authUserError && (
-              <p className="input-error">
-                {t(`signin:error.${authUserError}`)}
-              </p>
-            )}
-            <div className="authentication__form__wrapper__inputs__wrapper__input__signin">
-              <AuthInput
-                value={email}
-                onChange={setEmail}
-                title="E-mail"
-                size="x-large"
-              />
-            </div>
-            <div className="authentication__form__wrapper__inputs__wrapper__input__signin">
-              <AuthInput
-                type="password"
-                value={password}
-                onChange={setPassword}
-                title={inputPassword}
-                size="x-large"
-              />
-            </div>
-
-            <div className="authentication__form__wrapper__inputs__wrapper__helpers">
-              <div className="authentication__form__wrapper__inputs__wrapper__helpers__rember-me">
-                <Checkbox
-                  value={isRembermeChecked}
-                  onChange={setStatusOfRemberme}
-                />
-              </div>
-
-              <span className="authentication__form__wrapper__inputs__wrapper__helpers__rember-me__text">
-                {remindPassword}
-              </span>
-            </div>
-            <div className="authentication__form__wrapper__inputs__wrapper__button">
-              <PrimaryButton value={buttonText} size="large" />
-            </div>
-            {authError && (
-              <div className="authentication__form__wrapper__inputs__wrapper__error">
-                <p className="input-error">
-                  {t(`component:layout.authentication.error.${authError}`)}
-                </p>
-              </div>
-            )}
-          </form>
+            <FaGooglePlusG />
+          </a>
         </div>
-      </>
+        <div className="authentication__form__wrapper__icons__icon">
+          <a
+            href="/auth/twitter"
+            className="authentication__form__wrapper__icons__icon__link"
+          >
+            <FiTwitter />
+          </a>
+        </div>
+        <div className="authentication__form__wrapper__icons__icon">
+          <a
+            href="/auth/facebook"
+            className="authentication__form__wrapper__icons__icon__link"
+          >
+            <FaFacebookF />
+          </a>
+        </div>
+      </div>
+      <p className="authentication__form__wrapper__text">{description}</p>
+      <div className="authentication__form__wrapper__inputs">
+        <form
+          className="authentication__form__wrapper__inputs__wrapper"
+          onSubmit={handleSubmit}
+        >
+          {authUserError && (
+            <p className="input-error">{t(`signin:error.${authUserError}`)}</p>
+          )}
+          <div className="authentication__form__wrapper__inputs__wrapper__input__signin">
+            <AuthInput
+              value={email}
+              onChange={setEmail}
+              title="E-mail"
+              size="x-large"
+            />
+          </div>
+          <div className="authentication__form__wrapper__inputs__wrapper__input__signin">
+            <AuthInput
+              type="password"
+              value={password}
+              onChange={setPassword}
+              title={inputPassword}
+              size="x-large"
+            />
+          </div>
+
+          <div className="authentication__form__wrapper__inputs__wrapper__helpers">
+            <div className="authentication__form__wrapper__inputs__wrapper__helpers__rember-me">
+              <Checkbox
+                value={isRembermeChecked}
+                onChange={setStatusOfRemberme}
+              />
+            </div>
+
+            <span className="authentication__form__wrapper__inputs__wrapper__helpers__rember-me__text">
+              {remindPassword}
+            </span>
+          </div>
+          <div className="authentication__form__wrapper__inputs__wrapper__button">
+            <PrimaryButton value={buttonText} size="large" />
+          </div>
+          {authError && (
+            <div className="authentication__form__wrapper__inputs__wrapper__error">
+              <p className="input-error">
+                {t(`component:layout.authentication.error.${authError}`)}
+              </p>
+            </div>
+          )}
+        </form>
+      </div>
     </Authentication>
   );
 };

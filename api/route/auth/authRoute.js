@@ -7,6 +7,7 @@ const path = require("path");
 const { client } = require("../../../config/pgAdaptor");
 const { jwtSecret } = require("../../../config/keys");
 const router = express.Router();
+const defaultCountryAndLanguage = require("../../../utils/defaultCountryAndLanguage");
 
 const saltRounds = 10;
 
@@ -137,6 +138,8 @@ router.post("/signin", async (req, res) => {
 });
 
 router.post("/signup", async (req, res) => {
+  const defaultValues = defaultCountryAndLanguage(req.cookies["next-i18next"]);
+  const [defaultLanguage, defaultCountry] = defaultValues;
   const { creds } = req.body;
   const {
     email,
@@ -146,6 +149,7 @@ router.post("/signup", async (req, res) => {
     lastName,
     phone,
   } = creds;
+  const phoneNumber = phone.replace(/[\s-]/gi, "");
   if (
     !/^([a-zA-Z\d\.-]+)@([a-z\d-]+)\.([a-z]{2,8})(\.[a-z]{2,8})?$/.test(email)
   )
@@ -157,7 +161,7 @@ router.post("/signup", async (req, res) => {
     return res.status(400).json("passwords-not-equal");
   else if (!firstName) return res.status(400).json("empty-first-name");
   else if (!lastName) return res.status(400).json("empty-last-name");
-  else if (!/[\d]{9}/.test(phone))
+  else if (!/[\d]{9}/.test(phoneNumber))
     return res.status(400).json("invalid-phone-number");
 
   const getUserIdQuery = fs
@@ -166,49 +170,43 @@ router.post("/signup", async (req, res) => {
   const createUserQuery = fs
     .readFileSync(path.join(__dirname, "./query/add/user.sql"))
     .toString();
+
   try {
     const { rowCount } = await client.query(getUserIdQuery, [email]);
     if (rowCount) return res.status(403).json("user-exist");
+    await bcrypt.hash(password, saltRounds);
+    const { rows: user } = await client.query(createUserQuery, [
+      email,
+      pwHash,
+      firstName,
+      lastName,
+      phoneNumber,
+      defaultCountry,
+      defaultLanguage,
+    ]);
 
-    try {
-      const pwHash = await bcrypt.hash(password, saltRounds);
-
-      try {
-        const { rows: user } = await client.query(createUserQuery, [
-          email,
-          pwHash,
+    const token = jwt.sign(
+      {
+        exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
+        data: {
+          id: user[0].id,
           firstName,
           lastName,
-          phone,
-        ]);
+          photo: "profile.png",
+          email,
+          password: pwHash,
+          phone: phoneNumber,
+          country: null,
+          language: null,
+          city: null,
+          birthDate: null,
+        },
+      },
+      jwtSecret
+    );
 
-        const token = jwt.sign(
-          {
-            exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
-            data: {
-              id: user[0].id,
-              firstName,
-              lastName,
-              photo: "profile.png",
-              email,
-              password: pwHash,
-              phone,
-              country: null,
-              language: null,
-              city: null,
-              birthDate: null,
-            },
-          },
-          jwtSecret
-        );
-        res.cookie("token", token);
-        res.status(200).json({ success: true });
-      } catch {
-        return res.status(400).json("bad-request");
-      }
-    } catch {
-      return res.status(400).json("bad-request");
-    }
+    res.cookie("token", token);
+    res.status(200).json({ success: true });
   } catch {
     return res.status(400).json("bad-request");
   }
