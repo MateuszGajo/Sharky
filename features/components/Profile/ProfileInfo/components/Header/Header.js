@@ -14,19 +14,16 @@ const { useTranslation } = i18next;
 const Header = ({ info, setNumberOfPhotos, userId }) => {
   const { t } = useTranslation(["component", "profile"]);
 
-  const { firstName, lastName, photo: initialPhoto, relation } = info;
+  const {
+    firstName,
+    lastName,
+    photo: initialPhoto,
+    relation: initialRelation,
+  } = info;
   const { setError, owner } = useContext(AppContex);
 
   const initialButtonName = getInitialButtonName(info, userId);
-  const [buttonColor, setButtonColor] = useState(
-    relation == "friend"
-      ? "green"
-      : relation === "family"
-      ? "blue"
-      : relation === "pal"
-      ? "pink"
-      : ""
-  );
+  const [relation, setRelation] = useState(initialRelation);
   const [buttonName, setButtonName] = useState(initialButtonName);
   const [photo, setPhoto] = useState(initialPhoto);
   const [prompt, setPrompt] = useState();
@@ -111,7 +108,7 @@ const Header = ({ info, setNumberOfPhotos, userId }) => {
           <FriendsInvitationButtons
             userId={userId}
             setButtonName={setButtonName}
-            setButtonColor={setButtonColor}
+            setCurrentRelation={setRelation}
           />
         );
       case "relation":
@@ -120,12 +117,12 @@ const Header = ({ info, setNumberOfPhotos, userId }) => {
             buttons={buttons}
             userId={userId}
             setButtonName={setButtonName}
-            fieldName={buttonColor}
+            title={relation}
           />
         );
     }
   };
-
+  console.log(buttonName);
   return (
     <div className="profile__container__person">
       <div className="profile__container__person__name">

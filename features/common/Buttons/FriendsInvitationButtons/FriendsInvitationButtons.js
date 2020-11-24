@@ -10,7 +10,8 @@ const FriendInvitationButtons = ({
   size = "medium",
   userId,
   setButtonName,
-  setButtonColor,
+  setCurrentRelation,
+  setDeclineInvitation,
 }) => {
   const { t } = useTranslation();
   const acceptText = t("component:lists.people.accept");
@@ -18,13 +19,17 @@ const FriendInvitationButtons = ({
 
   const handleAcceptButton = () => {
     axios.post("/friend/accept", { userId }).then(() => {
-      setButtonColor("green");
+      setCurrentRelation("friend");
       setButtonName("relation");
     });
   };
   const handleDeclineButton = () => {
     axios.post("/friend/decline", { userId }).then(() => {
-      setButtonName("add");
+      if (setDeclineInvitation) setDeclineInvitation({ userId });
+      else {
+        console.log("ustaw przycisl");
+        setButtonName("add");
+      }
     });
   };
   return (
