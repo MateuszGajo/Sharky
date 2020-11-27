@@ -1,7 +1,7 @@
 import React from "react";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import cx from "classnames";
-import axios from "axios";
+import axios from "@features/service/Axios";
 import i18next from "@i18n";
 
 const { useTranslation } = i18next;

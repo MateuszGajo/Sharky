@@ -8,7 +8,6 @@ const withSettings = (Component) => {
     const [type, setType] = useState("");
     const [title, setTitle] = useState("");
     const [isOpenConfirmPopUp, setOpenConfirmPopUp] = useState(false);
-    const [confirmPopUpError, setConfirmPopUpError] = useState("");
 
     return (
       <SettingsContext.Provider
@@ -23,8 +22,6 @@ const withSettings = (Component) => {
           setTitle,
           isOpenConfirmPopUp,
           setOpenConfirmPopUp,
-          confirmPopUpError,
-          setConfirmPopUpError,
         }}
       >
         <Component />

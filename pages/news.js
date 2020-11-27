@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import axios from "axios";
+import axios from "@features/service/Axios";
 import Router from "next/router";
 import { MdBlock } from "react-icons/md";
 import HomeLayout from "@components/Layout/Home/HomeLayout";
@@ -58,6 +58,7 @@ const News = () => {
               onChange={setContent}
               file={file}
               setFile={setFile}
+              news={true}
             />
           </form>
         ) : (

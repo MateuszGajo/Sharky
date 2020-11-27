@@ -1,6 +1,6 @@
 import React from "react";
 import cx from "classnames";
-import axios from "axios";
+import axios from "@features/service/Axios";
 import i18next from "@i18n";
 
 const { useTranslation } = i18next;
@@ -26,10 +26,7 @@ const FriendInvitationButtons = ({
   const handleDeclineButton = () => {
     axios.post("/friend/decline", { userId }).then(() => {
       if (setDeclineInvitation) setDeclineInvitation({ userId });
-      else {
-        console.log("ustaw przycisl");
-        setButtonName("add");
-      }
+      else setButtonName("add");
     });
   };
   return (

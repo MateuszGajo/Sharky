@@ -20,6 +20,7 @@ numberOfMembers as (
             select *
             from groupSorted
         )
+        and status = '1'
     group by group_id
 )
 select a.*,

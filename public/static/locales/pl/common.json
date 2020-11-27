@@ -10,10 +10,11 @@
     "checkbox":{
         "label":"Zapamiętaj mnie"
     },
-    "messagebox":{
+    "message-box":{
         "title":"Dodaj post",
         "button":"Opublikuj",
-        "description":"Co słychać u Ciebie?"
+        "description":"Co słychać u Ciebie?",
+        "news-description":"Jakie informacje chcesz przekazać światu?"
     },
     "pop-up":{
         "confirm-user":{

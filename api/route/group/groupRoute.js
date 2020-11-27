@@ -3,15 +3,14 @@ const fs = require("fs");
 const path = require("path");
 const multer = require("multer");
 const { client } = require("../../../config/pgAdaptor");
-const decodeToken = require("../../../utils/decodeToken");
-const { group } = require("console");
+const decodeToken = require("../decodeToken");
 const router = express.Router();
 
 router.post("/enter", async (req, res) => {
   const { groupId } = req.body;
   if (!/^[0-9]*$/.test(groupId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const getPrimaryInfoQuery = fs
@@ -46,7 +45,7 @@ router.post("/about", async (req, res) => {
 
   if (!/^[0-9]*$/.test(groupId)) return res.status(400).json("invalid-data");
 
-  const { error } = decodeToken(req.cookies.token);
+  const { error } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const getInfoQuery = fs
@@ -67,7 +66,7 @@ router.post("/delete", async (req, res) => {
   const { groupId } = req.body;
   if (!/^[0-9]*$/.test(groupId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const getAdminQuery = fs
@@ -109,18 +108,18 @@ router.post("/member/get", async (req, res) => {
 });
 
 router.post("/member/relation/change", async (req, res) => {
-  const { subId, relation, groupId } = req.body;
+  const { userId, relation, groupId } = req.body;
 
   if (
-    !/^[\d]*$/.test(subId) ||
+    !/^[\d]*$/.test(userId) ||
     !(relation === "member" || relation === "admin" || relation === "moderator")
   )
     return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
-  const updateMemberRealtionQuery = fs
+  const updateMemberRelationQuery = fs
     .readFileSync(path.join(__dirname, "./query/update/memberRelation.sql"))
     .toString();
   const getAdminQuery = fs
@@ -129,7 +128,7 @@ router.post("/member/relation/change", async (req, res) => {
   try {
     const { rows } = await client.query(getAdminQuery, [ownerId, groupId]);
     if (!rows[0].id) return res.status(403).json("no-permission");
-    await client.query(updateMemberRealtionQuery, [relation, subId, groupId]);
+    await client.query(updateMemberRelationQuery, [relation, userId, groupId]);
 
     res.status(200).json({ success: true });
   } catch {
@@ -148,7 +147,7 @@ router.post("/get", async (req, res) => {
   )
     return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const getGroupsQuery = fs
@@ -206,7 +205,7 @@ router.post("/create", async (req, res) => {
   const { name, description } = req.body;
   if (!name) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const date = new Date();
@@ -235,7 +234,7 @@ router.post("/join", async (req, res) => {
   const { groupId } = req.body;
   if (!/^[\d]*$/.test(groupId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const role = "member";
@@ -274,7 +273,7 @@ router.post("/user/delete", async (req, res) => {
   if (!/^[\d]*$/.test(groupId) || !/^[\d]*$/.test(subId))
     return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const getAdminQuery = fs
@@ -303,7 +302,7 @@ router.post("/leave", async (req, res) => {
   const { groupId } = req.body;
   if (!/^[\d]*$/.test(groupId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const getAdminsQuery = fs
@@ -331,15 +330,15 @@ router.post("/user/invite", async (req, res) => {
   if (!/^[\d]*$/.test(userId) || !/^[\d]*$/.test(targetId))
     return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
-  res.status(200).json({ success: true });
   try {
     const inviteUserQuery = fs
       .readFileSync(path.join(__dirname, "./query/add/inviteUser.sql"))
       .toString();
     await client.query(inviteUserQuery, [targetId, userId, ownerId]);
+    res.status(200).json({ success: true });
   } catch {
     res.status(400).json("bad-request");
   }
@@ -349,7 +348,7 @@ router.post("/user/invitation/accept", async (req, res) => {
   const { subscribeId } = req.body;
   if (!/^[\d]*$/.test(subscribeId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const acceptInvitationQuery = fs
@@ -368,7 +367,7 @@ router.post("/user/invitation/decline", async (req, res) => {
   const { subscribeId } = req.body;
   if (!/^[\d]*$/.test(subscribeId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const declineInvitationQuery = fs
@@ -385,7 +384,7 @@ router.post("/user/invitation/decline", async (req, res) => {
 });
 
 router.post("/change/photo", async (req, res) => {
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const storage = multer.diskStorage({

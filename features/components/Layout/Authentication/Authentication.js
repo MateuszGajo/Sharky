@@ -66,10 +66,16 @@ const Authentication = ({ children, type }) => {
                 value={
                   type === "signin"
                     ? signInButtonText
-                    : type === "signup" ? signUpButtonText : ""
+                    : type === "signup"
+                    ? signUpButtonText
+                    : ""
                 }
                 link={
-                  type === "signin" ? "/signup" : type === "signup" ? "/signin" : ""
+                  type === "signin"
+                    ? "/signup"
+                    : type === "signup"
+                    ? "/signin"
+                    : ""
                 }
               />
             </div>
@@ -81,8 +87,8 @@ const Authentication = ({ children, type }) => {
 };
 
 Authentication.propTypes = {
-  children: PropTypes.element,
-  type: PropTypes.string
-}
+  children: PropTypes.arrayOf(PropTypes.element),
+  type: PropTypes.string,
+};
 
-export default Authentication ;
+export default Authentication;

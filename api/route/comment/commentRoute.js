@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path");
 const fs = require("fs");
 const { client } = require("../../../config/pgAdaptor");
-const decodeToken = require("../../../utils/decodeToken");
+const decodeToken = require("../decodeToken");
 const router = express.Router();
 
 router.post("/add", async (req, res) => {
@@ -11,7 +11,7 @@ router.post("/add", async (req, res) => {
   if (!/^[0-9]*$/.test(postId) || !content)
     return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const date = new Date();
@@ -46,7 +46,7 @@ router.post("/delete", async (req, res) => {
 
   if (!/^[0-9]*$/.test(commentId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const deleteCommentQuery = fs
@@ -69,7 +69,7 @@ router.post("/get", async (req, res) => {
   if (!/^[0-9]*$/.test(postId) || !/^[0-9]*$/.test(from))
     return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const getGroupPermissionQuery = fs
@@ -113,7 +113,7 @@ router.post("/like", async (req, res) => {
 
   if (!/^[0-9]*$/.test(commentId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const getGroupPermissionQuery = fs
@@ -159,7 +159,7 @@ router.post("/unlike", async (req, res) => {
 
   if (!/^[0-9]*$/.test(commentId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const getGroupPermissionQuery = fs

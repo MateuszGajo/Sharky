@@ -2,7 +2,7 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const { client } = require("../../../config/pgAdaptor");
-const decodeToken = require("../../../utils/decodeToken");
+const decodeToken = require("../decodeToken");
 
 const router = express.Router();
 
@@ -12,7 +12,7 @@ router.post("/add", async (req, res) => {
   if (!/^[\d]*$/.test(commentId) || typeof content !== "string")
     return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const addReplyQuery = fs
@@ -57,7 +57,7 @@ router.post("/delete", async (req, res) => {
   const { replyId } = req.body;
   if (!/^[\d]*$/.test(replyId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const deleteReplyQuery = fs
@@ -78,7 +78,7 @@ router.post("/get", async (req, res) => {
   if (!/^[\d]*$/.test(commentId) || !/^[\d]*$/.test(from))
     return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const getRepliesQuery = fs
@@ -129,7 +129,7 @@ router.post("/like", async (req, res) => {
   const { replyId } = req.body;
   if (!/^[\d]*$/.test(replyId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const likeReplyQuery = fs
@@ -168,7 +168,7 @@ router.post("/unlike", async (req, res) => {
   const { replyId } = req.body;
   if (!/^[\d]*$/.test(replyId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const unlikeReplyQuery = fs

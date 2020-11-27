@@ -8,9 +8,18 @@ import {
 import PostContext from "../../../../../../context/PostContext";
 import AppContext from "@features/context/AppContext";
 
-const OwnerMenu = ({ deleteCommentText, comment, replies, setReplies }) => {
-  const { comments, setComments } = useContext(PostContext);
+const OwnerMenu = ({
+  deleteCommentText,
+  comment,
+  replies,
+  setReplies,
+  setNumberOfReplies,
+}) => {
+  const { comments, setComments, setNumberOfComments } = useContext(
+    PostContext
+  );
   const { setError } = useContext(AppContext);
+
   return (
     <div
       className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item"
@@ -21,12 +30,14 @@ const OwnerMenu = ({ deleteCommentText, comment, replies, setReplies }) => {
               comments,
               setComments,
               setError,
+              setNumberOfComments,
             })
           : deleteReply({
               replyId: comment.replyId,
               replies,
               setReplies,
               setError,
+              setNumberOfReplies,
             });
       }}
     >

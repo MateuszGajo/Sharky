@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import PropTypes from "prop-types";
 import cx from "classnames";
-import axios from "axios";
+import axios from "@features/service/Axios";
 import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
 import { useRouter } from "next/router";
 import i18next from "@i18n";

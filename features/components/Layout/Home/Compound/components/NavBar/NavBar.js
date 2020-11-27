@@ -12,7 +12,7 @@ import { FaRegUser } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
 import cx from "classnames";
 import Router from "next/router";
-import axios from "axios";
+import axios from "@features/service/Axios";
 import AppContext from "@features/context/AppContext";
 import i18next from "@i18n";
 import Hamburger from "./components/Hamburger/Hamburger";

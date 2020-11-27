@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import axios from "axios";
+import axios from "@features/service/Axios";
 import { useRouter } from "next/router";
 import HomeLayout from "@components/Layout/Home/HomeLayout";
 import Navbar from "@components/Fanpage/NavBar/NavBar";

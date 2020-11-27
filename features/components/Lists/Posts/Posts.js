@@ -100,8 +100,8 @@ Posts.propTypes = {
   fanpageId: PropTypes.number,
   groupId: PropTypes.number,
   news: PropTypes.bool,
-  authorPost:PropTypes.bool,
+  authorPost: PropTypes.bool,
   userId: PropTypes.number,
-}
+};
 
 export default withWizzard(Posts);

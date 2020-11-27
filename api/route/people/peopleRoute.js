@@ -2,7 +2,7 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const { client } = require("../../../config/pgAdaptor");
-const decodeToken = require("../../../utils/decodeToken");
+const decodeToken = require("../decodeToken");
 const router = express.Router();
 
 router.post("/get", async (req, res) => {
@@ -14,7 +14,7 @@ router.post("/get", async (req, res) => {
   )
     return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   let { keyWords } = req.body;

@@ -4,7 +4,7 @@ import { AiOutlineMinus, AiOutlineDelete } from "react-icons/ai";
 import { GoPlus } from "react-icons/go";
 import cx from "classnames";
 import { useRouter } from "next/router";
-import axios from "axios";
+import axios from "@features/service/Axios";
 import i18next from "@i18n";
 import AppContext from "@features/context/AppContext";
 

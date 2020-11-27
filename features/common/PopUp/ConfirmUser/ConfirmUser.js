@@ -1,25 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import PropTypes from "prop-types";
 import { IoMdClose } from "react-icons/io";
 import PrimaryInput from "@common/PrimaryInput/PrimaryInput";
 import PrimaryButton from "@common/PrimaryButton/PrimaryButton";
 import i18next from "@i18n";
+import AppContext from "@features/context/AppContext";
 
 const { useTranslation } = i18next;
 
-const ConfirmUser = ({ setOpen, setValue, popUpError }) => {
+const ConfirmUser = ({ setOpen, setValue }) => {
   const { t } = useTranslation();
 
   const title = t("common:pop-up.confirm-user.title");
   const buttonText = t("common:pop-up.confirm-user.button");
   const inputPasswordText = t("common:input.password");
 
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const { confirmPopUpError } = useContext(AppContext);
 
-  useEffect(() => {
-    error & setError(popUpError);
-  }, [popUpError]);
+  const [password, setPassword] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -57,9 +55,9 @@ const ConfirmUser = ({ setOpen, setValue, popUpError }) => {
             <div className="confrim-user-container__content__data__form__button">
               <PrimaryButton value={buttonText} />
             </div>
-            {error && (
+            {confirmPopUpError && (
               <p className="confrim-user-container__content__data__form__error">
-                {t(`common:pop-up.confirm-user.${error}`)}
+                {t(`common:pop-up.confirm-user.${confirmPopUpError}`)}
               </p>
             )}
           </form>

@@ -25,6 +25,7 @@ const Commnet = ({
   user,
   replies,
   setReplies,
+  setNumberOfReplies,
 }) => {
   const { id, firstName, lastName, photo } = user;
 
@@ -113,6 +114,7 @@ const Commnet = ({
               comment={comment}
               replies={replies}
               setReplies={setReplies}
+              setNumberOfReplies={setNumberOfReplies}
             />
           </div>
           <div className="post__item__comments__container__item__content__item__text">

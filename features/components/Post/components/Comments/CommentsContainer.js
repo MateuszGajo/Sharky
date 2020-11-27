@@ -95,7 +95,6 @@ const withContainer = (WrappedComponent) => {
           getReplies={gReplies}
           user={user}
         />
-
         {isRepliesOpen && (
           <div className="post__item__comments__container--margin">
             <div className="post__item__comments__container__wrapper__input">
@@ -117,6 +116,7 @@ const withContainer = (WrappedComponent) => {
                   user={user}
                   replies={replies}
                   setReplies={setReplies}
+                  setNumberOfReplies={setNumberOfReplies}
                 />
               );
             })}

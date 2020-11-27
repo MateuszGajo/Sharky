@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "@features/service/Axios";
 import { uuid } from "uuidv4";
 import Router from "next/router";
 
@@ -346,6 +346,7 @@ export const deleteComment = ({
   comments,
   setComments,
   setError,
+  setNumberOfComments,
 }) => {
   axios
     .post("/comment/delete", {
@@ -356,6 +357,7 @@ export const deleteComment = ({
         (comment) => comment.commentId != commentId
       );
       setComments(filteredComments);
+      setNumberOfComments((prev) => prev - 1);
     })
     .catch((err) => {
       const {
@@ -448,7 +450,13 @@ export const addReply = ({
     });
 };
 
-export const deleteReply = ({ replyId, replies, setReplies, setError }) => {
+export const deleteReply = ({
+  replyId,
+  replies,
+  setReplies,
+  setError,
+  setNumberOfReplies,
+}) => {
   axios
     .post("/reply/delete", {
       replyId,
@@ -458,6 +466,7 @@ export const deleteReply = ({ replyId, replies, setReplies, setError }) => {
         return reply.replyId != replyId;
       });
       setReplies(filteredReplies);
+      setNumberOfReplies((prev) => prev - 1);
     })
     .catch((err) => {
       const {

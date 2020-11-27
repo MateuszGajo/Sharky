@@ -1,13 +1,12 @@
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
-const { composeInitialProps } = require("react-i18next");
 const { client } = require("../../../config/pgAdaptor");
-const decodeToken = require("../../../utils/decodeToken");
+const decodeToken = require("../decodeToken");
 const router = express.Router();
 
 router.get("/get", async (req, res) => {
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const getChatsQuery = fs
@@ -26,7 +25,7 @@ router.post("/add", async (req, res) => {
   const { userId } = req.body;
   if (!/^[\d]*$/.test(userId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const getFriendshipIdQuery = fs
@@ -59,7 +58,7 @@ router.post("/delete", async (req, res) => {
   const { userId } = req.body;
   if (!/^[\d]*$/.test(userId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const deleteUserQuery = fs
@@ -88,7 +87,7 @@ router.post("/accept", async (req, res) => {
   const { userId } = req.body;
   if (!/^[\d]*$/.test(userId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const relation = "friend";
@@ -124,7 +123,7 @@ router.post("/decline", async (req, res) => {
   const { userId } = req.body;
   if (!/^[\d]*$/.test(userId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const deleteFriendRequestQuery = fs
@@ -156,7 +155,7 @@ router.post("/get/people", async (req, res) => {
       return res.status(200).json({ friends: [], isMore: false });
   }
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const getFriendsQuery = fs
@@ -214,11 +213,11 @@ router.post("/get/people", async (req, res) => {
   res.status(200).json({ friends, isMore });
 });
 
-router.post("/message/read", (req, res) => {
+router.post("/message/read", async (req, res) => {
   const { userId } = req.body;
   if (!/^[\d]*$/.test(userId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const readMessageQuery = fs
@@ -236,7 +235,7 @@ router.post("/update/relation", async (req, res) => {
   )
     return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const updateRelationQuery = fs
@@ -265,7 +264,7 @@ router.post("/change/relation/accept", async (req, res) => {
   )
     return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const acceptNewRelationQuery = fs
@@ -291,7 +290,7 @@ router.post("/change/relation/decline", async (req, res) => {
   if (!/^[\d]*$/.test(userId) || !/^[\d]*$/.test(friendshipId))
     return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const declineNewRelationQuery = fs

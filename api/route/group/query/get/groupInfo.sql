@@ -7,5 +7,6 @@ from groups as a
             count(*) as "numberOfMembers"
         from group_users
         where group_id = $1
+            and status = '1'
         group by group_id
     ) as b on a.id = b.group_id

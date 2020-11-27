@@ -21,15 +21,15 @@ const Settings = () => {
   const isMobile = useMediaQuery({ query: "(max-width: 1023px)" });
 
   const { t } = useTranslation(["settings"]);
-  const { isPrompt, setPrompt, isError, setOwner } = useContext(AppContext);
+  const { socket, setPrompt, setOwner, setConfirmPopUpError } = useContext(
+    AppContext
+  );
   const {
     isOpenConfirmPopUp,
     setOpenConfirmPopUp,
-    confirmPopUpError,
     name,
     value,
     setName,
-    setConfirmPopUpError,
   } = useContext(SettingsContext);
 
   const [isAuth, setStatusOfAuth] = useState(null);
@@ -53,7 +53,8 @@ const Settings = () => {
       setConfirmPopUpError,
       t,
       setPrompt,
-      setName
+      setName,
+      socket
     );
   };
 
@@ -61,11 +62,7 @@ const Settings = () => {
     <div className="settings">
       <PopUpHandlers />
       {isOpenConfirmPopUp && (
-        <ConfirmUser
-          setOpen={setOpenConfirmPopUp}
-          setValue={changeValue}
-          popUpError={confirmPopUpError}
-        />
+        <ConfirmUser setOpen={setOpenConfirmPopUp} setValue={changeValue} />
       )}
       <NavBar />
       {!isMobile ? (

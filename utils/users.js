@@ -20,4 +20,8 @@ const userLeave = (userId, idSocket) => {
   users[userId] = newUser;
 };
 
-module.exports = { userJoin, userLeave, existUser, getSocket };
+const usersLeave = (userId) => {
+  users[userId] = [];
+};
+
+module.exports = { userJoin, userLeave, usersLeave, existUser, getSocket };

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { useRouter } from "next/router";
-import axios from "axios";
+import axios from "@features/service/Axios";
 import HomeLayout from "@components/Layout/Home/HomeLayout";
 import SinglePost from "@components/Post/Post";
 import withWizzard from "@components/Post/withWizzard";

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "@features/service/Axios";
 import countryCode from "@root/utils/countryCode";
 
 const validateEmail = (email) => {
@@ -90,13 +90,18 @@ export const getLanguages = (t, setLanguages) => {
 };
 
 export const getValue = (t, name, type, setValue) => {
-  axios.post("/user/get/item", { value: name }).then(({ data: { item } }) => {
-    if (type == "general")
-      setValue(
-        t(`settings:${name === "country" ? "countries" : "languages"}.${item}`)
-      );
-    else setValue(item);
-  });
+  axios
+    .post("/user/get/item", { value: name })
+    .then(({ data: { item } }) => {
+      if (type == "general")
+        setValue(
+          t(
+            `settings:${name === "country" ? "countries" : "languages"}.${item}`
+          )
+        );
+      else setValue(item);
+    })
+    .catch(() => {});
 };
 
 export const changeValue = (
@@ -130,7 +135,7 @@ export const changeValue = (
         setName("");
       }
     })
-    .catch(({ response: { status, data } }) => {});
+    .catch(() => {});
 };
 
 export const changeValueWithConfirmPassword = (
@@ -141,20 +146,24 @@ export const changeValueWithConfirmPassword = (
   setConfirmPopUpError,
   t,
   setPrompt,
-  setName
+  setName,
+  socket
 ) => {
-  axios
-    .post(`/user/change/${name}`, { value, password })
-    .then(() => {
-      setOpenConfirmPopUp(false);
-      setPrompt(t(`settings:account.${name}-changed`));
-      setName("");
-    })
-    .catch(({ response: { status, data } }) => {
-      if (
-        (status === 401 && data === "invalid-password") ||
-        (status === 400 && data === "password-too-short")
-      )
-        setConfirmPopUpError(data);
-    });
+  if (name === "password") socket.emit("changePassword", { value, password });
+  else
+    axios
+      .post(`/user/change/${name}`, { value, password })
+      .then(() => {
+        setConfirmPopUpError("");
+        setOpenConfirmPopUp(false);
+        setPrompt(t(`settings:account.${name}-changed`));
+        setName("");
+      })
+      .catch(({ response: { status, data } }) => {
+        if (
+          (status === 401 && data === "invalid-password") ||
+          (status === 400 && data === "password-too-short")
+        )
+          setConfirmPopUpError(data);
+      });
 };

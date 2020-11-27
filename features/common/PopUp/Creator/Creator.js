@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import axios from "axios";
+import axios from "@features/service/Axios";
 import Router from "next/router";
 import { RiCloseLine } from "react-icons/ri";
 import PrimaryInput from "@common/PrimaryInput/PrimaryInput";

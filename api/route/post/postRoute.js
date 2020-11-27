@@ -3,13 +3,13 @@ const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
 const { client } = require("../../../config/pgAdaptor");
-const decodeToken = require("../../../utils/decodeToken");
+const decodeToken = require("../decodeToken");
 const { ClientBase } = require("pg");
 
 const router = express.Router();
 
 router.post("/add", async (req, res) => {
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const storage = multer.diskStorage({
@@ -143,7 +143,7 @@ router.post("/get", async (req, res) => {
     return res.status(400).json("invalid-data");
   }
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const getFanpagePostsQuery = fs
@@ -224,7 +224,7 @@ router.post("/get/single", async (req, res) => {
   const { postId } = req.body;
   if (!/^[\d]*$/.test(postId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const getPostQuery = fs
@@ -273,7 +273,7 @@ router.post("/like", async (req, res) => {
   const { postId } = req.body;
   if (!/^[\d]*$/.test(postId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const likePostQuery = fs
@@ -322,7 +322,7 @@ router.post("/unlike", async (req, res) => {
   const { postId } = req.body;
   if (!/^[\d]*$/.test(postId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const unlikePostQuery = fs
@@ -358,7 +358,7 @@ router.post("/share", async (req, res) => {
   const date = new Date();
   if (!/^[\d]*$/.test(postId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const postShareQuery = fs
@@ -400,7 +400,7 @@ router.post("/edit", async (req, res) => {
   if (!/^[\d]*$/.test(postId) || typeof content !== "string")
     return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const updatePostContentQuery = fs
@@ -436,7 +436,7 @@ router.post("/delete", async (req, res) => {
   const { postId } = req.body;
   if (!/^[\d]*$/.test(postId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const deletePostQuery = fs
@@ -484,7 +484,7 @@ router.post("/share/delete", async (req, res) => {
   const { shareId } = req.body;
   if (!/^[\d]*$/.test(shareId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = decodeToken(req.cookies.token);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
   if (error) return res.status(401).json(error);
 
   const deleteSharePostQuery = fs

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import axios from "axios";
+import axios from "@features/service/Axios";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Card from "@components/Lists/Card/Card";
 import Spinner from "@components/Spinner/Spinner";

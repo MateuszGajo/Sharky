@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import cx from "classnames";
 import { MdClose } from "react-icons/md";
-import axios from "axios";
+import axios from "@features/service/Axios";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Search from "@common/Search/Search";
 import Card from "@components/Lists/Card/Card";

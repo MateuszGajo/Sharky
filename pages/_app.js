@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useReducer } from "react";
 import socketIOClient from "socket.io-client";
+import Router from "next/router";
+import axios from "@features/service/Axios";
 import AppContext from "@features/context/AppContext";
 import { SERVER_URL } from "../config/config";
 import AuthReducer from "@features/context/authReducer";
@@ -26,6 +28,7 @@ const MyApp = ({ Component, pageProps }) => {
   const [isPrompt, setPrompt] = useState("");
   const [authError, setAuthError] = useState("");
   const [authUserError, setAuthUserError] = useState("");
+  const [confirmPopUpError, setConfirmPopUpError] = useState("");
   const [validationSignUpError, setValidationSignUpError] = useState("");
   const [socket, setSocket] = useState(null);
 
@@ -57,6 +60,16 @@ const MyApp = ({ Component, pageProps }) => {
         setNewChat(newChat);
       });
 
+      socket.on("changePasswordError", ({ message }) => {
+        setConfirmPopUpError(message);
+      });
+
+      socket.on("passwordChanged", async () => {
+        axios.get("/user/logout").then(() => {
+          Router.push("/");
+        });
+      });
+
       socket.emit("connectUser");
     }
   }, [socket]);
@@ -80,6 +93,8 @@ const MyApp = ({ Component, pageProps }) => {
         setAuthError,
         authUserError,
         setAuthUserError,
+        confirmPopUpError,
+        setConfirmPopUpError,
         validationSignUpError,
         setValidationSignUpError,
         dispatch,

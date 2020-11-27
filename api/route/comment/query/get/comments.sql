@@ -4,7 +4,7 @@ select secondResult.*,
     post_comments.date,
     comment_likes.id as "likeId"
 from (
-        select result.id,
+        select result.id as "commentId",
             result."numberOfReplies",
             count(comment_likes.comment_id) as "numberOfLikes"
         from (
@@ -19,8 +19,8 @@ from (
         group by result.id,
             result."numberOfReplies"
     ) as secondResult
-    left join comment_likes on secondResult.id = comment_likes.comment_id
+    left join comment_likes on secondResult."commentId" = comment_likes.comment_id
     and comment_likes.user_id = $2
-    left join post_comments on post_comments.id = secondResult.id
+    left join post_comments on post_comments.id = secondResult."commentId"
 order by post_comments.date desc
 limit 21 offset $3

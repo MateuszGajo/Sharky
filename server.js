@@ -9,6 +9,7 @@ const bodyParser = require("body-parser");
 const authRoute = require("./api/route/auth/authRoute");
 require("./config/passportSetup");
 const express = require("express");
+const bcrypt = require("bcrypt");
 const nextI18NextMiddleware = require("next-i18next/middleware").default;
 const fs = require("fs");
 const path = require("path");
@@ -26,7 +27,13 @@ const notificationRoute = require("./api/route/notifications/notificationsRoute"
 const countryRoute = require("./api/route/country/countryRoute");
 const languageRoute = require("./api/route/language/languageRoute");
 const { client } = require("./config/pgAdaptor");
-const { userJoin, userLeave, getSocket, existUser } = require("./utils/users");
+const {
+  userJoin,
+  userLeave,
+  usersLeave,
+  getSocket,
+  existUser,
+} = require("./utils/users");
 const decodeToken = require("./utils/decodeToken");
 
 const nextI18Next = require("./i18n/server");
@@ -55,6 +62,7 @@ socketIO.sockets.on("connection", (socket) => {
   const addUnreadMessageQuery = fs
     .readFileSync(path.join(__dirname, "./utils/query/add/unreadMessage.sql"))
     .toString();
+
   socket.on("connectUser", () => {
     const { id: ownerId } = decodeToken(
       cookie.parse(socket.handshake.headers.cookie).token
@@ -145,11 +153,44 @@ socketIO.sockets.on("connection", (socket) => {
     }
   });
 
-  socket.on("changedPassword", async ({ userId }) => {
-    const sockets = getSocket(userId);
-    for (let i = 0; i < sockets.length; i++) {
-      socketIO.to(sockets[i]).emit("logOutChangedPassword");
-    }
+  socket.on("changePassword", async ({ value, password }) => {
+    const { id: ownerId } = decodeToken(
+      cookie.parse(socket.handshake.headers.cookie).token
+    );
+    if (!ownerId) return;
+
+    if (value.length < 6)
+      return socketIO
+        .to(socket.id)
+        .emit("changePasswordError", { message: "new-password-too-short" });
+    if (password.length < 6)
+      return socketIO
+        .to(socket.id)
+        .emit("changePasswordError", { message: "password-too-short" });
+
+    const getPasswordQuery = fs
+      .readFileSync(path.join(__dirname, "./utils/query/get/password.sql"))
+      .toString();
+
+    const { rows } = await client.query(getPasswordQuery, [ownerId]);
+    const match = await bcrypt.compare(password, rows[0].password);
+    if (!match)
+      return socketIO
+        .to(socket.id)
+        .emit("changePasswordError", { message: "invalid-password" });
+    if (!match) return;
+
+    const changePasswordQuery = fs
+      .readFileSync(path.join(__dirname, "./utils/query/update/password.sql"))
+      .toString();
+    const saltRounds = 10;
+    bcrypt.hash(value, saltRounds, async (err, hash) => {
+      if (hash) {
+        await client.query(changePasswordQuery, [hash, ownerId]);
+        usersLeave(ownerId);
+        return socketIO.to(socket.id).emit("passwordChanged");
+      }
+    });
   });
 
   socket.on("joinChat", async () => {

@@ -8,14 +8,22 @@ import i18next from "@i18n";
 import AppContext from "@features/context/AppContext";
 const { useTranslation } = i18next;
 
-const MessageBox = ({ value, onChange, btnSize = "medium", file, setFile }) => {
-  const { t } = useTranslation();
+const MessageBox = ({
+  value,
+  onChange,
+  btnSize = "medium",
+  file,
+  setFile,
+  news = false,
+}) => {
+  const { t } = useTranslation(["common"]);
 
   const { setError } = useContext(AppContext);
 
   const title = t("common:message-box.title");
   const description = t("common:message-box.description");
   const buttonText = t("common:message-box.button");
+  const newsDescription = t("common:message-box.news-description");
 
   const imageRef = useRef(null);
 
@@ -43,7 +51,7 @@ const MessageBox = ({ value, onChange, btnSize = "medium", file, setFile }) => {
       <div className="message-box__navbar">{title}</div>
       <div className="message-box__content">
         <textarea
-          placeholder={description}
+          placeholder={news ? newsDescription : description}
           className="message-box__content--textarea"
           data-testid="message-box-textarea"
           required={!file}

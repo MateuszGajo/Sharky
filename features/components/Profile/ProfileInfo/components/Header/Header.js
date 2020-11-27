@@ -1,5 +1,5 @@
-import React, { useState, useContext } from "react";
-import axios from "axios";
+import React, { useState, useContext, useEffect, useRef } from "react";
+import axios from "@features/service/Axios";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import cx from "classnames";
 import AppContex from "@features/context/AppContext";
@@ -22,6 +22,8 @@ const Header = ({ info, setNumberOfPhotos, userId }) => {
   } = info;
   const { setError, owner } = useContext(AppContex);
 
+  const timeToClear = useRef(null);
+
   const initialButtonName = getInitialButtonName(info, userId);
   const [relation, setRelation] = useState(initialRelation);
   const [buttonName, setButtonName] = useState(initialButtonName);
@@ -33,7 +35,7 @@ const Header = ({ info, setNumberOfPhotos, userId }) => {
   const changePhotoText = t("profile:change-photo");
 
   const clearPrompt = () => {
-    setTimeout(() => setPrompt(""), 1500);
+    timeToClear.current = setTimeout(() => setPrompt(""), 1500);
   };
 
   const handlePhotoUpload = (e) => {
@@ -57,6 +59,12 @@ const Header = ({ info, setNumberOfPhotos, userId }) => {
       })
       .catch(({ response: { data: message } }) => setError(message));
   };
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(timeToClear.current);
+    };
+  }, []);
 
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];

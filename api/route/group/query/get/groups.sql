@@ -29,6 +29,7 @@ from(
                 from group_users as a
                 where user_id = $1
             )
+            and status = '1'
     ) as a
     left join groups as b on a."groupId" = b.id
 where a.user_id = $2

@@ -13,7 +13,8 @@
     "message-box":{
         "title":"Add post",
         "button":"Post",
-        "description":"How you doing?"
+        "description":"How you doing?",
+        "news-description":"What do you want to share with the world?"
     },
     "pop-up":{
         "confirm-user":{

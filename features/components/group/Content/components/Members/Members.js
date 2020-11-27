@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import axios from "axios";
+import axios from "@features/service/Axios";
 import Card from "@components/Lists/Card/Card";
 import i18next from "@i18n";
 import AppContext from "@features/context/AppContext";
@@ -24,10 +24,10 @@ const Members = ({ groupId, role: permission, setNumberOfMembers }) => {
     const { id, refId } = removeMember;
     if (id) {
       axios
-        .post("/group/user/delete", { subId: id, groupId })
+        .post("/group/user/delete", { subId: refId, groupId })
         .then(() => {
           const newArrayOfMembers = members.filter(
-            (member) => member.userId != refId
+            (member) => member.userId != id
           );
           setMembers(newArrayOfMembers);
           setNumberOfMembers((prev) => prev - 1);
@@ -42,7 +42,7 @@ const Members = ({ groupId, role: permission, setNumberOfMembers }) => {
     if (id)
       axios
         .post("/group/member/relation/change", {
-          subId: id,
+          userId: id,
           groupId,
           relation: name,
         })
@@ -65,8 +65,8 @@ const Members = ({ groupId, role: permission, setNumberOfMembers }) => {
         const data = {
           cardInfo: {
             refType: "profile",
-            id: subId,
-            refId: userId,
+            id: userId,
+            refId: subId,
             photo,
             deleteText,
             radiusPhoto: false,

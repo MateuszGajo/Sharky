@@ -3,8 +3,6 @@ import { BsThreeDots } from "react-icons/bs";
 import OwnerMenu from "./components/OwnerMenu/OwnerMenu";
 import UserMenu from "./components/UserMenu/UserMenu";
 import i18next from "@i18n";
-
-import WizzardContext from "../../../../context/WizzardContext";
 import AppContext from "@features/context/AppContext";
 
 const { useTranslation } = i18next;
@@ -16,6 +14,7 @@ const Menu = ({
   comment,
   replies,
   setReplies,
+  setNumberOfReplies,
 }) => {
   const { t } = useTranslation(["component"]);
 
@@ -81,6 +80,7 @@ const Menu = ({
             comment={comment}
             replies={replies}
             setReplies={setReplies}
+            setNumberOfReplies={setNumberOfReplies}
           />
         ) : (
           <UserMenu

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import Router from "next/router";
-import axios from "axios";
+import axios from "@features/service/Axios";
 import { uuid } from "uuidv4";
 import InfiniteScroll from "react-infinite-scroll-component";
 import HomeLayout from "@components/Layout/Home/HomeLayout";

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "@features/service/Axios";
 
 export const getMesseges = ({
   userId,
