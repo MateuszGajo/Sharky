@@ -28,7 +28,7 @@ const News = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setNewPost({ content, file });
+    setNewPost({ content, setContent, file, setFile });
   };
   useEffect(() => {
     isAuth &&
@@ -51,7 +51,7 @@ const News = () => {
       <PopUpHandlers />
       <section className="news">
         {permission ? (
-          <form class="news__form" onSubmit={handleSubmit}>
+          <form className="news__form" onSubmit={handleSubmit}>
             <MessageBox
               btnSize="small"
               value={content}
