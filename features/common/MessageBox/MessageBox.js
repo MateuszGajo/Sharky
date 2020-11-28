@@ -18,7 +18,7 @@ const MessageBox = ({
 }) => {
   const { t } = useTranslation(["common"]);
 
-  const { setError } = useContext(AppContext);
+  const { setError, owner } = useContext(AppContext);
 
   const title = t("common:message-box.title");
   const description = t("common:message-box.description");
@@ -64,7 +64,6 @@ const MessageBox = ({
           {file ? (
             <div className="message-box__downbar____upload__photo">
               <img
-                src="/static/images/profile.png"
                 alt=""
                 className={cx("message-box__downbar__upload__photo", {
                   "message-box__downbar__upload__photo--small":

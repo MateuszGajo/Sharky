@@ -94,6 +94,7 @@ const Post = () => {
             userShare={null}
             focusElement={focusElement}
             single={true}
+            forward={false}
           />
         ))}
       </section>

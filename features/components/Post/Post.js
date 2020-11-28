@@ -6,7 +6,6 @@ import Navbar from "./components/Navbar/Navbar";
 import Content from "./components/Content/Content";
 import Comment from "./components/Comments/CommentsContainer";
 import SecondaryInput from "@common/SecondaryInput/SecondaryInput";
-import Report from "@common/PopUp/Report/Report";
 import withPost from "./withPost";
 import PostContext from "./context/PostContext";
 import WizzardContext from "./context/WizzardContext";
@@ -15,7 +14,7 @@ import i18next from "@i18n";
 import { addComent, getComments } from "./services/Functions";
 const { useTranslation } = i18next;
 
-const Post = ({ post, focusElement }) => {
+const Post = ({ post, focusElement, forward }) => {
   const { t } = useTranslation(["component"]);
   const loadMoreComments = t("component:post.comments.load-more-comments");
   const loadComments = t("component:post.comments.load-comments");
@@ -85,7 +84,7 @@ const Post = ({ post, focusElement }) => {
       })}
     >
       <Navbar focusCollapse={focusElement} focusIcon={focusIcon} />
-      <Content />
+      <Content forward={forward} />
       <div className="post__item__downbar">
         <DownBarButtons />
       </div>
@@ -96,6 +95,7 @@ const Post = ({ post, focusElement }) => {
               size={"medium"}
               value={commentText}
               onChange={setCommentText}
+              photo={owner.photo}
             />
           </form>
         </div>

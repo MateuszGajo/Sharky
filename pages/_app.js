@@ -29,6 +29,11 @@ const MyApp = ({ Component, pageProps }) => {
   const [authError, setAuthError] = useState("");
   const [authUserError, setAuthUserError] = useState("");
   const [confirmPopUpError, setConfirmPopUpError] = useState("");
+  const [photoPopUp, setPhotoPopUp] = useState({
+    photoSrc: null,
+    postId: null,
+    forward: false,
+  });
   const [validationSignUpError, setValidationSignUpError] = useState("");
   const [socket, setSocket] = useState(null);
 
@@ -90,6 +95,8 @@ const MyApp = ({ Component, pageProps }) => {
         newChat,
         setNewChat,
         authError,
+        photoPopUp,
+        setPhotoPopUp,
         setAuthError,
         authUserError,
         setAuthUserError,

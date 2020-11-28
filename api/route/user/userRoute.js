@@ -424,7 +424,18 @@ router.get("/logout", async (req, res) => {
 router.get("/me", async (req, res) => {
   const user = await decodeToken(req.cookies.token, res);
   if (user.error) return res.status(401).json(user.error);
-  return res.status(200).json({ user });
+
+  const getOwnerQuery = fs
+    .readFileSync(path.join(__dirname, "./query/get/owner.sql"))
+    .toString();
+
+  try {
+    const { rows: data } = await client.query(getOwnerQuery, [user.id]);
+
+    res.status(200).json({ user: data[0] });
+  } catch {
+    res.status(400).json("bad-request");
+  }
 });
 
 router.post("/check/password", async (req, res) => {
@@ -446,23 +457,6 @@ router.post("/check/password", async (req, res) => {
 
       res.status(401).json("bad-password");
     });
-  } catch {
-    res.status(400).json("bad-request");
-  }
-});
-
-router.get("/me/info", async (req, res) => {
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
-  if (error) return res.status(401).json(error);
-
-  const getUserSettingsQuery = fs
-    .readFileSync(path.join(__dirname, "./query/get/userSettings.sql"))
-    .toString();
-
-  try {
-    const { rows } = await client.query(getUserSettingsQuery, [ownerId]);
-
-    res.status(200).json({ ...rows[0] });
   } catch {
     res.status(400).json("bad-request");
   }

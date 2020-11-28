@@ -8,6 +8,7 @@ export const getOwner = ({ setStatusOfAuth, setOwner }) => {
   axios
     .get("/user/me")
     .then(({ data: { user } }) => {
+      console.log(user);
       setOwner(user);
       setStatusOfAuth(true);
     })

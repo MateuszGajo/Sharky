@@ -43,7 +43,7 @@ SecondaryInput.propTypes = {
   photo: PropTypes.string,
   size: PropTypes.string,
   value: PropTypes.string,
-  onChange: PropTypes.func
-}
+  onChange: PropTypes.func,
+};
 
 export default SecondaryInput;

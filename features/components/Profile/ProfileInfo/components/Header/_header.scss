@@ -19,8 +19,8 @@
 
 .profile__container__person__photo__container__img {
   display: block;
-  width: 300px;
-  height: 350px;
+  max-width: 100%;
+  max-height: 350px;
   object-fit: cover;
 }
 

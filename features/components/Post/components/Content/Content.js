@@ -6,10 +6,10 @@ import PostContext from "../../context/PostContext";
 import WizzardContext from "../../context/WizzardContext";
 import AppContext from "@features/context/AppContext";
 
-const Content = () => {
+const Content = ({ forward }) => {
   const textareaRef = useRef(null);
 
-  const { setError } = useContext(AppContext);
+  const { setError, setPhotoPopUp } = useContext(AppContext);
   const { post, isEdit, setStatusOfEdit } = useContext(PostContext);
   const { newContent, setNewContent } = useContext(WizzardContext);
 
@@ -78,7 +78,11 @@ const Content = () => {
           className="post__item__photo"
           data-testid="post-photo"
           onClick={() => {
-            Router.push(`/post/${post.postId}`);
+            setPhotoPopUp({
+              photoSrc: post.photo,
+              postId: post.postId,
+              forward,
+            });
           }}
         >
           <img

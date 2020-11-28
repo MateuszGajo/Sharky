@@ -130,7 +130,6 @@ const Header = ({ info, setNumberOfPhotos, userId }) => {
         );
     }
   };
-  console.log(buttonName);
   return (
     <div className="profile__container__person">
       <div className="profile__container__person__name">
