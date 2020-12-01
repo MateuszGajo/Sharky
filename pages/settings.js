@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import Router from "next/router";
 import { useMediaQuery } from "react-responsive";
-import NavBar from "@components/Layout/Home/Compound/components/NavBar/NavBar";
+import NavBar from "@components/Layout/Home/Compound/components/Navbar/Navbar";
 import ConfirmUser from "@common/PopUp/ConfirmUser/ConfirmUser";
 import Items from "@components/Settings/Items/Items";
 import Display from "@components/Settings/Display/Display";
