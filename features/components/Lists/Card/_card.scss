@@ -1,136 +1,130 @@
+.card:nth-child(even) .card__item {
+  margin-right: calc((100% - 400px) * 2 / 3);
+  margin-left: calc((100% - 400px) * 1 / 3);
+}
 
-  .card:nth-child(even) .card__item{
-    margin-right:calc((100% - 400px)*2/3);
-    margin-left:calc((100% - 400px)*1/3)
+.card:nth-child(odd) .card__item {
+  margin-right: calc((100% - 400px) * 1 / 3);
+  margin-left: calc((100% - 400px) * 2 / 3);
+}
+
+.card__item {
+  display: flex;
+  height: 100px;
+  width: 400px;
+  margin: 0.5vw auto 0;
+  font-size: 0.85rem;
+  border: 1px solid $secondaryBackgroundColor;
+}
+
+.card__item__photo {
+  cursor: pointer;
+}
+
+.card__item__photo__img {
+  display: block;
+  height: 100%;
+  width: 100px;
+  object-fit: cover;
+}
+
+.card__item__photo__img--radius {
+  border-radius: 5px;
+}
+
+.card__item__info {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.card__item__info__second-column {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card__item__info__second-column__buttons {
+  display: flex;
+  height: 100%;
+}
+
+.card__item__info__second-column__text {
+  display: flex;
+  align-items: center;
+  font-size: 1.2rem;
+  margin-right: $smallMargin;
+}
+
+.image-radius {
+  border-radius: 5px;
+}
+
+@media (max-width: 1365px) {
+  .card:nth-child(even) .card__item {
+    margin-right: calc((100% - 300px) * 2 / 3);
+    margin-left: calc((100% - 300px) * 1 / 3);
   }
 
-  .card:nth-child(odd) .card__item{
-    margin-right:calc((100% - 400px)*1/3);
-    margin-left:calc((100% - 400px)*2/3)
+  .card:nth-child(odd) .card__item {
+    margin-right: calc((100% - 300px) * 1 / 3);
+    margin-left: calc((100% - 300px) * 2 / 3);
   }
-  
+
   .card__item {
-    display: flex;
-    height:100px;
-    width:400px;
-    margin:0.5vw auto 0;
-    font-size: 0.85rem;
-    border: 1px solid $secondaryBackgroundColor;
+    height: 70px;
+    width: 300px;
   }
-  
-  .card__item__photo {
-    cursor: pointer;
-  }
-  
   .card__item__photo__img {
-    display: block;
-    height: 100%;
-    width:100px;
-    object-fit: cover;
+    width: 70px;
   }
 
-  .card__item__photo__img--radius{
-    border-radius:5px;
+  .image-radius {
+    border-radius: 4px;
   }
-  
-  .card__item__info {
-    display: flex;
-    justify-content: space-between;
+}
+
+@media (max-width: 1023px) and(orientation:portrait) {
+  .card {
     width: 100%;
   }
-
-  .card__item__info__second-column {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .card__item__info__second-column__buttons{
-    display:flex;
-    height:100%;
+  .card:nth-child(even) .card__item {
+    margin: 0 auto;
   }
 
-  .card__item__info__second-column__buttons--yourself{
-    display:flex;
-    align-items: center;
-    font-size: 1.2rem;
-    margin-right:$smallMargin;
-    // font-weight: bold;
-  }
-  
-  .image-radius{
-    border-radius:5px;
-  }
-  
-  @media(max-width:1365px){
-    .card:nth-child(even) .card__item{
-      margin-right:calc((100% - 300px)*2/3);
-      margin-left:calc((100% - 300px)*1/3)
-    }
-  
-    .card:nth-child(odd) .card__item{
-      margin-right:calc((100% - 300px)*1/3);
-      margin-left:calc((100% - 300px)*2/3)
-    }
-    
-    .card__item {
-      height:70px;
-      width:300px;
-    }
-    .card__item__photo__img {
-      width:70px;
-    }
-
-  .image-radius{
-    border-radius:4px;
+  .card:nth-child(odd) .card__item {
+    margin: 0 auto;
   }
 }
 
-@media(max-width:1023px) and(orientation:portrait){
-
-  .card{
-    width:100%;
-    
+@media (max-width: 767px) and (orientation: landscape) {
+  .card {
+    width: 100%;
+    margin-bottom: 10px;
   }
-  .card:nth-child(even) .card__item{
-    margin:0 auto;
-  }
-
-  .card:nth-child(odd) .card__item{
-    margin:0 auto;
-  }
-}
-
-@media (max-width : 767px) and (orientation:landscape){
-  .card{
-    width:100%;
-    margin-bottom:10px;
-  }
-  .card:nth-child(even) .card__item{
-    margin:0 auto;
+  .card:nth-child(even) .card__item {
+    margin: 0 auto;
   }
 
-  .card:nth-child(odd) .card__item{
-    margin:0 auto;
+  .card:nth-child(odd) .card__item {
+    margin: 0 auto;
   }
-  
+
   .card__item {
-    height:120px;
-    width:550px;
+    height: 120px;
+    width: 550px;
   }
   .card__item__photo__img {
-    width:120px;
+    width: 120px;
   }
-
 }
 
-@media  (max-width : 639px)  and (orientation:landscape){
+@media (max-width: 639px) and (orientation: landscape) {
   .card__item {
-    height:100px;
-    width:450px;
+    height: 100px;
+    width: 450px;
   }
   .card__item__photo__img {
-    width:90px;
+    width: 90px;
   }
-
 }

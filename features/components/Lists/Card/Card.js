@@ -5,10 +5,18 @@ import Button from "./components/Button/Button";
 import Description from "./components/Description/Description";
 import withCard from "./withCard";
 import CardContext from "./context/CardContext";
+import { text } from "body-parser";
 
 const Card = () => {
   const { cardInfo } = useContext(CardContext);
-  const { radiusPhoto, refType, id, photo, NotButton } = cardInfo;
+  const {
+    radiusPhoto,
+    refType,
+    id,
+    photo,
+    noButton,
+    textInsteadButton,
+  } = cardInfo;
   const router = useRouter();
 
   return (
@@ -28,13 +36,17 @@ const Card = () => {
           <Description />
 
           <div className="card__item__info__second-column">
-            {!NotButton ? (
+            {!noButton ? (
               <div
                 className="card__item__info__second-column__buttons"
                 data-testid="card-buttons"
               >
                 <Button />
               </div>
+            ) : textInsteadButton ? (
+              <p className="card__item__info__second-column__text">
+                ({textInsteadButton})
+              </p>
             ) : null}
           </div>
         </div>

@@ -3,10 +3,12 @@
   border-radius: 3px;
   cursor: pointer;
 }
+
 .join-leave-button__button--small {
   padding: 5px 10px;
   font-size: 1.1rem;
 }
+
 .join-leave-button__button--medium {
   padding: 7px 14px;
   font-size: 1.2rem;
@@ -15,4 +17,21 @@
 .join-leave-button__button--large {
   padding: 9px 18px;
   font-size: 1.3rem;
+}
+
+@media (max-width: 1365px) {
+  .join-leave-button__button--small {
+    padding: 4px 8px;
+    font-size: 0.95rem;
+  }
+
+  .join-leave-button__button--medium {
+    padding: 6px 12px;
+    font-size: 1.1rem;
+  }
+
+  .join-leave-button__button--large {
+    padding: 8px 16px;
+    font-size: 1.2rem;
+  }
 }

@@ -21,21 +21,23 @@ const Conversations = ({ items, setChat, chat, setStatusOfDisplayMobile }) => {
 };
 
 Conversations.propTypes = {
-  items: PropTypes.shape({
-    userId: PropTypes.number,
-    chatId: PropTypes.number,
-    messageTo: PropTypes.number,
-    firstName: PropTypes.string,
-    lastName: PropTypes.string,
-    photo: PropTypes.string,
-    message: PropTypes.string,
-  }),
+  items: PropTypes.arrayOf(
+    PropTypes.shape({
+      userId: PropTypes.number,
+      chatId: PropTypes.number,
+      messageTo: PropTypes.number,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      photo: PropTypes.string,
+      message: PropTypes.string,
+    })
+  ),
   setChat: PropTypes.func,
   chat: PropTypes.shape({
     user: PropTypes.shape({
       id: PropTypes.number,
-      firstName: PropTypes.number,
-      lastName: PropTypes.number,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
       photo: PropTypes.string,
     }),
     chatId: PropTypes.number,

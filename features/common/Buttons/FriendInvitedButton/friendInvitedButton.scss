@@ -11,6 +11,7 @@
 .friend-invited-button--border--medium {
   padding: 7px 14px;
 }
+
 .friend-invited-button--border--large {
   padding: 9px 18px;
 }
@@ -44,4 +45,30 @@
 }
 .friend-invited-button__text--large {
   font-size: 1.8rem;
+}
+
+@media (max-width: 1365px) {
+  .friend-invited-button--border--small {
+    padding: 4px 8px;
+  }
+
+  .friend-invited-button--border--medium {
+    padding: 6px 12px;
+  }
+
+  .friend-invited-button--border--large {
+    padding: 8px 16px;
+  }
+
+  .friend-invited-button__text--small {
+    font-size: 0.9rem;
+  }
+
+  .friend-invited-button__icon--medium {
+    font-size: 1.35rem;
+  }
+
+  .friend-invited-button__icon--large {
+    font-size: 1.8rem;
+  }
 }

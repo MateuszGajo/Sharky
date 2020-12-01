@@ -49,7 +49,7 @@ const withCard = (Component) => {
         name: PropTypes.string.isRequired,
         description: PropTypes.string,
         number: PropTypes.number,
-        isNotButton: PropTypes.bool,
+        noButton: PropTypes.bool,
       }),
       userStatus: PropTypes.shape({
         isInvited: PropTypes.bool,

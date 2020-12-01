@@ -21,10 +21,12 @@
   font-size: 1rem;
   padding: 5px 10px;
 }
+
 .friend-invitation-buttons__handle--medium {
   font-size: 1.5rem;
   padding: 6px 12px;
 }
+
 .friend-invitation-buttons__handle--large {
   font-size: 2rem;
   padding: 7px 14px;
@@ -32,4 +34,25 @@
 
 .friend-invitation-buttons__accept {
   margin-right: 15px;
+}
+
+@media (max-width: 1365px) {
+  .friend-invitation-buttons__handle--small {
+    font-size: 0.9rem;
+    padding: 4px 8px;
+  }
+
+  .friend-invitation-buttons__handle--medium {
+    font-size: 1.35rem;
+    padding: 5px 10px;
+  }
+
+  .friend-invitation-buttons__handle--large {
+    font-size: 1.8rem;
+    padding: 6px 12px;
+  }
+
+  .friend-invitation-buttons__accept {
+    margin-right: 5px;
+  }
 }

@@ -7,7 +7,6 @@ import { AiOutlineSearch } from "react-icons/ai";
 import Spinner from "@components/Spinner/Spinner";
 import AppContext from "@features/context/AppContext";
 import i18n from "@i18n";
-import { uuid } from "uuidv4";
 const { useTranslation } = i18n;
 
 const People = ({
@@ -23,14 +22,10 @@ const People = ({
   const friendName = t("component:lists.people.friend");
   const familyName = t("component:lists.people.family");
   const palName = t("component:lists.people.pal");
-  const addText = t("component:lists.people.add");
   const deleteText = t("component:lists.people.delete");
-  const acceptInvite = t("component:lists.people.accept");
-  const declineInvite = t("component:lists.people.decline");
-  const inviteSent = t("component:lists.people.sent");
   const emptyContent = t("component:lists.people.empty-content");
   const noResult = t("component:lists.people.no-result");
-
+  const yourself = t("component:lists.people.yourself");
   const { setError, setPrompt, owner, socket } = useContext(AppContext);
 
   const [relation, setRelation] = useState({ id: null, name: "" });
@@ -121,14 +116,6 @@ const People = ({
             isInvitationSent,
           } = friend;
 
-          const title = isInvited
-            ? acceptInvite
-            : isInvitationSent
-            ? inviteSent
-            : !relation
-            ? addText
-            : t(`component:lists.people.${relation}`);
-
           const data = {
             cardInfo: {
               id,
@@ -139,6 +126,8 @@ const People = ({
               description: description,
               number: numberOfFriends,
               radiusPhoto: false,
+              noButton: id === owner.id,
+              textInsteadButton: yourself,
             },
             userStatus: {
               isInvited,
@@ -171,7 +160,6 @@ const People = ({
               data={data}
               key={id}
               setRelation={setRelation}
-              // handleClick={setFriend}
               handleCollapseClick={setRemoveFriend}
               setDeclineInvitation={keyWords ? setDeclineInvitation : null}
             />

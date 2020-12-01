@@ -63,15 +63,15 @@ socketIO.sockets.on("connection", (socket) => {
     .readFileSync(path.join(__dirname, "./utils/query/add/unreadMessage.sql"))
     .toString();
 
-  socket.on("connectUser", () => {
-    const { id: ownerId } = decodeToken(
+  socket.on("connectUser", async () => {
+    const { id: ownerId } = await decodeToken(
       cookie.parse(socket.handshake.headers.cookie).token
     );
     if (ownerId) userJoin(ownerId, socket.id);
   });
 
   socket.on("sendChatMessage", async ({ userId, message }) => {
-    const { id: ownerId } = decodeToken(
+    const { id: ownerId } = await decodeToken(
       cookie.parse(socket.handshake.headers.cookie).token
     );
 
@@ -103,8 +103,8 @@ socketIO.sockets.on("connection", (socket) => {
     }
   });
 
-  socket.on("isMessageUnRead", ({ userId }) => {
-    const { id: ownerId } = decodeToken(
+  socket.on("isMessageUnRead", async ({ userId }) => {
+    const { id: ownerId } = await decodeToken(
       cookie.parse(socket.handshake.headers.cookie).token
     );
     if (ownerId) client.query(addUnreadMessageQuery, [ownerId, userId]);
@@ -154,7 +154,7 @@ socketIO.sockets.on("connection", (socket) => {
   });
 
   socket.on("changePassword", async ({ value, password }) => {
-    const { id: ownerId } = decodeToken(
+    const { id: ownerId } = await decodeToken(
       cookie.parse(socket.handshake.headers.cookie).token
     );
     if (!ownerId) return;
@@ -194,7 +194,7 @@ socketIO.sockets.on("connection", (socket) => {
   });
 
   socket.on("joinChat", async () => {
-    const { id: ownerId } = decodeToken(
+    const { id: ownerId } = await decodeToken(
       cookie.parse(socket.handshake.headers.cookie).token
     );
 
@@ -211,8 +211,8 @@ socketIO.sockets.on("connection", (socket) => {
     }
   });
 
-  socket.on("singleDisconnect", () => {
-    const { id: ownerId } = decodeToken(
+  socket.on("singleDisconnect", async () => {
+    const { id: ownerId } = await decodeToken(
       cookie.parse(socket.handshake.headers.cookie).token
     );
     if (ownerId) {
@@ -221,7 +221,7 @@ socketIO.sockets.on("connection", (socket) => {
   });
 
   socket.on("disconnect", async () => {
-    const { id: ownerId } = decodeToken(
+    const { id: ownerId } = await decodeToken(
       cookie.parse(socket.handshake.headers.cookie).token
     );
     if (ownerId) {
