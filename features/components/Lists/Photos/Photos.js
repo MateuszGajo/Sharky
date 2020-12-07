@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import axios from "@features/service/Axios";
+import axios from "~features/service/Axios";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 const Photos = ({ userId }) => {

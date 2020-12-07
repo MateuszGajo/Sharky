@@ -3,11 +3,12 @@ import PropTypes from "prop-types";
 import Router from "next/router";
 import { BsThreeDots } from "react-icons/bs";
 import { IoMdShareAlt } from "react-icons/io";
+import i18next from "~i18n";
 import UserSettings from "./components/UserSettings/UserSettings";
 import OwnerSettings from "./components/OwnerSettings/OwnerSettings";
 import PostContext from "../../context/PostContext";
-import AppContext from "@features/context/AppContext";
-import i18next from "@i18n";
+import AppContext from "~features/context/AppContext";
+
 const { useTranslation } = i18next;
 
 const NavBar = ({ focusCollapse, focusIcon }) => {
@@ -71,6 +72,7 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
           onClick={() => {
             Router.push(`/profile/${secondaryUser.id}`);
           }}
+          aria-hidden="true"
         >
           <div className="post__item__navbar__user__photo">
             <img
@@ -97,6 +99,7 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
         onClick={() => {
           Router.push(`/profile/${user.id}`);
         }}
+        aria-hidden="true"
       >
         <div className="post__item__navbar__user__photo">
           <img
@@ -120,7 +123,7 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
             className="post__item__navbar__column-end__data__span"
             data-testid="post-date"
           >
-            {da} {mo} {ye}
+            {da + " " + mo + " " + ye}
           </span>
         </div>
         <div
@@ -128,6 +131,7 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
           data-testid="post-setting-icon"
           ref={settingRef}
           onClick={(e) => e.stopPropagation()}
+          aria-hidden="true"
         >
           <div className="post__item__navbar__column-end__setting__icon">
             <BsThreeDots />
@@ -148,6 +152,11 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
   );
 };
 const element = typeof Element === "undefined" ? function () {} : Element;
+
+NavBar.defaultProps = {
+  focusCollapse: null,
+  focusIcon: null,
+};
 
 NavBar.propTypes = {
   focusCollapse: PropTypes.oneOfType([

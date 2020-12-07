@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import axios from "@features/service/Axios";
-import i18next from "@i18n";
+import axios from "~features/service/Axios";
+import i18next from "~i18n";
 
 const { useTranslation } = i18next;
 

@@ -1,19 +1,19 @@
 import React, { useState, useContext, useEffect } from "react";
 import Router from "next/router";
 import { useMediaQuery } from "react-responsive";
-import NavBar from "@components/Layout/Home/Compound/components/Navbar/Navbar";
-import ConfirmUser from "@common/PopUp/ConfirmUser/ConfirmUser";
-import Items from "@components/Settings/Items/Items";
-import Display from "@components/Settings/Display/Display";
-import Spinner from "@components/Spinner/Spinner";
-import PopUpHandlers from "@components/PopUpHandlers/PopUpHandlers";
-import AppContext from "@features/context/AppContext";
-import { getOwner } from "@features/service/Functions/index";
-import withSettings from "@components/Settings/withSettings";
-import SettingsContext from "@components/Settings/context/SettingsContext";
-import { changeValueWithConfirmPassword } from "@components/Settings/Display/services/functions";
-import i18next from "@i18n";
-import "@styles/settings.scss";
+import NavBar from "~components/Layout/Home/Compound/components/Navbar/Navbar";
+import ConfirmUser from "~common/PopUp/ConfirmUser/ConfirmUser";
+import Items from "~components/Settings/Items/Items";
+import Display from "~components/Settings/Display/Display";
+import Spinner from "~components/Spinner/Spinner";
+import PopUpHandlers from "~components/PopUpHandlers/PopUpHandlers";
+import AppContext from "~features/context/AppContext";
+import { getOwner } from "~features/service/Functions/index";
+import withSettings from "~components/Settings/withSettings";
+import SettingsContext from "~components/Settings/context/SettingsContext";
+import { changeValueWithConfirmPassword } from "~components/Settings/Display/services/functions";
+import i18next from "~i18n";
+import "~styles/settings.scss";
 
 const { useTranslation } = i18next;
 
@@ -38,8 +38,8 @@ const Settings = () => {
     getOwner({ setStatusOfAuth, setOwner });
   }, []);
 
-  if (isAuth == null) return <Spinner />;
-  else if (!isAuth) {
+  if (isAuth === null) return <Spinner />;
+  if (!isAuth) {
     Router.push("/signin");
     return <Spinner />;
   }

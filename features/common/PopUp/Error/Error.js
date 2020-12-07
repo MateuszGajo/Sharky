@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import PropTypes from "prop-types";
 import { MdErrorOutline } from "react-icons/md";
-import AppContext from "@features/context/AppContext";
-import i18next from "@i18n";
+import AppContext from "~features/context/AppContext";
+import i18next from "~i18n";
 import { useEffect } from "react";
 const { useTranslation } = i18next;
 
@@ -37,7 +37,7 @@ const Error = ({ message }) => {
 };
 
 Error.propTypes = {
-  message: PropTypes.string
-}
+  message: PropTypes.string,
+};
 
 export default Error;

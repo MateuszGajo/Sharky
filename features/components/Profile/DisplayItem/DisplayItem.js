@@ -2,13 +2,13 @@ import React from "react";
 import PropTypes from "prop-types";
 import { IoMdArrowBack } from "react-icons/io";
 import cx from "classnames";
-import Fanpages from "@components/Lists/Fanpages/Fanpages";
-import People from "@components/Lists/People/People";
-import Groups from "@components/Lists/Groups/Groups";
-import Photos from "@components/Lists/Photos/Photos";
-import Posts from "@components/Lists/Posts/Posts";
+import Fanpages from "~components/Lists/Fanpages/Fanpages";
+import People from "~components/Lists/People/People";
+import Groups from "~components/Lists/Groups/Groups";
+import Photos from "~components/Lists/Photos/Photos";
+import Posts from "~components/Lists/Posts/Posts";
 import About from "../About/About";
-import i18next from "@i18n";
+import i18next from "~i18n";
 const { useTranslation } = i18next;
 
 const DisplayItem = ({ setChooseItem, chooseItem, info, userId }) => {

@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const { client } = require("../../../config/pgAdaptor");
 const decodeToken = require("../decodeToken");
+
 const router = express.Router();
 
 router.post("/get", async (req, res) => {
@@ -11,17 +12,19 @@ router.post("/get", async (req, res) => {
     !/^[\d]*$/.test(targetId) ||
     !/^[\d]*$/.test(from) ||
     typeof type !== "string"
-  )
+  ) {
     return res.status(400).json("invalid-data");
+  }
 
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   let { keyWords } = req.body;
   if (keyWords) {
     keyWords = keyWords.split(/\s+/);
-    if (keyWords.length > 2)
+    if (keyWords.length > 2) {
       return res.status(200).json({ friends: [], isMore: false });
+    }
   }
 
   const getFriendsQuery = fs
@@ -33,20 +36,22 @@ router.post("/get", async (req, res) => {
   let result;
   if (!keyWords) {
     try {
-      if (type == "group")
+      if (type === "group") {
         result = await client.query(getFriendsQuery, [ownerId, targetId, from]);
+      }
     } catch {
       return res.status(400).json("bad-request");
     }
   } else {
     try {
-      if (type == "group")
+      if (type === "group") {
         result = await client.query(getPeopleQuery, [
-          keyWords[0] + "%",
-          (keyWords[1] ? keyWords[1] : "") + "%",
+          `${keyWords[0]}%`,
+          `${keyWords[1] ? keyWords[1] : ""}%`,
           targetId,
           from,
         ]);
+      }
     } catch {
       return res.status(400).json("bad-request");
     }
@@ -61,7 +66,7 @@ router.post("/get", async (req, res) => {
     friends = friends.slice(0, -1);
   }
 
-  res.status(200).json({ friends, isMore });
+  return res.status(200).json({ friends, isMore });
 });
 
 module.exports = router;

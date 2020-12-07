@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import cx from "classnames";
 import { IoIosArrowDown } from "react-icons/io";
-import i18next from "@i18n";
+import i18next from "~i18n";
 import SettingsContext from "../context/SettingsContext";
 const { useTranslation } = i18next;
 

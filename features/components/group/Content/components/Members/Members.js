@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useContext } from "react";
-import axios from "@features/service/Axios";
-import Card from "@components/Lists/Card/Card";
-import i18next from "@i18n";
-import AppContext from "@features/context/AppContext";
+import axios from "~features/service/Axios";
+import Card from "~components/Lists/Card/Card";
+import i18next from "~i18n";
+import AppContext from "~features/context/AppContext";
 
 const { useTranslation } = i18next;
 

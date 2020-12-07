@@ -4,7 +4,7 @@ import { FiLock } from "react-icons/fi";
 import About from "./components/About/About";
 import Members from "./components/Members/Members";
 import Home from "./components/Home/Home";
-import i18next from "@i18n";
+import i18next from "~i18n";
 
 const { useTranslation } = i18next;
 

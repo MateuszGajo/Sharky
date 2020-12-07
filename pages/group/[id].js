@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useContext } from "react";
-import axios from "@features/service/Axios";
 import { useRouter } from "next/router";
-import Navbar from "@components/Layout/Home/Compound/components/Navbar/Navbar";
-import SideBar from "@components/group/SideBar/SideBar";
-import Content from "@components/group/Content/Content";
-import InvitePerson from "@common/PopUp/InvitePerson/InvitePerson";
-import Spinner from "@components/Spinner/Spinner";
-import i18next from "@i18n";
-import AppContext from "@features/context/AppContext";
-import { getOwner } from "@features/service/Functions/index";
-import PopUpHandlers from "@components/PopUpHandlers/PopUpHandlers";
-
+import axios from "~features/service/Axios";
+import Navbar from "~components/Layout/Home/Compound/components/Navbar/Navbar";
+import SideBar from "~components/group/SideBar/SideBar";
+import Content from "~components/group/Content/Content";
+import InvitePerson from "~common/PopUp/InvitePerson/InvitePerson";
+import Spinner from "~components/Spinner/Spinner";
+import i18next from "~i18n";
+import AppContext from "~features/context/AppContext";
+import { getOwner } from "~features/service/Functions/index";
+import PopUpHandlers from "~components/PopUpHandlers/PopUpHandlers";
 import "../../styles/group.scss";
+
 const { useTranslation } = i18next;
 
 const Group = () => {
@@ -39,8 +39,8 @@ const Group = () => {
   const getGroupInfo = () => {
     axios
       .post("/group/about", { groupId })
-      .then(({ data: { date, numberOfMembers } }) => {
-        setNumberOfMembers(numberOfMembers);
+      .then(({ data: { date, initialNumberOfMembers } }) => {
+        setNumberOfMembers(initialNumberOfMembers);
         setStartingDate(date);
       });
   };
@@ -50,29 +50,35 @@ const Group = () => {
       isAuth &&
       axios
         .post("/group/enter", { groupId })
-        .then(({ data: { id, memberId, name, role, photo } }) => {
-          if (!id) {
-            setStatusOfExistsGroup(false);
-            return setStatusOfLoading(false);
+        .then(
+          ({
+            data: { id, initialMemberId, name, initialRole, initialPhoto },
+          }) => {
+            if (!id) {
+              setStatusOfExistsGroup(false);
+              setStatusOfLoading(false);
+              return;
+            }
+            getGroupInfo();
+            setPhoto(initialPhoto);
+            setIdMember(initialMemberId);
+            initialMemberId && setRole(initialRole);
+            setGroupName(name);
+            setStatusOfLoading(false);
           }
-          getGroupInfo();
-          setPhoto(photo);
-          setIdMember(memberId);
-          memberId && setRole(role);
-          setGroupName(name);
-          setStatusOfLoading(false);
-        });
+        );
   }, [groupId, isAuth]);
 
   useEffect(() => {
     getOwner({ setStatusOfAuth, setOwner });
   }, []);
 
-  if (isAuth == null) return <Spinner />;
-  else if (!isAuth) {
+  if (isAuth === null) return <Spinner />;
+  if (!isAuth) {
     router.push("/signin");
     return <Spinner />;
-  } else if (isLoading) return <Spinner />;
+  }
+  if (isLoading) return <Spinner />;
 
   return (
     <section className="group">

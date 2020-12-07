@@ -6,7 +6,7 @@ import {
   deleteReply,
 } from "../../../../../../services/Functions";
 import PostContext from "../../../../../../context/PostContext";
-import AppContext from "@features/context/AppContext";
+import AppContext from "~features/context/AppContext";
 
 const OwnerMenu = ({
   deleteCommentText,

@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useContext } from "react";
 import { BsEnvelope } from "react-icons/bs";
-import axios from "@features/service/Axios";
+import axios from "~features/service/Axios";
 import { WizzardContext } from "../../../../context/WizzardContext";
-import AppContext from "@features/context/AppContext";
+import AppContext from "~features/context/AppContext";
 
 const Item = ({ user }) => {
   const { firstName, lastName, userId, photo, chatId } = user;

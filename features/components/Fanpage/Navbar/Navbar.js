@@ -1,13 +1,13 @@
 import React, { useContext, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
-import axios from "@features/service/Axios";
+import axios from "~features/service/Axios";
 import cx from "classnames";
 import { useRouter } from "next/router";
 import { AiOutlineCheck, AiOutlineDelete } from "react-icons/ai";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { MdPhotoCamera } from "react-icons/md";
-import i18next from "@i18n";
-import AppContext from "@features/context/AppContext";
+import i18next from "~i18n";
+import AppContext from "~features/context/AppContext";
 const { useTranslation } = i18next;
 
 const Navbar = ({ setIdSub, setSection, subId, role, fanpageId }) => {

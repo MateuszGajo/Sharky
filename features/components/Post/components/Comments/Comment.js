@@ -11,7 +11,7 @@ import {
   unlikeReply,
 } from "../../services/Functions";
 import WizzardContext from "../../context/WizzardContext";
-import AppContext from "@features/context/AppContext";
+import AppContext from "~features/context/AppContext";
 import Menu from "./components/Menu/Menu";
 
 const Commnet = ({

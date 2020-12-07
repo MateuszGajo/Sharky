@@ -1,10 +1,10 @@
 import React, { useState, useContext } from "react";
 import PropTypes from "prop-types";
-import AddFriendButton from "@common/Buttons/AddFriendButton/AddFriendButton";
-import FriendInvitedButton from "@common/Buttons/FriendInvitedButton/FriendInvitedButton";
-import FriendsInvitationButtons from "@common/Buttons/FriendsInvitationButtons/FriendsInvitationButtons";
-import RelationButtons from "@common/Buttons/RelationButtons/RelationButtons";
-import JoinLeaveButton from "@common/Buttons/JoinLeaveButton/JoinLeaveButton";
+import AddFriendButton from "~common/Buttons/AddFriendButton/AddFriendButton";
+import FriendInvitedButton from "~common/Buttons/FriendInvitedButton/FriendInvitedButton";
+import FriendsInvitationButtons from "~common/Buttons/FriendsInvitationButtons/FriendsInvitationButtons";
+import RelationButtons from "~common/Buttons/RelationButtons/RelationButtons";
+import JoinLeaveButton from "~common/Buttons/JoinLeaveButton/JoinLeaveButton";
 import CardContext from "../../context/CardContext";
 import getInitialButtonName from "./getInitialButtonName";
 

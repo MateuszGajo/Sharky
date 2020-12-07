@@ -7,7 +7,7 @@ import { sharePost, likePost, unlikePost } from "../../services/Functions";
 import Router from "next/router";
 import PostContext from "../../context/PostContext";
 import WizzardContext from "../../context/WizzardContext";
-import AppContext from "@features/context/AppContext";
+import AppContext from "~features/context/AppContext";
 
 const DownBarButtons = () => {
   const { setError } = useContext(AppContext);

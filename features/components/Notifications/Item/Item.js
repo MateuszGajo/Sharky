@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import PropTypes from "prop-types";
 import cx from "classnames";
-import axios from "@features/service/Axios";
+import axios from "~features/service/Axios";
 import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
 import { useRouter } from "next/router";
-import i18next from "@i18n";
-import AppContext from "@features/context/AppContext";
+import i18next from "~i18n";
+import AppContext from "~features/context/AppContext";
 const { useTranslation } = i18next;
 
 const Item = ({ item, setDeleteNotification }) => {

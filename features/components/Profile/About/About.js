@@ -1,5 +1,5 @@
 import React from "react";
-import i18next from "@i18n";
+import i18next from "~i18n";
 const { useTranslation } = i18next;
 
 const About = ({ info }) => {

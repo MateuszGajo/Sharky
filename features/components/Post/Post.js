@@ -5,12 +5,12 @@ import DownBarButtons from "./components/DownBarButtons/DownBarButtons";
 import Navbar from "./components/Navbar/Navbar";
 import Content from "./components/Content/Content";
 import Comment from "./components/Comments/CommentsContainer";
-import SecondaryInput from "@common/SecondaryInput/SecondaryInput";
+import SecondaryInput from "~common/SecondaryInput/SecondaryInput";
 import withPost from "./withPost";
 import PostContext from "./context/PostContext";
 import WizzardContext from "./context/WizzardContext";
-import AppContext from "@features/context/AppContext";
-import i18next from "@i18n";
+import AppContext from "~features/context/AppContext";
+import i18next from "~i18n";
 import { addComent, getComments } from "./services/Functions";
 const { useTranslation } = i18next;
 

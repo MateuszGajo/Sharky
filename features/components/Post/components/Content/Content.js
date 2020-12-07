@@ -4,7 +4,7 @@ import Router from "next/router";
 import { editPost } from "../../services/Functions";
 import PostContext from "../../context/PostContext";
 import WizzardContext from "../../context/WizzardContext";
-import AppContext from "@features/context/AppContext";
+import AppContext from "~features/context/AppContext";
 
 const Content = ({ forward }) => {
   const textareaRef = useRef(null);

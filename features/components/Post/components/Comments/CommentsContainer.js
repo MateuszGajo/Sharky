@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import Comment from "./Comment";
-import SecondaryInput from "@common/SecondaryInput/SecondaryInput";
-import i18next from "@i18n";
+import SecondaryInput from "~common/SecondaryInput/SecondaryInput";
+import i18next from "~i18n";
 import { getReplies, addReply } from "../../services/Functions";
 import WizzardContext from "../../context/WizzardContext";
-import AppContext from "@features/context/AppContext";
+import AppContext from "~features/context/AppContext";
 const { useTranslation } = i18next;
 
 const withContainer = (WrappedComponent) => {

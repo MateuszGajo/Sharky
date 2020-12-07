@@ -4,8 +4,8 @@ import { IoIosAddCircleOutline } from "react-icons/io";
 import { AiOutlineClose } from "react-icons/ai";
 import cx from "classnames";
 import PrimaryButton from "../PrimaryButton/PrimaryButton";
-import i18next from "@i18n";
-import AppContext from "@features/context/AppContext";
+import i18next from "~i18n";
+import AppContext from "~features/context/AppContext";
 const { useTranslation } = i18next;
 
 const MessageBox = ({

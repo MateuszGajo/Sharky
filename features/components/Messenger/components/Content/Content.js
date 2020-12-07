@@ -1,6 +1,6 @@
 import React, { useRef, useContext, useEffect } from "react";
 import PropTypes from "prop-types";
-import AppContext from "@features/context/AppContext";
+import AppContext from "~features/context/AppContext";
 
 const Content = ({ messages, user, scrollDown }) => {
   const { firstName, lastName, photo } = user;

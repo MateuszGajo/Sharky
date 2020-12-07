@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import cx from "classnames";
-import AppContext from "@features/context/AppContext";
+import AppContext from "~features/context/AppContext";
 
 const Item = ({
   userId,

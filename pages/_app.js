@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useReducer } from "react";
 import socketIOClient from "socket.io-client";
 import Router from "next/router";
-import axios from "@features/service/Axios";
-import AppContext from "@features/context/AppContext";
+import PropTypes from "prop-types";
+import axios from "~features/service/Axios";
+import AppContext from "~features/context/AppContext";
 import { SERVER_URL } from "../config/config";
-import AuthReducer from "@features/context/authReducer";
-import { authInitState } from "@features/context/initState";
-import { checkLanguage } from "@features/service/Functions";
+import AuthReducer from "~features/context/authReducer";
+import { authInitState } from "~features/context/initState";
+import { checkLanguage } from "~features/service/Functions";
 
 const MyApp = ({ Component, pageProps }) => {
   const [owner, setOwner] = useState({});
@@ -61,8 +62,8 @@ const MyApp = ({ Component, pageProps }) => {
         }
       );
 
-      socket.on("newChat", ({ newChat }) => {
-        setNewChat(newChat);
+      socket.on("newChat", ({ initialNewChat }) => {
+        setNewChat(initialNewChat);
       });
 
       socket.on("changePasswordError", ({ message }) => {
@@ -111,6 +112,16 @@ const MyApp = ({ Component, pageProps }) => {
       <Component {...pageProps} />
     </AppContext.Provider>
   );
+};
+
+MyApp.defaultProps = {
+  Component: () => {},
+  pageProps: {},
+};
+
+MyApp.propTypes = {
+  Component: PropTypes.func,
+  pageProps: PropTypes.objectOf(PropTypes.any),
 };
 
 export default MyApp;

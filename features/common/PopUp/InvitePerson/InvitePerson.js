@@ -2,13 +2,13 @@ import React, { useState, useRef, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import cx from "classnames";
 import { MdClose } from "react-icons/md";
-import axios from "@features/service/Axios";
+import axios from "~features/service/Axios";
 import InfiniteScroll from "react-infinite-scroll-component";
-import Search from "@common/Search/Search";
-import Card from "@components/Lists/Card/Card";
-import Spinner from "@components/Spinner/Spinner";
-import AppContext from "@features/context/AppContext";
-import i18next from "@i18n";
+import Search from "~common/Search/Search";
+import Card from "~components/Lists/Card/Card";
+import Spinner from "~components/Spinner/Spinner";
+import AppContext from "~features/context/AppContext";
+import i18next from "~i18n";
 const { useTranslation } = i18next;
 
 const InvitePerson = ({ isOpen = true, setStatusOfOpen, type, targetId }) => {

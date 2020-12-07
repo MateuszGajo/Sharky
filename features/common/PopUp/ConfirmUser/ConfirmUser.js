@@ -1,10 +1,10 @@
 import React, { useState, useContext } from "react";
 import PropTypes from "prop-types";
 import { IoMdClose } from "react-icons/io";
-import PrimaryInput from "@common/PrimaryInput/PrimaryInput";
-import PrimaryButton from "@common/PrimaryButton/PrimaryButton";
-import i18next from "@i18n";
-import AppContext from "@features/context/AppContext";
+import PrimaryInput from "~common/PrimaryInput/PrimaryInput";
+import PrimaryButton from "~common/PrimaryButton/PrimaryButton";
+import i18next from "~i18n";
+import AppContext from "~features/context/AppContext";
 
 const { useTranslation } = i18next;
 

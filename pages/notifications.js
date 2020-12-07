@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useContext } from "react";
 import Router from "next/router";
-import axios from "@features/service/Axios";
 import { uuid } from "uuidv4";
 import InfiniteScroll from "react-infinite-scroll-component";
-import HomeLayout from "@components/Layout/Home/HomeLayout";
-import Item from "@components/Notifications/Item/Item";
-import Spinner from "@components/Spinner/Spinner";
-import PopUpHandlers from "@components/PopUpHandlers/PopUpHandlers";
-import AppContext from "@features/context/AppContext";
-import { getOwner } from "@features/service/Functions/index";
-import "@styles/notifications.scss";
+import axios from "~features/service/Axios";
+import HomeLayout from "~components/Layout/Home/HomeLayout";
+import Item from "~components/Notifications/Item/Item";
+import Spinner from "~components/Spinner/Spinner";
+import PopUpHandlers from "~components/PopUpHandlers/PopUpHandlers";
+import AppContext from "~features/context/AppContext";
+import { getOwner } from "~features/service/Functions/index";
+import "~styles/notifications.scss";
 
-const notifications = () => {
+const Notifications = () => {
   const { setOwner } = useContext(AppContext);
 
   const [notifications, setNotifications] = useState([]);
@@ -27,18 +27,19 @@ const notifications = () => {
         ...prev,
         allNotification.slice(prev.length, allNotification.length),
       ]);
-    } else
+    } else {
       setNotifications((prev) => [
         ...prev,
         allNotification.slice(prev.length, prev.length + 20),
       ]);
+    }
   };
 
   useEffect(() => {
     const { id } = deleteNotification;
     if (id) {
       const newNotifications = notifications.filter(
-        (notification) => notification.id != id
+        (notification) => notification.id !== id
       );
       setNotifications(newNotifications);
     }
@@ -51,12 +52,12 @@ const notifications = () => {
         .then(({ data: { invitations, newRelations } }) => {
           const items = [...invitations, ...newRelations];
 
-          const notifications = items
+          const initialNotifications = items
             .sort((a, b) => new Date(b.date) - new Date(a.date))
             .map((item) => ({ ...item, id: uuid() }));
 
-          setAllNotifications(notifications);
-          setNotifications(notifications.slice(0, 20));
+          setAllNotifications(initialNotifications);
+          setNotifications(initialNotifications.slice(0, 20));
           if (items.length < 20) setStatusOfMore(false);
         });
   }, [isAuth]);
@@ -65,8 +66,8 @@ const notifications = () => {
     getOwner({ setStatusOfAuth, setOwner });
   }, []);
 
-  if (isAuth == null) return <Spinner />;
-  else if (!isAuth) {
+  if (isAuth === null) return <Spinner />;
+  if (!isAuth) {
     Router.push("/signin");
     return <Spinner />;
   }
@@ -79,18 +80,16 @@ const notifications = () => {
         hasMore={isMore}
         loader={<Spinner />}
       >
-        {notifications.map((item) => {
-          return (
-            <Item
-              item={item}
-              key={item.id}
-              setDeleteNotification={setDeleteNotification}
-            />
-          );
-        })}
+        {notifications.map((item) => (
+          <Item
+            item={item}
+            key={item.id}
+            setDeleteNotification={setDeleteNotification}
+          />
+        ))}
       </InfiniteScroll>
     </HomeLayout>
   );
 };
 
-export default notifications;
+export default Notifications;

@@ -2,15 +2,15 @@ import React, { useState, useEffect, useContext } from "react";
 import { FaGooglePlusG, FaFacebookF } from "react-icons/fa";
 import { FiTwitter } from "react-icons/fi";
 import Router from "next/router";
-import Authentication from "@components/Layout/Authentication/Authentication";
-import Checkbox from "@common/Checkbox/Checkbox";
-import PrimaryButton from "@common/PrimaryButton/PrimaryButton";
-import AuthInput from "@common/AuthInput/AuthInput";
-import Spinner from "@components/Spinner/Spinner";
-import AppContext from "@features/context/AppContext";
-import { signIn as sIn, getOwner } from "@features/service/Functions/index";
-import i18next from "@i18n";
-import PopUpHandlers from "@components/PopUpHandlers/PopUpHandlers";
+import Authentication from "~components/Layout/Authentication/Authentication";
+import Checkbox from "~common/Checkbox/Checkbox";
+import PrimaryButton from "~common/PrimaryButton/PrimaryButton";
+import AuthInput from "~common/AuthInput/AuthInput";
+import Spinner from "~components/Spinner/Spinner";
+import AppContext from "~features/context/AppContext";
+import { signIn as sIn, getOwner } from "~features/service/Functions/index";
+import i18next from "~i18n";
+import PopUpHandlers from "~components/PopUpHandlers/PopUpHandlers";
 import "../styles/signin.scss";
 
 const { useTranslation } = i18next;
@@ -53,8 +53,8 @@ const SignIn = () => {
     getOwner({ setStatusOfAuth, setOwner });
   }, []);
 
-  if (isAuth == null) return <Spinner />;
-  else if (isAuth) {
+  if (isAuth === null) return <Spinner />;
+  if (isAuth) {
     Router.push("/");
     return <Spinner />;
   }

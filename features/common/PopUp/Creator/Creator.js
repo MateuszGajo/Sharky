@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import axios from "@features/service/Axios";
+import axios from "~features/service/Axios";
 import Router from "next/router";
 import { RiCloseLine } from "react-icons/ri";
-import PrimaryInput from "@common/PrimaryInput/PrimaryInput";
-import PrimaryButton from "@common/PrimaryButton/PrimaryButton";
-import i18next from "@i18n";
+import PrimaryInput from "~common/PrimaryInput/PrimaryInput";
+import PrimaryButton from "~common/PrimaryButton/PrimaryButton";
+import i18next from "~i18n";
 
 const { useTranslation } = i18next;
 

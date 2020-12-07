@@ -4,40 +4,42 @@ const fs = require("fs");
 const path = require("path");
 const { client } = require("../../../config/pgAdaptor");
 const decodeToken = require("../decodeToken");
-const { ClientBase } = require("pg");
 
 const router = express.Router();
 
 router.post("/add", async (req, res) => {
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
+    destination: (fileReq, file, cb) => {
       cb(null, "./public/static/images");
     },
-    filename: (req, file, cb) => {
+    filename: (fileReq, file, cb) => {
       cb(null, Date.now() + file.originalname);
     },
   });
 
   const upload = multer({
     storage,
-    fileFilter: (req, file, cb) => {
+    fileFilter: (fileReq, file, cb) => {
       if (file.mimetype !== "image/jpeg" && file.mimetype !== "image/png") {
         return cb(new Error("wrong file type"));
       }
-      cb(null, true);
+      return cb(null, true);
     },
     limits: { fileSize: 200000 },
   }).single("file");
-  await upload(req, res, async (err) => {
+  const result = await upload(req, res, async (err) => {
     if (err) {
-      return err.message == "File too large"
-        ? res.status(413).json("file-too-large")
-        : err.message === "wrong file type"
-        ? res.status(415).json("wrong-file-type")
-        : res.status(400).json("bad-request");
+      switch (err.message) {
+        case "File too large":
+          return res.status(413).json("file-too-large");
+        case "wrong file type":
+          return res.status(415).json("wrong-file-type");
+        default:
+          return res.status(400).json("bad-request");
+      }
     }
 
     let fileName = null;
@@ -53,9 +55,9 @@ router.post("/add", async (req, res) => {
       !(groupId == null || /^[\d]*$/.test(groupId)) ||
       !(fanpageId == null || /^[\d]*$/.test(fanpageId)) ||
       typeof news !== "boolean"
-    )
+    ) {
       return res.status(400).json("invalid-data");
-
+    }
     const addGroupPostQuery = fs
       .readFileSync(path.join(__dirname, "./query/add/groupPost.sql"))
       .toString();
@@ -111,13 +113,14 @@ router.post("/add", async (req, res) => {
           date,
           fileName,
         ]);
-      } else
+      } else {
         newPost = await client.query(addPostQuery, [
           ownerId,
           content,
           date,
           fileName,
         ]);
+      }
 
       return res.status(200).json({
         postId: newPost.rows[0].id,
@@ -128,6 +131,7 @@ router.post("/add", async (req, res) => {
       return res.status(400).json("bad-request");
     }
   });
+  return result;
 });
 
 router.post("/get", async (req, res) => {
@@ -143,7 +147,7 @@ router.post("/get", async (req, res) => {
     return res.status(400).json("invalid-data");
   }
 
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const getFanpagePostsQuery = fs
@@ -167,16 +171,17 @@ router.post("/get", async (req, res) => {
   const getMemberQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/member.sql"))
     .toString();
-  let postsResult, commentsResult;
+  let postsResult;
+  let commentsResult;
 
   try {
-    if (fanpageId)
+    if (fanpageId) {
       postsResult = await client.query(getFanpagePostsQuery, [
         fanpageId,
         ownerId,
         from,
       ]);
-    else if (groupId) {
+    } else if (groupId) {
       const { rows } = await client.query(getMemberQuery, [ownerId, groupId]);
       if (!rows[0].id) return res.status(403).json("no-permission");
       postsResult = await client.query(getGroupPostsQuery, [
@@ -184,15 +189,15 @@ router.post("/get", async (req, res) => {
         ownerId,
         from,
       ]);
-    } else if (authorPost)
+    } else if (authorPost) {
       postsResult = await client.query(getUserPostsQuery, [
         userId,
         ownerId,
         from,
       ]);
-    else if (news)
+    } else if (news) {
       postsResult = await client.query(getNewsQuery, [ownerId, from]);
-    else postsResult = await client.query(getPostsQuery, [ownerId, from]);
+    } else postsResult = await client.query(getPostsQuery, [ownerId, from]);
 
     const postIds = [];
     for (let i = 0; i < postsResult.rows.length; i++) {
@@ -206,8 +211,8 @@ router.post("/get", async (req, res) => {
   let isMorePosts = true;
 
   let { rows: posts } = postsResult;
-  let { rows: comments } = commentsResult;
-  if (posts.length != 21) {
+  const { rows: comments } = commentsResult;
+  if (posts.length !== 21) {
     isMorePosts = false;
   } else {
     posts = posts.slice(0, -1);
@@ -224,7 +229,7 @@ router.post("/get/single", async (req, res) => {
   const { postId } = req.body;
   if (!/^[\d]*$/.test(postId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const getPostQuery = fs
@@ -246,8 +251,9 @@ router.post("/get/single", async (req, res) => {
         ownerId,
         post[0].groupId,
       ]);
-      if (!rows[0])
+      if (!rows[0]) {
         return res.status(403).json("user-does-not-have-permission");
+      }
     }
 
     let { rows: comments } = await client.query(getCommentsQuery, [
@@ -263,9 +269,9 @@ router.post("/get/single", async (req, res) => {
       comments = comments.slice(0, -1);
     }
 
-    res.status(200).json({ post: post[0], comments, isMoreComments });
+    return res.status(200).json({ post: post[0], comments, isMoreComments });
   } catch {
-    res.status(400).json("bad-request");
+    return res.status(400).json("bad-request");
   }
 });
 
@@ -273,7 +279,7 @@ router.post("/like", async (req, res) => {
   const { postId } = req.body;
   if (!/^[\d]*$/.test(postId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const likePostQuery = fs
@@ -312,9 +318,9 @@ router.post("/like", async (req, res) => {
       likeId = rows[0].id;
     } else likeId = newLike[0].id;
 
-    res.status(200).json({ likeId });
+    return res.status(200).json({ likeId });
   } catch {
-    res.status(400).json("bad-request");
+    return res.status(400).json("bad-request");
   }
 });
 
@@ -322,7 +328,7 @@ router.post("/unlike", async (req, res) => {
   const { postId } = req.body;
   if (!/^[\d]*$/.test(postId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const unlikePostQuery = fs
@@ -347,9 +353,9 @@ router.post("/unlike", async (req, res) => {
       if (!rows[0]) return res.status(403).json("no-permission");
     }
     await client.query(unlikePostQuery, [postId, ownerId]);
-    res.status(200).json({ success: true });
+    return res.status(200).json({ success: true });
   } catch {
-    res.status(400).json("bad-request");
+    return res.status(400).json("bad-request");
   }
 });
 
@@ -358,7 +364,7 @@ router.post("/share", async (req, res) => {
   const date = new Date();
   if (!/^[\d]*$/.test(postId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const postShareQuery = fs
@@ -387,20 +393,22 @@ router.post("/share", async (req, res) => {
       ownerId,
       date,
     ]);
-    res
+
+    return res
       .status(200)
       .json({ shareId: postShare.rows[0].id, userId: ownerId, date });
   } catch {
-    res.status(400).json("bad-request");
+    return res.status(400).json("bad-request");
   }
 });
 
 router.post("/edit", async (req, res) => {
   const { postId, content } = req.body;
-  if (!/^[\d]*$/.test(postId) || typeof content !== "string")
+  if (!/^[\d]*$/.test(postId) || typeof content !== "string") {
     return res.status(400).json("invalid-data");
+  }
 
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const updatePostContentQuery = fs
@@ -426,9 +434,9 @@ router.post("/edit", async (req, res) => {
     }
     await client.query(updatePostContentQuery, [content, postId, ownerId]);
 
-    res.status(200).json({ success: true });
+    return res.status(200).json({ success: true });
   } catch {
-    res.status(400).json("bad-request");
+    return res.status(400).json("bad-request");
   }
 });
 
@@ -436,7 +444,7 @@ router.post("/delete", async (req, res) => {
   const { postId } = req.body;
   if (!/^[\d]*$/.test(postId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const deletePostQuery = fs
@@ -474,9 +482,9 @@ router.post("/delete", async (req, res) => {
       await client.query(deleteRepliesQuery, [postId]);
       await client.query(deleteCommentsQuery, [postId]);
     } else return res.status(403).json("no-permission");
-    res.status(200).json({ success: true });
+    return res.status(200).json({ success: true });
   } catch {
-    res.status(400).json("bad-request");
+    return res.status(400).json("bad-request");
   }
 });
 
@@ -484,7 +492,7 @@ router.post("/share/delete", async (req, res) => {
   const { shareId } = req.body;
   if (!/^[\d]*$/.test(shareId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const deleteSharePostQuery = fs
@@ -498,9 +506,9 @@ router.post("/share/delete", async (req, res) => {
     ]);
     if (!post[0].id) return res.status(403).json("no-permission");
 
-    res.status(200).json({ success: true });
+    return res.status(200).json({ success: true });
   } catch {
-    res.status(400).json("bad-request");
+    return res.status(400).json("bad-request");
   }
 });
 

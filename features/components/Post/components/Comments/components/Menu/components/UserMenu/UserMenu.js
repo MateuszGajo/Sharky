@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { IconContext } from "react-icons";
 import { FiFlag } from "react-icons/fi";
-import AppContext from "@features/context/AppContext";
+import AppContext from "~features/context/AppContext";
 
 const OwnerMenu = ({ reportCommentText, id, comment }) => {
   const { setReport } = useContext(AppContext);

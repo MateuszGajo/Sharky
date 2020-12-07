@@ -3,15 +3,17 @@ const path = require("path");
 const fs = require("fs");
 const { client } = require("../../../config/pgAdaptor");
 const decodeToken = require("../decodeToken");
+
 const router = express.Router();
 
 router.post("/add", async (req, res) => {
   const { postId, content } = req.body;
 
-  if (!/^[0-9]*$/.test(postId) || !content)
+  if (!/^[0-9]*$/.test(postId) || !content) {
     return res.status(400).json("invalid-data");
+  }
 
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const date = new Date();
@@ -46,7 +48,7 @@ router.post("/delete", async (req, res) => {
 
   if (!/^[0-9]*$/.test(commentId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const deleteCommentQuery = fs
@@ -66,10 +68,11 @@ router.post("/delete", async (req, res) => {
 router.post("/get", async (req, res) => {
   const { from, postId } = req.body;
 
-  if (!/^[0-9]*$/.test(postId) || !/^[0-9]*$/.test(from))
+  if (!/^[0-9]*$/.test(postId) || !/^[0-9]*$/.test(from)) {
     return res.status(400).json("invalid-data");
+  }
 
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const getGroupPermissionQuery = fs
@@ -88,8 +91,9 @@ router.post("/get", async (req, res) => {
       postId,
       ownerId,
     ]);
-    if (rows[0].groupId && !rows[0].id)
+    if (rows[0].groupId && !rows[0].id) {
       return res.status(403).json("no-permission");
+    }
     result = await client.query(getCommentsQuery, [postId, ownerId, from]);
   } catch {
     return res.status(400).json("bad-request");
@@ -97,7 +101,7 @@ router.post("/get", async (req, res) => {
 
   let { rows: comments } = result;
   let isMore = true;
-  if (comments.length != 21) {
+  if (comments.length !== 21) {
     isMore = false;
   } else {
     comments = comments.slice(0, -1);
@@ -113,7 +117,7 @@ router.post("/like", async (req, res) => {
 
   if (!/^[0-9]*$/.test(commentId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const getGroupPermissionQuery = fs
@@ -134,8 +138,9 @@ router.post("/like", async (req, res) => {
       ownerId,
     ]);
 
-    if (rows[0].groupId && !rows[0].id)
+    if (rows[0].groupId && !rows[0].id) {
       return res.status(403).json("no-permission");
+    }
 
     const { rows: newLike } = await client.query(likeCommentQuery, [
       commentId,
@@ -144,8 +149,11 @@ router.post("/like", async (req, res) => {
 
     let likeId;
     if (!newLike[0]) {
-      const { rows } = await client.query(getLikeIdQuery, [commentId, ownerId]);
-      likeId = rows[0].id;
+      const { likeIdRows } = await client.query(getLikeIdQuery, [
+        commentId,
+        ownerId,
+      ]);
+      likeId = likeIdRows[0].id;
     } else likeId = newLike[0].id;
 
     return res.status(200).json({ likeId });
@@ -159,7 +167,7 @@ router.post("/unlike", async (req, res) => {
 
   if (!/^[0-9]*$/.test(commentId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const getGroupPermissionQuery = fs
@@ -176,8 +184,9 @@ router.post("/unlike", async (req, res) => {
       commentId,
       ownerId,
     ]);
-    if (rows[0].groupId && !rows[0].id)
+    if (rows[0].groupId && !rows[0].id) {
       return res.status(403).json("no-permission");
+    }
 
     await client.query(unlikeCommentQuery, [commentId, ownerId]);
 

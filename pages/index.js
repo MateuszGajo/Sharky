@@ -2,10 +2,11 @@ import React, { useContext, useEffect, useState } from "react";
 import Head from "next/head";
 import Signin from "./signin";
 import Home from "./home";
-import Spinner from "@components/Spinner/Spinner";
-import i18next from "@i18n";
-import AppContext from "@features/context/AppContext";
-import { getOwner } from "@features/service/Functions";
+import Spinner from "~components/Spinner/Spinner";
+import i18next from "~i18n";
+import AppContext from "~features/context/AppContext";
+import { getOwner } from "~features/service/Functions";
+
 const { useTranslation } = i18next;
 
 const Index = () => {

@@ -1,13 +1,13 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
-import axios from "@features/service/Axios";
+import axios from "~features/service/Axios";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import cx from "classnames";
-import AppContex from "@features/context/AppContext";
-import i18next from "@i18n";
-import AddFriendButton from "@common/Buttons/AddFriendButton/AddFriendButton";
-import FriendInvitedButton from "@common/Buttons/FriendInvitedButton/FriendInvitedButton";
-import FriendsInvitationButtons from "@common/Buttons/FriendsInvitationButtons/FriendsInvitationButtons";
-import RelationButtons from "@common/Buttons/RelationButtons/RelationButtons";
+import AppContex from "~features/context/AppContext";
+import i18next from "~i18n";
+import AddFriendButton from "~common/Buttons/AddFriendButton/AddFriendButton";
+import FriendInvitedButton from "~common/Buttons/FriendInvitedButton/FriendInvitedButton";
+import FriendsInvitationButtons from "~common/Buttons/FriendsInvitationButtons/FriendsInvitationButtons";
+import RelationButtons from "~common/Buttons/RelationButtons/RelationButtons";
 import getInitialButtonName from "./getInitialButtonName";
 const { useTranslation } = i18next;
 

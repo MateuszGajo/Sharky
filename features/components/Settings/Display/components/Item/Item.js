@@ -1,9 +1,9 @@
 import React, { useState, useContext, useEffect } from "react";
 import { IoMdArrowBack } from "react-icons/io";
-import PrimaryInput from "@common/PrimaryInput/PrimaryInput";
-import PrimaryButton from "@common/PrimaryButton/PrimaryButton";
+import PrimaryInput from "~common/PrimaryInput/PrimaryInput";
+import PrimaryButton from "~common/PrimaryButton/PrimaryButton";
 import SettingsContext from "../../../context/SettingsContext";
-import AppContext from "@features/context/AppContext";
+import AppContext from "~features/context/AppContext";
 import {
   getCountries,
   getLanguages,
@@ -11,7 +11,7 @@ import {
   changeValue,
   validateField,
 } from "../../services/functions";
-import i18next from "@i18n";
+import i18next from "~i18n";
 
 const { useTranslation, i18n } = i18next;
 

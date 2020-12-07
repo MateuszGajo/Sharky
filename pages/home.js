@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
 import Router from "next/router";
-import HomeLayout from "@components/Layout/Home/HomeLayout";
-import MessageBox from "@common/MessageBox/MessageBox";
-import Spinner from "@components/Spinner/Spinner";
-import Posts from "@components/Lists/Posts/Posts";
-import PopUpHandlers from "@components/PopUpHandlers/PopUpHandlers";
-import AppContext from "@features/context/AppContext";
-import { getOwner } from "@features/service/Functions/index";
+import HomeLayout from "~components/Layout/Home/HomeLayout";
+import MessageBox from "~common/MessageBox/MessageBox";
+import Spinner from "~components/Spinner/Spinner";
+import Posts from "~components/Lists/Posts/Posts";
+import PopUpHandlers from "~components/PopUpHandlers/PopUpHandlers";
+import AppContext from "~features/context/AppContext";
+import { getOwner } from "~features/service/Functions/index";
 import "../styles/home.scss";
 
 const Home = () => {
@@ -18,7 +18,12 @@ const Home = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setNewPost({ content, file, setContent, setFile });
+    setNewPost({
+      content,
+      file,
+      setContent,
+      setFile,
+    });
   };
 
   useEffect(() => {
@@ -26,7 +31,7 @@ const Home = () => {
   }, []);
 
   if (isAuth == null) return <Spinner />;
-  else if (!isAuth) {
+  if (!isAuth) {
     Router.push("/signin");
     return <Spinner />;
   }

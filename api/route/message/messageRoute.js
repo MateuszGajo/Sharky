@@ -21,17 +21,17 @@ router.post("/get", async (req, res) => {
 
   try {
     const messages = await client.query(getMessagesQuery, [userId, ownerId]);
-    res.status(200).json({
+    return res.status(200).json({
       messages: messages.rows,
       user: { id: ownerId, firstName, lastName, photo },
     });
   } catch {
-    res.status(400).json("bad-request");
+    return res.status(400).json("bad-request");
   }
 });
 
 router.get("/conversation/get", async (req, res) => {
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const getConversationsQuery = fs
@@ -41,18 +41,19 @@ router.get("/conversation/get", async (req, res) => {
     const { rows: conversations } = await client.query(getConversationsQuery, [
       ownerId,
     ]);
-    res.status(200).json({ conversations });
+    return res.status(200).json({ conversations });
   } catch {
-    res.status(400).json("bad-request");
+    return res.status(400).json("bad-request");
   }
 });
 
 router.post("/add", async (req, res) => {
   const { message, userId } = req.body;
-  if (!/^[\d]*$/.test(userId) || !message)
+  if (!/^[\d]*$/.test(userId) || !message) {
     return res.status(400).json("invalid-data");
+  }
 
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const addMessageQuery = fs
@@ -60,16 +61,17 @@ router.post("/add", async (req, res) => {
     .toString();
   const date = new Date();
 
-  const { rows } = await client.query(addMessageQuery, [
-    message,
-    date,
-    ownerId,
-    userId,
-  ]);
-  res.status(200).json({ messageId: rows[0].id, date });
   try {
+    const { rows } = await client.query(addMessageQuery, [
+      message,
+      date,
+      ownerId,
+      userId,
+    ]);
+
+    return res.status(200).json({ messageId: rows[0].id, date });
   } catch {
-    res.status(400).json("bad-request");
+    return res.status(400).json("bad-request");
   }
 });
 

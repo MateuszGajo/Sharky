@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
-import PropTypes from "prop-types"
-import AppContext from "@features/context/AppContext";
+import PropTypes from "prop-types";
+import AppContext from "~features/context/AppContext";
 
 const Prompt = ({ message }) => {
   const { setPrompt } = useContext(AppContext);
@@ -24,7 +24,7 @@ const Prompt = ({ message }) => {
 };
 
 Prompt.propTypes = {
-  message: PropTypes.string
-}
+  message: PropTypes.string,
+};
 
 export default Prompt;

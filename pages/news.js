@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useContext } from "react";
-import axios from "@features/service/Axios";
 import Router from "next/router";
 import { MdBlock } from "react-icons/md";
-import HomeLayout from "@components/Layout/Home/HomeLayout";
-import MessageBox from "@common/MessageBox/MessageBox";
-import Posts from "@components/Lists/Posts/Posts";
-import Spinner from "@components/Spinner/Spinner";
-import PopUpHandlers from "@components/PopUpHandlers/PopUpHandlers";
-import i18next from "@i18n";
-import { getOwner } from "@features/service/Functions/index";
-import AppContext from "@features/context/AppContext";
+import axios from "~features/service/Axios";
+import HomeLayout from "~components/Layout/Home/HomeLayout";
+import MessageBox from "~common/MessageBox/MessageBox";
+import Posts from "~components/Lists/Posts/Posts";
+import Spinner from "~components/Spinner/Spinner";
+import PopUpHandlers from "~components/PopUpHandlers/PopUpHandlers";
+import i18next from "~i18n";
+import { getOwner } from "~features/service/Functions/index";
+import AppContext from "~features/context/AppContext";
 import "../styles/news.scss";
+
 const { useTranslation } = i18next;
 
 const News = () => {
@@ -32,8 +33,8 @@ const News = () => {
   };
   useEffect(() => {
     isAuth &&
-      axios.get("/news/permission").then(({ data: { permission } }) => {
-        setPermission(permission);
+      axios.get("/news/permission").then(({ data: { initialPermission } }) => {
+        setPermission(initialPermission);
       });
   }, [isAuth]);
 
@@ -41,8 +42,8 @@ const News = () => {
     getOwner({ setStatusOfAuth, setOwner });
   }, []);
 
-  if (isAuth == null) return <Spinner />;
-  else if (!isAuth) {
+  if (isAuth === null) return <Spinner />;
+  if (!isAuth) {
     Router.push("/signin");
     return <Spinner />;
   }
@@ -58,7 +59,7 @@ const News = () => {
               onChange={setContent}
               file={file}
               setFile={setFile}
-              news={true}
+              news
             />
           </form>
         ) : (
@@ -69,7 +70,7 @@ const News = () => {
             <span className="news__info__span">{noPermission}</span>
           </div>
         )}
-        <Posts news={true} newPost={newPost} />
+        <Posts news newPost={newPost} />
       </section>
     </HomeLayout>
   );

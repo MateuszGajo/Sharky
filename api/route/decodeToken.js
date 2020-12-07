@@ -4,7 +4,7 @@ const path = require("path");
 const { jwtSecret } = require("../../config/keys");
 const { client } = require("../../config/pgAdaptor");
 
-module.exports = async (token, res) => {
+module.exports = async (token) => {
   const getPasswordQuery = fs
     .readFileSync(path.join(__dirname, "./user/query/get/password.sql"))
     .toString();
@@ -18,8 +18,9 @@ module.exports = async (token, res) => {
     const { rowCount } = await client.query(getThirdIdQuery, [data.id]);
     if (rowCount === 0) {
       const { rows } = await client.query(getPasswordQuery, [data.id]);
-      if (data.password !== rows[0].password)
+      if (data.password !== rows[0].password) {
         return { error: "password-changed" };
+      }
     }
     return data;
   } catch {

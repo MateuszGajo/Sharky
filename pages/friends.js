@@ -1,12 +1,12 @@
 import React, { useContext, useState, useEffect } from "react";
 import Router from "next/router";
-import HomeLayout from "@components/Layout/Home/HomeLayout";
-import People from "@components/Lists/People/People";
-import Spinner from "@components/Spinner/Spinner";
-import PopUpHandlers from "@components/PopUpHandlers/PopUpHandlers";
-import AppContext from "@features/context/AppContext";
-import { getOwner } from "@features/service/Functions/index";
-import Search from "@common/Search/Search";
+import HomeLayout from "~components/Layout/Home/HomeLayout";
+import People from "~components/Lists/People/People";
+import Spinner from "~components/Spinner/Spinner";
+import PopUpHandlers from "~components/PopUpHandlers/PopUpHandlers";
+import AppContext from "~features/context/AppContext";
+import { getOwner } from "~features/service/Functions/index";
+import Search from "~common/Search/Search";
 import "../styles/friends.scss";
 
 const Friends = () => {
@@ -18,15 +18,15 @@ const Friends = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (keyWords != text) setKeyWords(text);
+    if (keyWords !== text) setKeyWords(text);
   };
 
   useEffect(() => {
     getOwner({ setStatusOfAuth, setOwner });
   }, []);
 
-  if (isAuth == null) return <Spinner />;
-  else if (!isAuth) {
+  if (isAuth === null) return <Spinner />;
+  if (!isAuth) {
     Router.push("/signin");
     return <Spinner />;
   }

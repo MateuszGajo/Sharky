@@ -3,10 +3,11 @@ const fs = require("fs");
 const path = require("path");
 const { client } = require("../../../config/pgAdaptor");
 const decodeToken = require("../decodeToken");
+
 const router = express.Router();
 
 router.get("/get", async (req, res) => {
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const getChatsQuery = fs
@@ -15,9 +16,10 @@ router.get("/get", async (req, res) => {
 
   try {
     const friends = await client.query(getChatsQuery, [ownerId]);
-    res.status(200).json({ friends: friends.rows });
+
+    return res.status(200).json({ friends: friends.rows });
   } catch {
-    res.status(400).json("bad-request");
+    return res.status(400).json("bad-request");
   }
 });
 
@@ -25,7 +27,7 @@ router.post("/add", async (req, res) => {
   const { userId } = req.body;
   if (!/^[\d]*$/.test(userId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const getFriendshipIdQuery = fs
@@ -48,9 +50,9 @@ router.post("/add", async (req, res) => {
       userId,
     ]);
 
-    res.status(200).json({ friendshipId: addUser[0].id });
+    return res.status(200).json({ friendshipId: addUser[0].id });
   } catch {
-    res.status(400).json("bad-request");
+    return res.status(400).json("bad-request");
   }
 });
 
@@ -58,7 +60,7 @@ router.post("/delete", async (req, res) => {
   const { userId } = req.body;
   if (!/^[\d]*$/.test(userId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const deleteUserQuery = fs
@@ -77,9 +79,9 @@ router.post("/delete", async (req, res) => {
     await client.query(deleteFriendRelationQuery, [friendshipId]);
     await client.query(deleteChatQuery, [friendshipId]);
 
-    res.status(200).json({ success: true });
+    return res.status(200).json({ success: true });
   } catch {
-    res.status(400).json("bad-request");
+    return res.status(400).json("bad-request");
   }
 });
 
@@ -87,7 +89,7 @@ router.post("/accept", async (req, res) => {
   const { userId } = req.body;
   if (!/^[\d]*$/.test(userId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const relation = "friend";
@@ -113,9 +115,11 @@ router.post("/accept", async (req, res) => {
       chatId = chat[0].id;
     }
 
-    res.status(200).json({ chatId, relation, success: rows[0] ? true : false });
+    return res
+      .status(200)
+      .json({ chatId, relation, success: rows[0] === undefined });
   } catch {
-    res.status(400).json("bad-request");
+    return res.status(400).json("bad-request");
   }
 });
 
@@ -123,7 +127,7 @@ router.post("/decline", async (req, res) => {
   const { userId } = req.body;
   if (!/^[\d]*$/.test(userId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const deleteFriendRequestQuery = fs
@@ -132,9 +136,10 @@ router.post("/decline", async (req, res) => {
 
   try {
     await client.query(deleteFriendRequestQuery, [userId, ownerId]);
-    res.status(200).json({ success: true });
+
+    return res.status(200).json({ success: true });
   } catch {
-    res.status(400).json("bad-request");
+    return res.status(400).json("bad-request");
   }
 });
 
@@ -145,17 +150,19 @@ router.post("/get/people", async (req, res) => {
     !/^[\d]*$/.test(userId) ||
     !/^[\d]*$/.test(from) ||
     !(typeof keyWords === "string" || keyWords === null) ||
-    !(onlyFriends == true || onlyFriends == false)
-  )
+    !(onlyFriends === true || onlyFriends === false)
+  ) {
     return res.status(400).json("invalid-data");
+  }
 
   if (keyWords) {
     keyWords = keyWords.split(/\s+/);
-    if (keyWords.length > 2)
+    if (keyWords.length > 2) {
       return res.status(200).json({ friends: [], isMore: false });
+    }
   }
 
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const getFriendsQuery = fs
@@ -182,20 +189,21 @@ router.post("/get/people", async (req, res) => {
     }
   } else {
     try {
-      if (onlyFriends)
+      if (onlyFriends) {
         result = await client.query(getFriendsSortedQuery, [
-          keyWords[0] + "%",
-          (keyWords[1] ? keyWords[1] : "") + "%",
+          `${keyWords[0]}%`,
+          `${keyWords[1] ? keyWords[1] : ""}%`,
           ownerId,
           from,
         ]);
-      else
+      } else {
         result = await client.query(getUserSortedQuery, [
-          keyWords[0] + "%",
-          (keyWords[1] ? keyWords[1] : "") + "%",
+          `${keyWords[0]}%`,
+          `${keyWords[1] ? keyWords[1] : ""}%`,
           ownerId,
           from,
         ]);
+      }
     } catch {
       return res.status(400).json("bad-request");
     }
@@ -210,14 +218,14 @@ router.post("/get/people", async (req, res) => {
     friends = friends.slice(0, -1);
   }
 
-  res.status(200).json({ friends, isMore });
+  return res.status(200).json({ friends, isMore });
 });
 
 router.post("/message/read", async (req, res) => {
   const { userId } = req.body;
   if (!/^[\d]*$/.test(userId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const readMessageQuery = fs
@@ -225,6 +233,8 @@ router.post("/message/read", async (req, res) => {
     .toString();
 
   client.query(readMessageQuery, [userId, ownerId]);
+
+  return res.status(200).json({ success: true });
 });
 
 router.post("/update/relation", async (req, res) => {
@@ -232,10 +242,11 @@ router.post("/update/relation", async (req, res) => {
   if (
     !/^[\d]*$/.test(userId) ||
     !(relation === "friend" || relation === "family" || relation === "pal")
-  )
+  ) {
     return res.status(400).json("invalid-data");
+  }
 
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const updateRelationQuery = fs
@@ -245,9 +256,9 @@ router.post("/update/relation", async (req, res) => {
   try {
     await client.query(updateRelationQuery, [relation, userId, ownerId]);
 
-    res.status(200);
+    return res.status(200).json({ success: true });
   } catch {
-    res.status(400).json("bad-request");
+    return res.status(400).json("bad-request");
   }
 });
 
@@ -261,10 +272,11 @@ router.post("/change/relation/accept", async (req, res) => {
       newRelation === "pal"
     ) ||
     !/^[\d]*$/.test(friendshipId)
-  )
+  ) {
     return res.status(400).json("invalid-data");
+  }
 
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const acceptNewRelationQuery = fs
@@ -279,18 +291,19 @@ router.post("/change/relation/accept", async (req, res) => {
       userId,
     ]);
 
-    res.status(200).json({ sucess: true });
+    return res.status(200).json({ sucess: true });
   } catch {
-    res.status(400).json("bad-request");
+    return res.status(400).json("bad-request");
   }
 });
 
 router.post("/change/relation/decline", async (req, res) => {
   const { friendshipId, userId } = req.body;
-  if (!/^[\d]*$/.test(userId) || !/^[\d]*$/.test(friendshipId))
+  if (!/^[\d]*$/.test(userId) || !/^[\d]*$/.test(friendshipId)) {
     return res.status(400).json("invalid-data");
+  }
 
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const declineNewRelationQuery = fs
@@ -304,9 +317,9 @@ router.post("/change/relation/decline", async (req, res) => {
       userId,
     ]);
 
-    res.status(200).json({ sucess: true });
+    return res.status(200).json({ sucess: true });
   } catch {
-    res.status(400).json("bad-request");
+    return res.status(400).json("bad-request");
   }
 });
 

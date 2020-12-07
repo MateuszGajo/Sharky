@@ -9,10 +9,11 @@ const router = express.Router();
 router.post("/add", async (req, res) => {
   const { commentId, content } = req.body;
   const date = new Date();
-  if (!/^[\d]*$/.test(commentId) || typeof content !== "string")
+  if (!/^[\d]*$/.test(commentId) || typeof content !== "string") {
     return res.status(400).json("invalid-data");
+  }
 
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const addReplyQuery = fs
@@ -31,8 +32,9 @@ router.post("/add", async (req, res) => {
     const { rows: result } = await client.query(getGroupIdInPostsQuery, [
       commentId,
     ]);
-    if (!result[0].postId)
+    if (!result[0].postId) {
       return res.status(400).json("comment-does-not-exist");
+    }
     if (result[0].groupId) {
       const { rows } = await client.query(getMemberQuery, [
         ownerId,
@@ -57,7 +59,7 @@ router.post("/delete", async (req, res) => {
   const { replyId } = req.body;
   if (!/^[\d]*$/.test(replyId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const deleteReplyQuery = fs
@@ -75,10 +77,11 @@ router.post("/delete", async (req, res) => {
 
 router.post("/get", async (req, res) => {
   const { commentId, from } = req.body;
-  if (!/^[\d]*$/.test(commentId) || !/^[\d]*$/.test(from))
+  if (!/^[\d]*$/.test(commentId) || !/^[\d]*$/.test(from)) {
     return res.status(400).json("invalid-data");
+  }
 
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const getRepliesQuery = fs
@@ -113,7 +116,7 @@ router.post("/get", async (req, res) => {
   let { rows: replies } = result;
   let isMore = true;
 
-  if (replies.length != 21) {
+  if (replies.length !== 21) {
     isMore = false;
   } else {
     replies = replies.slice(0, -1);
@@ -129,7 +132,7 @@ router.post("/like", async (req, res) => {
   const { replyId } = req.body;
   if (!/^[\d]*$/.test(replyId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const likeReplyQuery = fs
@@ -147,11 +150,11 @@ router.post("/like", async (req, res) => {
   try {
     const { rows } = await client.query(getGroupIdInPostsQuery, [replyId]);
     if (rows[0].idGroup) {
-      const { rows } = await client.query(getMemberQuery, [
+      const { groupRows } = await client.query(getMemberQuery, [
         ownerId,
         rows[0].idGroup,
       ]);
-      if (!rows[0].id) return res.status(403).json("no-permission");
+      if (!groupRows[0].id) return res.status(403).json("no-permission");
     }
     const { rows: newLike } = await client.query(likeReplyQuery, [
       replyId,
@@ -168,7 +171,7 @@ router.post("/unlike", async (req, res) => {
   const { replyId } = req.body;
   if (!/^[\d]*$/.test(replyId)) return res.status(400).json("invalid-data");
 
-  const { error, id: ownerId } = await decodeToken(req.cookies.token, res);
+  const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
   const unlikeReplyQuery = fs
@@ -187,12 +190,12 @@ router.post("/unlike", async (req, res) => {
     const { rows } = await client.query(getGroupIdInPostsQuery, [replyId]);
 
     if (rows[0].idGroup) {
-      const { rows } = await client.query(getMemberQuery, [
+      const { groupRows } = await client.query(getMemberQuery, [
         ownerId,
         rows[0].idGroup,
       ]);
 
-      if (!rows[0].id) return res.status(403).json("no-permission");
+      if (!groupRows[0].id) return res.status(403).json("no-permission");
     }
     await client.query(unlikeReplyQuery, [replyId, ownerId]);
 

@@ -6,6 +6,7 @@ const fs = require("fs");
 const path = require("path");
 const { client } = require("../../../config/pgAdaptor");
 const { jwtSecret } = require("../../../config/keys");
+
 const router = express.Router();
 const defaultCountryAndLanguage = require("../../../utils/defaultCountryAndLanguage");
 
@@ -82,10 +83,11 @@ router.get(
 router.post("/signin", async (req, res) => {
   const { email, password } = req.body;
   if (
-    !/^([a-zA-Z\d\.-]+)@([a-z\d-]+)\.([a-z]{2,8})(\.[a-z]{2,8})?$/.test(email)
-  )
+    !/^([a-zA-Z\d.-]+)@([a-z\d-]+)\.([a-z]{2,8})(\.[a-z]{2,8})?$/.test(email)
+  ) {
     return res.status(400).json("invalid-email");
-  else if (!password) return res.status(400).json("empty-password");
+  }
+  if (!password) return res.status(400).json("empty-password");
 
   const findUserQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/user.sql"))
@@ -101,8 +103,6 @@ router.post("/signin", async (req, res) => {
         id,
         firstName,
         lastName,
-        email,
-        password,
         phone,
         photo,
         country,
@@ -119,7 +119,7 @@ router.post("/signin", async (req, res) => {
             lastName,
             photo,
             email,
-            password,
+            password: user.password,
             phone,
             country,
             language,
@@ -152,18 +152,20 @@ router.post("/signup", async (req, res) => {
   } = creds;
   const phoneNumber = phone.replace(/[\s-]/gi, "");
   if (
-    !/^([a-zA-Z\d\.-]+)@([a-z\d-]+)\.([a-z]{2,8})(\.[a-z]{2,8})?$/.test(email)
-  )
+    !/^([a-zA-Z\d.-]+)@([a-z\d-]+)\.([a-z]{2,8})(\.[a-z]{2,8})?$/.test(email)
+  ) {
     return res.status(400).json("invalid-email");
+  }
   if (password.length < 6) return res.status(400).json("password-too-short");
-  else if (!confirmPassword)
-    return res.status(400).json("empty-confirm-password");
-  else if (password !== confirmPassword)
+  if (!confirmPassword) return res.status(400).json("empty-confirm-password");
+  if (password !== confirmPassword) {
     return res.status(400).json("passwords-not-equal");
-  else if (!firstName) return res.status(400).json("empty-first-name");
-  else if (!lastName) return res.status(400).json("empty-last-name");
-  else if (!/[\d]{9}/.test(phoneNumber))
+  }
+  if (!firstName) return res.status(400).json("empty-first-name");
+  if (!lastName) return res.status(400).json("empty-last-name");
+  if (!/[\d]{9}/.test(phoneNumber)) {
     return res.status(400).json("invalid-phone-number");
+  }
 
   const getUserIdQuery = fs
     .readFileSync(path.join(__dirname, "./query/get/userId.sql"))
@@ -175,7 +177,7 @@ router.post("/signup", async (req, res) => {
   try {
     const { rowCount } = await client.query(getUserIdQuery, [email]);
     if (rowCount) return res.status(403).json("user-exist");
-    await bcrypt.hash(password, saltRounds);
+    const pwHash = await bcrypt.hash(password, saltRounds);
     const { rows: user } = await client.query(createUserQuery, [
       email,
       pwHash,
@@ -207,7 +209,7 @@ router.post("/signup", async (req, res) => {
     );
 
     res.cookie("token", token);
-    res.status(200).json({ success: true });
+    return res.status(200).json({ success: true });
   } catch {
     return res.status(400).json("bad-request");
   }

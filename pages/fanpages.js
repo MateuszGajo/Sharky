@@ -1,15 +1,15 @@
 import React, { useState, useContext, useEffect } from "react";
 import Router from "next/router";
 import { IoIosAddCircleOutline } from "react-icons/io";
-import ListOfFanpages from "@components/Lists/Fanpages/Fanpages";
-import Search from "@common/Search/Search";
-import Spinner from "@components/Spinner/Spinner";
-import NavBar from "@components/Layout/Home/Compound/components/Navbar/Navbar";
-import Creator from "@common/PopUp/Creator/Creator";
-import PopUpHandlers from "@components/PopUpHandlers/PopUpHandlers";
-import AppContext from "@features/context/AppContext";
-import { getOwner } from "@features/service/Functions/index";
-import i18next from "@i18n";
+import ListOfFanpages from "~components/Lists/Fanpages/Fanpages";
+import Search from "~common/Search/Search";
+import Spinner from "~components/Spinner/Spinner";
+import NavBar from "~components/Layout/Home/Compound/components/Navbar/Navbar";
+import Creator from "~common/PopUp/Creator/Creator";
+import PopUpHandlers from "~components/PopUpHandlers/PopUpHandlers";
+import AppContext from "~features/context/AppContext";
+import { getOwner } from "~features/service/Functions/index";
+import i18next from "~i18n";
 import "../styles/fanpages.scss";
 
 const { useTranslation } = i18next;
@@ -29,7 +29,7 @@ const Fanpages = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    text != keyWords && setKeyWords(text);
+    text !== keyWords && setKeyWords(text);
   };
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const Fanpages = () => {
   }, []);
 
   if (isAuth == null) return <Spinner />;
-  else if (!isAuth) {
+  if (!isAuth) {
     Router.push("/signin");
     return <Spinner />;
   }
@@ -62,6 +62,7 @@ const Fanpages = () => {
           <div
             className="fanpages__side-bar__create"
             onClick={() => setStatusOfCreatorOpen(true)}
+            aria-hidden="true"
           >
             <div className="fanpages__side-bar__create__button">
               <IoIosAddCircleOutline />

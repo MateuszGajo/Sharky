@@ -6,13 +6,13 @@ const session = require("express-session");
 const cookie = require("cookie");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
-const authRoute = require("./api/route/auth/authRoute");
 require("./config/passportSetup");
 const express = require("express");
 const bcrypt = require("bcrypt");
 const nextI18NextMiddleware = require("next-i18next/middleware").default;
 const fs = require("fs");
 const path = require("path");
+const authRoute = require("./api/route/auth/authRoute");
 const commentRoute = require("./api/route/comment/commentRoute");
 const replyRoute = require("./api/route/reply/replyRoute");
 const postRoute = require("./api/route/post/postRoute");
@@ -60,7 +60,7 @@ const socketIO = io(httpServer);
 
 socketIO.sockets.on("connection", (socket) => {
   const addUnreadMessageQuery = fs
-    .readFileSync(path.join(__dirname, "./utils/query/add/unreadMessage.sql"))
+    .readFileSync(path.join(__dirname, `./utils/query/add/unreadMessage.sql`))
     .toString();
 
   socket.on("connectUser", async () => {
@@ -90,9 +90,10 @@ socketIO.sockets.on("connection", (socket) => {
         userId,
       ]);
       if (rowCount > 0) {
-        if (!existUser(userId))
+        if (!existUser(userId)) {
           client.query(addUnreadMessageQuery, [userId, ownerId]);
-        socketIO.in("chat" + rows[0].chatId).emit("message", {
+        }
+        socketIO.in(`chat${rows[0].chatId}`).emit("message", {
           chatId: rows[0].chatId,
           messageId: rows[0].id,
           userId: ownerId,
@@ -124,7 +125,7 @@ socketIO.sockets.on("connection", (socket) => {
       ]);
       for (let i = 0; i < userSockets.length; i++) {
         const soc = socketIO.sockets.connected[userSockets[i]];
-        soc.join("chat" + chatId);
+        soc.join(`chat${chatId}`);
         socketIO.to(userSockets[i]).emit("newChat", {
           newChat: {
             ...user[0],
@@ -141,7 +142,7 @@ socketIO.sockets.on("connection", (socket) => {
       ]);
       for (let i = 0; i < ownerSockets.length; i++) {
         const soc = socketIO.sockets.connected[ownerSockets[i]];
-        soc.join("chat" + chatId);
+        soc.join(`chat${chatId}`);
         socketIO.to(ownerSockets[i]).emit("newChat", {
           newChat: {
             ...user[0],
@@ -159,14 +160,18 @@ socketIO.sockets.on("connection", (socket) => {
     );
     if (!ownerId) return;
 
-    if (value.length < 6)
-      return socketIO
+    if (value.length < 6) {
+      socketIO
         .to(socket.id)
         .emit("changePasswordError", { message: "new-password-too-short" });
-    if (password.length < 6)
-      return socketIO
+      return;
+    }
+    if (password.length < 6) {
+      socketIO
         .to(socket.id)
         .emit("changePasswordError", { message: "password-too-short" });
+      return;
+    }
 
     const getPasswordQuery = fs
       .readFileSync(path.join(__dirname, "./utils/query/get/password.sql"))
@@ -174,10 +179,12 @@ socketIO.sockets.on("connection", (socket) => {
 
     const { rows } = await client.query(getPasswordQuery, [ownerId]);
     const match = await bcrypt.compare(password, rows[0].password);
-    if (!match)
-      return socketIO
+    if (!match) {
+      socketIO
         .to(socket.id)
         .emit("changePasswordError", { message: "invalid-password" });
+      return;
+    }
     if (!match) return;
 
     const changePasswordQuery = fs
@@ -188,7 +195,7 @@ socketIO.sockets.on("connection", (socket) => {
       if (hash) {
         await client.query(changePasswordQuery, [hash, ownerId]);
         usersLeave(ownerId);
-        return socketIO.to(socket.id).emit("passwordChanged");
+        socketIO.to(socket.id).emit("passwordChanged");
       }
     });
   });
@@ -206,7 +213,7 @@ socketIO.sockets.on("connection", (socket) => {
     if (ownerId) {
       const { rows: chats } = await client.query(getChatsQuery, [ownerId]);
       for (let i = 0; i < chats.length; i++) {
-        socket.join("chat" + chats[i].chatId);
+        socket.join(`chat${chats[i].chatId}`);
       }
     }
   });
@@ -249,9 +256,7 @@ socketIO.sockets.on("connection", (socket) => {
   server.use("/notification", notificationRoute);
   server.use("/country", countryRoute);
   server.use("/language", languageRoute);
-  server.get("*", (req, res) => {
-    return handle(req, res);
-  });
+  server.get("*", (req, res) => handle(req, res));
 
   httpServer.listen(process.env.PORT || 3000);
 })();

@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
-import Error from "@common/PopUp/Error/Error";
-import Prompt from "@common/PopUp/Prompt/Prompt";
-import Report from "@common/PopUp/Report/Report";
-import PostPhoto from "@common/PopUp/PostPhoto/PostPhoto";
-import AppContext from "@features/context/AppContext";
+import Error from "~common/PopUp/Error/Error";
+import Prompt from "~common/PopUp/Prompt/Prompt";
+import Report from "~common/PopUp/Report/Report";
+import PostPhoto from "~common/PopUp/PostPhoto/PostPhoto";
+import AppContext from "~features/context/AppContext";
 
 const PopUpHandlers = () => {
   const { isPrompt, isError, report, photoPopUp, setPhotoPopUp } = useContext(

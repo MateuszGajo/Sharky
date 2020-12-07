@@ -2,8 +2,8 @@ import React, { useRef, useEffect, useContext } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import OwnerMenu from "./components/OwnerMenu/OwnerMenu";
 import UserMenu from "./components/UserMenu/UserMenu";
-import i18next from "@i18n";
-import AppContext from "@features/context/AppContext";
+import i18next from "~i18n";
+import AppContext from "~features/context/AppContext";
 
 const { useTranslation } = i18next;
 

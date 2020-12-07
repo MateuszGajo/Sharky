@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import DisplayItem from "../DisplayItem/DisplayItem";
 import Header from "./components/Header/Header";
 import Content from "./components/Content/Content";
-import i18next from "@i18n";
+import i18next from "~i18n";
 
 const { useTranslation } = i18next;
 

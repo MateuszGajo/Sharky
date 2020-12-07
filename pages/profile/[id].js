@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/router";
-import axios from "@features/service/Axios";
-import NavBar from "@components/Layout/Home/Compound/components/Navbar/Navbar";
-import ProfileInfo from "@components/Profile/ProfileInfo/ProfileInfo";
-import DisplayItem from "@components/Profile/DisplayItem/DisplayItem";
-import Spinner from "@components/Spinner/Spinner";
-import PopUpHandlers from "@components/PopUpHandlers/PopUpHandlers";
-import AppContext from "@features/context/AppContext";
-import i18next from "@i18n";
-import { getOwner } from "@features/service/Functions/index";
-import "@styles/profile.scss";
+import axios from "~features/service/Axios";
+import NavBar from "~components/Layout/Home/Compound/components/Navbar/Navbar";
+import ProfileInfo from "~components/Profile/ProfileInfo/ProfileInfo";
+import DisplayItem from "~components/Profile/DisplayItem/DisplayItem";
+import Spinner from "~components/Spinner/Spinner";
+import PopUpHandlers from "~components/PopUpHandlers/PopUpHandlers";
+import AppContext from "~features/context/AppContext";
+import i18next from "~i18n";
+import { getOwner } from "~features/service/Functions/index";
+import "~styles/profile.scss";
+
 const { useTranslation } = i18next;
 
 const profile = () => {
@@ -31,12 +32,12 @@ const profile = () => {
       isAuth &&
       axios
         .post("/user/info", { userId })
-        .then(({ data: { info } }) => {
-          setInfo(info);
+        .then(({ data: { initialInfo } }) => {
+          setInfo(initialInfo);
           setStatusOfLoading(false);
         })
         .catch(({ response: { status, data: message } }) => {
-          if (status == 404) {
+          if (status === 404) {
             setUserError(message);
             setStatusOfLoading(false);
           }
@@ -47,11 +48,12 @@ const profile = () => {
     getOwner({ setStatusOfAuth, setOwner });
   }, []);
 
-  if (isAuth == null) return <Spinner />;
-  else if (!isAuth) {
+  if (isAuth === null) return <Spinner />;
+  if (!isAuth) {
     router.push("/signin");
     return <Spinner />;
-  } else if (isLoading) return <Spinner />;
+  }
+  if (isLoading) return <Spinner />;
 
   return (
     <section className="profile">

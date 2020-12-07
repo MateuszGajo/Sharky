@@ -1,8 +1,8 @@
 import React, { useContext, useState } from "react";
 import PropTypes from "prop-types";
-import PrimaryButton from "@common/PrimaryButton/PrimaryButton";
-import i18next from "@i18n";
-import AppContext from "@features/context/AppContext";
+import PrimaryButton from "~common/PrimaryButton/PrimaryButton";
+import i18next from "~i18n";
+import AppContext from "~features/context/AppContext";
 const { useTranslation } = i18next;
 
 const Report = ({ type = "post", id }) => {

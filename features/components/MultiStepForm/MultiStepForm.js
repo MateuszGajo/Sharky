@@ -7,9 +7,9 @@ import StepWrapper from "./components/StepWrapper/StepWrapper";
 import Step from "./components/Step/Step";
 import Credentials from "./components/Credentials/Credentials";
 import PersonalData from "./components/PersonalData/PersonalData";
-import AppContext from "@features/context/AppContext";
-import { signUp } from "@features/service/Functions/index";
-import i18next from "@i18n";
+import AppContext from "~features/context/AppContext";
+import { signUp } from "~features/service/Functions/index";
+import i18next from "~i18n";
 
 const { useTranslation } = i18next;
 
@@ -90,7 +90,7 @@ const Wizzard = ({ children }) => {
 };
 
 Wizzard.propTypes = {
-  children: PropTypes.arrayOf(PropTypes.element)
-}
+  children: PropTypes.arrayOf(PropTypes.element),
+};
 
 export { Wizzard, Controls, StepWrapper, Step, Credentials, PersonalData };

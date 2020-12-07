@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Posts from "@components/Lists/Posts/Posts";
-import MessageBox from "@common/MessageBox/MessageBox";
+import Posts from "~components/Lists/Posts/Posts";
+import MessageBox from "~common/MessageBox/MessageBox";
 
 const Home = ({ fanpageId, role }) => {
   const [content, setContent] = useState("");

@@ -13,6 +13,7 @@ axios.interceptors.response.use(
       (message === "invalid-token" || message === "password-changed") &&
       status === 401
     ) {
+      console.log("wchodzimy ");
       await axios.get("/user/logout").then(() => {
         Router.push("/signin");
       });

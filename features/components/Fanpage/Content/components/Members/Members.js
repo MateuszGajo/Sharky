@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useContext } from "react";
-import axios from "@features/service/Axios";
+import axios from "~features/service/Axios";
 import InfiniteScroll from "react-infinite-scroll-component";
-import Card from "@components/Lists/Card/Card";
-import Spinner from "@components/Spinner/Spinner";
-import AppContext from "@features/context/AppContext";
-import i18next from "@i18n";
+import Card from "~components/Lists/Card/Card";
+import Spinner from "~components/Spinner/Spinner";
+import AppContext from "~features/context/AppContext";
+import i18next from "~i18n";
 const { useTranslation } = i18next;
 
 const Members = ({ fanpageId, role: permission }) => {

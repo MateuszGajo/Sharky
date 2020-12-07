@@ -9,9 +9,9 @@ router.get("/get", async (req, res) => {
   try {
     const { rows: languages } = await client.query(getLanguagesQuery);
 
-    res.status(200).json({ languages });
+    return res.status(200).json({ languages });
   } catch {
-    res.status(400).json("bad-request");
+    return res.status(400).json("bad-request");
   }
 });
 

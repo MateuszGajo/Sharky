@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useContext } from "react";
-import axios from "@features/service/Axios";
 import Router from "next/router";
-import NavBar from "@components/Layout/Home/Compound/components/Navbar/Navbar";
-import Messenger from "@components/Messenger/Messenger";
-import Conversations from "@components/Messages/Conversations/Conversations";
-import Spinner from "@components/Spinner/Spinner";
-import AppContext from "@features/context/AppContext";
-import PopUpHandlers from "@components/PopUpHandlers/PopUpHandlers";
-import { getOwner } from "@features/service/Functions/index";
-import i18next from "@i18n";
+import axios from "~features/service/Axios";
+import NavBar from "~components/Layout/Home/Compound/components/Navbar/Navbar";
+import Messenger from "~components/Messenger/Messenger";
+import Conversations from "~components/Messages/Conversations/Conversations";
+import Spinner from "~components/Spinner/Spinner";
+import AppContext from "~features/context/AppContext";
+import PopUpHandlers from "~components/PopUpHandlers/PopUpHandlers";
+import { getOwner } from "~features/service/Functions/index";
+import i18next from "~i18n";
 import "../styles/messages.scss";
+
 const { useTranslation } = i18next;
 
 const Messages = () => {
@@ -33,15 +34,15 @@ const Messages = () => {
     isAuth &&
       axios
         .get("/message/conversation/get")
-        .then(({ data: { conversations } }) => {
-          if (conversations.length) {
+        .then(({ data: { initialConversations } }) => {
+          if (initialConversations.length) {
             const {
               userId,
               firstName,
               lastName,
               photo,
               chatId,
-            } = conversations[0];
+            } = initialConversations[0];
             setChat({
               user: {
                 id: userId,
@@ -51,7 +52,7 @@ const Messages = () => {
               },
               chatId,
             });
-            setConversations(conversations);
+            setConversations(initialConversations);
           }
           setStatusOfLoading(false);
         });
@@ -61,11 +62,12 @@ const Messages = () => {
     getOwner({ setStatusOfAuth, setOwner });
   }, []);
 
-  if (isAuth == null) return <Spinner />;
-  else if (!isAuth) {
+  if (isAuth === null) return <Spinner />;
+  if (!isAuth) {
     Router.push("/signin");
     return <Spinner />;
-  } else if (isLoading) return <Spinner />;
+  }
+  if (isLoading) return <Spinner />;
   return (
     <section className="messages">
       <PopUpHandlers />

@@ -1,5 +1,5 @@
-import axios from "@features/service/Axios";
-import countryCode from "@root/utils/countryCode";
+import axios from "~features/service/Axios";
+import countryCode from "~root/utils/countryCode";
 
 const validateEmail = (email) => {
   const emailRegex = /^([a-zA-Z\d\.-]+)@([a-z\d-]+)\.([a-z]{2,8})(\.[a-z]{2,8})?$/;

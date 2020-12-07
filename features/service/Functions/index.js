@@ -1,7 +1,7 @@
-import axios from "@features/service/Axios";
-import { signUpValidation } from "@features/Validation/Validation";
-import countryCode from "@root/utils/countryCode";
-import i18next from "@i18n";
+import axios from "~features/service/Axios";
+import { signUpValidation } from "~features/Validation/Validation";
+import countryCode from "~root/utils/countryCode";
+import i18next from "~i18n";
 const { i18n } = i18next;
 
 export const getOwner = ({ setStatusOfAuth, setOwner }) => {

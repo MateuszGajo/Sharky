@@ -1,15 +1,14 @@
 import React, { useEffect, useState, useContext } from "react";
-import axios from "@features/service/Axios";
 import { useRouter } from "next/router";
-import HomeLayout from "@components/Layout/Home/HomeLayout";
-import Navbar from "@components/Fanpage/Navbar/Navbar";
-import Content from "@components/Fanpage/Content/Content";
-import Spinner from "@components/Spinner/Spinner";
-import PopUpHandlers from "@components/PopUpHandlers/PopUpHandlers";
-import i18next from "@i18n";
-import AppContext from "@features/context/AppContext";
-import { getOwner } from "@features/service/Functions/index";
-
+import axios from "~features/service/Axios";
+import HomeLayout from "~components/Layout/Home/HomeLayout";
+import Navbar from "~components/Fanpage/Navbar/Navbar";
+import Content from "~components/Fanpage/Content/Content";
+import Spinner from "~components/Spinner/Spinner";
+import PopUpHandlers from "~components/PopUpHandlers/PopUpHandlers";
+import i18next from "~i18n";
+import AppContext from "~features/context/AppContext";
+import { getOwner } from "~features/service/Functions/index";
 import "../../styles/fanpage.scss";
 
 const { useTranslation } = i18next;
@@ -36,13 +35,13 @@ const Fanpage = () => {
       isAuth &&
       axios
         .post("/fanpage/enter", { fanpageId })
-        .then(({ data: { subId, role } }) => {
-          setIdSub(subId);
-          setRole(role);
+        .then(({ data: { initialSubId, initialRole } }) => {
+          setIdSub(initialSubId);
+          setRole(initialRole);
           setStatusOfLoading(false);
         })
         .catch(({ response: { status, data: message } }) => {
-          if (status == 404) {
+          if (status === 404) {
             setFanpageError(message);
             setStatusOfLoading(false);
           }
@@ -53,11 +52,12 @@ const Fanpage = () => {
     getOwner({ setStatusOfAuth, setOwner });
   }, []);
 
-  if (isAuth == null) return <Spinner />;
-  else if (!isAuth) {
+  if (isAuth === null) return <Spinner />;
+  if (!isAuth) {
     router.push("/signin");
     return <Spinner />;
-  } else if (isLoading) return <Spinner />;
+  }
+  if (isLoading) return <Spinner />;
 
   return (
     <HomeLayout>

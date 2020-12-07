@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
-import axios from "@features/service/Axios";
+import axios from "~features/service/Axios";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { AiOutlineSearch } from "react-icons/ai";
 import Card from "../Card/Card";
-import i18next from "@i18n";
-import AppContext from "@features/context/AppContext";
-import Spinner from "@components/Spinner/Spinner";
+import i18next from "~i18n";
+import AppContext from "~features/context/AppContext";
+import Spinner from "~components/Spinner/Spinner";
 
 const { useTranslation } = i18next;
 

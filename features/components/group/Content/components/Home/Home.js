@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import MessageBox from "@common/MessageBox/MessageBox";
-import Posts from "@components/Lists/Posts/Posts";
+import MessageBox from "~common/MessageBox/MessageBox";
+import Posts from "~components/Lists/Posts/Posts";
 
 const Home = ({ groupId }) => {
   const [content, setContent] = useState("");

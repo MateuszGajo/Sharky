@@ -5,11 +5,11 @@ import { IconContext } from "react-icons";
 import {
   deletePost,
   deletePostShare,
-} from "@components/Post/services/Functions";
-import PostContext from "@components/Post/context/PostContext";
-import WizzardContext from "@components/Post/context/WizzardContext";
-import AppContext from "@features/context/AppContext";
-import i18next from "@i18n";
+} from "~components/Post/services/Functions";
+import PostContext from "~components/Post/context/PostContext";
+import WizzardContext from "~components/Post/context/WizzardContext";
+import AppContext from "~features/context/AppContext";
+import i18next from "~i18n";
 const { useTranslation } = i18next;
 
 const OwnerSettings = () => {

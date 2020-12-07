@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import i18next from "@i18n";
+import i18next from "~i18n";
 const { useTranslation } = i18next;
 
 const Checkbox = ({ value, onChange }) => {

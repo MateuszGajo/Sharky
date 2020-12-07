@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import SettingsContext from "../context/SettingsContext";
 import Item from "./components/Item/Item";
-import i18next from "@i18n";
+import i18next from "~i18n";
 
 const { useTranslation } = i18next;
 
