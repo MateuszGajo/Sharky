@@ -23,12 +23,20 @@ const PrimaryInput = ({
 
     if (autocompleteData.length) {
       setAutocompleteDataFiltered(
-        autocompleteData.filter((item) => {
-          return item.value
-            .toLowerCase()
-            .startsWith(e.target.value.toLowerCase());
-        })
+        autocompleteData.filter((item) =>
+          item.value.toLowerCase().startsWith(e.target.value.toLowerCase())
+        )
       );
+    }
+  };
+
+  const hideList = (e) => {
+    if (
+      e.target.className !== "primary-input__autocomplete__item" &&
+      document.activeElement.className !== "primary-input__input"
+    ) {
+      setStatusOfFocus(false);
+      window.removeEventListener("click", hideList);
     }
   };
 
@@ -37,22 +45,12 @@ const PrimaryInput = ({
     window.addEventListener("click", hideList);
   };
 
-  const hideList = (e) => {
-    if (
-      e.target.className != "primary-input__autocomplete__item" &&
-      document.activeElement.className != "primary-input__input"
-    ) {
-      setStatusOfFocus(false);
-      removeEventListener("click", hideList);
-    }
-  };
-
   useEffect(() => {
     if (isFocus) {
       setAutocompleteDataFiltered(
-        autocompleteData.filter((item) => {
-          return item.value.toLowerCase().startsWith(value.toLowerCase());
-        })
+        autocompleteData.filter((item) =>
+          item.value.toLowerCase().startsWith(value.toLowerCase())
+        )
       );
     }
   }, [isFocus]);
@@ -63,8 +61,8 @@ const PrimaryInput = ({
     }
 
     return () => {
-      removeEventListener("focus", showList);
-      removeEventListener("click", hideList);
+      inputRef.current.removeEventListener("focus", showList);
+      inputRef.current.removeEventListener("click", hideList);
     };
   }, [autocompleteData]);
   return (
@@ -99,15 +97,16 @@ const PrimaryInput = ({
           "is-close": !isFocus,
         })}
       >
-        {autocompleteDataFiltered.map((item, index) => (
+        {autocompleteDataFiltered.map((item) => (
           <div
             className="primary-input__autocomplete__item"
-            key={index}
+            key={item.value}
             onClick={() => {
               onChange(item.value);
               setAutocompleteDataFiltered([]);
               setStatusOfFocus(false);
             }}
+            aria-hidden="true"
           >
             <span className="primary-input__autocomplete__item__span">
               {item.value}
@@ -119,19 +118,29 @@ const PrimaryInput = ({
   );
 };
 
+PrimaryInput.defaultProps = {
+  type: "text",
+  autocompleteData: [],
+  withOutMargin: false,
+  size: "large",
+  require: false,
+};
+
 PrimaryInput.propTypes = {
   type: PropTypes.string,
-  onChange: PropTypes.func,
-  value: PropTypes.string,
-  name: PropTypes.string,
-  title: PropTypes.string,
-  autocompleteData: PropTypes.arrayOf(PropTypes.shape({
-    value:PropTypes.string,
-    name: PropTypes.string,
-  })),
+  onChange: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  autocompleteData: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.string,
+      name: PropTypes.string,
+    })
+  ),
   withOutMargin: PropTypes.bool,
   size: PropTypes.string,
-  require: PropTypes.bool
-}
+  require: PropTypes.bool,
+};
 
 export default PrimaryInput;

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import cx from "classnames";
 import axios from "~features/service/Axios";
 import i18next from "~i18n";
@@ -6,8 +7,8 @@ import i18next from "~i18n";
 const { useTranslation } = i18next;
 
 const FriendInvitationButtons = ({
-  darkerBorder = true,
-  size = "medium",
+  darkerBorder,
+  size,
   userId,
   setButtonName,
   setCurrentRelation,
@@ -42,6 +43,7 @@ const FriendInvitationButtons = ({
           }
         )}
         onClick={handleAcceptButton}
+        aria-hidden="true"
       >
         {acceptText}
       </div>
@@ -56,11 +58,26 @@ const FriendInvitationButtons = ({
           }
         )}
         onClick={handleDeclineButton}
+        aria-hidden="true"
       >
         {declineText}
       </div>
     </div>
   );
+};
+
+FriendInvitationButtons.defaultProps = {
+  darkerBorder: true,
+  size: "medium",
+};
+
+FriendInvitationButtons.propTypes = {
+  darkerBorder: PropTypes.bool,
+  size: PropTypes.string,
+  userId: PropTypes.number.isRequired,
+  setButtonName: PropTypes.func.isRequired,
+  setCurrentRelation: PropTypes.func.isRequired,
+  setDeclineInvitation: PropTypes.func.isRequired,
 };
 
 export default FriendInvitationButtons;

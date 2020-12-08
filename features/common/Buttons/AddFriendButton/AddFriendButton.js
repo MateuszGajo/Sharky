@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import cx from "classnames";
 import axios from "~features/service/Axios";
@@ -26,13 +27,14 @@ const AddFriendButton = ({
         })
         .then(() => setButtonName("invitation"))
         .catch(() => {});
-    } else
+    } else {
       axios
         .post("/friend/add", { userId })
         .then(() => {
           setButtonName("invitation");
         })
         .catch(() => {});
+    }
   };
   return (
     <div
@@ -40,6 +42,7 @@ const AddFriendButton = ({
         "add-friend-button--border": border,
       })}
       onClick={handleClick}
+      aria-hidden="true"
     >
       {icon && (
         <div
@@ -65,6 +68,25 @@ const AddFriendButton = ({
       </div>
     </div>
   );
+};
+
+AddFriendButton.defaultProps = {
+  icon: true,
+  size: "large",
+  border: false,
+};
+
+AddFriendButton.propTypes = {
+  icon: PropTypes.bool,
+  size: PropTypes.string,
+  border: PropTypes.bool,
+  userId: PropTypes.number.isRequired,
+  setButtonName: PropTypes.func.isRequired,
+  invitePerson: PropTypes.shape({
+    type: PropTypes.string.isRequired,
+    targetId: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default AddFriendButton;

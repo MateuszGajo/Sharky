@@ -1,9 +1,9 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import PropTypes from "prop-types";
 import { MdErrorOutline } from "react-icons/md";
 import AppContext from "~features/context/AppContext";
 import i18next from "~i18n";
-import { useEffect } from "react";
+
 const { useTranslation } = i18next;
 
 const Error = ({ message }) => {
@@ -24,7 +24,11 @@ const Error = ({ message }) => {
 
   return (
     <section className="error">
-      <div className="error__container" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="error__container"
+        onClick={(e) => e.stopPropagation()}
+        aria-hidden="true"
+      >
         <div className="error__container__icon">
           <MdErrorOutline />
         </div>
@@ -37,7 +41,7 @@ const Error = ({ message }) => {
 };
 
 Error.propTypes = {
-  message: PropTypes.string,
+  message: PropTypes.string.isRequired,
 };
 
 export default Error;

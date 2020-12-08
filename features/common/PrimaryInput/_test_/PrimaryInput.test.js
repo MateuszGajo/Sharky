@@ -21,7 +21,7 @@ it("Does primary input work correct", () => {
       onChange={inputOnChange}
       title={inputTitle}
       autocompleteData={[]}
-      withOutMargin={true}
+      withOutMargin
       size="large"
     />
   );

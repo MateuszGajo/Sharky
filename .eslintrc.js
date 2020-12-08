@@ -2,6 +2,7 @@ module.exports = {
   env: {
     browser: true,
     es2021: true,
+    "jest/globals": true,
   },
   extends: [
     "plugin:react/recommended",
@@ -16,19 +17,28 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: "module",
   },
-  plugins: ["react"],
+  plugins: ["react", "jest"],
   rules: {
     "react/react-in-jsx-scope": "off",
     "react/jsx-filename-extension": [1, { extensions: [".js", ".jsx"] }],
     "no-plusplus": [2, { allowForLoopAfterthoughts: true }],
     quotes: ["error", "double", { allowTemplateLiterals: true }],
-    "operator-linebreak": [2, "after"],
+    "operator-linebreak": [
+      2,
+      "after",
+      {
+        overrides: {
+          ":": "before",
+          "?": "before",
+        },
+      },
+    ],
     "comma-dangle": [
       "error",
       {
         arrays: "only-multiline",
         objects: "only-multiline",
-        imports: "never",
+        imports: "only-multiline",
         exports: "never",
         functions: "never",
       },
@@ -39,6 +49,17 @@ module.exports = {
     "linebreak-style": ["error", "windows"],
     curly: [2, "multi-line"],
     "import/prefer-default-export": "off",
+    "jsx-a11y/label-has-associated-control": [
+      2,
+      {
+        labelComponents: ["CustomInputLabel"],
+        labelAttributes: ["label"],
+        controlComponents: ["CustomInput"],
+        depth: 3,
+      },
+    ],
+    "implicit-arrow-linebreak": "off",
+    "function-paren-newline": "off",
   },
 
   globals: {

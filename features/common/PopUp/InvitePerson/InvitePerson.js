@@ -2,16 +2,17 @@ import React, { useState, useRef, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import cx from "classnames";
 import { MdClose } from "react-icons/md";
-import axios from "~features/service/Axios";
 import InfiniteScroll from "react-infinite-scroll-component";
+import axios from "~features/service/Axios";
 import Search from "~common/Search/Search";
 import Card from "~components/Lists/Card/Card";
 import Spinner from "~components/Spinner/Spinner";
 import AppContext from "~features/context/AppContext";
 import i18next from "~i18n";
+
 const { useTranslation } = i18next;
 
-const InvitePerson = ({ isOpen = true, setStatusOfOpen, type, targetId }) => {
+const InvitePerson = ({ isOpen, setStatusOfOpen, type, targetId }) => {
   const { t } = useTranslation();
 
   const { setError } = useContext(AppContext);
@@ -20,7 +21,6 @@ const InvitePerson = ({ isOpen = true, setStatusOfOpen, type, targetId }) => {
   const [people, setPeople] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [isScrolling, setStatusOfScrolling] = useState(false);
-  const [invite, setInvite] = useState({ refId: null });
   const [isMore, setStatusOfMore] = useState(null);
 
   const emptyContent = t("common:pop-up.invite-person.empty-content");
@@ -43,9 +43,9 @@ const InvitePerson = ({ isOpen = true, setStatusOfOpen, type, targetId }) => {
   const fetchData = (from, keyWords = "", prevState = people) => {
     axios
       .post("/people/get", { targetId, keyWords, from, type })
-      .then(({ data: { friends, isMore } }) => {
+      .then(({ data: { friends, isMore: isMorePeople } }) => {
         setPeople([...prevState, ...friends]);
-        setStatusOfMore(isMore);
+        setStatusOfMore(isMorePeople);
       })
       .catch(({ response: { message } }) => setError(message));
   };
@@ -59,7 +59,7 @@ const InvitePerson = ({ isOpen = true, setStatusOfOpen, type, targetId }) => {
     scrollBar.current.addEventListener("wheel", showScroll);
     fetchData(0, searchText, []);
     return () => {
-      removeEventListener("wheel", showScroll);
+      scrollBar.current.removeEventListener("wheel", showScroll);
     };
   }, []);
   return (
@@ -72,6 +72,7 @@ const InvitePerson = ({ isOpen = true, setStatusOfOpen, type, targetId }) => {
         <div
           className="invite-person__container__close-icon"
           onClick={() => setStatusOfOpen(false)}
+          aria-hidden="true"
         >
           <MdClose />
         </div>
@@ -98,7 +99,7 @@ const InvitePerson = ({ isOpen = true, setStatusOfOpen, type, targetId }) => {
               next={() => fetchData(people.length, searchText)}
               hasMore={isMore}
               loader={<Spinner />}
-              scrollableTarget={"scroll"}
+              scrollableTarget="scroll"
             >
               {people.map((person) => {
                 const {
@@ -115,7 +116,7 @@ const InvitePerson = ({ isOpen = true, setStatusOfOpen, type, targetId }) => {
                     id: userId,
                     refType: "profile",
                     refId: userId,
-                    photo: photo,
+                    photo,
                     name: `${firstName} ${lastName}`,
                     description,
                     number: numberOfFriends,
@@ -156,10 +157,10 @@ const InvitePerson = ({ isOpen = true, setStatusOfOpen, type, targetId }) => {
 };
 
 InvitePerson.propTypes = {
-  isOpen: PropTypes.bool,
-  setStatusOfOpen: PropTypes.func,
-  type: PropTypes.string,
-  targetId: PropTypes.number,
+  isOpen: PropTypes.bool.isRequired,
+  setStatusOfOpen: PropTypes.func.isRequired,
+  type: PropTypes.string.isRequired,
+  targetId: PropTypes.number.isRequired,
 };
 
 export default InvitePerson;

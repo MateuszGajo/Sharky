@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { BsEnvelope } from "react-icons/bs";
 import cx from "classnames";
 import i18next from "~i18n";
@@ -38,6 +39,16 @@ const FriendInvitedButton = ({ size = "large", border = false }) => {
       </div>
     </div>
   );
+};
+
+FriendInvitedButton.defaultProps = {
+  size: "large",
+  border: false,
+};
+
+FriendInvitedButton.propTypes = {
+  size: PropTypes.string,
+  border: PropTypes.bool,
 };
 
 export default FriendInvitedButton;

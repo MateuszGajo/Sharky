@@ -24,7 +24,7 @@ const Prompt = ({ message }) => {
 };
 
 Prompt.propTypes = {
-  message: PropTypes.string,
+  message: PropTypes.string.isRequired,
 };
 
 export default Prompt;

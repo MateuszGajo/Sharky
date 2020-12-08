@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import PropTypes from "prop-types";
 import cx from "classnames";
 
 const RelationButton = ({
@@ -57,7 +58,7 @@ const RelationButton = ({
   };
 
   const resetFriendButton = () => {
-    removeEventListener("click", removeFriend);
+    buttonRef.current.removeEventListener("click", removeFriend);
 
     setStatusOfCollapse(true);
   };
@@ -68,17 +69,18 @@ const RelationButton = ({
       buttonRef.current.addEventListener("mouseout", resetFriendButton);
     }
 
-    () => {
-      removeEventListener("mouseover", changeFriendButton);
-      removeEventListener("mouseout", resetFriendButton);
+    return () => {
+      buttonRef.current.removeEventListener("mouseover", changeFriendButton);
+      buttonRef.current.removeEventListener("mouseout", resetFriendButton);
     };
   }, [buttonRef]);
 
-  useEffect(() => {
-    return () => {
-      removeEventListener("click", removeFriend);
-    };
-  }, []);
+  useEffect(
+    () => () => {
+      buttonRef.current.removeEventListener("click", removeFriend);
+    },
+    []
+  );
 
   return (
     <div className="relation-buttons">
@@ -114,6 +116,7 @@ const RelationButton = ({
                     });
                   }
                 }}
+                aria-hidden="true"
                 key={id}
               >
                 <span>{itemTitle}</span>
@@ -141,6 +144,47 @@ const RelationButton = ({
       </div>
     </div>
   );
+};
+
+RelationButton.defaultProps = {
+  deleteTitle: "delete",
+  size: "large",
+  blockCollapse: true,
+  setRelation: () => {},
+  setButtonName: () => {},
+  userId: null,
+  refId: null,
+  handleCollapseClick: () => {},
+  setNumber: () => {},
+  setRefId: () => {},
+};
+
+RelationButton.propTypes = {
+  buttons: PropTypes.shape({
+    green: PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired,
+    }),
+    pink: PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired,
+    }),
+    blue: PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired,
+    }),
+  }).isRequired,
+  userId: PropTypes.number,
+  refId: PropTypes.number,
+  setButtonName: PropTypes.func,
+  setRelation: PropTypes.func,
+  handleCollapseClick: PropTypes.func,
+  deleteTitle: PropTypes.string,
+  size: PropTypes.number,
+  title: PropTypes.string.isRequired,
+  blockCollapse: PropTypes.bool,
+  setNumber: PropTypes.func,
+  setRefId: PropTypes.func,
 };
 
 export default RelationButton;

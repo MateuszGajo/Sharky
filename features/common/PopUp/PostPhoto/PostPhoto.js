@@ -1,7 +1,9 @@
 import React, { useEffect } from "react";
+import PropTypes from "prop-types";
 import Router from "next/router";
 import { IoMdClose, IoMdArrowForward } from "react-icons/io";
-const PostPhoto = ({ src, postId, setSrc, forward = true }) => {
+
+const PostPhoto = ({ src, postId, setSrc, forward }) => {
   useEffect(() => {
     document.body.classList.add("invisible-scroll");
     return () => {
@@ -14,6 +16,7 @@ const PostPhoto = ({ src, postId, setSrc, forward = true }) => {
       onClick={() => {
         setSrc("");
       }}
+      aria-hidden="true"
     >
       <div className="post-photo__close">
         <div
@@ -22,6 +25,7 @@ const PostPhoto = ({ src, postId, setSrc, forward = true }) => {
             e.stopPropagation();
             setSrc("");
           }}
+          aria-hidden="true"
         >
           <IoMdClose />
         </div>
@@ -34,6 +38,7 @@ const PostPhoto = ({ src, postId, setSrc, forward = true }) => {
               e.stopPropagation();
               Router.push(`/post/${postId}`);
             }}
+            aria-hidden="true"
           >
             <IoMdArrowForward />
           </div>
@@ -42,15 +47,27 @@ const PostPhoto = ({ src, postId, setSrc, forward = true }) => {
       <div
         className="post-photo__container no-scroll"
         onClick={(e) => e.stopPropagation()}
+        aria-hidden="true"
       >
         <img
           className="post-photo__container__img"
           src={`/static/images/${src}`}
-          alt="post's photo"
+          alt="post"
         />
       </div>
     </div>
   );
+};
+
+PostPhoto.defaultProps = {
+  forward: true,
+};
+
+PostPhoto.propTypes = {
+  src: PropTypes.string.isRequired,
+  postId: PropTypes.number.isRequired,
+  setSrc: PropTypes.func.isRequired,
+  forward: PropTypes.bool,
 };
 
 export default PostPhoto;

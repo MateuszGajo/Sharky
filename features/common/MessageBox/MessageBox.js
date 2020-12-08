@@ -6,6 +6,7 @@ import cx from "classnames";
 import PrimaryButton from "../PrimaryButton/PrimaryButton";
 import i18next from "~i18n";
 import AppContext from "~features/context/AppContext";
+
 const { useTranslation } = i18next;
 
 const MessageBox = ({
@@ -17,8 +18,7 @@ const MessageBox = ({
   news = false,
 }) => {
   const { t } = useTranslation(["common"]);
-
-  const { setError, owner } = useContext(AppContext);
+  const { setError } = useContext(AppContext);
 
   const title = t("common:message-box.title");
   const description = t("common:message-box.description");
@@ -28,22 +28,22 @@ const MessageBox = ({
   const imageRef = useRef(null);
 
   const previewImage = (e) => {
-    const file = e.target.files[0];
+    const { type, size } = e.target.files[0];
 
-    if (file.type != "image/png" && file.type != "image/jpeg") {
+    if (type !== "image/png" && type !== "image/jpeg") {
       return setError("wrong-file-type");
     }
-    if (file.size > 200000) {
+    if (size > 200000) {
       return setError("file-too-large");
     }
     const reader = new FileReader();
 
-    reader.onload = (e) => {
-      imageRef.current.setAttribute("src", e.target.result);
+    reader.onload = (event) => {
+      imageRef.current.setAttribute("src", event.target.result);
     };
 
     reader.readAsDataURL(e.target.files[0]);
-    setFile(e.target.files[0]);
+    return setFile(e.target.files[0]);
   };
 
   return (
@@ -81,6 +81,7 @@ const MessageBox = ({
                 <div
                   className="message-box__downbar____upload__photo__overlay__delete"
                   onClick={() => setFile(null)}
+                  aria-hidden="true"
                 >
                   <AiOutlineClose />
                 </div>
@@ -120,12 +121,18 @@ const MessageBox = ({
   );
 };
 
+MessageBox.defaultProps = {
+  btnSize: "medium",
+  news: false,
+};
+
 MessageBox.propTypes = {
-  value: PropTypes.string,
-  onChange: PropTypes.func,
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
   btnSize: PropTypes.string,
-  file: PropTypes.object,
-  setFile: PropTypes.func,
+  file: PropTypes.objectOf(PropTypes.object()).isRequired,
+  setFile: PropTypes.func.isRequired,
+  news: PropTypes.bool,
 };
 
 export default MessageBox;

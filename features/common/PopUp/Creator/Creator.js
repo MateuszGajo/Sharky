@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import axios from "~features/service/Axios";
 import Router from "next/router";
 import { RiCloseLine } from "react-icons/ri";
+import axios from "~features/service/Axios";
 import PrimaryInput from "~common/PrimaryInput/PrimaryInput";
 import PrimaryButton from "~common/PrimaryButton/PrimaryButton";
 import i18next from "~i18n";
@@ -38,12 +38,15 @@ const Creator = ({ type, setStatusOfOpen }) => {
         <div
           className="creator__container__close-button"
           onClick={() => setStatusOfOpen(false)}
+          aria-hidden="true"
         >
           <RiCloseLine />
         </div>
         <div className="creator__container__title">
           <h1 className="creator__container__title__h1">
-            {type == "group" ? createGroup : type == "fanpage" && createFanpage}
+            {type === "group"
+              ? createGroup
+              : type === "fanpage" && createFanpage}
           </h1>
         </div>
         <div className="creator__container__content">
@@ -56,7 +59,7 @@ const Creator = ({ type, setStatusOfOpen }) => {
                 title={inputName}
                 value={name}
                 onChange={setName}
-                require={true}
+                require
               />
             </div>
             <div className="creator__container__content__form__input">
@@ -83,8 +86,8 @@ const Creator = ({ type, setStatusOfOpen }) => {
 };
 
 Creator.propTypes = {
-  type: PropTypes.string,
-  setStatusOfOpen: PropTypes.func,
+  type: PropTypes.string.isRequired,
+  setStatusOfOpen: PropTypes.func.isRequired,
 };
 
 export default Creator;

@@ -3,9 +3,10 @@ import PropTypes from "prop-types";
 import PrimaryButton from "~common/PrimaryButton/PrimaryButton";
 import i18next from "~i18n";
 import AppContext from "~features/context/AppContext";
+
 const { useTranslation } = i18next;
 
-const Report = ({ type = "post", id }) => {
+const Report = ({ type = "post" }) => {
   const { t } = useTranslation();
 
   const title = t(`common:pop-up.report.title-${type}`);
@@ -35,7 +36,7 @@ const Report = ({ type = "post", id }) => {
 
     if (classList.contains("primary-background")) {
       classList.remove("primary-background");
-      const newReportsList = reportsList.filter((item) => item != reason);
+      const newReportsList = reportsList.filter((item) => item !== reason);
 
       setReportsLists(newReportsList);
     } else {
@@ -53,22 +54,23 @@ const Report = ({ type = "post", id }) => {
         <div className="report-user__container__content">
           <div className="report-user__container__content__subtitle">
             <h3 className="report-user__container__content__subtitle__h3">
-              {subtitle}:
+              {`${subtitle} :`}
             </h3>
           </div>
           <div className="report-user__container__content__select">
-            {items.map((item, i) => {
+            {items.map((item) => {
               const { value, name } = item;
 
               return (
                 <div
                   className="report-user__container__content__select__item"
-                  key={i}
+                  key={name}
                 >
                   <div
                     className="report-user__container__content__select__item__circle"
-                    data-id={i}
+                    data-id={name}
                     onClick={(e) => handleClick(e, name)}
+                    aria-hidden="true"
                   >
                     <span className="report-user__container__content__select__item__circle__span">
                       {value}
@@ -84,6 +86,7 @@ const Report = ({ type = "post", id }) => {
           onClick={() => {
             setReport({ type: "", id: "" });
           }}
+          aria-hidden="true"
         >
           <PrimaryButton value={buttonText} size="medium" />
         </div>
@@ -93,8 +96,7 @@ const Report = ({ type = "post", id }) => {
 };
 
 Report.propTypes = {
-  type: PropTypes.string,
-  id: PropTypes.number,
+  type: PropTypes.string.isRequired,
 };
 
 export default Report;

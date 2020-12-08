@@ -2,13 +2,7 @@ import React, { useRef } from "react";
 import PropTypes from "prop-types";
 import cx from "classnames";
 
-const InputAuth = ({
-  value,
-  onChange,
-  type = "text",
-  title,
-  size = "large",
-}) => {
+const InputAuth = ({ value, onChange, type, title, size }) => {
   const input = useRef(null);
   return (
     <div
@@ -33,6 +27,7 @@ const InputAuth = ({
         data-testid="auth-input-placeholder"
         className="auth-input__placeholder"
         onClick={() => input.current.focus()}
+        aria-hidden="true"
       >
         {title}
       </h2>
@@ -40,11 +35,16 @@ const InputAuth = ({
   );
 };
 
+InputAuth.defaultProps = {
+  type: "text",
+  size: "large",
+};
+
 InputAuth.propTypes = {
-  value: PropTypes.string,
-  onChange: PropTypes.func,
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
   type: PropTypes.string,
-  title: PropTypes.string,
+  title: PropTypes.string.isRequired,
   size: PropTypes.string,
 };
 

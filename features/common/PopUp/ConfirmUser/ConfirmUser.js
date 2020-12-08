@@ -30,6 +30,7 @@ const ConfirmUser = ({ setOpen, setValue }) => {
           className="confrim-user-container__content__icon"
           data-testid="close-icon"
           onClick={() => setOpen(false)}
+          aria-hidden="true"
         >
           <IoMdClose />
         </div>
@@ -68,9 +69,8 @@ const ConfirmUser = ({ setOpen, setValue }) => {
 };
 
 ConfirmUser.propTypes = {
-  setOpen: PropTypes.func,
-  setValue: PropTypes.func,
-  popUpError: PropTypes.string,
+  setOpen: PropTypes.func.isRequired,
+  setValue: PropTypes.func.isRequired,
 };
 
 export default ConfirmUser;
