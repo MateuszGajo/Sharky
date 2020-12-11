@@ -1,11 +1,12 @@
 import React, { useContext } from "react";
 import PropTypes from "prop-types";
 import cx from "classnames";
-import axios from "~features/service/Axios";
 import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
 import { useRouter } from "next/router";
+import axios from "~features/service/Axios";
 import i18next from "~i18n";
 import AppContext from "~features/context/AppContext";
+
 const { useTranslation } = i18next;
 
 const Item = ({ item, setDeleteNotification }) => {
@@ -64,14 +65,13 @@ const Item = ({ item, setDeleteNotification }) => {
       <div
         className="home-wrapper__main__content__notifications__item"
         onClick={() =>
-          router.push(
-            `/${userId ? "user" : "group"}/${userId ? userId : groupId}`
-          )
+          router.push(`/${userId ? "user" : "group"}/${userId || groupId}`)
         }
+        aria-hidden="true"
       >
         <div className="home-wrapper__main__content__notifications__item__photo">
           <img
-            src={"/static/images/" + photo}
+            src={`/static/images/${photo}`}
             alt=""
             className="home-wrapper__main__content__notifications__item__photo__img"
           />
@@ -82,28 +82,26 @@ const Item = ({ item, setDeleteNotification }) => {
               className={cx(
                 "home-wrapper__main__content__notifications__item__content__name__span bold-text",
                 {
-                  "pal-color": relation == "pal",
-                  "family-color": relation == "family",
-                  "primary-color": relation == "friend",
+                  "pal-color": relation === "pal",
+                  "family-color": relation === "family",
+                  "primary-color": relation === "friend",
                 }
               )}
             >
-              {userId ? firstName + " " + lastName : name}
+              {userId ? `${firstName} ${lastName}` : name}
             </span>
           </div>
           <div className="home-wrapper__main__content__notifications__item__content__text">
             <span className="home-wrapper__main__content__notifications__item__content__text__span">
               {userId && (
-                <span className="bold-text">
-                  {firstName + " " + lastName + " "}
-                </span>
+                <span className="bold-text">{`${firstName} ${lastName} `}</span>
               )}
-              {(userId ? changeRelation : groupInvite) + " "}
+              {`${userId ? changeRelation : groupInvite} `}
               <span
                 className={cx("bold-text", {
-                  "pal-color": newRelation == "pal",
-                  "family-color": newRelation == "family",
-                  "primary-color": newRelation == "friend",
+                  "pal-color": newRelation === "pal",
+                  "family-color": newRelation === "family",
+                  "primary-color": newRelation === "friend",
                 })}
               >
                 {userId ? newRelation : name}
@@ -119,6 +117,7 @@ const Item = ({ item, setDeleteNotification }) => {
               if (userId) acceptNewRelation();
               else if (groupId) acceptInvitationToGroup();
             }}
+            aria-hidden="true"
           >
             <AiOutlineCheck />
           </div>
@@ -129,6 +128,7 @@ const Item = ({ item, setDeleteNotification }) => {
               if (userId) declineNewRelation();
               else if (groupId) declineInvitationToGroup();
             }}
+            aria-hidden="true"
           >
             <AiOutlineClose />
           </div>
@@ -151,8 +151,8 @@ Item.propTypes = {
     lastName: PropTypes.string,
     relation: PropTypes.string,
     newRelation: PropTypes.string,
-  }),
-  setDeleteNotification: PropTypes.func,
+  }).isRequired,
+  setDeleteNotification: PropTypes.func.isRequired,
 };
 
 export default Item;

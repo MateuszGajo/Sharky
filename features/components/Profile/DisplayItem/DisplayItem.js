@@ -9,6 +9,7 @@ import Photos from "~components/Lists/Photos/Photos";
 import Posts from "~components/Lists/Posts/Posts";
 import About from "../About/About";
 import i18next from "~i18n";
+
 const { useTranslation } = i18next;
 
 const DisplayItem = ({ setChooseItem, chooseItem, info, userId }) => {
@@ -25,30 +26,22 @@ const DisplayItem = ({ setChooseItem, chooseItem, info, userId }) => {
     switch (name) {
       case fanpagesText:
         return (
-          <Fanpages
-            userId={userId}
-            onlySubscribed={true}
-            helpInformation={false}
-          />
+          <Fanpages userId={userId} onlySubscribed helpInformation={false} />
         );
       case friendsText:
-        return (
-          <People userId={userId} onlyFriends={true} helpInformation={false} />
-        );
+        return <People userId={userId} onlyFriends helpInformation={false} />;
       case groupsText:
         return (
-          <Groups
-            userId={userId}
-            onlySubscribed={true}
-            helpInformation={false}
-          />
+          <Groups userId={userId} onlySubscribed helpInformation={false} />
         );
       case photosText:
         return <Photos userId={userId} />;
       case postsText:
-        return <Posts userId={userId} authorPost={true} />;
+        return <Posts userId={userId} authorPost />;
       case aboutText:
         return <About info={info} />;
+      default:
+        return null;
     }
   };
   return (
@@ -61,6 +54,7 @@ const DisplayItem = ({ setChooseItem, chooseItem, info, userId }) => {
         <div
           className="profile__display__navbar__icon"
           onClick={() => setChooseItem("")}
+          aria-hidden="true"
         >
           <IoMdArrowBack />
         </div>
@@ -70,7 +64,7 @@ const DisplayItem = ({ setChooseItem, chooseItem, info, userId }) => {
         className={cx("profile__display__content", {
           "profile__display__content--photos": chooseItem === photosText,
           "profile__display__content--posts": chooseItem === postsText,
-          "profile__display__content--about": chooseItem == aboutText,
+          "profile__display__content--about": chooseItem === aboutText,
         })}
       >
         {renderComponent(chooseItem)}
@@ -80,16 +74,16 @@ const DisplayItem = ({ setChooseItem, chooseItem, info, userId }) => {
 };
 
 DisplayItem.propTypes = {
-  setChooseItem: PropTypes.func,
-  chooseItem: PropTypes.string,
+  setChooseItem: PropTypes.func.isRequired,
+  chooseItem: PropTypes.string.isRequired,
   info: PropTypes.shape({
     firstName: PropTypes.string,
     lastName: PropTypes.string,
     city: PropTypes.string,
     country: PropTypes.string,
     birthDate: PropTypes.string,
-  }),
-  userId: PropTypes.number,
+  }).isRequired,
+  userId: PropTypes.number.isRequired,
 };
 
 export default DisplayItem;

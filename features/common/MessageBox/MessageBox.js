@@ -130,7 +130,7 @@ MessageBox.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   btnSize: PropTypes.string,
-  file: PropTypes.objectOf(PropTypes.object()).isRequired,
+  file: PropTypes.objectOf(PropTypes.object).isRequired,
   setFile: PropTypes.func.isRequired,
   news: PropTypes.bool,
 };

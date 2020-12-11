@@ -2,23 +2,19 @@ import React from "react";
 import PropTypes from "prop-types";
 import Item from "./components/Item/Item";
 
-const Conversations = ({ items, setChat, chat, setStatusOfDisplayMobile }) => {
-  return (
-    <div className="conversations">
-      {items.map((conversation) => {
-        return (
-          <Item
-            key={conversation.chatId}
-            {...conversation}
-            setChat={setChat}
-            chat={chat}
-            setStatusOfDisplayMobile={setStatusOfDisplayMobile}
-          />
-        );
-      })}
-    </div>
-  );
-};
+const Conversations = ({ items, setChat, chat, setStatusOfDisplayMobile }) => (
+  <div className="conversations">
+    {items.map((conversation) => (
+      <Item
+        key={conversation.chatId}
+        {...conversation}
+        setChat={setChat}
+        chat={chat}
+        setStatusOfDisplayMobile={setStatusOfDisplayMobile}
+      />
+    ))}
+  </div>
+);
 
 Conversations.propTypes = {
   items: PropTypes.arrayOf(
@@ -31,8 +27,8 @@ Conversations.propTypes = {
       photo: PropTypes.string,
       message: PropTypes.string,
     })
-  ),
-  setChat: PropTypes.func,
+  ).isRequired,
+  setChat: PropTypes.func.isRequired,
   chat: PropTypes.shape({
     user: PropTypes.shape({
       id: PropTypes.number,
@@ -41,8 +37,8 @@ Conversations.propTypes = {
       photo: PropTypes.string,
     }),
     chatId: PropTypes.number,
-  }),
-  setStatusOfDisplayMobile: PropTypes.func,
+  }).isRequired,
+  setStatusOfDisplayMobile: PropTypes.func.isRequired,
 };
 
 export default Conversations;

@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types"
+import PropTypes from "prop-types";
 
 export const WizzardContext = React.createContext({
   numberOfPages: 0,
@@ -17,7 +17,7 @@ export const WizzardContext = React.createContext({
   lastName: "",
   setLastName: () => {},
   phoneNumber: "",
-  setPhoneNumber: () => {}
+  setPhoneNumber: () => {},
 });
 
 WizzardContext.Provider.propTypes = {
@@ -37,7 +37,6 @@ WizzardContext.Provider.propTypes = {
     lastName: PropTypes.string,
     setLastName: PropTypes.func,
     phoneNumber: PropTypes.string,
-    setPhoneNumber: PropTypes.func
-  })
-}
-
+    setPhoneNumber: PropTypes.func,
+  }),
+};

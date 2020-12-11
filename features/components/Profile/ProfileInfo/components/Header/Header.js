@@ -1,14 +1,16 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
-import axios from "~features/service/Axios";
+import PropTypes from "prop-types";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import cx from "classnames";
+import axios from "~features/service/Axios";
 import AppContex from "~features/context/AppContext";
 import i18next from "~i18n";
 import AddFriendButton from "~common/Buttons/AddFriendButton/AddFriendButton";
 import FriendInvitedButton from "~common/Buttons/FriendInvitedButton/FriendInvitedButton";
-import FriendsInvitationButtons from "~common/Buttons/FriendsInvitationButtons/FriendsInvitationButtons";
+import FriendsInvitationButtons from "~common/Buttons/FriendInvitationButtons/FriendInvitationButtons";
 import RelationButtons from "~common/Buttons/RelationButtons/RelationButtons";
 import getInitialButtonName from "./getInitialButtonName";
+
 const { useTranslation } = i18next;
 
 const Header = ({ info, setNumberOfPhotos, userId }) => {
@@ -41,7 +43,7 @@ const Header = ({ info, setNumberOfPhotos, userId }) => {
   const handlePhotoUpload = (e) => {
     const file = e.target.files[0];
 
-    if (file.type != "image/png" && file.type != "image/jpeg") {
+    if (file.type !== "image/png" && file.type !== "image/jpeg") {
       return setError("wrong-file-type");
     }
     if (file.size > 200000) {
@@ -50,7 +52,7 @@ const Header = ({ info, setNumberOfPhotos, userId }) => {
     const data = new FormData();
     data.append("file", file);
 
-    axios
+    return axios
       .post("/user/add/photo", data)
       .then(() => {
         setPrompt(photoAddedSuccessfullyText);
@@ -60,16 +62,17 @@ const Header = ({ info, setNumberOfPhotos, userId }) => {
       .catch(({ response: { data: message } }) => setError(message));
   };
 
-  useEffect(() => {
-    return () => {
+  useEffect(
+    () => () => {
       clearTimeout(timeToClear.current);
-    };
-  }, []);
+    },
+    []
+  );
 
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
 
-    if (file.type != "image/png" && file.type != "image/jpeg") {
+    if (file.type !== "image/png" && file.type !== "image/jpeg") {
       return setError("wrong-file-type");
     }
     if (file.size > 200000) {
@@ -79,7 +82,7 @@ const Header = ({ info, setNumberOfPhotos, userId }) => {
     const data = new FormData();
     data.append("file", e.target.files[0]);
 
-    axios
+    return axios
       .post("/user/change/photo", data)
       .then(({ data: { fileName } }) => {
         setPhoto(fileName);
@@ -128,20 +131,22 @@ const Header = ({ info, setNumberOfPhotos, userId }) => {
             title={relation}
           />
         );
+      default:
+        return null;
     }
   };
   return (
     <div className="profile__container__person">
       <div className="profile__container__person__name">
         <span className="profile__container__person__name__span">
-          {firstName + " " + lastName}
+          {`${firstName} ${lastName}`}
         </span>
       </div>
       <div className="profile__container__person__photo">
         <div
           className={cx("profile__container__person__photo__container", {
             "profile__container__person__photo__container--owner":
-              owner.id == userId,
+              owner.id === userId,
           })}
         >
           <img
@@ -164,7 +169,7 @@ const Header = ({ info, setNumberOfPhotos, userId }) => {
           </div>
         </div>
 
-        {owner.id == userId ? (
+        {owner.id === userId ? (
           <div className="profile__container__person__add-photo">
             {prompt ? (
               <div className="profile__container__person__add-photo__text">
@@ -204,6 +209,21 @@ const Header = ({ info, setNumberOfPhotos, userId }) => {
       </div>
     </div>
   );
+};
+
+Header.propTypes = {
+  info: PropTypes.shape({
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    city: PropTypes.string,
+    country: PropTypes.string,
+    birthDate: PropTypes.string,
+    numberOfPhotos: PropTypes.number,
+    photo: PropTypes.string,
+    relation: PropTypes.string,
+  }).isRequired,
+  setNumberOfPhotos: PropTypes.func.isRequired,
+  userId: PropTypes.number.isRequired,
 };
 
 export default Header;

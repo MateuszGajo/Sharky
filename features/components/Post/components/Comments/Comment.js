@@ -14,7 +14,7 @@ import WizzardContext from "../../context/WizzardContext";
 import AppContext from "~features/context/AppContext";
 import Menu from "./components/Menu/Menu";
 
-const Commnet = ({
+const Comment = ({
   comment,
   setStatusOfOpenReplies,
   numberOfReplies,
@@ -60,18 +60,18 @@ const Commnet = ({
 
   useEffect(() => {
     if (
-      newLike.type == "comment" &&
-      newLike.idElement == comment.commentId &&
-      numberOfReplies != undefined
+      newLike.type === "comment" &&
+      newLike.idElement === comment.commentId &&
+      numberOfReplies !== undefined
     ) {
       setIdLike(newLike.likeId);
       newLike.likeId
         ? setNumberOfLikes(numberOfLikes + 1)
         : setNumberOfLikes(numberOfLikes - 1);
     } else if (
-      newLike.type == "reply" &&
-      newLike.idElement == comment.replyId &&
-      numberOfReplies == undefined
+      newLike.type === "reply" &&
+      newLike.idElement === comment.replyId &&
+      numberOfReplies === undefined
     ) {
       setIdLike(newLike.likeId);
       newLike.likeId
@@ -87,9 +87,10 @@ const Commnet = ({
         onClick={() => {
           Router.push(`/profile/${id}`);
         }}
+        aria-hidden="true"
       >
         <img
-          src={"/static/images/" + photo}
+          src={`/static/images/${photo}`}
           alt=""
           className="post__item__comments__container__item__photo--img"
         />
@@ -102,9 +103,10 @@ const Commnet = ({
               onClick={() => {
                 Router.push(`/profile/${id}`);
               }}
+              aria-hidden="true"
             >
               <span className="post__item__comments__container__item__content__item__top-bar__user-name__span">
-                {firstName + " " + lastName}
+                {`${firstName} ${lastName}`}
               </span>
             </div>
             <Menu
@@ -131,13 +133,14 @@ const Commnet = ({
               onClick={() => {
                 setlikeComment();
               }}
+              aria-hidden="true"
             >
               <IoIosHeartEmpty />
               <span className="post__item__comments__container__item__content__item__down-bar__icon__number">
                 {numberOfLikes}
               </span>
             </div>
-            {numberOfReplies != undefined && (
+            {numberOfReplies !== undefined && (
               <div
                 className="post__item__comments__container__item__content__item__down-bar__icon hover-primary-color"
                 onClick={() => {
@@ -146,6 +149,7 @@ const Commnet = ({
                   }
                   setStatusOfOpenReplies(!isRepliesOpen);
                 }}
+                aria-hidden="true"
               >
                 <FiMessageCircle />
                 <span className="post__item__comments__container__item__content__item__down-bar__icon__number">
@@ -160,11 +164,66 @@ const Commnet = ({
   );
 };
 
-Commnet.propTypes = {
-  setStatusOfOpenReplies: PropTypes.func,
-  numberOfReplies: PropTypes.number,
-  isRepliesOpen: PropTypes.bool,
-  getReplies: PropTypes.func,
+Comment.defaultProps = {
+  replies: [
+    {
+      replyId: null,
+      userId: null,
+      numberOFLikes: null,
+      likedId: null,
+      date: "",
+      content: "",
+    },
+  ],
+  focusCollapse: {
+    current: null,
+  },
+  focusIcon: {
+    current: null,
+  },
+};
+const element = typeof Element === "undefined" ? () => {} : Element;
+
+Comment.propTypes = {
+  comment: PropTypes.shape({
+    replyId: PropTypes.number,
+    commentId: PropTypes.number.isRequired,
+    content: PropTypes.string.isRequired,
+    date: PropTypes.string.isRequired,
+    likeId: PropTypes.number,
+    numberOfLikes: PropTypes.number.isRequired,
+    numberOfReplies: PropTypes.number.isRequired,
+    postId: PropTypes.number.isRequired,
+    userId: PropTypes.number.isRequired,
+  }).isRequired,
+  user: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
+    photo: PropTypes.string.isRequired,
+  }).isRequired,
+  replies: PropTypes.shape({
+    replyId: PropTypes.number.isRequired,
+    userId: PropTypes.number.isRequired,
+    numberOFLikes: PropTypes.number.isRequired,
+    likedId: PropTypes.number,
+    date: PropTypes.string.isRequired,
+    content: PropTypes.string,
+  }),
+  setReplies: PropTypes.func.isRequired,
+  setNumberOfReplies: PropTypes.func.isRequired,
+  setStatusOfOpenReplies: PropTypes.func.isRequired,
+  numberOfReplies: PropTypes.number.isRequired,
+  isRepliesOpen: PropTypes.bool.isRequired,
+  getReplies: PropTypes.func.isRequired,
+  focusCollapse: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({ current: PropTypes.instanceOf(element) }),
+  ]),
+  focusIcon: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({ current: PropTypes.instanceOf(element) }),
+  ]),
 };
 
-export default Commnet;
+export default Comment;

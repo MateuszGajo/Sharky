@@ -4,7 +4,7 @@ import Router from "next/router";
 import { AiOutlineClose } from "react-icons/ai";
 import { IoMdArrowBack } from "react-icons/io";
 
-const Navbar = ({
+const NavBar = ({
   setStatusOfDisplayMobile,
   setStatusOfMessenger,
   user,
@@ -18,16 +18,18 @@ const Navbar = ({
         <div
           className="messenger__navbar__left__return"
           onClick={() => setStatusOfDisplayMobile(false)}
+          aria-hidden="true"
         >
           <IoMdArrowBack />
         </div>
         <div
           className="messenger__navbar__left__person"
           onClick={() => Router.push(`/profile/${id}`)}
+          aria-hidden="true"
         >
           <div className="messenger__navbar__left__person__photo">
             <img
-              src={"/static/images/" + photo}
+              src={`/static/images/${photo}`}
               alt=""
               className="messenger__navbar__left__person__photo__img"
             />
@@ -35,7 +37,7 @@ const Navbar = ({
 
           <div className="messenger__navbar__left__person__name">
             <span className="messenger__navbar__left__person__name__text">
-              {firstName + " " + lastName}
+              {`${firstName} ${lastName}`}
             </span>
           </div>
         </div>
@@ -49,6 +51,7 @@ const Navbar = ({
                 setChat({ chatId: null, user: null });
                 setStatusOfMessenger(true);
               }}
+              aria-hidden="true"
               data-testid="messenger-close"
             >
               <AiOutlineClose />
@@ -60,4 +63,21 @@ const Navbar = ({
   );
 };
 
-export default Navbar;
+NavBar.defaultProps = {
+  setStatusOfDisplayMobile: () => {},
+};
+
+NavBar.propTypes = {
+  setStatusOfDisplayMobile: PropTypes.func,
+  setStatusOfMessenger: PropTypes.func.isRequired,
+  user: PropTypes.shape({
+    id: PropTypes.number,
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    photo: PropTypes.string,
+  }).isRequired,
+  windowMessenger: PropTypes.bool.isRequired,
+  setChat: PropTypes.func.isRequired,
+};
+
+export default NavBar;

@@ -8,6 +8,7 @@ import i18next from "~i18n";
 import PostContext from "~components/Post/context/PostContext";
 import WizzardContext from "~components/Post/context/WizzardContext";
 import AppContext from "~features/context/AppContext";
+
 const { useTranslation } = i18next;
 
 const UserSettings = () => {
@@ -33,6 +34,7 @@ const UserSettings = () => {
         <div
           className="post__item__navbar__column-end__setting__collapse__item"
           onClick={() => setStatusOfHiddenPost(true)}
+          aria-hidden="true"
         >
           <div className="post__item__navbar__column-end__setting__collapse__item__icon">
             <IconContext.Provider
@@ -62,6 +64,7 @@ const UserSettings = () => {
             setError,
           })
         }
+        aria-hidden="true"
       >
         <div className="post__item__navbar__column-end__setting__collapse__item__icon">
           <IconContext.Provider
@@ -82,6 +85,7 @@ const UserSettings = () => {
       <div
         className="post__item__navbar__column-end__setting__collapse__item"
         onClick={() => setStatusOfReport(true)}
+        aria-hidden="true"
       >
         <div className="post__item__navbar__column-end__setting__collapse__item__icon">
           <IconContext.Provider
@@ -110,6 +114,7 @@ const UserSettings = () => {
             setError,
           })
         }
+        aria-hidden="true"
       >
         <div className="post__item__navbar__column-end__setting__collapse__item__icon">
           <IconContext.Provider

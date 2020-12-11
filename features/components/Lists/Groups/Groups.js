@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
-import axios from "~features/service/Axios";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { AiOutlineSearch } from "react-icons/ai";
+import axios from "~features/service/Axios";
 import Card from "../Card/Card";
 import i18next from "~i18n";
 import AppContext from "~features/context/AppContext";
@@ -32,9 +32,9 @@ const Groups = ({
   const fetchData = (from) => {
     axios
       .post("/group/get", { from, userId, keyWords, onlySubscribed })
-      .then(({ data: { groups: g, isMore } }) => {
+      .then(({ data: { groups: g, isMoreGroups } }) => {
         setGroups([...groups, ...g]);
-        setStatusOfMore(isMore);
+        setStatusOfMore(isMoreGroups);
       })
       .catch(({ response: { data: message } }) => setError(message));
   };
@@ -44,24 +44,25 @@ const Groups = ({
   }, []);
 
   useEffect(() => {
-    if (keyWords != null)
+    if (keyWords != null) {
       axios
         .post("/group/get", { from: 0, userId, keyWords, onlySubscribed })
-        .then(({ data: { groups, isMore } }) => {
-          setGroups(groups);
-          setStatusOfMore(isMore);
+        .then(({ data: { initialGroups, isMoreGroups } }) => {
+          setGroups(initialGroups);
+          setStatusOfMore(isMoreGroups);
         })
         .catch(({ response: { data: message } }) => setError(message));
+    }
   }, [keyWords]);
 
   useEffect(() => {
     const { setNumber, refId, setRefId, id } = group;
-    if (refId)
+    if (refId) {
       axios
         .post("/group/leave", { groupId: id })
         .then(() => {
-          if (userId == owner.id && !keyWords) {
-            const newGroups = groups.filter((group) => group.groupId != id);
+          if (userId === owner.id && !keyWords) {
+            const newGroups = groups.filter((item) => item.groupId !== id);
             setGroups(newGroups);
           } else {
             setNumber((prev) => prev - 1);
@@ -69,14 +70,15 @@ const Groups = ({
           }
         })
         .catch(({ response: { data: message } }) => setError(message));
-    else if (id)
+    } else if (id) {
       axios
         .post("/group/join", { groupId: group.id })
-        .then(({ data: { id } }) => {
-          setRefId(id);
+        .then(({ data: { id: groupRefId } }) => {
+          setRefId(groupRefId);
           setNumber((prev) => prev + 1);
         })
         .catch(({ response: { data: message } }) => setError(message));
+    }
   }, [group]);
 
   if (!groups) return <Spinner />;
@@ -88,8 +90,8 @@ const Groups = ({
       loader={<Spinner />}
     >
       <div className="list">
-        {groups.map((group) => {
-          const { groupId, subId, name, photo, numberOfMembers } = group;
+        {groups.map((item) => {
+          const { groupId, subId, name, photo, numberOfMembers } = item;
           const data = {
             cardInfo: {
               id: groupId,
@@ -126,6 +128,12 @@ const Groups = ({
       )}
     </InfiniteScroll>
   );
+};
+
+Groups.defaultProps = {
+  keyWords: "",
+  onlySubscribed: false,
+  helpInformation: true,
 };
 
 Groups.propTypes = {

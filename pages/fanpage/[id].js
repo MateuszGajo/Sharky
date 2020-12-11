@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { useRouter } from "next/router";
 import axios from "~features/service/Axios";
 import HomeLayout from "~components/Layout/Home/HomeLayout";
-import Navbar from "~components/Fanpage/Navbar/Navbar";
+import Navbar from "~components/Fanpage/NavBar/NavBar";
 import Content from "~components/Fanpage/Content/Content";
 import Spinner from "~components/Spinner/Spinner";
 import PopUpHandlers from "~components/PopUpHandlers/PopUpHandlers";
@@ -31,8 +31,7 @@ const Fanpage = () => {
   const [isAuth, setStatusOfAuth] = useState(null);
 
   useEffect(() => {
-    fanpageId &&
-      isAuth &&
+    if (fanpageId && isAuth) {
       axios
         .post("/fanpage/enter", { fanpageId })
         .then(({ data: { initialSubId, initialRole } }) => {
@@ -46,6 +45,7 @@ const Fanpage = () => {
             setStatusOfLoading(false);
           }
         });
+    }
   }, [fanpageId, isAuth]);
 
   useEffect(() => {

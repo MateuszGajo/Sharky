@@ -1,10 +1,11 @@
 import React, { useRef, useContext, useEffect } from "react";
 import PropTypes from "prop-types";
+import Router from "next/router";
 import AppContext from "~features/context/AppContext";
 
 const Content = ({ messages, user, scrollDown }) => {
   const { firstName, lastName, photo } = user;
-  const { owner, newMessage } = useContext(AppContext);
+  const { owner } = useContext(AppContext);
 
   const contentRef = useRef(null);
 
@@ -29,14 +30,14 @@ const Content = ({ messages, user, scrollDown }) => {
           index + 1 === messages.length ||
           messages[index + 1].userId !== message.userId;
 
-        return message.userId == owner.id ? (
-          <div className="messenger__text__myself" key={index}>
+        return message.userId === owner.id ? (
+          <div className="messenger__text__myself" key={message.id}>
             <span className="messenger__text__myself--primary-color messenger-text-style">
               {message.message}
             </span>
           </div>
         ) : (
-          <div className="messenger__text__stranger" key={index}>
+          <div className="messenger__text__stranger" key={message.id}>
             <span className="messenger__text__stranger--primary-background-color messenger-text-style">
               {message.message}
             </span>
@@ -44,19 +45,20 @@ const Content = ({ messages, user, scrollDown }) => {
               <div className="messenger__text__stranger__user">
                 <div
                   className="messenger__text__stranger__user__container"
-                  title={firstName + " " + lastName}
-                  onClick={() => Route.pust(`/profile/${message.userId}`)}
+                  title={`${firstName} ${lastName}`}
+                  onClick={() => Router.pust(`/profile/${message.userId}`)}
+                  aria-hidden="true"
                 >
                   <div className="messenger__text__stranger__user__container__photo">
                     <img
-                      src={"/static/images/" + photo}
+                      src={`/static/images/${photo}`}
                       alt=""
                       className="messenger__text__stranger__user__container__photo--img"
                     />
                   </div>
                   <div className="messenger__text__stranger__user__container__name">
                     <span className="messenger__text__stranger__user__container__name__span">
-                      {firstName} {lastName}
+                      {`${firstName} ${lastName}`}
                     </span>
                   </div>
                 </div>
@@ -78,7 +80,13 @@ Content.propTypes = {
       message: PropTypes.string,
       date: PropTypes.string,
     })
-  ),
+  ).isRequired,
+  user: PropTypes.shape({
+    firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
+    photo: PropTypes.string.isRequired,
+  }).isRequired,
+  scrollDown: PropTypes.number.isRequired,
 };
 
 export default Content;

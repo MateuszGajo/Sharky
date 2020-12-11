@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
+import PropTypes from "prop-types";
 import { AiOutlineCheck } from "react-icons/ai";
 import Router from "next/router";
 import { editPost } from "../../services/Functions";
@@ -17,8 +18,8 @@ const Content = ({ forward }) => {
   const [content, setContent] = useState(post.content);
 
   const handleChange = (e) => {
-    const rows = textareaRef.current.value.split("\n").length + 1;
-    setRows(rows);
+    const textAreaRows = textareaRef.current.value.split("\n").length + 1;
+    setRows(textAreaRows);
     setContent(e.target.value);
   };
 
@@ -35,13 +36,13 @@ const Content = ({ forward }) => {
 
   useEffect(() => {
     if (isEdit) {
-      const rows = textareaRef.current.value.split("\n").length + 1;
-      setRows(rows);
+      const textAreaRows = textareaRef.current.value.split("\n").length + 1;
+      setRows(textAreaRows);
     }
   }, [isEdit]);
 
   useEffect(() => {
-    if (newContent.postId == post.postId) {
+    if (newContent.postId === post.postId) {
       setContent(newContent.text);
     }
   }, [newContent]);
@@ -52,10 +53,11 @@ const Content = ({ forward }) => {
         onClick={() => {
           !isEdit && Router.push(`/post/${post.postId}`);
         }}
+        aria-hidden="true"
       >
         {isEdit ? (
           <form className="post__item__content__form" onSubmit={handleSubmit}>
-            <button className="post__item__content__form__button">
+            <button className="post__item__content__form__button" type="submit">
               <AiOutlineCheck />
             </button>
             <textarea
@@ -64,8 +66,7 @@ const Content = ({ forward }) => {
               rows={rows}
               value={content}
               onChange={(e) => handleChange(e)}
-              autoFocus
-            ></textarea>
+            />
           </form>
         ) : (
           <pre className="post__item__content__pre" data-testid="post-content">
@@ -84,9 +85,10 @@ const Content = ({ forward }) => {
               forward,
             });
           }}
+          aria-hidden="true"
         >
           <img
-            src={"/static/images/" + post.photo}
+            src={`/static/images/${post.photo}`}
             alt=""
             className="post__item__photo__img"
           />
@@ -94,6 +96,14 @@ const Content = ({ forward }) => {
       )}
     </>
   );
+};
+
+Content.defaultProps = {
+  forward: true,
+};
+
+Content.propTypes = {
+  forward: PropTypes.bool,
 };
 
 export default Content;

@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useContext } from "react";
+import PropTypes from "prop-types";
 import { BsThreeDots } from "react-icons/bs";
 import OwnerMenu from "./components/OwnerMenu/OwnerMenu";
 import UserMenu from "./components/UserMenu/UserMenu";
@@ -26,11 +27,13 @@ const Menu = ({
   const handleClick = () => {
     const { current: fCollapse } = focusCollapse;
     const { current: fIcon } = focusIcon;
-    if (!fCollapse.classList.contains("is-close"))
+    if (!fCollapse.classList.contains("is-close")) {
       fCollapse.classList.add("is-close");
+    }
 
-    if (fIcon.classList.contains("is-visible"))
+    if (fIcon.classList.contains("is-visible")) {
       fIcon.classList.remove("is-visible");
+    }
 
     window.removeEventListener("click", handleClick);
   };
@@ -46,8 +49,9 @@ const Menu = ({
       fCollapse.classList.add("is-close");
     }
 
-    if (fItem !== null && !fItem.classList.contains("is-visible"))
+    if (fItem !== null && !fItem.classList.contains("is-visible")) {
       fItem.classList.remove("is-visible");
+    }
 
     window.addEventListener("click", handleClick);
 
@@ -62,8 +66,8 @@ const Menu = ({
     settingRef.current.addEventListener("click", openSetting);
 
     return () => {
-      removeEventListener("click", openSetting);
-      removeEventListener("click", handleClick);
+      settingRef.current.removeEventListener("click", openSetting);
+      settingRef.current.removeEventListener("click", handleClick);
     };
   }, []);
   return (
@@ -71,10 +75,11 @@ const Menu = ({
       className="post__item__comments__container__item__content__item__top-bar__icon"
       ref={settingRef}
       onClick={(e) => e.stopPropagation()}
+      aria-hidden="true"
     >
       <BsThreeDots />
       <div className="post__item__comments__container__item__content__item__top-bar__icon__collapse is-close">
-        {owner.id == id ? (
+        {owner.id === id ? (
           <OwnerMenu
             deleteCommentText={deleteCommentText}
             comment={comment}
@@ -92,6 +97,59 @@ const Menu = ({
       </div>
     </div>
   );
+};
+
+Menu.defaultProps = {
+  focusIcon: {
+    current: null,
+  },
+  focusCollapse: {
+    current: null,
+  },
+  replies: [
+    {
+      replyId: null,
+      userId: null,
+      numberOFLikes: null,
+      likedId: null,
+      date: "",
+      content: "",
+    },
+  ],
+};
+
+const element = typeof Element === "undefined" ? () => {} : Element;
+Menu.propTypes = {
+  focusCollapse: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({ current: PropTypes.instanceOf(element) }),
+  ]),
+  focusIcon: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({ current: PropTypes.instanceOf(element) }),
+  ]),
+  id: PropTypes.number.isRequired,
+  comment: PropTypes.shape({
+    replyId: PropTypes.number,
+    commentId: PropTypes.number.isRequired,
+    content: PropTypes.string.isRequired,
+    date: PropTypes.string.isRequired,
+    likeId: PropTypes.number,
+    numberOfLikes: PropTypes.number.isRequired,
+    numberOfReplies: PropTypes.number.isRequired,
+    postId: PropTypes.number.isRequired,
+    userId: PropTypes.number.isRequired,
+  }).isRequired,
+  replies: PropTypes.shape({
+    replyId: PropTypes.number.isRequired,
+    userId: PropTypes.number.isRequired,
+    numberOFLikes: PropTypes.number.isRequired,
+    likedId: PropTypes.number,
+    date: PropTypes.string.isRequired,
+    content: PropTypes.string,
+  }),
+  setReplies: PropTypes.func.isRequired,
+  setNumberOfReplies: PropTypes.func.isRequired,
 };
 
 export default Menu;

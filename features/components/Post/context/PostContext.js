@@ -1,21 +1,23 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const PostContext =  React.createContext({
+const PostContext = React.createContext({
   user: { id: null, firstName: "", lastName: "", photo: "" },
   setUser: () => {},
   secondaryUser: { id: null, firstName: "", lastName: "", photo: "" },
   setUserShare: () => {},
-  comments: [{
-    commentId: null,
-    postId: null,
-    userId: null,
-    likeId: null,
-    numberOfLikes: null,
-    numberOfReplies: null,
-    content: "",
-    date: ""
-  }],
+  comments: [
+    {
+      commentId: null,
+      postId: null,
+      userId: null,
+      likeId: null,
+      numberOfLikes: null,
+      numberOfReplies: null,
+      content: "",
+      date: "",
+    },
+  ],
   setComments: () => {},
   post: {
     id: null,
@@ -29,16 +31,18 @@ const PostContext =  React.createContext({
     numberOfShares: null,
     numberOfComments: null,
     isMoreComments: false,
-    comments:[{
-      commentId: null,
-      postId: null,
-      userId: null,
-      likeId: null,
-      numberOfLikes: null,
-      numberOfReplies: null,
-      content: "",
-      date: ""
-    }]
+    comments: [
+      {
+        commentId: null,
+        postId: null,
+        userId: null,
+        likeId: null,
+        numberOfLikes: null,
+        numberOfReplies: null,
+        content: "",
+        date: "",
+      },
+    ],
   },
   setPost: () => {},
   isMoreComments: false,
@@ -55,13 +59,13 @@ const PostContext =  React.createContext({
   setStatusOfSingle: () => {},
 });
 
-PostContext.Provider.propTypes ={
+PostContext.Provider.propTypes = {
   value: PropTypes.shape({
     user: PropTypes.shape({
       id: PropTypes.number,
       firstName: PropTypes.string,
       lastName: PropTypes.string,
-      photo: PropTypes.string
+      photo: PropTypes.string,
     }),
     setUser: PropTypes.func,
     secondaryUser: PropTypes.shape({
@@ -71,16 +75,18 @@ PostContext.Provider.propTypes ={
       photo: PropTypes.string,
     }),
     setUserShare: PropTypes.func,
-    comments: PropTypes.arrayOf(PropTypes.shape({
-      commentId: PropTypes.number,
-      postId: PropTypes.number,
-      userId: PropTypes.number,
-      likeId: PropTypes.number,
-      numberOfLikes: PropTypes.number,
-      numberOfReplies: PropTypes.number,
-      content: PropTypes.string,
-      date: PropTypes.string
-    })),
+    comments: PropTypes.arrayOf(
+      PropTypes.shape({
+        commentId: PropTypes.number,
+        postId: PropTypes.number,
+        userId: PropTypes.number,
+        likeId: PropTypes.number,
+        numberOfLikes: PropTypes.number,
+        numberOfReplies: PropTypes.number,
+        content: PropTypes.string,
+        date: PropTypes.string,
+      })
+    ),
     setComments: PropTypes.func,
     setPost: PropTypes.func,
     isMoreComments: PropTypes.bool,
@@ -95,7 +101,7 @@ PostContext.Provider.propTypes ={
     setStatusOfEdit: PropTypes.func,
     isSingle: PropTypes.bool,
     setStatusOfSingle: PropTypes.func,
-  })
-}
+  }),
+};
 
 export default PostContext;

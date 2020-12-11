@@ -53,5 +53,9 @@ export default (state, action) => {
           phoneNumberError: action.msg,
         },
       };
+    default:
+      return {
+        ...state,
+      };
   }
 };

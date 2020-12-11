@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import PropTypes from "prop-types";
 import cx from "classnames";
-import Navbar from "./components/Navbar/Navbar";
+import Navbar from "./components/NavBar/NavBar";
 import Content from "./components/Content/Content";
 import Downbar from "./components/Downbar/Downbar";
 import Spinner from "~components/Spinner/Spinner";
@@ -24,7 +24,7 @@ const Messenger = ({
   const [scrollDown, setScrollDown] = useState(0);
 
   useEffect(() => {
-    if (newMessage.chatId == chat.chatId) {
+    if (newMessage.chatId === chat.chatId) {
       setMessages([
         ...messages,
         {
@@ -90,9 +90,14 @@ const Messenger = ({
   );
 };
 
+Messenger.defaultProps = {
+  windowMessenger: false,
+  setStatusOfDisplayMobile: () => {},
+};
+
 Messenger.propTypes = {
-  setStatusOfMessenger: PropTypes.func,
-  isMessengerClose: PropTypes.bool,
+  setStatusOfMessenger: PropTypes.func.isRequired,
+  isMessengerClose: PropTypes.bool.isRequired,
   windowMessenger: PropTypes.bool,
   setStatusOfDisplayMobile: PropTypes.func,
   chat: PropTypes.shape({
@@ -103,8 +108,8 @@ Messenger.propTypes = {
       lastName: PropTypes.string,
       photo: PropTypes.string,
     }),
-  }),
-  setChat: PropTypes.func,
+  }).isRequired,
+  setChat: PropTypes.func.isRequired,
 };
 
 export default Messenger;

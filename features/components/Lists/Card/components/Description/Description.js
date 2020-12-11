@@ -14,6 +14,7 @@ const Description = () => {
           className="card__item__info__first-column__name__span"
           data-testid="card-name"
           onClick={() => router.push(`/${refType}/${id}`)}
+          aria-hidden="true"
         >
           {name}
         </span>
@@ -24,7 +25,7 @@ const Description = () => {
             className="card__item__info__first-column__number__span"
             data-testid="card-description"
           >
-            {description + ":" + number}
+            {`${description}: ${number}`}
           </span>
         </div>
       ) : null}

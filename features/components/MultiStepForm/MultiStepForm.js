@@ -90,7 +90,7 @@ const Wizzard = ({ children }) => {
 };
 
 Wizzard.propTypes = {
-  children: PropTypes.arrayOf(PropTypes.element),
+  children: PropTypes.arrayOf(PropTypes.element).isRequired,
 };
 
 export { Wizzard, Controls, StepWrapper, Step, Credentials, PersonalData };

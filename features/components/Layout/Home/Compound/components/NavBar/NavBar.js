@@ -16,6 +16,7 @@ import axios from "~features/service/Axios";
 import AppContext from "~features/context/AppContext";
 import i18next from "~i18n";
 import Hamburger from "./components/Hamburger/Hamburger";
+
 const { useTranslation } = i18next;
 
 const NavBar = () => {
@@ -120,7 +121,7 @@ const NavBar = () => {
     navbar.current.addEventListener("wheel", showScroll);
 
     return () => {
-      removeEventListener("whell", showScroll);
+      navbar.current.removeEventListener("whell", showScroll);
       clearTimeout(timeout);
     };
   }, []);
@@ -147,6 +148,7 @@ const NavBar = () => {
             <div
               className="home__wrapper__navbar__title__icon"
               onClick={() => setStatusOfNav(false)}
+              aria-hidden="true"
             >
               <IoMdArrowBack />
             </div>
@@ -158,32 +160,35 @@ const NavBar = () => {
             </h1>
           </div>
           <div className="home__wrapper__navbar__list">
-            {navbarItems.map((item) => {
-              return (
-                <div
-                  key={item.id}
-                  className="home__wrapper__navbar__list__item"
-                  onClick={() => Router.push("/" + item.route)}
-                >
-                  <div className="home__wrapper__navbar__list__item__icon">
-                    {item.icon}
-                  </div>
-                  <div className="home__wrapper__navbar__list__item__name">
-                    <a className="home__wrapper__navbar__list__item__name__a">
-                      {item.name}
-                    </a>
-                  </div>
+            {navbarItems.map((item) => (
+              <div
+                key={item.id}
+                className="home__wrapper__navbar__list__item"
+                onClick={() => Router.push(`/${item.route}`)}
+                aria-hidden="true"
+              >
+                <div className="home__wrapper__navbar__list__item__icon">
+                  {item.icon}
                 </div>
-              );
-            })}
-            <div className="home__wrapper__navbar__list__item" onClick={logOut}>
+                <div className="home__wrapper__navbar__list__item__name">
+                  <span className="home__wrapper__navbar__list__item__name__span">
+                    {item.name}
+                  </span>
+                </div>
+              </div>
+            ))}
+            <div
+              className="home__wrapper__navbar__list__item"
+              onClick={logOut}
+              aria-hidden="true"
+            >
               <div className="home__wrapper__navbar__list__item__icon">
                 <FiLogOut />
               </div>
               <div className="home__wrapper__navbar__list__item__name">
-                <a className="home__wrapper__navbar__list__item__name__a">
+                <span className="home__wrapper__navbar__list__item__name__span">
                   {logOutName}
-                </a>
+                </span>
               </div>
             </div>
           </div>

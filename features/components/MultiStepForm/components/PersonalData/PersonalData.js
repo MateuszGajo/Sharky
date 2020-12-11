@@ -3,6 +3,7 @@ import { WizzardContext } from "../../context/WizzardContext";
 import AuthInput from "~common/AuthInput/AuthInput";
 import AppContext from "~features/context/AppContext";
 import i18next from "~i18n";
+
 const { useTranslation } = i18next;
 
 const PersonalData = () => {
@@ -65,7 +66,7 @@ const PersonalData = () => {
           onChange={setPhoneNumber}
           title={inputPhone}
           size="x-large"
-          withOutMargin={true}
+          withOutMargin
         />
       </div>
     </div>

@@ -29,7 +29,7 @@ const FriendsBar = () => {
     getFriends({ users, setUsers });
 
     return () => {
-      removeEventListener("whell", showScroll);
+      friendsBar.current.removeEventListener("whell", showScroll);
       clearTimeout(timeout);
     };
   }, []);
@@ -53,9 +53,9 @@ const FriendsBar = () => {
         })}
       >
         <div className="home_friends__list">
-          {users.map((user) => {
-            return <Item key={user.chatId} user={user} />;
-          })}
+          {users.map((user) => (
+            <Item key={user.chatId} user={user} />
+          ))}
         </div>
       </div>
     </div>

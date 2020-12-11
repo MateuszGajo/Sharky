@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
+import PropTypes from "prop-types";
 import { BsEnvelope } from "react-icons/bs";
 import axios from "~features/service/Axios";
 import { WizzardContext } from "../../../../context/WizzardContext";
@@ -15,14 +16,14 @@ const Item = ({ user }) => {
   );
 
   useEffect(() => {
-    const { chatId, userId } = newMessage;
+    const { messageChatId, messageUserId } = newMessage;
     if (
-      chatId == user.chatId &&
-      chat.chatId != user.chatId &&
-      userId == owner.id
+      messageChatId === user.chatId &&
+      chat.chatId !== user.chatId &&
+      messageUserId === owner.id
     ) {
       setStatusOfNewMessage(true);
-      socket.emit("isMessageUnRead", { userId });
+      socket.emit("isMessageUnRead", { userId: messageUserId });
     }
   }, [newMessage]);
 
@@ -43,11 +44,12 @@ const Item = ({ user }) => {
         setStatusOfNewMessage(false);
         if (user.messageTo) axios.post("/friend/message/read", { userId });
       }}
+      aria-hidden="true"
     >
       <div className="home_friends__list__item__user">
         <div className="home_friends__list__item__user__photo">
           <img
-            src={"/static/images/" + photo}
+            src={`/static/images/${photo}`}
             alt=""
             className="home_friends__list__item__user__photo__photo"
           />
@@ -59,12 +61,23 @@ const Item = ({ user }) => {
         </div>
         <div className="home_friends__list__item__user__name">
           <span className="home_friends__list__item__user__name__span">
-            {firstName} {lastName}
+            {`${firstName} ${lastName}`}
           </span>
         </div>
       </div>
     </div>
   );
+};
+
+Item.propTypes = {
+  user: PropTypes.shape({
+    firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
+    userId: PropTypes.number.isRequired,
+    photo: PropTypes.string.isRequired,
+    chatId: PropTypes.number.isRequired,
+    messageTo: PropTypes.string,
+  }).isRequired,
 };
 
 export default Item;

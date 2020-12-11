@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useContext } from "react";
-import axios from "~features/service/Axios";
+import PropTypes from "prop-types";
 import InfiniteScroll from "react-infinite-scroll-component";
+import axios from "~features/service/Axios";
 import Card from "~components/Lists/Card/Card";
 import Spinner from "~components/Spinner/Spinner";
 import AppContext from "~features/context/AppContext";
 import i18next from "~i18n";
+
 const { useTranslation } = i18next;
 
 const Members = ({ fanpageId, role: permission }) => {
@@ -25,9 +27,9 @@ const Members = ({ fanpageId, role: permission }) => {
   const fetchData = (from) => {
     axios
       .post("/fanpage/member/get", { fanpageId, from })
-      .then(({ data: { members: m, isMore } }) => {
+      .then(({ data: { members: m, isMoreFanpages } }) => {
         setMembers([...members, ...m]);
-        setStatusOfMore(isMore);
+        setStatusOfMore(isMoreFanpages);
       });
   };
 
@@ -38,7 +40,7 @@ const Members = ({ fanpageId, role: permission }) => {
         .post("/fanpage/user/delete", { subId: id, fanpageId })
         .then(() => {
           const newArrayOfMembers = members.filter(
-            (member) => member.userId != refId
+            (member) => member.userId !== refId
           );
           setMembers(newArrayOfMembers);
         })
@@ -49,7 +51,7 @@ const Members = ({ fanpageId, role: permission }) => {
   useEffect(() => {
     const { id, name, setTitle } = relation;
 
-    if (id)
+    if (id) {
       axios
         .post("/fanpage/member/relation/change", {
           subId: id,
@@ -60,6 +62,7 @@ const Members = ({ fanpageId, role: permission }) => {
           setTitle(name);
         })
         .catch(({ response: { message } }) => setError(message));
+    }
   }, [relation]);
 
   useEffect(() => {
@@ -84,7 +87,7 @@ const Members = ({ fanpageId, role: permission }) => {
                 photo,
                 radiusPhoto: false,
                 name: `${firstName} ${lastName} ${
-                  owner.id == userId ? `(${mySelf})` : ""
+                  owner.id === userId ? `(${mySelf})` : ""
                 }`,
               },
               userStatus: {
@@ -94,8 +97,7 @@ const Members = ({ fanpageId, role: permission }) => {
                 deleteText,
               },
               collapse: {
-                isCollapse:
-                  permission == "admin" && owner.id != userId ? true : false,
+                isCollapse: permission === "admin" && owner.id !== userId,
                 collapseItems: {
                   pink: {
                     name: "admin",
@@ -125,6 +127,11 @@ const Members = ({ fanpageId, role: permission }) => {
       </InfiniteScroll>
     </div>
   );
+};
+
+Members.propTypes = {
+  fanpageId: PropTypes.number.isRequired,
+  role: PropTypes.string.isRequired,
 };
 
 export default Members;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/router";
 import axios from "~features/service/Axios";
-import Navbar from "~components/Layout/Home/Compound/components/Navbar/Navbar";
+import Navbar from "~components/Layout/Home/Compound/components/NavBar/NavBar";
 import SideBar from "~components/group/SideBar/SideBar";
 import Content from "~components/group/Content/Content";
 import InvitePerson from "~common/PopUp/InvitePerson/InvitePerson";
@@ -46,8 +46,7 @@ const Group = () => {
   };
 
   useEffect(() => {
-    groupId &&
-      isAuth &&
+    if (groupId && isAuth) {
       axios
         .post("/group/enter", { groupId })
         .then(
@@ -67,6 +66,7 @@ const Group = () => {
             setStatusOfLoading(false);
           }
         );
+    }
   }, [groupId, isAuth]);
 
   useEffect(() => {

@@ -49,6 +49,7 @@
             "passwords-not-equal":"Passwords are diffrent",
             "empty-first-name":"First name is empty",
             "empty-last-name":"Last name is empty",
+            "no-file":"There is no chosen file",
             "invalid-phone-number":"Invalid phone number"
         },
         "invite-person":{

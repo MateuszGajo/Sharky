@@ -2,13 +2,13 @@ import axios from "~features/service/Axios";
 import countryCode from "~root/utils/countryCode";
 
 const validateEmail = (email) => {
-  const emailRegex = /^([a-zA-Z\d\.-]+)@([a-z\d-]+)\.([a-z]{2,8})(\.[a-z]{2,8})?$/;
+  const emailRegex = /^([a-zA-Z\d.-]+)@([a-z\d-]+)\.([a-z]{2,8})(\.[a-z]{2,8})?$/;
   return emailRegex.test(email);
 };
 
 const validatePassword = (password, confirmPassword) => {
   if (password !== confirmPassword) return "different-passwords";
-  else if (password.length < 6) return "password-too-short";
+  if (password.length < 6) return "password-too-short";
   return "";
 };
 
@@ -61,6 +61,7 @@ export const validateField = (
       return `invalid-${name}`;
     }
   }
+  return "";
 };
 
 export const getCountries = (t, setCountries) => {
@@ -93,13 +94,13 @@ export const getValue = (t, name, type, setValue) => {
   axios
     .post("/user/get/item", { value: name })
     .then(({ data: { item } }) => {
-      if (type == "general")
+      if (type === "general") {
         setValue(
           t(
             `settings:${name === "country" ? "countries" : "languages"}.${item}`
           )
         );
-      else setValue(item);
+      } else setValue(item);
     })
     .catch(() => {});
 };
@@ -116,15 +117,16 @@ export const changeValue = (
   language,
   i18n
 ) => {
-  const dbValue = (name == "country" ? countries : languages).find((item) => {
+  const dbValue = (name === "country" ? countries : languages).find((item) => {
     if (item.value.toLowerCase() === value.toLowerCase()) return item;
+    return null;
   });
   axios
     .post(`/user/change/${name}`, { value: dbValue.name })
     .then(() => {
       const choseCountryCode = countryCode(dbValue.name.toLowerCase());
       if (name === "language") {
-        if (language != choseCountryCode) {
+        if (language !== choseCountryCode) {
           i18n.changeLanguage(choseCountryCode);
           setPrompt(t(`settings:general.${name}-changed`));
           setName("");
@@ -150,7 +152,7 @@ export const changeValueWithConfirmPassword = (
   socket
 ) => {
   if (name === "password") socket.emit("changePassword", { value, password });
-  else
+  else {
     axios
       .post(`/user/change/${name}`, { value, password })
       .then(() => {
@@ -163,7 +165,9 @@ export const changeValueWithConfirmPassword = (
         if (
           (status === 401 && data === "invalid-password") ||
           (status === 400 && data === "password-too-short")
-        )
+        ) {
           setConfirmPopUpError(data);
+        }
       });
+  }
 };

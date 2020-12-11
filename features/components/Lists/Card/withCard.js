@@ -38,6 +38,14 @@ const withCard = (Component) => {
     );
   };
 
+  Wrapped.defaultProps = {
+    setRelation: () => {},
+    handleClick: () => {},
+    setInvite: () => {},
+    setDeclineInvitation: () => {},
+    handleCollapseClick: () => {},
+  };
+
   Wrapped.propTypes = {
     data: PropTypes.shape({
       cardInfo: PropTypes.shape({
@@ -50,7 +58,7 @@ const withCard = (Component) => {
         description: PropTypes.string,
         number: PropTypes.number,
         noButton: PropTypes.bool,
-      }),
+      }).isRequired,
       userStatus: PropTypes.shape({
         isInvited: PropTypes.bool,
         isInvitationSent: PropTypes.bool,
@@ -74,16 +82,17 @@ const withCard = (Component) => {
           }),
         }),
       }),
-    }),
-    texts: PropTypes.shape({
-      subTitle: PropTypes.string,
-      unsubTitle: PropTypes.string,
-      deleteText: PropTypes.string,
-    }),
+      texts: PropTypes.shape({
+        subTitle: PropTypes.string,
+        unsubTitle: PropTypes.string,
+        deleteText: PropTypes.string,
+      }),
+    }).isRequired,
     setRelation: PropTypes.func,
     handleClick: PropTypes.func,
     setInvite: PropTypes.func,
     setDeclineInvitation: PropTypes.func,
+    handleCollapseClick: PropTypes.func,
   };
 
   return Wrapped;

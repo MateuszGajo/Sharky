@@ -12,7 +12,7 @@ const Hamburger = ({ setStatusOfNav }) => {
   useEffect(() => {
     hamburgerMenu.current?.addEventListener("click", setStatusOfNavbar);
     return () => {
-      removeEventListener("click", setStatusOfNavbar);
+      hamburgerMenu.current.removeEventListener("click", setStatusOfNavbar);
     };
   }, []);
 
@@ -25,8 +25,8 @@ const Hamburger = ({ setStatusOfNav }) => {
   );
 };
 
-Hamburger.propTypes= {
-  setStatusOfNav: PropTypes.func
-}
+Hamburger.propTypes = {
+  setStatusOfNav: PropTypes.func.isRequired,
+};
 
 export default Hamburger;

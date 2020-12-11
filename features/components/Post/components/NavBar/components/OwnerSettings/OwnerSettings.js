@@ -10,6 +10,7 @@ import PostContext from "~components/Post/context/PostContext";
 import WizzardContext from "~components/Post/context/WizzardContext";
 import AppContext from "~features/context/AppContext";
 import i18next from "~i18n";
+
 const { useTranslation } = i18next;
 
 const OwnerSettings = () => {
@@ -20,7 +21,7 @@ const OwnerSettings = () => {
   const { posts, setPosts } = useContext(WizzardContext);
 
   const isShare = post.postSharedUserId !== null;
-  const selfShare = post.postSharedUserId == post.userId;
+  const selfShare = post.postSharedUserId === post.userId;
   const { shareId, postId } = post;
 
   const editPostText = t("component:post.settings.edit");
@@ -32,6 +33,7 @@ const OwnerSettings = () => {
         <div
           className="post__item__navbar__column-end__setting__collapse__item"
           onClick={() => setStatusOfEdit(true)}
+          aria-hidden="true"
         >
           <div className="post__item__navbar__column-end__setting__collapse__item__icon">
             <IconContext.Provider
@@ -60,6 +62,7 @@ const OwnerSettings = () => {
             deletePost({ postId, posts, setPosts, isSingle, setError });
           }
         }}
+        aria-hidden="true"
       >
         <div className="post__item__navbar__column-end__setting__collapse__item__icon">
           <IconContext.Provider

@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
-import axios from "~features/service/Axios";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { AiOutlineSearch } from "react-icons/ai";
+import axios from "~features/service/Axios";
 import Card from "../Card/Card";
 import i18next from "~i18n";
 import AppContext from "~features/context/AppContext";
 import Spinner from "~components/Spinner/Spinner";
+
 const { useTranslation } = i18next;
 
 const Fanpages = ({
@@ -31,9 +32,9 @@ const Fanpages = ({
   const fetchData = (from) => {
     axios
       .post("/fanpage/get", { from, userId, keyWords, onlySubscribed })
-      .then(({ data: { fanpages: f, isMore } }) => {
+      .then(({ data: { fanpages: f, isMoreFanpages } }) => {
         setFanpages([...fanpages, ...f]);
-        setStatusOfMore(isMore);
+        setStatusOfMore(isMoreFanpages);
       })
       .catch(({ response: { data: message } }) => setError(message));
   };
@@ -44,13 +45,13 @@ const Fanpages = ({
 
   useEffect(() => {
     const { setNumber, refId, setRefId, id } = fanpage;
-    if (refId)
+    if (refId) {
       axios
         .post("/fanpage/unsubscribe", { fanpageId: id })
         .then(() => {
-          if (userId == owner.id && !keyWords) {
+          if (userId === owner.id && !keyWords) {
             const newFanpages = fanpages.filter(
-              (fanpage) => fanpage.fanpageId != id
+              (item) => item.fanpageId !== id
             );
             setFanpages(newFanpages);
           } else {
@@ -59,25 +60,27 @@ const Fanpages = ({
           }
         })
         .catch(({ response: { data: message } }) => setError(message));
-    else if (id)
+    } else if (id) {
       axios
         .post("/fanpage/subscribe", { fanpageId: fanpage.id })
-        .then(({ data: { id } }) => {
+        .then(({ data: { id: fanpageRefId } }) => {
           setNumber((prev) => prev + 1);
-          setRefId(id);
+          setRefId(fanpageRefId);
         })
         .catch(({ response: { data: message } }) => setError(message));
+    }
   }, [fanpage]);
 
   useEffect(() => {
-    if (keyWords != null)
+    if (keyWords != null) {
       axios
         .post("/fanpage/get", { from: 0, userId, keyWords, onlySubscribed })
-        .then(({ data: { fanpages, isMore } }) => {
-          setFanpages(fanpages);
-          setStatusOfMore(isMore);
+        .then(({ data: { initialFanpages, isMoreFanpages } }) => {
+          setFanpages(initialFanpages);
+          setStatusOfMore(isMoreFanpages);
         })
         .catch(({ response: { data: message } }) => setError(message));
+    }
   }, [keyWords]);
 
   if (!fanpages) return <Spinner />;
@@ -89,8 +92,8 @@ const Fanpages = ({
       loader={<Spinner />}
     >
       <div className="list">
-        {fanpages.map((fanpage) => {
-          const { fanpageId, subId, name, photo, numberOfSubscribes } = fanpage;
+        {fanpages.map((item) => {
+          const { fanpageId, subId, name, photo, numberOfSubscribes } = item;
           const data = {
             cardInfo: {
               id: fanpageId,
@@ -127,6 +130,12 @@ const Fanpages = ({
       )}
     </InfiniteScroll>
   );
+};
+
+Fanpages.defaultProps = {
+  keyWords: "",
+  onlySubscribed: false,
+  helpInformation: true,
 };
 
 Fanpages.propTypes = {

@@ -1,8 +1,7 @@
 import React, { useState, useContext } from "react";
-import PropTypes from "prop-types";
 import AddFriendButton from "~common/Buttons/AddFriendButton/AddFriendButton";
 import FriendInvitedButton from "~common/Buttons/FriendInvitedButton/FriendInvitedButton";
-import FriendsInvitationButtons from "~common/Buttons/FriendsInvitationButtons/FriendsInvitationButtons";
+import FriendsInvitationButtons from "~common/Buttons/FriendInvitationButtons/FriendInvitationButtons";
 import RelationButtons from "~common/Buttons/RelationButtons/RelationButtons";
 import JoinLeaveButton from "~common/Buttons/JoinLeaveButton/JoinLeaveButton";
 import CardContext from "../../context/CardContext";
@@ -42,13 +41,13 @@ const Button = () => {
             userId={id}
             setButtonName={setButtonName}
             icon={false}
-            border={true}
+            border
             size="small"
             invitePerson={userStatus.invitePerson}
           />
         );
       case "invitation":
-        return <FriendInvitedButton size="small" border={true} />;
+        return <FriendInvitedButton size="small" border />;
       case "friendRequest":
         return (
           <FriendsInvitationButtons
@@ -90,6 +89,8 @@ const Button = () => {
             setRefId={setRefId}
           />
         );
+      default:
+        return null;
     }
   };
 
@@ -98,15 +99,6 @@ const Button = () => {
       {renderComponent(buttonName)}
     </div>
   );
-};
-const element = typeof Element === "undefined" ? function () {} : Element;
-Button.propTypes = {
-  collapseRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({ current: PropTypes.instanceOf(element) }),
-  ]),
-  title: PropTypes.string,
-  invitationType: PropTypes.string,
 };
 
 export default Button;

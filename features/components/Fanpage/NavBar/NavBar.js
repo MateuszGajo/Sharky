@@ -1,13 +1,14 @@
 import React, { useContext, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
-import axios from "~features/service/Axios";
 import cx from "classnames";
 import { useRouter } from "next/router";
 import { AiOutlineCheck, AiOutlineDelete } from "react-icons/ai";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { MdPhotoCamera } from "react-icons/md";
+import axios from "~features/service/Axios";
 import i18next from "~i18n";
 import AppContext from "~features/context/AppContext";
+
 const { useTranslation } = i18next;
 
 const Navbar = ({ setIdSub, setSection, subId, role, fanpageId }) => {
@@ -33,7 +34,7 @@ const Navbar = ({ setIdSub, setSection, subId, role, fanpageId }) => {
     [...new Array(navbarItems.length)].map(() => React.createRef())
   );
 
-  const deleteFanpage = (e) => {
+  const deleteFanpage = () => {
     axios
       .post("/fanpage/delete", { fanpageId })
       .then(() => {
@@ -47,9 +48,9 @@ const Navbar = ({ setIdSub, setSection, subId, role, fanpageId }) => {
   const changePhoto = (e) => {
     e.stopPropagation();
     const file = e.target.files[0];
-    if (!file) return;
+    if (!file) return setError("no-file");
 
-    if (file.type != "image/png" && file.type != "image/jpeg") {
+    if (file.type !== "image/png" && file.type !== "image/jpeg") {
       return setError("wrong-file-type");
     }
     if (file.size > 200000) {
@@ -60,11 +61,9 @@ const Navbar = ({ setIdSub, setSection, subId, role, fanpageId }) => {
     data.append("file", e.target.files[0]);
     data.set("fanpageId", fanpageId);
 
-    axios
+    return axios
       .post("/fanpage/change/photo", data)
-      .then(() => {
-        setPrompt(changedPhoto);
-      })
+      .then(() => setPrompt(changedPhoto))
       .catch(({ response: { data: message } }) => setError(message));
   };
 
@@ -107,11 +106,12 @@ const Navbar = ({ setIdSub, setSection, subId, role, fanpageId }) => {
       {navbarItems.map((item, index) => (
         <div
           className="fanpage__navbar__item"
-          key={index}
+          key={item}
           ref={navbarItem.current[index]}
           onClick={() => {
             setSection(item);
           }}
+          aria-hidden="true"
         >
           <span className="fanpage__navbar__item__span">{item}</span>
         </div>
@@ -123,6 +123,7 @@ const Navbar = ({ setIdSub, setSection, subId, role, fanpageId }) => {
         onClick={() => {
           subId ? unSubscribeFanpage() : subscribeFanpage();
         }}
+        aria-hidden="true"
       >
         <div className="fanpage__navbar__subscribe__icon">
           {subId ? <AiOutlineCheck /> : null}
@@ -130,11 +131,12 @@ const Navbar = ({ setIdSub, setSection, subId, role, fanpageId }) => {
         <span className="fanpage__navbar__subscribe__span">
           {subId ? subscribedName : subscribeName}
         </span>
-        {role == "admin" && (
+        {role === "admin" && (
           <div className="fanpage__navbar__admin-panel">
             <div
               className="fanpage__navbar__admin-panel__item"
               onClick={deleteFanpage}
+              aria-hidden="true"
             >
               <div className="fanpage__navbar__admin-panel__item__icon">
                 <AiOutlineDelete />
@@ -146,6 +148,7 @@ const Navbar = ({ setIdSub, setSection, subId, role, fanpageId }) => {
             <div
               className="fanpage__navbar__admin-panel__item fanpage__navbar__admin-panel__item--no-padding"
               onClick={(e) => e.stopPropagation()}
+              aria-hidden="true"
             >
               <label
                 className="fanpage__navbar__admin-panel__item__label"
@@ -174,6 +177,7 @@ const Navbar = ({ setIdSub, setSection, subId, role, fanpageId }) => {
         onClick={() => {
           subId ? unSubscribeFanpage() : subscribeFanpage();
         }}
+        aria-hidden="true"
       >
         <div className="fanpage__navbar__subscribe--mobile__icon">
           <IoIosNotificationsOutline />
@@ -184,10 +188,10 @@ const Navbar = ({ setIdSub, setSection, subId, role, fanpageId }) => {
 };
 
 Navbar.propTypes = {
-  setIdSub: PropTypes.func,
-  setSection: PropTypes.func,
-  subId: PropTypes.number,
-  role: PropTypes.string,
+  setIdSub: PropTypes.func.isRequired,
+  setSection: PropTypes.func.isRequired,
+  subId: PropTypes.number.isRequired,
+  role: PropTypes.string.isRequired,
   fanpageId: PropTypes.number.isRequired,
 };
 

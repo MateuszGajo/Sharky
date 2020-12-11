@@ -46,15 +46,16 @@ const ProfileInfo = ({ setChooseItem, info, userId }) => {
 };
 
 ProfileInfo.propTypes = {
-  setChooseItem: PropTypes.func,
+  setChooseItem: PropTypes.func.isRequired,
   info: PropTypes.shape({
     firstName: PropTypes.string,
     lastName: PropTypes.string,
     city: PropTypes.string,
     country: PropTypes.string,
     birthDate: PropTypes.string,
-  }),
-  userId: PropTypes.number,
+    numberOfPhotos: PropTypes.number,
+  }).isRequired,
+  userId: PropTypes.number.isRequired,
 };
 
 export default ProfileInfo;

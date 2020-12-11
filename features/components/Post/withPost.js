@@ -42,22 +42,33 @@ const withPost = (Component) => {
           setStatusOfSingle,
         }}
       >
-        <Component {...props} />
+        <Component {...props} postId={post.postId} />
       </PostContext.Provider>
     );
   };
+
+  Wrapped.defaultProps = {
+    secondaryUser: {
+      id: null,
+      firstName: "",
+      lastName: "",
+      photo: "",
+    },
+    single: false,
+  };
+
   Wrapped.propTypes = {
     user: PropTypes.shape({
-      id: PropTypes.id,
+      id: PropTypes.number,
       firstName: PropTypes.string,
       lastName: PropTypes.string,
       photo: PropTypes.string,
-    }),
+    }).isRequired,
     secondaryUser: PropTypes.shape({
-      id: PropTypes.id,
+      id: PropTypes.number,
       firstName: PropTypes.string,
       lastName: PropTypes.string,
-      photo: PropTypes.stirng,
+      photo: PropTypes.string,
     }),
     single: PropTypes.bool,
     post: PropTypes.shape({
@@ -85,7 +96,7 @@ const withPost = (Component) => {
           date: PropTypes.string,
         })
       ),
-    }),
+    }).isRequired,
   };
   return Wrapped;
 };

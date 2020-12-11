@@ -6,7 +6,7 @@ import Main from "../Main";
 expect.extend({ toHaveTextContent });
 
 it("do children exist", () => {
-  const { getByTestId } = render(<Main children="text" />);
+  const { getByTestId } = render(<Main>text</Main>);
   const mainChildren = getByTestId("main-content");
 
   expect(mainChildren).toHaveTextContent("text");

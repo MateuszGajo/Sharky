@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import PrimaryButton from "~common/PrimaryButton/PrimaryButton";
 import i18next from "~i18n";
+
 const { useTranslation } = i18next;
 
 const Authentication = ({ children, type }) => {
@@ -18,6 +19,18 @@ const Authentication = ({ children, type }) => {
     "component:layout.authentication.sign-up.description"
   );
   const signUpButtonText = t("component:layout.authentication.sign-up.button");
+
+  const getValue = () => {
+    if (type === "signin") return signInButtonText;
+    if (type === "signup") return signUpButtonText;
+    return "";
+  };
+
+  const getLink = () => {
+    if (type === "signin") return "/signup";
+    if (type === "signup") return "/signin";
+    return "";
+  };
 
   return (
     <section className="authentication">
@@ -61,23 +74,7 @@ const Authentication = ({ children, type }) => {
                 : type === "signup" && signUpDescription}
             </p>
             <div className="authentication__container__text__wrapper__button">
-              <PrimaryButton
-                border={true}
-                value={
-                  type === "signin"
-                    ? signInButtonText
-                    : type === "signup"
-                    ? signUpButtonText
-                    : ""
-                }
-                link={
-                  type === "signin"
-                    ? "/signup"
-                    : type === "signup"
-                    ? "/signin"
-                    : ""
-                }
-              />
+              <PrimaryButton border value={getValue()} link={getLink()} />
             </div>
           </div>
         </div>
@@ -87,8 +84,8 @@ const Authentication = ({ children, type }) => {
 };
 
 Authentication.propTypes = {
-  children: PropTypes.arrayOf(PropTypes.element),
-  type: PropTypes.string,
+  children: PropTypes.arrayOf(PropTypes.element).isRequired,
+  type: PropTypes.string.isRequired,
 };
 
 export default Authentication;

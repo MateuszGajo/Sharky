@@ -1,5 +1,7 @@
 import React from "react";
+import PropTypes from "prop-types";
 import i18next from "~i18n";
+
 const { useTranslation } = i18next;
 
 const About = ({ startingDate, numberOfMembers, name }) => {
@@ -40,7 +42,7 @@ const About = ({ startingDate, numberOfMembers, name }) => {
         </div>
         <div className="group-info__item__name">
           <span className="group-info__item__name__span">
-            {da + " " + mo + " " + ye}
+            {`${da} ${mo} ${ye}`}
           </span>
         </div>
       </div>
@@ -58,6 +60,12 @@ const About = ({ startingDate, numberOfMembers, name }) => {
       </div>
     </div>
   );
+};
+
+About.propTypes = {
+  startingDate: PropTypes.string.isRequired,
+  numberOfMembers: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
 };
 
 export default About;

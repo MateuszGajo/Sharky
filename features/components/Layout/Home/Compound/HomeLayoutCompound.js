@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import { WizzardContext } from "./context/WizzardContext";
 import NavBar from "./components/NavBar/NavBar";
 import Main from "./components/Main/Main";
@@ -25,6 +26,13 @@ const Wizzard = ({ children }) => {
       {children}
     </WizzardContext.Provider>
   );
+};
+
+Wizzard.propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.arrayOf(PropTypes.element),
+  ]).isRequired,
 };
 
 export { Wizzard, Wrapper, NavBar, Main, FriendsBar, Messager };

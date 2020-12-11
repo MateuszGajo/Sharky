@@ -45,7 +45,10 @@ module.exports = {
     ],
     "react/jsx-props-no-spreading": 0,
     "object-curly-newline": "off",
-    "no-unused-expressions": [2, { allowShortCircuit: true }],
+    "no-unused-expressions": [
+      2,
+      { allowTernary: true, allowShortCircuit: true },
+    ],
     "linebreak-style": ["error", "windows"],
     curly: [2, "multi-line"],
     "import/prefer-default-export": "off",
@@ -60,6 +63,9 @@ module.exports = {
     ],
     "implicit-arrow-linebreak": "off",
     "function-paren-newline": "off",
+    "react/jsx-curly-newline": "off",
+    "no-param-reassign": ["error", { props: false }],
+    indent: "off",
   },
 
   globals: {

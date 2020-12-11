@@ -15,7 +15,7 @@ import i18next from "~i18n";
 
 const { useTranslation, i18n } = i18next;
 
-const Item = ({ show }) => {
+const Item = () => {
   const {
     t,
     i18n: { language },
@@ -53,8 +53,8 @@ const Item = ({ show }) => {
     );
     if (validateMessage) return setError(validateMessage);
 
-    type === "general" &&
-      changeValue(
+    if (type === "general") {
+      return changeValue(
         name,
         value,
         countries,
@@ -66,6 +66,8 @@ const Item = ({ show }) => {
         language,
         i18n
       );
+    }
+    return "";
   };
 
   useEffect(() => {
@@ -78,13 +80,19 @@ const Item = ({ show }) => {
     name === "language" && getLanguages(t, setLanguages);
   }, [name]);
 
+  const autoCompleteData = () => {
+    if (name === "country") return countries;
+    if (name === "lnaguage") return language;
+    return [];
+  };
   return (
     <div className="settings__container__display">
       <h1 className="settings__container__display__title">
-        {changeText + " " + title}
+        {`${changeText} ${title}`}
         <span
           className="settings__container__display__title__icon"
           onClick={() => setName("")}
+          aria-hidden="true"
         >
           <IoMdArrowBack />
         </span>
@@ -100,14 +108,8 @@ const Item = ({ show }) => {
             type={name === "password" ? "password" : "text"}
             size="x-large"
             title={title}
-            withOutMargin={true}
-            autocompleteData={
-              name === "country"
-                ? countries
-                : name === "language"
-                ? languages
-                : []
-            }
+            withOutMargin
+            autocompleteData={autoCompleteData()}
           />
         </div>
         {name === "password" ? (

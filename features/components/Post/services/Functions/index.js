@@ -1,6 +1,6 @@
-import axios from "~features/service/Axios";
 import { uuid } from "uuidv4";
 import Router from "next/router";
+import axios from "~features/service/Axios";
 
 export const getUsers = async (users, setUsers, elements) => {
   const userIds = [];
@@ -9,13 +9,13 @@ export const getUsers = async (users, setUsers, elements) => {
     const { userId } = elements[i];
     if (users[userId] === undefined) userIds.push(userId);
   }
-  if (userIds.length > 0)
+  if (userIds.length > 0) {
     await axios
       .post("/user/get", {
         userIds,
       })
       .then(({ data: { users: u } }) => {
-        let usersKey = {};
+        const usersKey = {};
 
         for (let i = 0; i < u.length; i++) {
           const { id, firstName, lastName, photo } = u[i];
@@ -31,6 +31,7 @@ export const getUsers = async (users, setUsers, elements) => {
           ...usersKey,
         });
       });
+  }
 };
 
 export const muteUser = ({ userId, setMuteUser, isSingle, setError }) => {
@@ -38,9 +39,9 @@ export const muteUser = ({ userId, setMuteUser, isSingle, setError }) => {
     .post("/user/mute", {
       userId,
     })
-    .then((resp) => {
+    .then(() => {
       isSingle && Router.push("/");
-      setMuteUser({ userId: userId });
+      setMuteUser({ userId });
     })
     .catch((err) => {
       const {
@@ -53,12 +54,12 @@ export const muteUser = ({ userId, setMuteUser, isSingle, setError }) => {
 export const blockUser = ({ userId, posts, setPosts, isSingle, setError }) => {
   axios
     .post("/user/block", { userId })
-    .then((resp) => {
+    .then(() => {
       const userBlockedID = userId;
       isSingle && Router.push("/");
       const filtredPosts = posts.filter((post) => {
-        const userId = post.postSharedUserId || post.userId;
-        return userId != userBlockedID;
+        const uId = post.postSharedUserId || post.userId;
+        return uId !== userBlockedID;
       });
       setPosts(filtredPosts);
     })
@@ -89,8 +90,9 @@ export const getPosts = ({
       await getUsers(users, setUsers, [...p, ...comments]);
       const commentsKey = {};
       for (let i = 0; i < comments.length; i++) {
-        if (!commentsKey[comments[i].postId])
+        if (!commentsKey[comments[i].postId]) {
           commentsKey[comments[i].postId] = [];
+        }
         commentsKey[comments[i].postId].push(comments[i]);
       }
       const newPosts = p.map((item) => {
@@ -101,20 +103,22 @@ export const getPosts = ({
             comments: [],
             isMoreComments: false,
           };
-        } else if (Object.keys(commentsKey[item.postId]).length < 3)
+        }
+        if (Object.keys(commentsKey[item.postId]).length < 3) {
           return {
             ...item,
             id: uuid(),
             comments: commentsKey[item.postId],
             isMoreComments: false,
           };
-        else
-          return {
-            ...item,
-            id: uuid(),
-            comments: commentsKey[item.postId].slice(0, -1),
-            isMoreComments: true,
-          };
+        }
+
+        return {
+          ...item,
+          id: uuid(),
+          comments: commentsKey[item.postId].slice(0, -1),
+          isMoreComments: true,
+        };
       });
       setStatusOfMorePosts(isMorePosts);
       setPosts([...posts, ...newPosts]);
@@ -137,7 +141,6 @@ export const addPost = ({
       photo,
     })
     .then(({ data: { postId: id, userId } }) => {
-      setUser(data.user);
       setPosts([
         {
           id,
@@ -179,9 +182,7 @@ export const likePost = ({ postId, setNewLike, setError }) => {
 export const unlikePost = ({ postId, setNewLike, setError }) => {
   axios
     .post("/post/unlike", { postId })
-    .then((resp) =>
-      setNewLike({ likeId: null, idElement: postId, type: "post" })
-    )
+    .then(() => setNewLike({ likeId: null, idElement: postId, type: "post" }))
     .catch((err) => {
       const {
         response: { data: message },
@@ -213,13 +214,13 @@ export const sharePost = ({
           {
             ...post,
             comments: [],
-            isMoreComments: comments.length ? true : false,
+            isMoreComments: !!comments.length,
             shareId,
             id: uuid(),
             date,
             postSharedUserId: userId,
             numberOfShares: Number(numberOfShares) + 1,
-            numberOfComments: numberOfComments,
+            numberOfComments,
             numberOfLikes,
           },
           ...posts,
@@ -243,7 +244,7 @@ export const editPost = ({
 }) => {
   axios
     .post("/post/edit", { postId, content })
-    .then((resp) => {
+    .then(() => {
       setNewContent({ text: content, postId });
       setStatusOfEdit(false);
     })
@@ -260,7 +261,7 @@ export const deletePost = ({ postId, posts, setPosts, isSingle, setError }) => {
     .post("/post/delete", { postId })
     .then(() => {
       isSingle && Router.push("/");
-      const newPosts = posts.filter((post) => post.postId != postId);
+      const newPosts = posts.filter((post) => post.postId !== postId);
       setPosts(newPosts);
     })
     .catch((err) => {
@@ -280,9 +281,9 @@ export const deletePostShare = ({
 }) => {
   axios
     .post("/post/share/delete", { shareId })
-    .then((resp) => {
+    .then(() => {
       isSingle && Router.push("/");
-      const newPosts = posts.filter((post) => post.shareId != shareId);
+      const newPosts = posts.filter((post) => post.shareId !== shareId);
       setPosts(newPosts);
     })
     .catch((err) => {
@@ -354,7 +355,7 @@ export const deleteComment = ({
     })
     .then(() => {
       const filteredComments = comments.filter(
-        (comment) => comment.commentId != commentId
+        (comment) => comment.commentId !== commentId
       );
       setComments(filteredComments);
       setNumberOfComments((prev) => prev - 1);
@@ -385,10 +386,10 @@ export const likeComment = ({ commentId, setNewLike, setError }) => {
     });
 };
 
-export const unlikeComment = ({ likeId, commentId, setNewLike, setError }) => {
+export const unlikeComment = ({ commentId, setNewLike, setError }) => {
   axios
     .post("/comment/unlike", { commentId })
-    .then((resp) =>
+    .then(() =>
       setNewLike({ likeId: null, idElement: commentId, type: "comment" })
     )
     .catch((err) => {
@@ -462,9 +463,9 @@ export const deleteReply = ({
       replyId,
     })
     .then(() => {
-      const filteredReplies = replies.filter((reply) => {
-        return reply.replyId != replyId;
-      });
+      const filteredReplies = replies.filter(
+        (reply) => reply.replyId !== replyId
+      );
       setReplies(filteredReplies);
       setNumberOfReplies((prev) => prev - 1);
     })
@@ -493,9 +494,7 @@ export const likeReply = async ({ replyId, setNewLike, setError }) => {
 export const unlikeReply = async ({ replyId, setNewLike, setError }) => {
   axios
     .post("/reply/unlike", { replyId })
-    .then((resp) =>
-      setNewLike({ likeId: null, idElement: replyId, type: "reply" })
-    )
+    .then(() => setNewLike({ likeId: null, idElement: replyId, type: "reply" }))
     .catch((err) => {
       const {
         response: { data: message },

@@ -1,7 +1,7 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import Authentication from "../Authentication";
 import { toHaveTextContent } from "@testing-library/jest-dom/matchers";
+import Authentication from "../Authentication";
 
 expect.extend({ toHaveTextContent });
 

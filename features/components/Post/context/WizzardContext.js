@@ -39,54 +39,60 @@ WizzardContext.propTypes = {
     likeId: PropTypes.number,
     idElement: PropTypes.number,
     type: PropTypes.string,
-    date: PropTypes.string
+    date: PropTypes.string,
   }),
   setNewLike: PropTypes.func,
   newComment: PropTypes.shape({
     content: PropTypes.string,
     idElement: PropTypes.number,
     type: PropTypes.string,
-    date: PropTypes.string
+    date: PropTypes.string,
   }),
   setNewComment: PropTypes.func,
-  newContent: PropTypes.shape({ 
+  newContent: PropTypes.shape({
     text: PropTypes.string,
-    postId: PropTypes.number
+    postId: PropTypes.number,
   }),
   setNewContent: PropTypes.func,
-  muteUser: PropTypes.shape({ userId: PropTypes.number}),
+  muteUser: PropTypes.shape({ userId: PropTypes.number }),
   setMuteUser: PropTypes.func,
-  users: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number,
-    firstName: PropTypes.string,
-    lastName: PropTypes.string,
-    photo: PropTypes.string
-  })),
+  users: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      photo: PropTypes.string,
+    })
+  ),
   setUsers: PropTypes.func,
-  posts: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number,
-    userId: PropTypes.number,
-    likeId: PropTypes.number,
-    postSharedUserId: PropTypes.number,
-    shareId: PropTypes.number,
-    content: PropTypes.string,
-    date: PropTypes.string,
-    numberOfLikes: PropTypes.number,
-    numberOfShares: PropTypes.number,
-    numberOfComments: PropTypes.number,
-    isMoreComments: PropTypes.bool,
-    comments:PropTypes.arrayOf(PropTypes.shape({
-      commentId: PropTypes.number,
-      postId: PropTypes.number,
+  posts: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
       userId: PropTypes.number,
       likeId: PropTypes.number,
-      numberOfLikes: PropTypes.number,
-      numberOfReplies: PropTypes.number,
+      postSharedUserId: PropTypes.number,
+      shareId: PropTypes.number,
       content: PropTypes.string,
       date: PropTypes.string,
-    }))
-  })),
-  setPosts: PropTypes.func
-}
+      numberOfLikes: PropTypes.number,
+      numberOfShares: PropTypes.number,
+      numberOfComments: PropTypes.number,
+      isMoreComments: PropTypes.bool,
+      comments: PropTypes.arrayOf(
+        PropTypes.shape({
+          commentId: PropTypes.number,
+          postId: PropTypes.number,
+          userId: PropTypes.number,
+          likeId: PropTypes.number,
+          numberOfLikes: PropTypes.number,
+          numberOfReplies: PropTypes.number,
+          content: PropTypes.string,
+          date: PropTypes.string,
+        })
+      ),
+    })
+  ),
+  setPosts: PropTypes.func,
+};
 
 export default WizzardContext;

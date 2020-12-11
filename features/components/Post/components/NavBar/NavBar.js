@@ -30,8 +30,9 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
   );
   const handleClick = () => {
     const { current: fCollapse } = focusCollapse;
-    if (!fCollapse.classList.contains("is-close"))
+    if (!fCollapse.classList.contains("is-close")) {
       fCollapse.classList.add("is-close");
+    }
     window.removeEventListener("click", handleClick);
   };
 
@@ -46,8 +47,9 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
       fCollapse.classList.add("is-close");
     }
 
-    if (fIcon !== null && fIcon.classList.contains("is-visible"))
+    if (fIcon !== null && fIcon.classList.contains("is-visible")) {
       fIcon.classList.remove("is-visible");
+    }
 
     window.addEventListener("click", handleClick);
     focusCollapse.current = collapseItem;
@@ -59,11 +61,11 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
     settingRef.current.addEventListener("click", openSetting);
 
     return () => {
-      removeEventListener("click", openSetting);
-      removeEventListener("click", handleClick);
+      settingRef.current.removeEventListener("click", openSetting);
+      settingRef.current.removeEventListener("click", handleClick);
     };
   }, []);
-  console.log(user);
+
   return (
     <div className="post__item__navbar">
       {secondaryUser && (
@@ -76,7 +78,7 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
         >
           <div className="post__item__navbar__user__photo">
             <img
-              src={"/static/images/" + secondaryUser.photo}
+              src={`/static/images/${secondaryUser.photo}`}
               alt="Zdjęcie użytkownika"
               className="post__item__navbar__user__photo__img"
             />
@@ -86,7 +88,7 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
               className="post__item__navbar__user__name__span"
               data-testid="post-username"
             >
-              {secondaryUser.firstName + " " + secondaryUser.lastName}
+              {`${secondaryUser.firstName} ${secondaryUser.lastName}`}
             </span>
           </div>
           <div className="post__item__navbar__user__share">
@@ -103,7 +105,7 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
       >
         <div className="post__item__navbar__user__photo">
           <img
-            src={"/static/images/" + user.photo}
+            src={`/static/images/${user.photo}`}
             alt="Zdjęcie użytkownika"
             className="post__item__navbar__user__photo__img"
           />
@@ -113,7 +115,7 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
             className="post__item__navbar__user__name__span"
             data-testid="post-username"
           >
-            {user.firstName + " " + user.lastName}
+            {`${user.firstName} ${user.lastName}`}
           </span>
         </div>
       </div>
@@ -123,7 +125,7 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
             className="post__item__navbar__column-end__data__span"
             data-testid="post-date"
           >
-            {da + " " + mo + " " + ye}
+            {`${da} ${mo} ${ye}`}
           </span>
         </div>
         <div
@@ -140,7 +142,7 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
             className="post__item__navbar__column-end__setting__collapse is-close"
             data-testid="post-setting"
           >
-            {post?.postSharedUserId == owner.id || post.userId == owner.id ? (
+            {post?.postSharedUserId === owner.id || post.userId === owner.id ? (
               <OwnerSettings />
             ) : (
               <UserSettings />
@@ -151,7 +153,7 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
     </div>
   );
 };
-const element = typeof Element === "undefined" ? function () {} : Element;
+const element = typeof Element === "undefined" ? () => {} : Element;
 
 NavBar.defaultProps = {
   focusCollapse: null,

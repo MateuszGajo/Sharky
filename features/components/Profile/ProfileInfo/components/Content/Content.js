@@ -1,6 +1,8 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { TiInfoLargeOutline } from "react-icons/ti";
 import i18next from "~i18n";
+
 const { useTranslation } = i18next;
 
 const Content = ({
@@ -30,6 +32,7 @@ const Content = ({
         <div
           className="profile__container__info__container__item"
           onClick={() => setChooseItem(friendsText)}
+          aria-hidden="true"
         >
           <div className="profile__container__info__container__item__circle">
             <span className="profile__container__info__container__item__circle__span">
@@ -45,6 +48,7 @@ const Content = ({
         <div
           className="profile__container__info__container__item"
           onClick={() => setChooseItem(groupsText)}
+          aria-hidden="true"
         >
           <div className="profile__container__info__container__item__circle">
             <span className="profile__container__info__container__item__circle__span">
@@ -60,6 +64,7 @@ const Content = ({
         <div
           className="profile__container__info__container__item"
           onClick={() => setChooseItem(fanpagesText)}
+          aria-hidden="true"
         >
           <div className="profile__container__info__container__item__circle">
             <span className="profile__container__info__container__item__circle__span">
@@ -77,6 +82,7 @@ const Content = ({
         <div
           className="profile__container__info__container__item"
           onClick={() => setChooseItem(photosText)}
+          aria-hidden="true"
         >
           <div className="profile__container__info__container__item__circle">
             <span className="profile__container__info__container__item__circle__span">
@@ -92,6 +98,7 @@ const Content = ({
         <div
           className="profile__container__info__container__item"
           onClick={() => setChooseItem(postsText)}
+          aria-hidden="true"
         >
           <div className="profile__container__info__container__item__circle">
             <span className="profile__container__info__container__item__circle__span">
@@ -107,6 +114,7 @@ const Content = ({
         <div
           className="profile__container__info__container__item"
           onClick={() => setStatusOfDisplayAbout(true)}
+          aria-hidden="true"
         >
           <div className="profile__container__info__container__item__circle">
             <span className="profile__container__info__container__item__circle__span">
@@ -124,6 +132,27 @@ const Content = ({
       </div>
     </div>
   );
+};
+
+Content.propTypes = {
+  info: PropTypes.shape({
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    city: PropTypes.string,
+    country: PropTypes.string,
+    birthDate: PropTypes.string,
+    numberOfPhotos: PropTypes.number,
+    numberOfFriends: PropTypes.number,
+    numberOfGroups: PropTypes.number,
+    numberOfFanpages: PropTypes.number,
+    numberOfPosts: PropTypes.number,
+    photo: PropTypes.string,
+    relation: PropTypes.string,
+  }).isRequired,
+  numberOfPhotos: PropTypes.number.isRequired,
+  setChooseItem: PropTypes.func.isRequired,
+  aboutText: PropTypes.string.isRequired,
+  setStatusOfDisplayAbout: PropTypes.func.isRequired,
 };
 
 export default Content;

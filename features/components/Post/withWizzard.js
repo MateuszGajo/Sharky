@@ -103,11 +103,23 @@ const withWizzard = (Component) => {
     );
   };
 
+  Wrapped.defaultProps = {
+    newPost: {
+      content: "",
+      file: null,
+      setContent: () => {},
+      setFile: () => {},
+    },
+    fanpageId: null,
+    groupId: null,
+    news: false,
+  };
+
   Wrapped.propTypes = {
     newPost: PropTypes.shape({
       content: PropTypes.string,
       setContent: PropTypes.func,
-      file: PropTypes.object,
+      file: PropTypes.objectOf(PropTypes.object),
       setFile: PropTypes.func,
     }),
     fanpageId: PropTypes.number,

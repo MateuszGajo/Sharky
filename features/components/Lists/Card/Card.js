@@ -5,7 +5,6 @@ import Button from "./components/Button/Button";
 import Description from "./components/Description/Description";
 import withCard from "./withCard";
 import CardContext from "./context/CardContext";
-import { text } from "body-parser";
 
 const Card = () => {
   const { cardInfo } = useContext(CardContext);
@@ -19,35 +18,47 @@ const Card = () => {
   } = cardInfo;
   const router = useRouter();
 
+  const buttonComponent = () => {
+    if (!noButton) {
+      return (
+        <div
+          className="card__item__info__second-column__buttons"
+          data-testid="card-buttons"
+        >
+          <Button />
+        </div>
+      );
+    }
+    if (textInsteadButton) {
+      return (
+        <p className="card__item__info__second-column__text">
+          {textInsteadButton}
+        </p>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="card">
       <div className="card__item">
         <div className="card__item__photo">
           <img
-            src={"/static/images/" + photo}
+            src={`/static/images/${photo}`}
             className={cx("card__item__photo__img", {
               "card__item__photo__img--radius": radiusPhoto === true,
             })}
             onClick={() => router.push(`/${refType}/${id}`)}
+            aria-hidden="true"
             data-testid="card-photo"
+            alt="card"
           />
         </div>
         <div className="card__item__info">
           <Description />
 
           <div className="card__item__info__second-column">
-            {!noButton ? (
-              <div
-                className="card__item__info__second-column__buttons"
-                data-testid="card-buttons"
-              >
-                <Button />
-              </div>
-            ) : textInsteadButton ? (
-              <p className="card__item__info__second-column__text">
-                ({textInsteadButton})
-              </p>
-            ) : null}
+            {buttonComponent()}
           </div>
         </div>
       </div>

@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
-import Card from "../Card/Card";
-import axios from "~features/service/Axios";
-import InfiniteScroll from "react-infinite-scroll-component";
 import { AiOutlineSearch } from "react-icons/ai";
+import InfiniteScroll from "react-infinite-scroll-component";
+import axios from "~features/service/Axios";
+import Card from "../Card/Card";
 import Spinner from "~components/Spinner/Spinner";
 import AppContext from "~features/context/AppContext";
 import i18n from "~i18n";
+
 const { useTranslation } = i18n;
 
 const People = ({
@@ -26,7 +27,7 @@ const People = ({
   const emptyContent = t("component:lists.people.empty-content");
   const noResult = t("component:lists.people.no-result");
   const yourself = t("component:lists.people.yourself");
-  const { setError, setPrompt, owner, socket } = useContext(AppContext);
+  const { setError, setPrompt, owner } = useContext(AppContext);
 
   const [relation, setRelation] = useState({ id: null, name: "" });
   const [friends, setFriends] = useState([]);
@@ -37,9 +38,9 @@ const People = ({
   const fetchData = (from) => {
     axios
       .post("/friend/get/people", { userId, from, keyWords, onlyFriends })
-      .then(({ data: { friends: f, isMore } }) => {
+      .then(({ data: { friends: f, isMorePeople } }) => {
         setFriends([...friends, ...f]);
-        setStatusOfMore(isMore);
+        setStatusOfMore(isMorePeople);
       });
   };
 
@@ -57,31 +58,34 @@ const People = ({
   }, [relation]);
 
   useEffect(() => {
-    const { userId } = declineInvitation;
-    const newFriends = friends.filter((friend) => friend.userId != userId);
-    setFriends(newFriends);
+    const { uId } = declineInvitation;
+    if (uId) {
+      const newFriends = friends.filter((friend) => friend.userId !== uId);
+      setFriends(newFriends);
+    }
   }, [declineInvitation]);
 
   useEffect(() => {
-    if (keyWords != null)
+    if (keyWords != null) {
       axios
         .post("/friend/get/people", { userId, from: 0, keyWords, onlyFriends })
-        .then(({ data: { friends, isMore } }) => {
-          setFriends(friends);
-          setStatusOfMore(isMore);
+        .then(({ data: { initialFriends, isMoreFriends } }) => {
+          setFriends(initialFriends);
+          setStatusOfMore(isMoreFriends);
         });
+    }
   }, [keyWords]);
 
   useEffect(() => {
     const { setNumber, refId, setRefId, id } = removeFriends;
-    if (refId)
+    if (refId) {
       axios
         .post("/friend/delete", { userId: id })
         .then(() => {
-          if (userId == owner.id) {
-            const newFriends = friends.filter((item) => {
-              return item.friendshipId != refId;
-            });
+          if (userId === owner.id) {
+            const newFriends = friends.filter(
+              (item) => item.friendshipId !== refId
+            );
             setFriends(newFriends);
           } else {
             setRefId(null);
@@ -89,6 +93,7 @@ const People = ({
           }
         })
         .catch(({ response: { data: message } }) => setError(message));
+    }
   }, [removeFriends]);
 
   useEffect(() => {
@@ -106,7 +111,7 @@ const People = ({
         {friends.map((friend) => {
           const {
             friendshipId,
-            relation,
+            relation: userRelation,
             userId: id,
             firstName,
             lastName,
@@ -122,8 +127,8 @@ const People = ({
               refId: friendshipId,
               refType: "profile",
               photo,
-              name: `${firstName + " " + lastName}`,
-              description: description,
+              name: `${`${firstName} ${lastName}`}`,
+              description,
               number: numberOfFriends,
               radiusPhoto: false,
               noButton: id === owner.id,
@@ -132,10 +137,10 @@ const People = ({
             userStatus: {
               isInvited,
               isInvitationSent,
-              relation,
+              relation: userRelation,
             },
             collapse: {
-              isCollapse: relation && userId == owner.id ? true : false,
+              isCollapse: userRelation && userId === owner.id,
               collapseItems: {
                 pink: {
                   name: "pal",
@@ -182,10 +187,16 @@ const People = ({
   );
 };
 
+People.defaultProps = {
+  keyWords: "",
+  onlyFriends: false,
+  helpInformation: true,
+};
+
 People.propTypes = {
   userId: PropTypes.number.isRequired,
+  onlyFriends: PropTypes.bool,
   keyWords: PropTypes.string,
-  onlySubscribed: PropTypes.bool,
   helpInformation: PropTypes.bool,
 };
 

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import MessageBox from "~common/MessageBox/MessageBox";
 import Posts from "~components/Lists/Posts/Posts";
 
@@ -32,6 +33,10 @@ const Home = ({ groupId }) => {
       </div>
     </div>
   );
+};
+
+Home.propTypes = {
+  groupId: PropTypes.number.isRequired,
 };
 
 export default Home;

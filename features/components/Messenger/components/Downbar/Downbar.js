@@ -5,6 +5,7 @@ import { MdSend } from "react-icons/md";
 import AppContext from "~features/context/AppContext";
 import i18next from "~i18n";
 import { addMessage } from "../../services/Functions";
+
 const { useTranslation } = i18next;
 
 const Downbar = ({ setMessages, converser }) => {
@@ -36,11 +37,12 @@ const Downbar = ({ setMessages, converser }) => {
   };
 
   const addKeySubmit = (e) => {
-    if (e.keyCode == 13) {
-      if (!message)
+    if (e.keyCode === 13) {
+      if (!message) {
         messageForm.current.dispatchEvent(
           new Event("submit", { cancelable: true })
         );
+      }
     }
   };
 
@@ -48,7 +50,7 @@ const Downbar = ({ setMessages, converser }) => {
     messageArea.current.addEventListener("keydown", addKeySubmit);
 
     return () => {
-      removeEventListener("keydown", addKeySubmit);
+      messageArea.current.removeEventListener("keydown", addKeySubmit);
     };
   }, []);
 
@@ -77,6 +79,7 @@ const Downbar = ({ setMessages, converser }) => {
             })}
             data-testid="messenger-send-button"
             disabled={!message}
+            type="button"
           >
             <MdSend />
           </button>
@@ -84,6 +87,11 @@ const Downbar = ({ setMessages, converser }) => {
       </form>
     </div>
   );
+};
+
+Downbar.propTypes = {
+  setMessages: PropTypes.func.isRequired,
+  converser: PropTypes.number.isRequired,
 };
 
 export default Downbar;

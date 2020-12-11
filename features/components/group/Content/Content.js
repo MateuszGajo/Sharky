@@ -63,14 +63,14 @@ const Content = ({
 };
 
 Content.propTypes = {
-  section: PropTypes.string,
-  groupId: PropTypes.number,
-  role: PropTypes.string,
-  memberId: PropTypes.number,
-  setNumberOfMembers: PropTypes.func,
-  numberOfMembers: PropTypes.number,
-  groupName: PropTypes.string,
-  startingDate: PropTypes.string,
+  section: PropTypes.string.isRequired,
+  groupId: PropTypes.number.isRequired,
+  role: PropTypes.string.isRequired,
+  memberId: PropTypes.number.isRequired,
+  setNumberOfMembers: PropTypes.func.isRequired,
+  numberOfMembers: PropTypes.number.isRequired,
+  groupName: PropTypes.string.isRequired,
+  startingDate: PropTypes.string.isRequired,
 };
 
 export default Content;

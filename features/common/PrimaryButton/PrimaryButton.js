@@ -2,7 +2,14 @@ import React from "react";
 import PropTypes from "prop-types";
 import cx from "classnames";
 
-const PrimaryButton = ({ value, size, border, isDisable, link }) => (
+const PrimaryButton = ({
+  value,
+  size,
+  border,
+  isDisable,
+  link,
+  submitButton,
+}) => (
   <button
     data-testid="primary-button"
     className={cx("primary-button", {
@@ -13,7 +20,7 @@ const PrimaryButton = ({ value, size, border, isDisable, link }) => (
       "primary-button--border": border,
       "is-close": isDisable === true,
     })}
-    type="button"
+    type={submitButton ? "submit" : "button"}
   >
     {link ? (
       <a className="primary-button__link" href={link}>
@@ -30,6 +37,7 @@ PrimaryButton.defaultProps = {
   border: false,
   isDisable: false,
   link: "",
+  submitButton: true,
 };
 
 PrimaryButton.propTypes = {
@@ -38,6 +46,7 @@ PrimaryButton.propTypes = {
   border: PropTypes.bool,
   isDisable: PropTypes.bool,
   link: PropTypes.string,
+  submitButton: PropTypes.bool,
 };
 
 export default PrimaryButton;

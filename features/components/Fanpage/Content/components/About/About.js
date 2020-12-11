@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import axios from "~features/service/Axios";
 import i18next from "~i18n";
 
@@ -36,7 +37,7 @@ const About = ({ fanpageId }) => {
       <div className="fanpage-about__item">
         <div className="fanpage-about__item__property">
           <span className="fanpage-about__item__property__span">
-            {nameText}:
+            {` ${nameText} :`}
           </span>
         </div>
         <div className="fanpage-about__item__name">
@@ -46,7 +47,7 @@ const About = ({ fanpageId }) => {
       <div className="fanpage-about__item">
         <div className="fanpage-about__item__property">
           <span className="fanpage-about__item__property__span">
-            {numberOfSubscribersText}:
+            {`${numberOfSubscribersText} :`}
           </span>
         </div>
         <div className="fanpage-about__item__name">
@@ -58,17 +59,21 @@ const About = ({ fanpageId }) => {
       <div className="fanpage-about__item">
         <div className="fanpage-about__item__property">
           <span className="fanpage-about__item__property__span">
-            {startingDateText}:
+            {`${startingDateText} :`}
           </span>
         </div>
         <div className="fanpage-about__item__name">
           <span className="fanpage-about__item__name__span">
-            {da + " " + mo + " " + ye}
+            {`${da} ${mo} ${ye}`}
           </span>
         </div>
       </div>
     </div>
   );
+};
+
+About.propTypes = {
+  fanpageId: PropTypes.number.isRequired,
 };
 
 export default About;

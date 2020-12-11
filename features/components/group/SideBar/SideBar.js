@@ -64,7 +64,7 @@ const SideBar = ({
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
 
-    if (file.type != "image/png" && file.type != "image/jpeg") {
+    if (file.type !== "image/png" && file.type !== "image/jpeg") {
       return setError("wrong-file-type");
     }
     if (file.size > 200000) {
@@ -75,7 +75,7 @@ const SideBar = ({
     data.append("file", e.target.files[0]);
     data.set("groupId", groupId);
 
-    axios
+    return axios
       .post("/group/change/photo", data)
       .then(({ data: { fileName } }) => {
         setPhoto(fileName);
@@ -87,7 +87,7 @@ const SideBar = ({
       <div className="group__container__side-bar--fixed">
         <div className="group__container__side-bar__group-info">
           <div className="group__container__side-bar__group-info__photo">
-            {role == "admin" && (
+            {role === "admin" && (
               <div className="group__container__side-bar__group-info__photo__overlay">
                 <label htmlFor="group-photo-change">
                   <div className="group__container__side-bar__group-info__photo--overlay__button">
@@ -105,6 +105,7 @@ const SideBar = ({
             <img
               src={`/static/images/${photo}`}
               className="group__container__side-bar__group-info__photo__img"
+              alt="group"
             />
           </div>
           <div className="group__container__side-bar__group-info__title">
@@ -122,6 +123,7 @@ const SideBar = ({
                     section === "home",
                 })}
                 onClick={() => setSection("home")}
+                aria-hidden="true"
               >
                 <span className="group__container__side-bar__navigation__item__span">
                   {homeName}
@@ -133,6 +135,7 @@ const SideBar = ({
                     section === "members",
                 })}
                 onClick={() => setSection("members")}
+                aria-hidden="true"
               >
                 <span className="group__container__side-bar__navigation__item__span">
                   {membersName}
@@ -144,6 +147,7 @@ const SideBar = ({
                     section === "about",
                 })}
                 onClick={() => setSection("about")}
+                aria-hidden="true"
               >
                 <span className="group__container__side-bar__navigation__item__span">
                   {aboutName}
@@ -154,6 +158,7 @@ const SideBar = ({
               <div
                 className="group__container__side-bar__manage__item"
                 onClick={() => leaveGroup()}
+                aria-hidden="true"
               >
                 <span className="group__container__side-bar__item__span">
                   {leaveText}
@@ -165,6 +170,7 @@ const SideBar = ({
               <div
                 className="group__container__side-bar__manage__item"
                 onClick={() => setStatusOfPopUp(true)}
+                aria-hidden="true"
               >
                 <span className="group__container__side-bar__item__span">
                   {inviteText}
@@ -173,10 +179,11 @@ const SideBar = ({
                   <GoPlus />
                 </div>
               </div>
-              {role == "admin" && (
+              {role === "admin" && (
                 <div
                   className="group__container__side-bar__manage__item"
                   onClick={deleteGroup}
+                  aria-hidden="true"
                 >
                   <span className="group__container__side-bar__item__span">
                     {deleteGroupText}
@@ -193,6 +200,7 @@ const SideBar = ({
             <div
               className="group__container__side-bar__manage__item"
               onClick={() => joinGroup()}
+              aria-hidden="true"
             >
               <span className="group__container__side-bar__item__span">
                 {joinText}
@@ -209,17 +217,17 @@ const SideBar = ({
 };
 
 SideBar.propTypes = {
-  setSection: PropTypes.func,
-  setStatusOfPopUp: PropTypes.func,
-  groupName: PropTypes.string,
-  memberId: PropTypes.number,
-  setIdMember: PropTypes.func,
-  setRole: PropTypes.func,
-  section: PropTypes.string,
-  role: PropTypes.string,
+  setSection: PropTypes.func.isRequired,
+  setStatusOfPopUp: PropTypes.func.isRequired,
+  groupName: PropTypes.string.isRequired,
+  memberId: PropTypes.number.isRequired,
+  setIdMember: PropTypes.func.isRequired,
+  setRole: PropTypes.func.isRequired,
+  section: PropTypes.string.isRequired,
+  role: PropTypes.string.isRequired,
   groupId: PropTypes.number.isRequired,
-  photo: PropTypes.string,
-  setPhoto: PropTypes.func,
+  photo: PropTypes.string.isRequired,
+  setPhoto: PropTypes.func.isRequired,
 };
 
 export default SideBar;

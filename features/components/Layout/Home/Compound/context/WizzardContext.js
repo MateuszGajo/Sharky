@@ -10,7 +10,6 @@ export const WizzardContext = React.createContext({
   setChat: () => {},
 });
 
-
 WizzardContext.Provider.propTypes = {
   value: PropTypes.shape({
     isMessengerClose: PropTypes.bool,
@@ -22,10 +21,10 @@ WizzardContext.Provider.propTypes = {
         id: PropTypes.number,
         firstName: PropTypes.string,
         lastName: PropTypes.string,
-        photo: PropTypes.string
+        photo: PropTypes.string,
       }),
-      chatId: PropTypes.number
+      chatId: PropTypes.number,
     }),
-    setChat: PropTypes.func 
-  })
-}
+    setChat: PropTypes.func,
+  }),
+};

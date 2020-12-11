@@ -13,7 +13,7 @@ const Messenger = () => {
         <Mess
           chat={chat}
           setChat={setChat}
-          windowMessenger={true}
+          windowMessenger
           isMessengerClose={isMessengerClose}
           setStatusOfMessenger={setStatusOfMessenger}
         />

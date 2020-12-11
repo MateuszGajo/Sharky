@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import Posts from "~components/Lists/Posts/Posts";
 import MessageBox from "~common/MessageBox/MessageBox";
 
@@ -32,6 +33,11 @@ const Home = ({ fanpageId, role }) => {
       {fanpageId && <Posts fanpageId={fanpageId} newPost={newPost} />}
     </div>
   );
+};
+
+Home.propTypes = {
+  fanpageId: PropTypes.number.isRequired,
+  role: PropTypes.string.isRequired,
 };
 
 export default Home;

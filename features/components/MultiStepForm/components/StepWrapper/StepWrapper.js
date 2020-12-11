@@ -6,12 +6,12 @@ const StepWrapper = ({ children }) => {
   const { setNumberOfPages } = useContext(WizzardContext);
 
   let amountOfPages = 0;
-  children = children.map(item => {
+  const childrenCloned = children.map((item) => {
     if (item.props.dataKey === "Step") {
-      amountOfPages++;
+      amountOfPages += 1;
       return React.cloneElement(item, {
         pageIndex: amountOfPages,
-        key: amountOfPages
+        key: amountOfPages,
       });
     }
     return item;
@@ -21,11 +21,11 @@ const StepWrapper = ({ children }) => {
     setNumberOfPages(amountOfPages);
   }, []);
 
-  return children;
+  return childrenCloned;
 };
 
 StepWrapper.propTypes = {
-  children: PropTypes.arrayOf(PropTypes.element)
-}
+  children: PropTypes.arrayOf(PropTypes.element),
+};
 
 export default StepWrapper;

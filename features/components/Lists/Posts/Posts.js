@@ -55,15 +55,21 @@ const Posts = ({
   useEffect(() => {
     if (muteUser.userId !== null) {
       const newPosts = posts?.filter((post) => {
-        const userId = post.postSharedUserId || post.userId;
+        const postUserId = post.postSharedUserId || post.userId;
 
-        return muteUser.userId != userId;
+        return muteUser.userId !== postUserId;
       });
       setPosts(newPosts);
     }
   }, [muteUser]);
 
   const focusElement = useRef(null);
+
+  const endOfContentComponent = () => (
+    <p className="post-list__end-of-content">
+      <b>{posts.length ? endOfContent : noContent}</b>
+    </p>
+  );
 
   return (
     <div className="post-list">
@@ -72,28 +78,30 @@ const Posts = ({
         next={() => fetchData(posts.length)}
         hasMore={isMorePosts}
         loader={<Spinner />}
-        endMessage={
-          <p className="post-list__end-of-content">
-            <b>{posts.length ? endOfContent : noContent}</b>
-          </p>
-        }
+        endMessage={endOfContentComponent}
       >
-        {posts.map((post) => {
-          return (
-            <div className="post-list__post" key={post.id}>
-              <Post
-                post={post}
-                user={users[post.userId]}
-                secondaryUser={users[post.postSharedUserId]}
-                focusElement={focusElement}
-                single={false}
-              />
-            </div>
-          );
-        })}
+        {posts.map((post) => (
+          <div className="post-list__post" key={post.id}>
+            <Post
+              post={post}
+              user={users[post.userId]}
+              secondaryUser={users[post.postSharedUserId]}
+              focusElement={focusElement}
+              single={false}
+            />
+          </div>
+        ))}
       </InfiniteScroll>
     </div>
   );
+};
+
+Posts.defaultProps = {
+  fanpageId: null,
+  groupId: null,
+  news: false,
+  authorPost: false,
+  userId: null,
 };
 
 Posts.propTypes = {

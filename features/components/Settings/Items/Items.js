@@ -3,9 +3,10 @@ import cx from "classnames";
 import { IoIosArrowDown } from "react-icons/io";
 import i18next from "~i18n";
 import SettingsContext from "../context/SettingsContext";
+
 const { useTranslation } = i18next;
 
-const Items = ({}) => {
+const Items = () => {
   const { t } = useTranslation(["settings"]);
 
   const title = t("settings:title");
@@ -32,6 +33,7 @@ const Items = ({}) => {
                 "setting-title__icon-active": !isAccountCollapsed,
               })}
               onClick={() => setStatusOfAccountCollapse(!isAccountCollapsed)}
+              aria-hidden="true"
             >
               <IoIosArrowDown />
             </div>
@@ -44,19 +46,20 @@ const Items = ({}) => {
               }
             )}
           >
-            {account.map((item, id) => {
-              const title = t(`settings:account.${item}`);
+            {account.map((item) => {
+              const settingTitle = t(`settings:account.${item}`);
               return (
                 <div
                   className="settings__container__wrapper__account__item__item setting-item__container"
-                  key={id}
+                  key={item}
                   onClick={() => {
-                    setTitle(title);
+                    setTitle(settingTitle);
                     setType("account");
                     setName(item);
                   }}
+                  aria-hidden="true"
                 >
-                  {title}
+                  {settingTitle}
                 </div>
               );
             })}
@@ -70,6 +73,7 @@ const Items = ({}) => {
                 "setting-title__icon-active": !isGeneralCollapsed,
               })}
               onClick={() => setStatusOfGeneralCollapse(!isGeneralCollapsed)}
+              aria-hidden="true"
             >
               <IoIosArrowDown />
             </div>
@@ -82,19 +86,20 @@ const Items = ({}) => {
               }
             )}
           >
-            {general.map((item, id) => {
-              const title = t(`settings:general.${item}`);
+            {general.map((item) => {
+              const settingTitle = t(`settings:general.${item}`);
               return (
                 <div
                   className="settings__container__wrapper__general__item__item setting-item__container"
-                  key={id}
+                  key={item}
                   onClick={() => {
-                    setTitle(title);
+                    setTitle(settingTitle);
                     setType("general");
                     setName(item);
                   }}
+                  aria-hidden="true"
                 >
-                  {title}
+                  {settingTitle}
                 </div>
               );
             })}

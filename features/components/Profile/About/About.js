@@ -1,5 +1,7 @@
 import React from "react";
+import PropTypes from "prop-types";
 import i18next from "~i18n";
+
 const { useTranslation } = i18next;
 
 const About = ({ info }) => {
@@ -16,33 +18,43 @@ const About = ({ info }) => {
   return (
     <div className="about">
       <div className="about__item">
-        <div className="about__item__first-column">{firstNameText}:</div>
+        <div className="about__item__first-column">{`${firstNameText} :`}</div>
         <div className="about__item__second-column">{firstName}</div>
       </div>
       <div className="about__item">
-        <div className="about__item__first-column">{lastNameText}:</div>
+        <div className="about__item__first-column">{`${lastNameText} :`}</div>
         <div className="about__item__second-column">{lastName}</div>
       </div>
       <div className="about__item">
-        <div className="about__item__first-column">{cityText}:</div>
+        <div className="about__item__first-column">{`${cityText}} :`}</div>
         <div className="about__item__second-column">
-          {city ? city : lackOfInformation}
+          {city || lackOfInformation}
         </div>
       </div>
       <div className="about__item">
-        <div className="about__item__first-column">{countryText}:</div>
+        <div className="about__item__first-column">{`${countryText} :`}</div>
         <div className="about__item__second-column">
-          {country ? country : lackOfInformation}
+          {country || lackOfInformation}
         </div>
       </div>
       <div className="about__item">
-        <div className="about__item__first-column">{birthdateText}:</div>
+        <div className="about__item__first-column">{`${birthdateText} :`}</div>
         <div className="about__item__second-column">
-          {birthDate ? birthDate : lackOfInformation}
+          {birthDate || lackOfInformation}
         </div>
       </div>
     </div>
   );
+};
+
+About.propTypes = {
+  info: PropTypes.shape({
+    firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
+    city: PropTypes.string.isRequired,
+    country: PropTypes.string.isRequired,
+    birthDate: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default About;

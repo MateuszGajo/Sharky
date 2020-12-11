@@ -3,8 +3,8 @@ import { FiMessageCircle } from "react-icons/fi";
 import { AiOutlineShareAlt } from "react-icons/ai";
 import { IoIosHeartEmpty } from "react-icons/io";
 import cx from "classnames";
-import { sharePost, likePost, unlikePost } from "../../services/Functions";
 import Router from "next/router";
+import { sharePost, likePost, unlikePost } from "../../services/Functions";
 import PostContext from "../../context/PostContext";
 import WizzardContext from "../../context/WizzardContext";
 import AppContext from "~features/context/AppContext";
@@ -28,8 +28,8 @@ const DownBarButtons = () => {
 
   useEffect(() => {
     if (
-      newLike.type.toLowerCase() == "post" &&
-      newLike.idElement == post.postId
+      newLike.type.toLowerCase() === "post" &&
+      newLike.idElement === post.postId
     ) {
       setIdLike(newLike.likeId);
 
@@ -46,6 +46,7 @@ const DownBarButtons = () => {
         onClick={() => {
           Router.push(`/post/${post.postId}`);
         }}
+        aria-hidden="true"
       >
         <FiMessageCircle />
         <p
@@ -65,6 +66,7 @@ const DownBarButtons = () => {
             ? unlikePost({ postId: post.postId, setNewLike, likeId, setError })
             : likePost({ postId: post.postId, setNewLike, setError });
         }}
+        aria-hidden="true"
       >
         <IoIosHeartEmpty />
         <p
@@ -91,6 +93,7 @@ const DownBarButtons = () => {
             isSingle,
           });
         }}
+        aria-hidden="true"
       >
         <AiOutlineShareAlt />
         <p

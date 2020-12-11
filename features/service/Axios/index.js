@@ -3,9 +3,7 @@ import Router from "next/router";
 
 // Add a response interceptor
 axios.interceptors.response.use(
-  function (response) {
-    return response;
-  },
+  (response) => response,
   async (error) => {
     const message = error.response?.data;
     const status = error.response?.status;
@@ -13,7 +11,6 @@ axios.interceptors.response.use(
       (message === "invalid-token" || message === "password-changed") &&
       status === 401
     ) {
-      console.log("wchodzimy ");
       await axios.get("/user/logout").then(() => {
         Router.push("/signin");
       });

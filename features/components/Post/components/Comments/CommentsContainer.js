@@ -6,6 +6,7 @@ import i18next from "~i18n";
 import { getReplies, addReply } from "../../services/Functions";
 import WizzardContext from "../../context/WizzardContext";
 import AppContext from "~features/context/AppContext";
+
 const { useTranslation } = i18next;
 
 const withContainer = (WrappedComponent) => {
@@ -55,8 +56,8 @@ const withContainer = (WrappedComponent) => {
 
     useEffect(() => {
       if (
-        newComment.type == "comment" &&
-        newComment.idElement == comment.commentId
+        newComment.type === "comment" &&
+        newComment.idElement === comment.commentId
       ) {
         if (!isRepliesOpen) setStatusOfOpenReplies(true);
         setReplies([
@@ -77,7 +78,7 @@ const withContainer = (WrappedComponent) => {
     useEffect(() => {
       if (muteUser.userId != null) {
         const newReplies = replies?.filter(
-          (reply) => reply.userId != muteUser.userId
+          (item) => item.userId !== muteUser.userId
         );
         setReplies(newReplies);
       }
@@ -100,30 +101,29 @@ const withContainer = (WrappedComponent) => {
             <div className="post__item__comments__container__wrapper__input">
               <form onSubmit={handleSubmit}>
                 <SecondaryInput
-                  size={"medium"}
+                  size="medium"
                   value={reply}
                   onChange={setReply}
                 />
               </form>
             </div>
-            {replies.map((comment) => {
-              return (
-                <WrappedComponent
-                  key={comment.replyId}
-                  comment={comment}
-                  focusCollapse={focusCollapse}
-                  focusIcon={focusIcon}
-                  user={user}
-                  replies={replies}
-                  setReplies={setReplies}
-                  setNumberOfReplies={setNumberOfReplies}
-                />
-              );
-            })}
+            {replies.map((item) => (
+              <WrappedComponent
+                key={item.replyId}
+                comment={item}
+                focusCollapse={focusCollapse}
+                focusIcon={focusIcon}
+                user={user}
+                replies={replies}
+                setReplies={setReplies}
+                setNumberOfReplies={setNumberOfReplies}
+              />
+            ))}
             {isMoreReplies && (
               <p
                 className="post__item__comments__container__more-content"
                 onClick={() => gReplies()}
+                aria-hidden="true"
               >
                 {loadMoreComments}
               </p>
@@ -133,12 +133,36 @@ const withContainer = (WrappedComponent) => {
       </>
     );
   };
-  const element = typeof Element === "undefined" ? function () {} : Element;
-  withContainer.propTypes = {
+  WithContainer.defaultProps = {
+    focusIcon: {
+      current: null,
+    },
+    focusCollapse: {
+      current: null,
+    },
+  };
+
+  const element = typeof Element === "undefined" ? () => {} : Element;
+  WithContainer.propTypes = {
     focusIcon: PropTypes.oneOfType([
       PropTypes.func,
       PropTypes.shape({ current: PropTypes.instanceOf(element) }),
     ]),
+    focusCollapse: PropTypes.oneOfType([
+      PropTypes.func,
+      PropTypes.shape({ current: PropTypes.instanceOf(element) }),
+    ]),
+    comment: PropTypes.shape({
+      replyId: PropTypes.number,
+      commentId: PropTypes.number.isRequired,
+      content: PropTypes.string.isRequired,
+      date: PropTypes.string.isRequired,
+      likeId: PropTypes.number,
+      numberOfLikes: PropTypes.number.isRequired,
+      numberOfReplies: PropTypes.number.isRequired,
+      postId: PropTypes.number.isRequired,
+      userId: PropTypes.number.isRequired,
+    }).isRequired,
   };
 
   return WithContainer;

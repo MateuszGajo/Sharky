@@ -4,7 +4,7 @@ import { IoIosAddCircleOutline } from "react-icons/io";
 import ListOfFanpages from "~components/Lists/Fanpages/Fanpages";
 import Search from "~common/Search/Search";
 import Spinner from "~components/Spinner/Spinner";
-import NavBar from "~components/Layout/Home/Compound/components/Navbar/Navbar";
+import NavBar from "~components/Layout/Home/Compound/components/NavBar/NavBar";
 import Creator from "~common/PopUp/Creator/Creator";
 import PopUpHandlers from "~components/PopUpHandlers/PopUpHandlers";
 import AppContext from "~features/context/AppContext";

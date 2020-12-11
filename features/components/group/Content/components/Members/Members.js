@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
+import PropTypes from "prop-types";
 import axios from "~features/service/Axios";
 import Card from "~components/Lists/Card/Card";
 import i18next from "~i18n";
@@ -27,7 +28,7 @@ const Members = ({ groupId, role: permission, setNumberOfMembers }) => {
         .post("/group/user/delete", { subId: refId, groupId })
         .then(() => {
           const newArrayOfMembers = members.filter(
-            (member) => member.userId != id
+            (member) => member.userId !== id
           );
           setMembers(newArrayOfMembers);
           setNumberOfMembers((prev) => prev - 1);
@@ -39,7 +40,7 @@ const Members = ({ groupId, role: permission, setNumberOfMembers }) => {
   useEffect(() => {
     const { id, name, setTitle } = relation;
 
-    if (id)
+    if (id) {
       axios
         .post("/group/member/relation/change", {
           userId: id,
@@ -50,12 +51,13 @@ const Members = ({ groupId, role: permission, setNumberOfMembers }) => {
           setTitle(name);
         })
         .catch(({ response: { message } }) => setError(message));
+    }
   }, [relation]);
 
   useEffect(() => {
     axios
       .post("/group/member/get", { groupId })
-      .then(({ data: { members } }) => setMembers(members));
+      .then(({ data: { groupMembers } }) => setMembers(groupMembers));
   }, []);
 
   return (
@@ -71,15 +73,14 @@ const Members = ({ groupId, role: permission, setNumberOfMembers }) => {
             deleteText,
             radiusPhoto: false,
             name: `${firstName} ${lastName} ${
-              owner.id == userId ? `(${yourself})` : ""
+              owner.id === userId ? `(${yourself})` : ""
             }`,
           },
           userStatus: {
             relation: role,
           },
           collapse: {
-            isCollapse:
-              permission == "admin" && owner.id != userId ? true : false,
+            isCollapse: permission === "admin" && owner.id !== userId,
             collapseItems: {
               pink: {
                 name: "admin",
@@ -110,6 +111,12 @@ const Members = ({ groupId, role: permission, setNumberOfMembers }) => {
       })}
     </div>
   );
+};
+
+Members.propTypes = {
+  groupId: PropTypes.number.isRequired,
+  role: PropTypes.string.isRequired,
+  setNumberOfMembers: PropTypes.func.isRequired,
 };
 
 export default Members;

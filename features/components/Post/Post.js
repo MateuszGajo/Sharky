@@ -12,9 +12,10 @@ import WizzardContext from "./context/WizzardContext";
 import AppContext from "~features/context/AppContext";
 import i18next from "~i18n";
 import { addComent, getComments } from "./services/Functions";
+
 const { useTranslation } = i18next;
 
-const Post = ({ post, focusElement, forward }) => {
+const Post = ({ postId, focusElement, forward }) => {
   const { t } = useTranslation(["component"]);
   const loadMoreComments = t("component:post.comments.load-more-comments");
   const loadComments = t("component:post.comments.load-comments");
@@ -42,7 +43,7 @@ const Post = ({ post, focusElement, forward }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     addComent({
-      postId: post.postId,
+      postId,
       content: commentText,
       clearText: setCommentText,
       setNewComment,
@@ -51,7 +52,7 @@ const Post = ({ post, focusElement, forward }) => {
   };
 
   useEffect(() => {
-    if (newComment.type == "post" && newComment.idElement == post.postId) {
+    if (newComment.type === "post" && newComment.idElement === postId) {
       setComments([
         {
           commentId: newComment.commentId,
@@ -62,7 +63,7 @@ const Post = ({ post, focusElement, forward }) => {
           content: newComment.content,
           date: newComment.date,
         },
-        ...(comments ? comments : []),
+        ...(comments || []),
       ]);
       setNumberOfComments(numberOfComments + 1);
     }
@@ -71,7 +72,7 @@ const Post = ({ post, focusElement, forward }) => {
   useEffect(() => {
     if (muteUser.userId != null) {
       const newComments = comments?.filter(
-        (comment) => comment.userId != muteUser.userId
+        (comment) => comment.userId !== muteUser.userId
       );
       setComments(newComments);
     }
@@ -92,7 +93,7 @@ const Post = ({ post, focusElement, forward }) => {
         <div className="post__item__comments__input">
           <form onSubmit={handleSubmit}>
             <SecondaryInput
-              size={"medium"}
+              size="medium"
               value={commentText}
               onChange={setCommentText}
               photo={owner.photo}
@@ -117,7 +118,7 @@ const Post = ({ post, focusElement, forward }) => {
             className="post__item__comments__more-content"
             onClick={() =>
               getComments({
-                postId: post.postId,
+                postId,
                 from: comments.length,
                 users,
                 setUsers,
@@ -126,6 +127,7 @@ const Post = ({ post, focusElement, forward }) => {
                 setStatusOfMoreData: setStatusOfMoreComments,
               })
             }
+            aria-hidden="true"
           >
             {comments.length ? loadMoreComments : loadComments}
           </p>
@@ -134,13 +136,21 @@ const Post = ({ post, focusElement, forward }) => {
     </div>
   );
 };
-const element = typeof Element === "undefined" ? function () {} : Element;
+
+Post.defaultProps = {
+  focusElement: { current: null },
+  forward: true,
+};
+
+const element = typeof Element === "undefined" ? () => {} : Element;
 
 Post.propTypes = {
   focusElement: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({ current: PropTypes.instanceOf(element) }),
   ]),
+  postId: PropTypes.number.isRequired,
+  forward: PropTypes.bool,
 };
 
 export default withPost(Post);

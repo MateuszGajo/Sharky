@@ -16,7 +16,7 @@ export const signUpValidation = (creds, dispatch) => {
   let firstNameErrorMessage = "";
   let lastNameErrorMessage = "";
   let phoneNumberErrorMessgae = "";
-  const emailRegex = /^([a-zA-Z\d\.-]+)@([a-z\d-]+)\.([a-z]{2,8})(\.[a-z]{2,8})?$/;
+  const emailRegex = /^([a-zA-Z\d.-]+)@([a-z\d-]+)\.([a-z]{2,8})(\.[a-z]{2,8})?$/;
   const numberRegex = /[\d]{9}/;
 
   if (!email) {
@@ -37,7 +37,7 @@ export const signUpValidation = (creds, dispatch) => {
     isValid = false;
   }
 
-  if (password != confirmPassword) {
+  if (password !== confirmPassword) {
     confirmPasswordErrorMessage = "passwords-not-equal";
     isValid = false;
   }

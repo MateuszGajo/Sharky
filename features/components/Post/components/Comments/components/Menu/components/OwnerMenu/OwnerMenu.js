@@ -1,4 +1,5 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
+import PropTypes from "prop-types";
 import { IconContext } from "react-icons";
 import { AiOutlineDelete } from "react-icons/ai";
 import {
@@ -40,6 +41,7 @@ const OwnerMenu = ({
               setNumberOfReplies,
             });
       }}
+      aria-hidden="true"
     >
       <div className="post__item__comments__container__item__content__item__top-bar__icon__collapse__item__icon">
         <IconContext.Provider
@@ -58,6 +60,44 @@ const OwnerMenu = ({
       </div>
     </div>
   );
+};
+
+OwnerMenu.defaultProps = {
+  replies: [
+    {
+      replyId: null,
+      userId: null,
+      numberOFLikes: null,
+      likedId: null,
+      date: "",
+      content: "",
+    },
+  ],
+};
+
+OwnerMenu.propTypes = {
+  deleteCommentText: PropTypes.func.isRequired,
+  comment: PropTypes.shape({
+    replyId: PropTypes.number,
+    commentId: PropTypes.number.isRequired,
+    content: PropTypes.string.isRequired,
+    date: PropTypes.string.isRequired,
+    likeId: PropTypes.number,
+    numberOfLikes: PropTypes.number.isRequired,
+    numberOfReplies: PropTypes.number.isRequired,
+    postId: PropTypes.number.isRequired,
+    userId: PropTypes.number.isRequired,
+  }).isRequired,
+  replies: PropTypes.shape({
+    replyId: PropTypes.number.isRequired,
+    userId: PropTypes.number.isRequired,
+    numberOFLikes: PropTypes.number.isRequired,
+    likedId: PropTypes.number,
+    date: PropTypes.string.isRequired,
+    content: PropTypes.string,
+  }),
+  setReplies: PropTypes.func.isRequired,
+  setNumberOfReplies: PropTypes.func.isRequired,
 };
 
 export default OwnerMenu;
