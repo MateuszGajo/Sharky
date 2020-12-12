@@ -180,7 +180,7 @@ RelationButton.propTypes = {
   setRelation: PropTypes.func,
   handleCollapseClick: PropTypes.func,
   deleteTitle: PropTypes.string,
-  size: PropTypes.number,
+  size: PropTypes.string,
   title: PropTypes.string.isRequired,
   blockCollapse: PropTypes.bool,
   setNumber: PropTypes.func,

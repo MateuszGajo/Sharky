@@ -1,3 +1,4 @@
+import Router from "next/router";
 import axios from "~features/service/Axios";
 import { signUpValidation } from "~features/Validation/Validation";
 import countryCode from "~root/utils/countryCode";
@@ -22,7 +23,6 @@ export const signUp = ({
   dispatch,
   setValidationSignUpError,
   setError,
-  Router,
 }) => {
   if (signUpValidation(creds, dispatch)) {
     setValidationSignUpError("");
@@ -43,21 +43,13 @@ export const signUp = ({
   } else setValidationSignUpError("fields-error");
 };
 
-export const signIn = ({
-  email,
-  password,
-  setAuthUserError,
-  setError,
-  Router,
-}) => {
+export const signIn = ({ email, password, setAuthUserError, setError }) => {
   axios
     .post("/auth/signin", {
       email,
       password,
     })
-    .then(() => {
-      Router.push("/home");
-    })
+    .then(() => Router.push("/home"))
     .catch(({ response: { status, data: message } }) => {
       if (status === 400) setError(message);
       else if (status === 401) setAuthUserError(message);

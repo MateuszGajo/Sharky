@@ -28,11 +28,10 @@ const profile = () => {
   const [isAuth, setStatusOfAuth] = useState(null);
 
   useEffect(() => {
-    userId &&
-      isAuth &&
+    if (userId && isAuth) {
       axios
         .post("/user/info", { userId })
-        .then(({ data: { initialInfo } }) => {
+        .then(({ data: { info: initialInfo } }) => {
           setInfo(initialInfo);
           setStatusOfLoading(false);
         })
@@ -42,6 +41,7 @@ const profile = () => {
             setStatusOfLoading(false);
           }
         });
+    }
   }, [userId, isAuth]);
 
   useEffect(() => {

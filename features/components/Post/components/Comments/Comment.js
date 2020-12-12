@@ -62,7 +62,7 @@ const Comment = ({
     if (
       newLike.type === "comment" &&
       newLike.idElement === comment.commentId &&
-      numberOfReplies !== undefined
+      numberOfReplies !== null
     ) {
       setIdLike(newLike.likeId);
       newLike.likeId
@@ -71,7 +71,7 @@ const Comment = ({
     } else if (
       newLike.type === "reply" &&
       newLike.idElement === comment.replyId &&
-      numberOfReplies === undefined
+      numberOfReplies === null
     ) {
       setIdLike(newLike.likeId);
       newLike.likeId
@@ -184,16 +184,25 @@ Comment.defaultProps = {
 };
 const element = typeof Element === "undefined" ? () => {} : Element;
 
+Comment.defaultProps = {
+  setNumberOfReplies: () => {},
+  setReplies: () => {},
+  isRepliesOpen: false,
+  getReplies: () => {},
+  setStatusOfOpenReplies: () => {},
+  numberOfReplies: null,
+};
+
 Comment.propTypes = {
   comment: PropTypes.shape({
     replyId: PropTypes.number,
-    commentId: PropTypes.number.isRequired,
+    commentId: PropTypes.number,
     content: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
     likeId: PropTypes.number,
     numberOfLikes: PropTypes.number.isRequired,
-    numberOfReplies: PropTypes.number.isRequired,
-    postId: PropTypes.number.isRequired,
+    numberOfReplies: PropTypes.number,
+    postId: PropTypes.number,
     userId: PropTypes.number.isRequired,
   }).isRequired,
   user: PropTypes.shape({
@@ -202,20 +211,22 @@ Comment.propTypes = {
     lastName: PropTypes.string.isRequired,
     photo: PropTypes.string.isRequired,
   }).isRequired,
-  replies: PropTypes.shape({
-    replyId: PropTypes.number.isRequired,
-    userId: PropTypes.number.isRequired,
-    numberOFLikes: PropTypes.number.isRequired,
-    likedId: PropTypes.number,
-    date: PropTypes.string.isRequired,
-    content: PropTypes.string,
-  }),
-  setReplies: PropTypes.func.isRequired,
-  setNumberOfReplies: PropTypes.func.isRequired,
-  setStatusOfOpenReplies: PropTypes.func.isRequired,
-  numberOfReplies: PropTypes.number.isRequired,
-  isRepliesOpen: PropTypes.bool.isRequired,
-  getReplies: PropTypes.func.isRequired,
+  replies: PropTypes.arrayOf(
+    PropTypes.shape({
+      replyId: PropTypes.number.isRequired,
+      userId: PropTypes.number.isRequired,
+      numberOfLikes: PropTypes.number,
+      likedId: PropTypes.number,
+      date: PropTypes.string.isRequired,
+      content: PropTypes.string,
+    })
+  ),
+  setReplies: PropTypes.func,
+  setNumberOfReplies: PropTypes.func,
+  setStatusOfOpenReplies: PropTypes.func,
+  numberOfReplies: PropTypes.number,
+  isRepliesOpen: PropTypes.bool,
+  getReplies: PropTypes.func,
   focusCollapse: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({ current: PropTypes.instanceOf(element) }),

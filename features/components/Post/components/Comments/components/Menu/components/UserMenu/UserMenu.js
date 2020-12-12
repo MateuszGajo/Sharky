@@ -34,10 +34,10 @@ const OwnerMenu = ({ reportCommentText, comment }) => {
 };
 
 OwnerMenu.propTypes = {
-  reportCommentText: PropTypes.func.isRequired,
+  reportCommentText: PropTypes.string.isRequired,
   comment: PropTypes.shape({
     replyId: PropTypes.number,
-    commentId: PropTypes.number.isRequired,
+    commentId: PropTypes.number,
     content: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
     likeId: PropTypes.number,

@@ -41,7 +41,7 @@ const SignIn = () => {
       localStorage.email = email;
       localStorage.password = password;
     }
-    sIn({ email, password, setAuthUserError, Router, setError });
+    sIn({ email, password, setAuthUserError, setError });
   };
 
   useEffect(() => {

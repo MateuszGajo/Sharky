@@ -27,7 +27,7 @@ const Members = ({ fanpageId, role: permission }) => {
   const fetchData = (from) => {
     axios
       .post("/fanpage/member/get", { fanpageId, from })
-      .then(({ data: { members: m, isMoreFanpages } }) => {
+      .then(({ data: { members: m, isMore: isMoreFanpages } }) => {
         setMembers([...members, ...m]);
         setStatusOfMore(isMoreFanpages);
       });

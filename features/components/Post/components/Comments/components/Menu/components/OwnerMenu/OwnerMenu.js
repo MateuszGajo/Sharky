@@ -63,41 +63,35 @@ const OwnerMenu = ({
 };
 
 OwnerMenu.defaultProps = {
-  replies: [
-    {
-      replyId: null,
-      userId: null,
-      numberOFLikes: null,
-      likedId: null,
-      date: "",
-      content: "",
-    },
-  ],
+  replies: [],
+  setNumberOfReplies: () => {},
 };
 
 OwnerMenu.propTypes = {
-  deleteCommentText: PropTypes.func.isRequired,
+  deleteCommentText: PropTypes.string.isRequired,
   comment: PropTypes.shape({
     replyId: PropTypes.number,
-    commentId: PropTypes.number.isRequired,
+    commentId: PropTypes.number,
     content: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
     likeId: PropTypes.number,
     numberOfLikes: PropTypes.number.isRequired,
-    numberOfReplies: PropTypes.number.isRequired,
-    postId: PropTypes.number.isRequired,
+    numberOfReplies: PropTypes.number,
+    postId: PropTypes.number,
     userId: PropTypes.number.isRequired,
   }).isRequired,
-  replies: PropTypes.shape({
-    replyId: PropTypes.number.isRequired,
-    userId: PropTypes.number.isRequired,
-    numberOFLikes: PropTypes.number.isRequired,
-    likedId: PropTypes.number,
-    date: PropTypes.string.isRequired,
-    content: PropTypes.string,
-  }),
+  replies: PropTypes.arrayOf(
+    PropTypes.shape({
+      replyId: PropTypes.number,
+      userId: PropTypes.number,
+      numberOFLikes: PropTypes.number,
+      likedId: PropTypes.number,
+      date: PropTypes.string,
+      content: PropTypes.string,
+    })
+  ),
   setReplies: PropTypes.func.isRequired,
-  setNumberOfReplies: PropTypes.func.isRequired,
+  setNumberOfReplies: PropTypes.func,
 };
 
 export default OwnerMenu;

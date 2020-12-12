@@ -39,7 +39,7 @@ const Group = () => {
   const getGroupInfo = () => {
     axios
       .post("/group/about", { groupId })
-      .then(({ data: { date, initialNumberOfMembers } }) => {
+      .then(({ data: { date, numberOfMembers: initialNumberOfMembers } }) => {
         setNumberOfMembers(initialNumberOfMembers);
         setStartingDate(date);
       });
@@ -51,7 +51,13 @@ const Group = () => {
         .post("/group/enter", { groupId })
         .then(
           ({
-            data: { id, initialMemberId, name, initialRole, initialPhoto },
+            data: {
+              id,
+              memberId: initialMemberId,
+              name,
+              role: initialRole,
+              photo: initialPhoto,
+            },
           }) => {
             if (!id) {
               setStatusOfExistsGroup(false);
@@ -73,7 +79,7 @@ const Group = () => {
     getOwner({ setStatusOfAuth, setOwner });
   }, []);
 
-  if (isAuth === null) return <Spinner />;
+  if (isAuth === null || !startingDate) return <Spinner />;
   if (!isAuth) {
     router.push("/signin");
     return <Spinner />;

@@ -16,11 +16,7 @@ it("is post content and search content correct", () => {
 
   const { getByTestId, getByText } = render(
     <WizzardContext.Provider value={mockContext}>
-      <HomeLayoutCompound.Main
-        onSubmit={onsubmit}
-        search={true}
-        addingPost={true}
-      />
+      <HomeLayoutCompound.Main onSubmit={onsubmit} search addingPost />
     </WizzardContext.Provider>
   );
 

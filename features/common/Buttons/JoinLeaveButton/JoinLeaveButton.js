@@ -29,11 +29,12 @@ const JoinLeaveButton = ({
 
 JoinLeaveButton.defaultProps = {
   size: "large",
+  refId: null,
 };
 
 JoinLeaveButton.propTypes = {
   id: PropTypes.number.isRequired,
-  refId: PropTypes.number.isRequired,
+  refId: PropTypes.number,
   joinText: PropTypes.string.isRequired,
   leaveText: PropTypes.string.isRequired,
   size: PropTypes.string,

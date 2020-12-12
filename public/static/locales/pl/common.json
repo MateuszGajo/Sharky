@@ -50,7 +50,8 @@
             "empty-first-name":"Pole imię jest puste",
             "empty-last-name":"Pole nazwisko jest puste",
             "no-file":"Brak wybranego pliku",
-            "invalid-phone-number":"Nieprawidłowy numer telefonu"
+            "invalid-phone-number":"Nieprawidłowy numer telefonu",
+            "invalid-creds":"Nieprawidłowy email bądź hasło"
         },
         "invite-person":{
             "empty-content":"Nie masz żadnych znajomych do zaproszenia",

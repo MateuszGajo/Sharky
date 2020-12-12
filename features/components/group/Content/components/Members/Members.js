@@ -57,7 +57,7 @@ const Members = ({ groupId, role: permission, setNumberOfMembers }) => {
   useEffect(() => {
     axios
       .post("/group/member/get", { groupId })
-      .then(({ data: { groupMembers } }) => setMembers(groupMembers));
+      .then(({ data: { members: groupMembers } }) => setMembers(groupMembers));
   }, []);
 
   return (

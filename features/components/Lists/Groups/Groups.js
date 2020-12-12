@@ -47,7 +47,7 @@ const Groups = ({
     if (keyWords != null) {
       axios
         .post("/group/get", { from: 0, userId, keyWords, onlySubscribed })
-        .then(({ data: { initialGroups, isMoreGroups } }) => {
+        .then(({ data: { groups: initialGroups, isMoreGroups } }) => {
           setGroups(initialGroups);
           setStatusOfMore(isMoreGroups);
         })

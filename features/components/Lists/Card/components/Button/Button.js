@@ -32,6 +32,7 @@ const Button = () => {
 
   const [currentRelation, setCurrentRelation] = useState(userStatus?.relation);
   const [buttonName, setButtonName] = useState(initialButtonName);
+  const [blockCollapse, setBlockCollapse] = useState(!collapse.isCollapse);
 
   const renderComponent = (name) => {
     switch (name) {
@@ -54,6 +55,7 @@ const Button = () => {
             userId={id}
             setButtonName={setButtonName}
             setCurrentRelation={setCurrentRelation}
+            setBlockCollapse={setBlockCollapse}
             size="small"
             darkerBorder={false}
             setDeclineInvitation={setDeclineInvitation}
@@ -66,7 +68,7 @@ const Button = () => {
             userId={id}
             refId={refId}
             title={currentRelation}
-            blockCollapse={!collapse.isCollapse}
+            blockCollapse={blockCollapse}
             setButtonName={setButtonName}
             setRelation={setRelation}
             handleCollapseClick={handleCollapseClick}

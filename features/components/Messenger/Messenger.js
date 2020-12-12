@@ -10,7 +10,6 @@ import AppContext from "~features/context/AppContext";
 
 const Messenger = ({
   setStatusOfMessenger = null,
-  isMessengerClose = false,
   windowMessenger = false,
   setStatusOfDisplayMobile,
   chat,
@@ -58,7 +57,6 @@ const Messenger = ({
   return (
     <div
       className={cx("messenger", {
-        "is-close": isMessengerClose,
         "window-messanger": windowMessenger === true,
       })}
       data-testid="messenger"
@@ -70,22 +68,25 @@ const Messenger = ({
         windowMessenger={windowMessenger}
         setChat={setChat}
       />
-      {isLoading ? (
+      {isLoading && !user.id ? (
         <Spinner />
       ) : (
-        <Content
-          messages={messages}
-          user={user}
-          chat={chat}
-          scrollDown={scrollDown}
-        />
+        <>
+          <Content
+            messages={messages}
+            user={user}
+            chat={chat}
+            scrollDown={scrollDown}
+          />
+
+          <Downbar
+            chatId={chat.chatId}
+            messages={messages}
+            setMessages={setMessages}
+            converser={user.id}
+          />
+        </>
       )}
-      <Downbar
-        chatId={chat.chatId}
-        messages={messages}
-        setMessages={setMessages}
-        converser={user.id}
-      />
     </div>
   );
 };
@@ -93,11 +94,11 @@ const Messenger = ({
 Messenger.defaultProps = {
   windowMessenger: false,
   setStatusOfDisplayMobile: () => {},
+  setStatusOfMessenger: () => {},
 };
 
 Messenger.propTypes = {
-  setStatusOfMessenger: PropTypes.func.isRequired,
-  isMessengerClose: PropTypes.bool.isRequired,
+  setStatusOfMessenger: PropTypes.func,
   windowMessenger: PropTypes.bool,
   setStatusOfDisplayMobile: PropTypes.func,
   chat: PropTypes.shape({

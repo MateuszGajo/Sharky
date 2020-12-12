@@ -140,7 +140,7 @@ const NavBar = () => {
       <div className="home__wrapper home__wrapper--large" ref={navbarWrapper}>
         <div
           className={cx("home__wrapper__navbar primary-scroll", {
-            "primary-scroll--activee": isNavbarScrolling,
+            "primary-scroll--active": isNavbarScrolling,
           })}
           ref={navbar}
         >

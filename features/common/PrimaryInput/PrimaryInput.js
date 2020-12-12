@@ -124,13 +124,14 @@ PrimaryInput.defaultProps = {
   withOutMargin: false,
   size: "large",
   require: false,
+  name: "",
 };
 
 PrimaryInput.propTypes = {
   type: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   value: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
+  name: PropTypes.string,
   title: PropTypes.string.isRequired,
   autocompleteData: PropTypes.arrayOf(
     PropTypes.shape({

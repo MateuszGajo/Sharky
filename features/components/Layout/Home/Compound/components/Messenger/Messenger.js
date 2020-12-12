@@ -14,7 +14,6 @@ const Messenger = () => {
           chat={chat}
           setChat={setChat}
           windowMessenger
-          isMessengerClose={isMessengerClose}
           setStatusOfMessenger={setStatusOfMessenger}
         />
       )}

@@ -55,6 +55,7 @@ router.post("/about", async (req, res) => {
 
   try {
     const { rows: info } = await client.query(getInfoQuery, [groupId]);
+
     return res
       .status(200)
       .json({ numberOfMembers: info[0].numberOfMembers, date: info[0].date });

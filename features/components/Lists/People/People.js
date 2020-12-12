@@ -69,7 +69,7 @@ const People = ({
     if (keyWords != null) {
       axios
         .post("/friend/get/people", { userId, from: 0, keyWords, onlyFriends })
-        .then(({ data: { initialFriends, isMoreFriends } }) => {
+        .then(({ data: { friends: initialFriends, isMoreFriends } }) => {
           setFriends(initialFriends);
           setStatusOfMore(isMoreFriends);
         });

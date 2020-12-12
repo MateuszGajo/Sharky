@@ -34,7 +34,7 @@ const Fanpage = () => {
     if (fanpageId && isAuth) {
       axios
         .post("/fanpage/enter", { fanpageId })
-        .then(({ data: { initialSubId, initialRole } }) => {
+        .then(({ data: { subId: initialSubId, role: initialRole } }) => {
           setIdSub(initialSubId);
           setRole(initialRole);
           setStatusOfLoading(false);

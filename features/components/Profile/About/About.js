@@ -51,9 +51,9 @@ About.propTypes = {
   info: PropTypes.shape({
     firstName: PropTypes.string.isRequired,
     lastName: PropTypes.string.isRequired,
-    city: PropTypes.string.isRequired,
-    country: PropTypes.string.isRequired,
-    birthDate: PropTypes.string.isRequired,
+    city: PropTypes.string,
+    country: PropTypes.string,
+    birthDate: PropTypes.string,
   }).isRequired,
 };
 

@@ -1,6 +1,5 @@
 import React, { useState, useContext } from "react";
 import PropTypes from "prop-types";
-import Router from "next/router";
 import { WizzardContext } from "./context/WizzardContext";
 import Controls from "./components/Controls/Controls";
 import StepWrapper from "./components/StepWrapper/StepWrapper";
@@ -46,7 +45,6 @@ const Wizzard = ({ children }) => {
       creds,
       dispatch,
       setValidationSignUpError,
-      Router,
       setError,
     });
   };

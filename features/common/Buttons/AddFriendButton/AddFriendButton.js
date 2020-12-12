@@ -74,6 +74,7 @@ AddFriendButton.defaultProps = {
   icon: true,
   size: "large",
   border: false,
+  invitePerson: null,
 };
 
 AddFriendButton.propTypes = {
@@ -86,7 +87,7 @@ AddFriendButton.propTypes = {
     type: PropTypes.string.isRequired,
     targetId: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
-  }).isRequired,
+  }),
 };
 
 export default AddFriendButton;

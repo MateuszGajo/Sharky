@@ -11,7 +11,7 @@ import AppContext from "~features/context/AppContext";
 
 const { useTranslation } = i18next;
 
-const Navbar = ({ setIdSub, setSection, subId, role, fanpageId }) => {
+const NavBar = ({ setIdSub, setSection, subId, role, fanpageId }) => {
   const { t } = useTranslation(["fanpage"]);
 
   const router = useRouter();
@@ -187,12 +187,17 @@ const Navbar = ({ setIdSub, setSection, subId, role, fanpageId }) => {
   );
 };
 
-Navbar.propTypes = {
+NavBar.defaultProps = {
+  subId: null,
+  role: "",
+};
+
+NavBar.propTypes = {
   setIdSub: PropTypes.func.isRequired,
   setSection: PropTypes.func.isRequired,
-  subId: PropTypes.number.isRequired,
-  role: PropTypes.string.isRequired,
+  subId: PropTypes.number,
+  role: PropTypes.string,
   fanpageId: PropTypes.number.isRequired,
 };
 
-export default Navbar;
+export default NavBar;

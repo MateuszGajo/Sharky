@@ -9,6 +9,7 @@ const router = express.Router();
 
 router.post("/about", async (req, res) => {
   const { fanpageId } = req.body;
+
   if (!/^[\d]*$/.test(fanpageId)) return res.status(400).json("invalid-data");
 
   const { error } = await decodeToken(req.cookies.token);

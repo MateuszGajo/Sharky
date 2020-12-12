@@ -13,6 +13,7 @@ const FriendInvitationButtons = ({
   setButtonName,
   setCurrentRelation,
   setDeclineInvitation,
+  setBlockCollapse,
 }) => {
   const { t } = useTranslation();
   const acceptText = t("component:lists.people.accept");
@@ -20,6 +21,7 @@ const FriendInvitationButtons = ({
 
   const handleAcceptButton = () => {
     axios.post("/friend/accept", { userId }).then(() => {
+      setBlockCollapse(false);
       setCurrentRelation("friend");
       setButtonName("relation");
     });
@@ -69,6 +71,8 @@ const FriendInvitationButtons = ({
 FriendInvitationButtons.defaultProps = {
   darkerBorder: true,
   size: "medium",
+  setDeclineInvitation: null,
+  setBlockCollapse: () => {},
 };
 
 FriendInvitationButtons.propTypes = {
@@ -77,7 +81,8 @@ FriendInvitationButtons.propTypes = {
   userId: PropTypes.number.isRequired,
   setButtonName: PropTypes.func.isRequired,
   setCurrentRelation: PropTypes.func.isRequired,
-  setDeclineInvitation: PropTypes.func.isRequired,
+  setDeclineInvitation: PropTypes.func,
+  setBlockCollapse: PropTypes.func,
 };
 
 export default FriendInvitationButtons;

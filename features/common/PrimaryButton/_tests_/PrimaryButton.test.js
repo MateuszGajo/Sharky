@@ -13,9 +13,9 @@ it("test primary button property", () => {
   const { getByTestId } = render(
     <PrimaryButton
       size="large"
-      border={true}
+      border
       value={textButton}
-      isDisable={true}
+      isDisable
       link="/home"
     />
   );

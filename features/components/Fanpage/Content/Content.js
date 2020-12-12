@@ -39,10 +39,14 @@ const Content = ({ section, fanpageId, role }) => {
   );
 };
 
+Content.defaultProps = {
+  role: "",
+};
+
 Content.propTypes = {
   section: PropTypes.string.isRequired,
   fanpageId: PropTypes.number.isRequired,
-  role: PropTypes.string.isRequired,
+  role: PropTypes.string,
 };
 
 export default Content;

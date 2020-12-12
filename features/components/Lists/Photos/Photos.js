@@ -10,7 +10,7 @@ const Photos = ({ userId }) => {
   const fetchData = (from) => {
     axios
       .post("/user/get/photo", { userId, from })
-      .then(({ data: { initialPhotos, isMorePhotos } }) => {
+      .then(({ data: { photos: initialPhotos, isMorePhotos } }) => {
         setPhotos((prev) => [...prev, ...initialPhotos]);
         setStatusOfMore(isMorePhotos);
       });

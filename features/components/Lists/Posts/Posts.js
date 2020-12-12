@@ -78,7 +78,7 @@ const Posts = ({
         next={() => fetchData(posts.length)}
         hasMore={isMorePosts}
         loader={<Spinner />}
-        endMessage={endOfContentComponent}
+        endMessage={endOfContentComponent()}
       >
         {posts.map((post) => (
           <div className="post-list__post" key={post.id}>

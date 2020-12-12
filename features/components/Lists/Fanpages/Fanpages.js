@@ -75,7 +75,7 @@ const Fanpages = ({
     if (keyWords != null) {
       axios
         .post("/fanpage/get", { from: 0, userId, keyWords, onlySubscribed })
-        .then(({ data: { initialFanpages, isMoreFanpages } }) => {
+        .then(({ data: { fanpages: initialFanpages, isMoreFanpages } }) => {
           setFanpages(initialFanpages);
           setStatusOfMore(isMoreFanpages);
         })

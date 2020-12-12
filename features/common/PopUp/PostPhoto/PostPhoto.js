@@ -1,9 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import Router from "next/router";
 import { IoMdClose, IoMdArrowForward } from "react-icons/io";
+import AppContext from "~features/context/AppContext";
 
 const PostPhoto = ({ src, postId, setSrc, forward }) => {
+  const { setPhotoPopUp } = useContext(AppContext);
   useEffect(() => {
     document.body.classList.add("invisible-scroll");
     return () => {
@@ -36,6 +38,11 @@ const PostPhoto = ({ src, postId, setSrc, forward }) => {
             className="post-photo__forward__icon post-photo__circle-icon"
             onClick={(e) => {
               e.stopPropagation();
+              setPhotoPopUp({
+                photoSrc: null,
+                postId: null,
+                forward: false,
+              });
               Router.push(`/post/${postId}`);
             }}
             aria-hidden="true"

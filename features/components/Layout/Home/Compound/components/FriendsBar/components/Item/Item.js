@@ -76,7 +76,7 @@ Item.propTypes = {
     userId: PropTypes.number.isRequired,
     photo: PropTypes.string.isRequired,
     chatId: PropTypes.number.isRequired,
-    messageTo: PropTypes.string,
+    messageTo: PropTypes.number,
   }).isRequired,
 };
 

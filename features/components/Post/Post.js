@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import cx from "classnames";
 import DownBarButtons from "./components/DownBarButtons/DownBarButtons";
-import Navbar from "./components/Navbar/Navbar";
+import Navbar from "./components/NavBar/NavBar";
 import Content from "./components/Content/Content";
 import Comment from "./components/Comments/CommentsContainer";
 import SecondaryInput from "~common/SecondaryInput/SecondaryInput";

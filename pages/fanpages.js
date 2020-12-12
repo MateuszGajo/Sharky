@@ -53,7 +53,7 @@ const Fanpages = () => {
         <div className="fanpages__content">
           <div className="fanpages__search">
             <form className="fanpages__search__form" onSubmit={handleSubmit}>
-              <Search text={text} onChange={setText} />
+              <Search value={text} onChange={setText} />
             </form>
           </div>
           <ListOfFanpages userId={owner.id} keyWords={keyWords} />

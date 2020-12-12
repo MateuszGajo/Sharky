@@ -77,6 +77,7 @@ const Item = ({
 Item.defaultProps = {
   messageTo: null,
   setStatusOfDisplayMobile: () => {},
+  message: "",
 };
 
 Item.propTypes = {
@@ -86,8 +87,8 @@ Item.propTypes = {
   firstName: PropTypes.string.isRequired,
   lastName: PropTypes.string.isRequired,
   photo: PropTypes.string.isRequired,
-  message: PropTypes.string.isRequired,
-  setChat: PropTypes.number.isRequired,
+  message: PropTypes.string,
+  setChat: PropTypes.func.isRequired,
   chat: PropTypes.shape({
     chatId: PropTypes.number,
   }).isRequired,
