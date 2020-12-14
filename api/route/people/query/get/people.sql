@@ -21,6 +21,7 @@ usersSortedCounted as(
                     select *
                     from usersSorted
                 )
+                and status = '1'
             group by "userId"
             union
             select user_id_2 as "userId",
@@ -30,6 +31,7 @@ usersSortedCounted as(
                     select *
                     from usersSorted
                 )
+                and status = '1'
             group by "userId"
         ) as a
     group by a."userId"

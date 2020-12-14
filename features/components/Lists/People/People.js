@@ -77,18 +77,18 @@ const People = ({
   }, [keyWords]);
 
   useEffect(() => {
-    const { setNumber, refId, setRefId, id } = removeFriends;
-    if (refId) {
+    const { setNumber, subId, setSubId, id } = removeFriends;
+    if (subId) {
       axios
         .post("/friend/delete", { userId: id })
         .then(() => {
           if (userId === owner.id) {
             const newFriends = friends.filter(
-              (item) => item.friendshipId !== refId
+              (item) => item.friendshipId !== subId
             );
             setFriends(newFriends);
           } else {
-            setRefId(null);
+            setSubId(null);
             setNumber((prev) => prev - 1);
           }
         })
@@ -124,7 +124,8 @@ const People = ({
           const data = {
             cardInfo: {
               id,
-              refId: friendshipId,
+              refId: id,
+              subId: friendshipId,
               refType: "profile",
               photo,
               name: `${`${firstName} ${lastName}`}`,

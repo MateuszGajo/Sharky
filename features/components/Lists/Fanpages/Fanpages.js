@@ -44,8 +44,8 @@ const Fanpages = ({
   }, []);
 
   useEffect(() => {
-    const { setNumber, refId, setRefId, id } = fanpage;
-    if (refId) {
+    const { setNumber, subId, setSubId, id } = fanpage;
+    if (subId) {
       axios
         .post("/fanpage/unsubscribe", { fanpageId: id })
         .then(() => {
@@ -55,7 +55,7 @@ const Fanpages = ({
             );
             setFanpages(newFanpages);
           } else {
-            setRefId(null);
+            setSubId(null);
             setNumber((prev) => prev - 1);
           }
         })
@@ -63,9 +63,9 @@ const Fanpages = ({
     } else if (id) {
       axios
         .post("/fanpage/subscribe", { fanpageId: fanpage.id })
-        .then(({ data: { id: fanpageRefId } }) => {
+        .then(({ data: { id: fanpageSubId } }) => {
           setNumber((prev) => prev + 1);
-          setRefId(fanpageRefId);
+          setSubId(fanpageSubId);
         })
         .catch(({ response: { data: message } }) => setError(message));
     }
@@ -97,7 +97,8 @@ const Fanpages = ({
           const data = {
             cardInfo: {
               id: fanpageId,
-              refId: subId || null,
+              refId: fanpageId,
+              subId,
               refType: "fanpage",
               photo,
               radiusPhoto: true,

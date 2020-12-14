@@ -48,12 +48,7 @@ const withPost = (Component) => {
   };
 
   Wrapped.defaultProps = {
-    secondaryUser: {
-      id: null,
-      firstName: "",
-      lastName: "",
-      photo: "",
-    },
+    secondaryUser: null,
     single: false,
   };
 

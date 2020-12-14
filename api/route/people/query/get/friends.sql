@@ -20,6 +20,7 @@ friendsCounted as(
                     select *
                     from friendIds
                 )
+                and status = '1'
             group by user_id_1
             union
             select user_id_2 as "userId",
@@ -29,6 +30,7 @@ friendsCounted as(
                     select *
                     from friendIds
                 )
+                and status = '1'
             group by user_id_2
         ) as a
     group by a."userId"

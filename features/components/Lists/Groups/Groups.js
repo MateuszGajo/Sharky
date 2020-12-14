@@ -56,8 +56,8 @@ const Groups = ({
   }, [keyWords]);
 
   useEffect(() => {
-    const { setNumber, refId, setRefId, id } = group;
-    if (refId) {
+    const { setNumber, subId, setsubId, id } = group;
+    if (subId) {
       axios
         .post("/group/leave", { groupId: id })
         .then(() => {
@@ -66,15 +66,15 @@ const Groups = ({
             setGroups(newGroups);
           } else {
             setNumber((prev) => prev - 1);
-            setRefId(null);
+            setsubId(null);
           }
         })
         .catch(({ response: { data: message } }) => setError(message));
     } else if (id) {
       axios
         .post("/group/join", { groupId: group.id })
-        .then(({ data: { id: groupRefId } }) => {
-          setRefId(groupRefId);
+        .then(({ data: { id: groupSubId } }) => {
+          setsubId(groupSubId);
           setNumber((prev) => prev + 1);
         })
         .catch(({ response: { data: message } }) => setError(message));
@@ -95,7 +95,8 @@ const Groups = ({
           const data = {
             cardInfo: {
               id: groupId,
-              refId: subId || null,
+              refId: groupId,
+              subId,
               refType: "group",
               photo,
               radiusPhoto: true,

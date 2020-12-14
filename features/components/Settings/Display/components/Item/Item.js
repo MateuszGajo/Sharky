@@ -82,9 +82,10 @@ const Item = () => {
 
   const autoCompleteData = () => {
     if (name === "country") return countries;
-    if (name === "lnaguage") return language;
+    if (name === "language") return languages;
     return [];
   };
+
   return (
     <div className="settings__container__display">
       <h1 className="settings__container__display__title">

@@ -140,7 +140,7 @@ const Comment = ({
                 {numberOfLikes}
               </span>
             </div>
-            {numberOfReplies !== undefined && (
+            {numberOfReplies !== null && (
               <div
                 className="post__item__comments__container__item__content__item__down-bar__icon hover-primary-color"
                 onClick={() => {

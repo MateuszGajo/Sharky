@@ -57,6 +57,7 @@ const Header = ({ info, setNumberOfPhotos, userId }) => {
       .then(() => {
         setPrompt(photoAddedSuccessfullyText);
         clearPrompt();
+        console.log("halox1?");
         setNumberOfPhotos((prev) => prev + 1);
       })
       .catch(({ response: { data: message } }) => setError(message));
@@ -86,6 +87,7 @@ const Header = ({ info, setNumberOfPhotos, userId }) => {
       .post("/user/change/photo", data)
       .then(({ data: { fileName } }) => {
         setPhoto(fileName);
+        console.log("halo?!");
         setNumberOfPhotos((prev) => prev + 1);
       })
       .catch(({ response: { data: message } }) => setError(message));

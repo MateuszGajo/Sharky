@@ -37,7 +37,7 @@ passport.use(
                 return done(null, false);
               }
               const user = {
-                id: res.rows[0].id,
+                id: createRes.rows[0].id,
                 email: null,
                 firstName,
                 lastName,
@@ -91,7 +91,7 @@ passport.use(
                 return done(null, false);
               }
               const user = {
-                id: res.rows[0].id,
+                id: createRes.rows[0].id,
                 email: null,
                 firstName,
                 lastName,
@@ -145,7 +145,7 @@ passport.use(
               if (createRes.rowCount === 0) return done(null, false);
 
               const user = {
-                id: res.rows[0].id,
+                id: createRes.rows[0].id,
                 email: null,
                 firstName,
                 lastName,

@@ -19,7 +19,7 @@
 
 .profile__container__person__photo__container__img {
   display: block;
-  max-width: 100%;
+  max-width: 400px;
   max-height: 350px;
   object-fit: cover;
 }
@@ -164,6 +164,13 @@
 
 .profile__container__person__friend__container__text {
   font-size: 2rem;
+}
+
+@media (max-width: 1365px) {
+  .profile__container__person__photo__container__img {
+    max-width: 350px;
+    max-height: 300px;
+  }
 }
 
 @media (max-width: 1023px) {

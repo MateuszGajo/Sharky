@@ -22,13 +22,13 @@ const Members = ({ groupId, role: permission, setNumberOfMembers }) => {
   const deleteText = t("component:lists.people.delete");
 
   useEffect(() => {
-    const { id, refId } = removeMember;
-    if (id) {
+    const { refId, subId } = removeMember;
+    if (refId) {
       axios
-        .post("/group/user/delete", { subId: refId, groupId })
+        .post("/group/user/delete", { subId, groupId })
         .then(() => {
           const newArrayOfMembers = members.filter(
-            (member) => member.userId !== id
+            (member) => member.userId !== refId
           );
           setMembers(newArrayOfMembers);
           setNumberOfMembers((prev) => prev - 1);
@@ -68,7 +68,8 @@ const Members = ({ groupId, role: permission, setNumberOfMembers }) => {
           cardInfo: {
             refType: "profile",
             id: userId,
-            refId: subId,
+            refId: userId,
+            subId,
             photo,
             deleteText,
             radiusPhoto: false,

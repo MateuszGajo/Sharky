@@ -7,12 +7,14 @@ import i18next from "~i18n";
 
 const { useTranslation } = i18next;
 
-const ProfileInfo = ({ setChooseItem, info, userId }) => {
-  const { numberOfPhotos: initialNumberOfPhotos } = info;
-
+const ProfileInfo = ({
+  setChooseItem,
+  info,
+  userId,
+  numberOfPhotos,
+  setNumberOfPhotos,
+}) => {
   const [isDisplayAbout, setStatusOfDisplayAbout] = useState(false);
-
-  const [numberOfPhotos, setNumberOfPhotos] = useState(initialNumberOfPhotos);
 
   const { t } = useTranslation(["profile"]);
 
@@ -56,6 +58,8 @@ ProfileInfo.propTypes = {
     numberOfPhotos: PropTypes.number,
   }).isRequired,
   userId: PropTypes.number.isRequired,
+  numberOfPhotos: PropTypes.number.isRequired,
+  setNumberOfPhotos: PropTypes.func.isRequired,
 };
 
 export default ProfileInfo;

@@ -4,17 +4,17 @@ import cx from "classnames";
 
 const JoinLeaveButton = ({
   id,
-  refId,
+  subId,
   joinText,
   leaveText,
   size = "large",
   onClick,
   setNumber,
-  setRefId,
+  setSubId,
 }) => (
   <div className="join-leave-button">
     <div
-      onClick={() => onClick({ refId, id, setNumber, setRefId })}
+      onClick={() => onClick({ subId, id, setNumber, setSubId })}
       className={cx("join-leave-button__button", {
         "join-leave-button__button--small": size === "small",
         "join-leave-button__button--medium": size === "medium",
@@ -22,25 +22,25 @@ const JoinLeaveButton = ({
       })}
       aria-hidden="true"
     >
-      {refId ? leaveText : joinText}
+      {subId ? leaveText : joinText}
     </div>
   </div>
 );
 
 JoinLeaveButton.defaultProps = {
   size: "large",
-  refId: null,
+  subId: null,
 };
 
 JoinLeaveButton.propTypes = {
   id: PropTypes.number.isRequired,
-  refId: PropTypes.number,
+  subId: PropTypes.number,
   joinText: PropTypes.string.isRequired,
   leaveText: PropTypes.string.isRequired,
   size: PropTypes.string,
   onClick: PropTypes.func.isRequired,
   setNumber: PropTypes.func.isRequired,
-  setRefId: PropTypes.func.isRequired,
+  setSubId: PropTypes.func.isRequired,
 };
 
 export default JoinLeaveButton;

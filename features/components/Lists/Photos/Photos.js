@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import InfiniteScroll from "react-infinite-scroll-component";
 import axios from "~features/service/Axios";
+import AppContext from "~features/context/AppContext";
 
 const Photos = ({ userId }) => {
+  const { setPhotoPopUp } = useContext(AppContext);
+
   const [photos, setPhotos] = useState([]);
   const [isMore, setStatusOfMore] = useState(false);
 
   const fetchData = (from) => {
     axios
       .post("/user/get/photo", { userId, from })
-      .then(({ data: { photos: initialPhotos, isMorePhotos } }) => {
+      .then(({ data: { photos: initialPhotos, isMore: isMorePhotos } }) => {
         setPhotos((prev) => [...prev, ...initialPhotos]);
         setStatusOfMore(isMorePhotos);
       });
@@ -33,6 +36,14 @@ const Photos = ({ userId }) => {
               src={`/static/images/${photo.name}`}
               alt="Zdjęcia użytkowika"
               className="photo-list__item__photo"
+              onClick={() => {
+                setPhotoPopUp({
+                  photoSrc: photo.name,
+                  postId: null,
+                  forward: false,
+                });
+              }}
+              aria-hidden="true"
             />
           </div>
         ))}

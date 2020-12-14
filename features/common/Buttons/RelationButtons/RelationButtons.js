@@ -5,7 +5,7 @@ import cx from "classnames";
 const RelationButton = ({
   buttons,
   userId,
-  refId,
+  subId,
   setButtonName,
   setRelation,
   handleCollapseClick,
@@ -14,7 +14,7 @@ const RelationButton = ({
   title: initialTitle,
   blockCollapse = true,
   setNumber,
-  setRefId,
+  setSubId,
 }) => {
   const { green, pink, blue } = buttons;
   const items = {
@@ -48,7 +48,7 @@ const RelationButton = ({
   const [title, setTitle] = useState(initialTitle);
 
   const removeFriend = () => {
-    handleCollapseClick({ id: userId, refId, setNumber, setRefId });
+    handleCollapseClick({ id: userId, subId, setNumber, setSubId });
   };
 
   const changeFriendButton = () => {
@@ -153,10 +153,10 @@ RelationButton.defaultProps = {
   setRelation: () => {},
   setButtonName: () => {},
   userId: null,
-  refId: null,
+  subId: null,
   handleCollapseClick: () => {},
   setNumber: () => {},
-  setRefId: () => {},
+  setSubId: () => {},
 };
 
 RelationButton.propTypes = {
@@ -175,7 +175,7 @@ RelationButton.propTypes = {
     }),
   }).isRequired,
   userId: PropTypes.number,
-  refId: PropTypes.number,
+  subId: PropTypes.number,
   setButtonName: PropTypes.func,
   setRelation: PropTypes.func,
   handleCollapseClick: PropTypes.func,
@@ -184,7 +184,7 @@ RelationButton.propTypes = {
   title: PropTypes.string.isRequired,
   blockCollapse: PropTypes.bool,
   setNumber: PropTypes.func,
-  setRefId: PropTypes.func,
+  setSubId: PropTypes.func,
 };
 
 export default RelationButton;

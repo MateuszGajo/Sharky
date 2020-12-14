@@ -11,7 +11,7 @@ const Card = () => {
   const {
     radiusPhoto,
     refType,
-    id,
+    refId,
     photo,
     noButton,
     textInsteadButton,
@@ -48,7 +48,7 @@ const Card = () => {
             className={cx("card__item__photo__img", {
               "card__item__photo__img--radius": radiusPhoto === true,
             })}
-            onClick={() => router.push(`/${refType}/${id}`)}
+            onClick={() => router.push(`/${refType}/${refId}`)}
             aria-hidden="true"
             data-testid="card-photo"
             alt="card"

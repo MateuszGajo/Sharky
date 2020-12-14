@@ -26,6 +26,7 @@ const profile = () => {
   const [info, setInfo] = useState({});
   const [userError, setUserError] = useState("");
   const [isAuth, setStatusOfAuth] = useState(null);
+  const [numberOfPhotos, setNumberOfPhotos] = useState(0);
 
   useEffect(() => {
     if (userId && isAuth) {
@@ -33,6 +34,7 @@ const profile = () => {
         .post("/user/info", { userId })
         .then(({ data: { info: initialInfo } }) => {
           setInfo(initialInfo);
+          setNumberOfPhotos(initialInfo.numberOfPhotos);
           setStatusOfLoading(false);
         })
         .catch(({ response: { status, data: message } }) => {
@@ -73,6 +75,8 @@ const profile = () => {
               setChooseItem={setChooseItem}
               info={info}
               userId={userId}
+              numberOfPhotos={numberOfPhotos}
+              setNumberOfPhotos={setNumberOfPhotos}
             />
           )}
         </>

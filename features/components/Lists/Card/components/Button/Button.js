@@ -18,8 +18,8 @@ const Button = () => {
     handleCollapseClick,
     handleClick,
     setNumber,
-    refId,
-    setRefId,
+    subId,
+    setSubId,
   } = useContext(CardContext);
 
   const { collapseItems } = collapse;
@@ -66,14 +66,14 @@ const Button = () => {
           <RelationButtons
             buttons={collapseItems}
             userId={id}
-            refId={refId}
+            subId={subId}
             title={currentRelation}
             blockCollapse={blockCollapse}
             setButtonName={setButtonName}
             setRelation={setRelation}
             handleCollapseClick={handleCollapseClick}
             setNumber={setNumber}
-            setRefId={setRefId}
+            setSubId={setSubId}
             deleteTitle={texts.deleteText}
             size="small"
           />
@@ -82,13 +82,13 @@ const Button = () => {
         return (
           <JoinLeaveButton
             id={id}
-            refId={refId}
+            subId={subId}
             joinText={subTitle}
             leaveText={unsubTitle}
             size="small"
             onClick={handleClick}
             setNumber={setNumber}
-            setRefId={setRefId}
+            setSubId={setSubId}
           />
         );
       default:

@@ -4,7 +4,7 @@ import CardContext from "../../context/CardContext";
 
 const Description = () => {
   const { cardInfo, number } = useContext(CardContext);
-  const { refType, id, name, description } = cardInfo;
+  const { refType, refId, name, description } = cardInfo;
 
   const router = useRouter();
   return (
@@ -13,7 +13,7 @@ const Description = () => {
         <span
           className="card__item__info__first-column__name__span"
           data-testid="card-name"
-          onClick={() => router.push(`/${refType}/${id}`)}
+          onClick={() => router.push(`/${refType}/${refId}`)}
           aria-hidden="true"
         >
           {name}

@@ -13,7 +13,7 @@ const withCard = (Component) => {
     } = props;
     const { cardInfo, userStatus, collapse, texts } = data;
 
-    const [refId, setRefId] = useState(cardInfo.refId);
+    const [subId, setSubId] = useState(cardInfo.subId);
     const [number, setNumber] = useState(cardInfo.number);
 
     return (
@@ -23,9 +23,9 @@ const withCard = (Component) => {
           userStatus,
           collapse,
           texts,
-          refId,
           number,
-          setRefId,
+          subId,
+          setSubId,
           setNumber,
           setRelation,
           handleClick,
@@ -51,6 +51,7 @@ const withCard = (Component) => {
       cardInfo: PropTypes.shape({
         id: PropTypes.number,
         refId: PropTypes.number,
+        subId: PropTypes.number,
         refType: PropTypes.string.isRequired,
         photo: PropTypes.string.isRequired,
         radiusPhoto: PropTypes.bool,

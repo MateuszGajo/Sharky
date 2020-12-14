@@ -54,6 +54,7 @@ server.use(cookieParser());
 
 server.use(passport.initialize());
 server.use(passport.session());
+server.use(express.static(path.join(__dirname, "public")));
 
 const httpServer = http.createServer(server);
 const socketIO = io(httpServer);
@@ -228,11 +229,12 @@ socketIO.sockets.on("connection", (socket) => {
   });
 
   socket.on("disconnect", async () => {
-    const { id: ownerId } = await decodeToken(
-      cookie.parse(socket.handshake.headers.cookie).token
-    );
-    if (ownerId) {
-      userLeave(ownerId, socket.id);
+    const token = cookie.parse(socket.handshake.headers.cookie).token || "";
+    if (token) {
+      const { id: ownerId } = await decodeToken(token);
+      if (ownerId) {
+        userLeave(ownerId, socket.id);
+      }
     }
   });
 });
