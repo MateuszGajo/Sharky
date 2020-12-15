@@ -1,4 +1,4 @@
-import { uuid } from "uuidv4";
+import { v4 as uuid } from "uuid";
 import Router from "next/router";
 import axios from "~features/service/Axios";
 

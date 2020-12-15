@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
-import { uuid } from "uuidv4";
+import { v4 as uuid } from "uuid";
 import axios from "~features/service/Axios";
 import WizzardContext from "./context/WizzardContext";
 import AppContext from "~features/context/AppContext";

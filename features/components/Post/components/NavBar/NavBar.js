@@ -36,7 +36,6 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
     window.removeEventListener("click", handleClick);
   };
 
-  console.log(secondaryUser);
   const openSetting = () => {
     const { current } = settingRef;
     const collapseItem = current.querySelector(

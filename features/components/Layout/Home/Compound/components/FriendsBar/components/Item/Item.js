@@ -16,14 +16,14 @@ const Item = ({ user }) => {
   );
 
   useEffect(() => {
-    const { messageChatId, messageUserId } = newMessage;
+    const { chatId: messageChatId, userId: messageUserId } = newMessage;
     if (
       messageChatId === user.chatId &&
       chat.chatId !== user.chatId &&
       messageUserId === owner.id
     ) {
       setStatusOfNewMessage(true);
-      socket.emit("isMessageUnRead", { userId: messageUserId });
+      socket.emit("isMessageUnRead", { userId });
     }
   }, [newMessage]);
 

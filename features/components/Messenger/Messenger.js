@@ -27,11 +27,11 @@ const Messenger = ({
       setMessages([
         ...messages,
         {
-          id: chat.chatId,
+          id: newMessage.messageId,
           chatId: newMessage.chatId,
           message: newMessage.message,
           date: newMessage.date,
-          userId: newMessage.userId,
+          userId: newMessage.ownerId,
         },
       ]);
       setScrollDown((prev) => prev + 1);
@@ -42,7 +42,6 @@ const Messenger = ({
     const {
       user: { id },
     } = chat;
-
     if (user.id !== chat.user.id) {
       getMesseges({
         userId: id,

@@ -42,7 +42,7 @@ OwnerMenu.propTypes = {
     date: PropTypes.string.isRequired,
     likeId: PropTypes.number,
     numberOfLikes: PropTypes.number.isRequired,
-    numberOfReplies: PropTypes.number.isRequired,
+    numberOfReplies: PropTypes.number,
     postId: PropTypes.number.isRequired,
     userId: PropTypes.number.isRequired,
   }).isRequired,

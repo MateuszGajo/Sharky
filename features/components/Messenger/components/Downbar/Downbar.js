@@ -79,7 +79,7 @@ const Downbar = ({ setMessages, converser }) => {
             })}
             data-testid="messenger-send-button"
             disabled={!message}
-            type="button"
+            type="submit"
           >
             <MdSend />
           </button>

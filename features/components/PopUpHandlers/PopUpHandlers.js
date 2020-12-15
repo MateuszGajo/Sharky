@@ -9,7 +9,7 @@ const PopUpHandlers = () => {
   const { isPrompt, isError, report, photoPopUp, setPhotoPopUp } = useContext(
     AppContext
   );
-  console.log(photoPopUp);
+
   return (
     <>
       {photoPopUp.photoSrc && (

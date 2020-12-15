@@ -90,7 +90,7 @@ const Post = () => {
         )}
         {posts.map((post) => (
           <SinglePost
-            key={post.id}
+            key={post.postId}
             post={post}
             user={users[post.userId]}
             userShare={null}
@@ -103,5 +103,4 @@ const Post = () => {
     </HomeLayout>
   );
 };
-
 export default withWizzard(Post);

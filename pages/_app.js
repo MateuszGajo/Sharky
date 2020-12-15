@@ -50,14 +50,13 @@ const MyApp = ({ Component, pageProps }) => {
     if (socket) {
       socket.on(
         "message",
-        ({ messageId, chatId, userId, message, date, messageTo }) => {
+        ({ messageId, chatId, userId, message, ownerId }) => {
           setNewMessage({
             messageId,
             chatId,
             userId,
             message,
-            date,
-            messageTo,
+            ownerId,
           });
         }
       );

@@ -11,30 +11,35 @@ with usersSorted as (
         )
 ),
 usersSortedCounted as(
-    select a."userId",
-        sum(a.count)::int as "numberOfFriends"
+    with a as(
+        select user_id_1 as "userId",
+            count(user_id_1)
+        from friends
+        where user_id_1 in(
+                select *
+                from usersSorted
+            )
+            and status = '1'
+        group by "userId"
+        union all
+        select user_id_2 as "userId",
+            count(user_id_2)
+        from friends
+        where user_id_2 in(
+                select *
+                from usersSorted
+            )
+            and status = '1'
+        group by "userId"
+    )
+    select b.id as "userId",
+        coalesce(sum(a.count)::int, 0) as "numberOfFriends"
     from(
-            select user_id_1 as "userId",
-                count(user_id_1)
-            from friends
-            where user_id_1 in(
-                    select *
-                    from usersSorted
-                )
-                and status = '1'
-            group by "userId"
-            union
-            select user_id_2 as "userId",
-                count(user_id_2)
-            from friends
-            where user_id_2 in(
-                    select *
-                    from usersSorted
-                )
-                and status = '1'
-            group by "userId"
-        ) as a
-    group by a."userId"
+            select *
+            from usersSorted
+        ) as b
+        left join a on a."userId" = b.id
+    group by b.id
 ),
 usersInvited as (
     select user_id as "userId",

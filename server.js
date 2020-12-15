@@ -55,6 +55,7 @@ server.use(cookieParser());
 server.use(passport.initialize());
 server.use(passport.session());
 server.use(express.static(path.join(__dirname, "public")));
+server.set("trust proxy", true);
 
 const httpServer = http.createServer(server);
 const socketIO = io(httpServer);
@@ -97,7 +98,8 @@ socketIO.sockets.on("connection", (socket) => {
         socketIO.in(`chat${rows[0].chatId}`).emit("message", {
           chatId: rows[0].chatId,
           messageId: rows[0].id,
-          userId: ownerId,
+          userId,
+          ownerId,
           message,
           date,
         });
@@ -109,7 +111,9 @@ socketIO.sockets.on("connection", (socket) => {
     const { id: ownerId } = await decodeToken(
       cookie.parse(socket.handshake.headers.cookie).token
     );
-    if (ownerId) client.query(addUnreadMessageQuery, [ownerId, userId]);
+    if (ownerId) {
+      await client.query(addUnreadMessageQuery, [ownerId, userId]);
+    }
   });
 
   socket.on("joinNewChat", async ({ friendshipId, chatId }) => {
