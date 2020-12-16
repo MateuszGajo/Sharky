@@ -22,15 +22,14 @@ const Comment = ({
   focusCollapse,
   focusIcon,
   getReplies,
-  user,
   replies,
   setReplies,
   setNumberOfReplies,
 }) => {
-  const { id, firstName, lastName, photo } = user;
+  const { users, newLike, setNewLike } = useContext(WizzardContext);
+  const { id, firstName, lastName, photo } = users[comment.userId];
 
   const { setError } = useContext(AppContext);
-  const { newLike, setNewLike } = useContext(WizzardContext);
 
   const [likeId, setIdLike] = useState(comment?.likeId);
   const [numberOfLikes, setNumberOfLikes] = useState(
@@ -204,12 +203,6 @@ Comment.propTypes = {
     numberOfReplies: PropTypes.number,
     postId: PropTypes.number,
     userId: PropTypes.number.isRequired,
-  }).isRequired,
-  user: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    firstName: PropTypes.string.isRequired,
-    lastName: PropTypes.string.isRequired,
-    photo: PropTypes.string.isRequired,
   }).isRequired,
   replies: PropTypes.arrayOf(
     PropTypes.shape({

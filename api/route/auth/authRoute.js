@@ -34,7 +34,7 @@ router.get(
       jwtSecret
     );
     res.cookie("token", token);
-    res.redirect("/home");
+    return res.redirect("/home");
   }
 );
 
@@ -55,7 +55,7 @@ router.get(
       jwtSecret
     );
     res.cookie("token", token);
-    res.redirect("/home");
+    return res.redirect("/home");
   }
 );
 
@@ -75,8 +75,9 @@ router.get(
       },
       jwtSecret
     );
+
     res.cookie("token", token);
-    res.redirect("/home");
+    return res.redirect("/home");
   }
 );
 

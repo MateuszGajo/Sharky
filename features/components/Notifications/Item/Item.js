@@ -23,7 +23,7 @@ const Item = ({ item, setDeleteNotification }) => {
     relation,
     newRelation,
   } = item;
-  const { t } = useTranslation(["notifications"]);
+  const { t } = useTranslation(["notifications", "component"]);
   const router = useRouter();
 
   const { setError } = useContext(AppContext);
@@ -59,7 +59,7 @@ const Item = ({ item, setDeleteNotification }) => {
       .then(() => setDeleteNotification({ id }))
       .catch(({ response: { data: message } }) => setError(message));
   };
-
+  console.log(item);
   return (
     <div className="home-wrapper__main__content__notifications">
       <div
@@ -104,7 +104,7 @@ const Item = ({ item, setDeleteNotification }) => {
                   "primary-color": newRelation === "friend",
                 })}
               >
-                {userId ? newRelation : name}
+                {userId ? t(`component:lists.people.${newRelation}`) : name}
               </span>
             </span>
           </div>

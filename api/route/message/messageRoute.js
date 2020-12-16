@@ -7,7 +7,7 @@ const decodeToken = require("../decodeToken");
 const router = express.Router();
 
 router.post("/get", async (req, res) => {
-  const { userId } = req.body;
+  const { userId, from } = req.body;
   if (!/^[\d]*$/.test(userId)) return res.status(400).json("invalid-data");
 
   const { error, id: ownerId, firstName, lastName, photo } = await decodeToken(
@@ -20,9 +20,19 @@ router.post("/get", async (req, res) => {
     .toString();
 
   try {
-    const messages = await client.query(getMessagesQuery, [userId, ownerId]);
+    const { rowCount, rows } = await client.query(getMessagesQuery, [
+      userId,
+      ownerId,
+      from,
+    ]);
+    let isMore = true;
+    if (rowCount < 20) {
+      isMore = false;
+    }
+
     return res.status(200).json({
-      messages: messages.rows,
+      messages: rows,
+      isMore,
       user: { id: ownerId, firstName, lastName, photo },
     });
   } catch {

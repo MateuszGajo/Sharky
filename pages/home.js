@@ -10,6 +10,7 @@ import { getOwner } from "~features/service/Functions/index";
 import "../styles/home.scss";
 
 const Home = () => {
+  console.log("wchodzimy do home");
   const { setOwner } = useContext(AppContext);
   const [content, setContent] = useState("");
   const [file, setFile] = useState(null);
@@ -32,6 +33,7 @@ const Home = () => {
 
   if (isAuth == null) return <Spinner />;
   if (!isAuth) {
+    console.log("home nas wywala");
     Router.push("/signin");
     return <Spinner />;
   }

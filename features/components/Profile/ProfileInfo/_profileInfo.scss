@@ -1,22 +1,18 @@
 .profile__container {
-    flex-basis: 0;
-    flex-grow:1;
-    display: flex;
-  }
-  
- 
-
-
-  @media(max-width:1023px){
-    .profile__container{
-      flex-direction: column;
-      min-height:100vh;
-    }
+  flex-basis: 0;
+  flex-grow: 1;
+  display: flex;
 }
 
-  @media(max-width:1023px) and (orientation:landscape){
-    .profile__container{
-      min-height:150vh;
-    }
+@media (max-width: 1023px) {
+  .profile__container {
+    flex-direction: column;
+    min-height: 100vh;
   }
+}
 
+@media (max-width: 1023px) and (orientation: landscape) {
+  .profile__container {
+    min-height: 150vh;
+  }
+}

@@ -21,11 +21,21 @@ const Messenger = ({
   const [messages, setMessages] = useState([]);
   const [user, setUser] = useState({ id: null });
   const [scrollDown, setScrollDown] = useState(0);
+  const [isMore, setStatusOfMore] = useState(false);
+
+  const fetchMessages = (from) => {
+    getMesseges({
+      userId: chat.user.id,
+      messages,
+      setMessages,
+      from,
+      setStatusOfMore,
+    });
+  };
 
   useEffect(() => {
     if (newMessage.chatId === chat.chatId) {
       setMessages([
-        ...messages,
         {
           id: newMessage.messageId,
           chatId: newMessage.chatId,
@@ -33,21 +43,22 @@ const Messenger = ({
           date: newMessage.date,
           userId: newMessage.ownerId,
         },
+        ...messages,
       ]);
       setScrollDown((prev) => prev + 1);
     }
   }, [newMessage]);
 
   useEffect(() => {
-    const {
-      user: { id },
-    } = chat;
     if (user.id !== chat.user.id) {
       getMesseges({
-        userId: id,
-        messages: [],
+        userId: chat.user.id,
+        messages,
         setMessages,
+        from: 0,
+        setStatusOfMore,
         setStatusOfLoading,
+        setScrollDown,
       });
       setUser(chat.user);
     }
@@ -76,6 +87,8 @@ const Messenger = ({
             user={user}
             chat={chat}
             scrollDown={scrollDown}
+            fetchMessages={fetchMessages}
+            isMore={isMore}
           />
 
           <Downbar

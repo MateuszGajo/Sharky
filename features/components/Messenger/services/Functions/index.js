@@ -5,11 +5,18 @@ export const getMesseges = ({
   messages: m,
   setMessages,
   setStatusOfLoading,
+  from,
+  setStatusOfMore,
+  setScrollDown,
 }) => {
-  axios.post("/message/get", { userId }).then(({ data: { messages } }) => {
-    setMessages([...messages, ...m]);
-    setStatusOfLoading(false);
-  });
+  axios
+    .post("/message/get", { userId, from })
+    .then(({ data: { messages, isMore } }) => {
+      setMessages([...m, ...messages]);
+      setStatusOfMore(isMore);
+      if (setStatusOfLoading) setStatusOfLoading(false);
+      if (setScrollDown) setScrollDown((prev) => prev + 1);
+    });
 };
 
 export const addMessage = ({ message, userId, socket, setMessage }) => {

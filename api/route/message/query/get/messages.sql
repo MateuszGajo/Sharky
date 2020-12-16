@@ -20,3 +20,5 @@ where chat_id = (
                     )
             )
     )
+order by c.id desc
+limit 20 offset $3

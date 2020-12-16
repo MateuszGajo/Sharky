@@ -28,8 +28,6 @@ const withContainer = (WrappedComponent) => {
       Number(comment.numberOfReplies)
     );
 
-    const user = users[comment.userId];
-
     const handleSubmit = (e) => {
       e.preventDefault();
 
@@ -94,7 +92,6 @@ const withContainer = (WrappedComponent) => {
           focusCollapse={focusCollapse}
           focusIcon={focusIcon}
           getReplies={gReplies}
-          user={user}
         />
         {isRepliesOpen && (
           <div className="post__item__comments__container--margin">
@@ -113,7 +110,6 @@ const withContainer = (WrappedComponent) => {
                 comment={item}
                 focusCollapse={focusCollapse}
                 focusIcon={focusIcon}
-                user={user}
                 replies={replies}
                 setReplies={setReplies}
                 setNumberOfReplies={setNumberOfReplies}
