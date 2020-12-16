@@ -10,8 +10,9 @@ export const getOwner = ({ setStatusOfAuth, setOwner, owner }) => {
   axios
     .get("/user/me")
     .then(({ data: { user } }) => {
-      setStatusOfAuth(true);
       if (!owner.id) setOwner(user);
+
+      setStatusOfAuth(true);
     })
     .catch(({ response: { status } }) => {
       if (status === 401) {

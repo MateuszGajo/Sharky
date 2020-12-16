@@ -65,7 +65,6 @@ const NavBar = ({ focusCollapse, focusIcon }) => {
       settingRef.current.removeEventListener("click", handleClick);
     };
   }, []);
-
   return (
     <div className="post__item__navbar">
       {secondaryUser && (

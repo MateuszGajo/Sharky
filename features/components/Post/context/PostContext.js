@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 const PostContext = React.createContext({
   user: { id: null, firstName: "", lastName: "", photo: "" },
   setUser: () => {},
-  secondaryUser: { id: null, firstName: "", lastName: "", photo: "" },
+  secondaryUser: null,
   setUserShare: () => {},
   comments: [
     {
