@@ -20,7 +20,7 @@ const Post = () => {
   const { t } = useTranslation(["post"]);
 
   const { posts, setPosts, users, setUsers } = useContext(WizzardContext);
-  const { setOwner } = useContext(AppContext);
+  const { setOwner, owner } = useContext(AppContext);
   const [postError, setPostError] = useState("");
   const [isAuth, setStatusOfAuth] = useState(null);
 
@@ -71,7 +71,7 @@ const Post = () => {
   const focusElement = useRef(null);
 
   useEffect(() => {
-    getOwner({ setStatusOfAuth, setOwner });
+    getOwner({ setStatusOfAuth, setOwner, owner });
   }, []);
 
   if (isAuth === null) return <Spinner />;

@@ -14,7 +14,7 @@ import "../styles/messages.scss";
 const { useTranslation } = i18next;
 
 const Messages = () => {
-  const { socket, setOwner } = useContext(AppContext);
+  const { socket, setOwner, owner } = useContext(AppContext);
 
   const { t } = useTranslation(["messages"]);
 
@@ -59,7 +59,7 @@ const Messages = () => {
   }, [isAuth]);
 
   useEffect(() => {
-    getOwner({ setStatusOfAuth, setOwner });
+    getOwner({ setStatusOfAuth, setOwner, owner });
   }, []);
 
   if (isAuth === null) return <Spinner />;

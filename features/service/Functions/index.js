@@ -6,15 +6,18 @@ import i18next from "~i18n";
 
 const { i18n } = i18next;
 
-export const getOwner = ({ setStatusOfAuth, setOwner }) => {
+export const getOwner = ({ setStatusOfAuth, setOwner, owner }) => {
   axios
     .get("/user/me")
     .then(({ data: { user } }) => {
-      setOwner(user);
       setStatusOfAuth(true);
+      if (!owner.id) setOwner(user);
     })
     .catch(({ response: { status } }) => {
-      if (status === 401) setStatusOfAuth(false);
+      if (status === 401) {
+        setStatusOfAuth(false);
+        setOwner({ id: null });
+      }
     });
 };
 

@@ -21,7 +21,7 @@ const Fanpage = () => {
 
   const homeName = t("fanpage:home");
 
-  const { setOwner } = useContext(AppContext);
+  const { setOwner, owner } = useContext(AppContext);
 
   const [section, setSection] = useState(homeName);
   const [subId, setIdSub] = useState(null);
@@ -49,7 +49,7 @@ const Fanpage = () => {
   }, [fanpageId, isAuth]);
 
   useEffect(() => {
-    getOwner({ setStatusOfAuth, setOwner });
+    getOwner({ setStatusOfAuth, setOwner, owner });
   }, []);
 
   if (isAuth === null) return <Spinner />;

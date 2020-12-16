@@ -21,6 +21,7 @@ const SignIn = () => {
     authUserError,
     setAuthUserError,
     setOwner,
+    owner,
     setError,
   } = useContext(AppContext);
   const { t } = useTranslation(["component", "signin"]);
@@ -50,7 +51,7 @@ const SignIn = () => {
       setPassword(localStorage.password);
     }
 
-    getOwner({ setStatusOfAuth, setOwner });
+    getOwner({ setStatusOfAuth, setOwner, owner });
   }, []);
 
   if (isAuth === null) return <Spinner />;

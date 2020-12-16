@@ -12,14 +12,14 @@ const { useTranslation } = i18next;
 const Index = () => {
   const { t } = useTranslation(["index"]);
 
-  const { setOwner } = useContext(AppContext);
+  const { setOwner, owner } = useContext(AppContext);
   const [isAuth, setStatusOfAuth] = useState(null);
 
   const description = t("index:description");
   const keyWords = t("index:key-words");
 
   useEffect(() => {
-    getOwner({ setStatusOfAuth, setOwner });
+    getOwner({ setStatusOfAuth, setOwner, owner });
   }, []);
 
   if (isAuth == null) return <Spinner />;

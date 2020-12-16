@@ -12,7 +12,7 @@ import { getOwner } from "~features/service/Functions/index";
 import "~styles/notifications.scss";
 
 const Notifications = () => {
-  const { setOwner } = useContext(AppContext);
+  const { setOwner, owner } = useContext(AppContext);
 
   const [notifications, setNotifications] = useState([]);
   const [allNotification, setAllNotifications] = useState([]);
@@ -63,7 +63,7 @@ const Notifications = () => {
   }, [isAuth]);
 
   useEffect(() => {
-    getOwner({ setStatusOfAuth, setOwner });
+    getOwner({ setStatusOfAuth, setOwner, owner });
   }, []);
 
   if (isAuth === null) return <Spinner />;

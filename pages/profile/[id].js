@@ -19,7 +19,7 @@ const profile = () => {
 
   const { t } = useTranslation(["profile"]);
 
-  const { setOwner } = useContext(AppContext);
+  const { setOwner, owner } = useContext(AppContext);
 
   const [chooseItem, setChooseItem] = useState("");
   const [isLoading, setStatusOfLoading] = useState(true);
@@ -47,7 +47,7 @@ const profile = () => {
   }, [userId, isAuth]);
 
   useEffect(() => {
-    getOwner({ setStatusOfAuth, setOwner });
+    getOwner({ setStatusOfAuth, setOwner, owner });
   }, []);
 
   if (isAuth === null) return <Spinner />;

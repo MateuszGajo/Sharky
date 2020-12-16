@@ -17,7 +17,7 @@ const { useTranslation } = i18next;
 const News = () => {
   const { t } = useTranslation(["news"]);
 
-  const { setOwner } = useContext(AppContext);
+  const { setOwner, owner } = useContext(AppContext);
 
   const [permission, setPermission] = useState();
   const [file, setFile] = useState();
@@ -39,7 +39,7 @@ const News = () => {
   }, [isAuth]);
 
   useEffect(() => {
-    getOwner({ setStatusOfAuth, setOwner });
+    getOwner({ setStatusOfAuth, setOwner, owner });
   }, []);
 
   if (isAuth === null) return <Spinner />;

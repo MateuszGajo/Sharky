@@ -10,8 +10,7 @@ import { getOwner } from "~features/service/Functions/index";
 import "../styles/home.scss";
 
 const Home = () => {
-  console.log("wchodzimy do home");
-  const { setOwner } = useContext(AppContext);
+  const { setOwner, owner } = useContext(AppContext);
   const [content, setContent] = useState("");
   const [file, setFile] = useState(null);
   const [newPost, setNewPost] = useState();
@@ -28,12 +27,11 @@ const Home = () => {
   };
 
   useEffect(() => {
-    getOwner({ setStatusOfAuth, setOwner });
+    getOwner({ setStatusOfAuth, setOwner, owner });
   }, []);
 
   if (isAuth == null) return <Spinner />;
   if (!isAuth) {
-    console.log("home nas wywala");
     Router.push("/signin");
     return <Spinner />;
   }

@@ -20,7 +20,7 @@ const Group = () => {
 
   const { t } = useTranslation(["group"]);
 
-  const { setOwner } = useContext(AppContext);
+  const { setOwner, owner } = useContext(AppContext);
 
   const groupDoesNotExist = t("group:error.does-not-exist");
 
@@ -76,7 +76,7 @@ const Group = () => {
   }, [groupId, isAuth]);
 
   useEffect(() => {
-    getOwner({ setStatusOfAuth, setOwner });
+    getOwner({ setStatusOfAuth, setOwner, owner });
   }, []);
 
   if (isAuth === null || !startingDate) return <Spinner />;

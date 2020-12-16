@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useReducer } from "react";
+import React, { useEffect, useState, useReducer, useRef } from "react";
 import socketIOClient from "socket.io-client";
 import Router from "next/router";
 import PropTypes from "prop-types";
@@ -38,12 +38,27 @@ const MyApp = ({ Component, pageProps }) => {
   const [validationSignUpError, setValidationSignUpError] = useState("");
   const [socket, setSocket] = useState(null);
 
+  const prevOwnerRef = useRef();
+
   const [state, dispatch] = useReducer(AuthReducer, authInitState);
+
+  const removeSocketListener = () => {
+    socket.off("message");
+    socket.off("newChat");
+    socket.off("changePasswordError");
+    socket.off("passwordChanged");
+  };
+
   useEffect(() => {
+    const { current: previous } = prevOwnerRef;
     if (owner.id) {
-      setSocket(socketIOClient(SERVER_URL));
       checkLanguage();
+
+      if (previous.id !== owner.id) setSocket(socketIOClient(SERVER_URL));
+    } else if (previous?.id && previous?.id !== owner.id) {
+      removeSocketListener();
     }
+    prevOwnerRef.current = owner;
   }, [owner]);
 
   useEffect(() => {
@@ -74,7 +89,6 @@ const MyApp = ({ Component, pageProps }) => {
           Router.push("/");
         });
       });
-
       socket.emit("connectUser");
     }
   }, [socket]);

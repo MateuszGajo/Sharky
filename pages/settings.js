@@ -21,9 +21,13 @@ const Settings = () => {
   const isMobile = useMediaQuery({ query: "(max-width: 1023px)" });
 
   const { t } = useTranslation(["settings"]);
-  const { socket, setPrompt, setOwner, setConfirmPopUpError } = useContext(
-    AppContext
-  );
+  const {
+    socket,
+    setPrompt,
+    setOwner,
+    owner,
+    setConfirmPopUpError,
+  } = useContext(AppContext);
   const {
     isOpenConfirmPopUp,
     setOpenConfirmPopUp,
@@ -35,7 +39,7 @@ const Settings = () => {
   const [isAuth, setStatusOfAuth] = useState(null);
 
   useEffect(() => {
-    getOwner({ setStatusOfAuth, setOwner });
+    getOwner({ setStatusOfAuth, setOwner, owner });
   }, []);
 
   if (isAuth === null) return <Spinner />;
