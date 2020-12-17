@@ -51,9 +51,9 @@
         },
         "people":{
             "description":"Liczba znajomych",
-            "friend":"Znajomy",
+            "friend":"Przyjaciel",
             "family":"Rodzina",
-            "pal":"Przyjaciel",
+            "pal":"Znajomy",
             "relation-change":"Prośba zmiany relacji została wysłana",
             "add":"Dodaj",
             "delete":"Usuń",

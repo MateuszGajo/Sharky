@@ -144,16 +144,16 @@ const People = ({
               isCollapse: userRelation && userId === owner.id,
               collapseItems: {
                 pink: {
-                  name: "pal",
-                  title: palName,
+                  name: "friend",
+                  title: friendName,
                 },
                 blue: {
                   name: "family",
                   title: familyName,
                 },
                 green: {
-                  name: "friend",
-                  title: friendName,
+                  name: "pal",
+                  title: palName,
                 },
               },
             },

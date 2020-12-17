@@ -92,7 +92,7 @@ router.post("/accept", async (req, res) => {
   const { error, id: ownerId } = await decodeToken(req.cookies.token);
   if (error) return res.status(401).json(error);
 
-  const relation = "friend";
+  const relation = "pal";
   const acceptRequestQuery = fs
     .readFileSync(path.join(__dirname, "./query/update/friendStatus.sql"))
     .toString();
