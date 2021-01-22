@@ -59,7 +59,6 @@ const Item = ({ item, setDeleteNotification }) => {
       .then(() => setDeleteNotification({ id }))
       .catch(({ response: { data: message } }) => setError(message));
   };
-  console.log(item);
   return (
     <div className="home-wrapper__main__content__notifications">
       <div

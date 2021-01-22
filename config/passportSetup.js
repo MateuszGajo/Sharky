@@ -83,7 +83,7 @@ passport.use(
         if (res.rowCount === 0) {
           const createUser =
             "INSERT INTO users(google_id, first_name, last_name, photo, country, language) VALUES($1, $2, $3, 'profile.png', $4, $5) RETURNING id";
-          client.query(
+          return client.query(
             createUser,
             [id, firstName, lastName, defaultCountry, defaultLanguage],
             (createErr, createRes) => {
@@ -136,7 +136,7 @@ passport.use(
         if (res.rowCount === 0) {
           const createUser =
             "INSERT INTO users(twitter_id, first_name, last_name, photo, country, language) VALUES($1, $2, $3, 'profile.png', $4, $5) RETURNING id";
-          client.query(
+          return client.query(
             createUser,
             [id, firstName, lastName, defaultCountry, defaultLanguage],
             (createErr, createRes) => {
