@@ -39,7 +39,7 @@
     "jest": "^25.5.4",
     "jsonwebtoken": "^8.5.1",
     "multer": "^1.4.2",
-    "next": "^9.5.5",
+    "next": "^13.0.4",
     "next-i18next": "^4.5.0",
     "next-translate": "^0.15.1",
     "nextjs-dynamic-routes": "^2.5.1",
